@@ -1,0 +1,36 @@
+[project]
+name = "hybrid-document-search"
+version = "0.1.0"
+description = "Compare sparse, dense, and hybrid document retrieval."
+requires-python = ">=3.12"
+dependencies = ["fastapi", "pydantic", "uvicorn", "streamlit"]
+
+[project.optional-dependencies]
+sparse = ["scikit-learn", "bm25s"]
+dense = ["sentence-transformers", "faiss-cpu"]
+evaluation = ["ranx"]
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.13.1",
+    "pytest",
+    "ruff",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app", "retrievers", "fusion", "evaluation", "indexing", "data", "frontend"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--import-mode=importlib"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]

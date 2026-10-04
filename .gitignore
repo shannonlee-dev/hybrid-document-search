@@ -1,0 +1,39 @@
+# Python and tooling
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local configuration and editor files
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+*.swp
+.DS_Store
+/docs/private/
+
+# Downloaded data, models, and generated artifacts (keep data/*.py tracked)
+/data/raw/
+/data/processed/
+/datasets/
+/models/
+/indexes/
+/artifacts/
+/experiments/
+.cache/
+*.faiss
+*.index
+*.db
+*.db-*
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
