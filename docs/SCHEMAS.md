@@ -1,33 +1,35 @@
-# Shared Data Schema Draft
+# 공통 데이터 스키마 초안
 
-Status: Draft — pending team alignment
-Related issue: #4
-Owner: @bangahee
+상태: 초안 — 문서 구조 및 인덱싱 규칙 합의 반영, 나머지 사항은 합의 대기
+관련 Issue: #4
+담당: @bangahee
 
-## Document
+## 문서 (Document)
 
-One record represents one source passage.
+레코드 하나는 원본 passage 하나를 나타냅니다.
 
-| Field | Type | Required | Meaning |
+| 필드 | 자료형 | 필수 여부 | 의미 |
 | --- | --- | --- | --- |
-| document_id | string | Yes | Stable original passage ID |
-| text | string | Yes | Original passage text |
-| title | string or null | No | Source article title |
+| `document_id` | string | 필수 | 원본에서 유지한 안정적인 passage ID |
+| `text` | string | 필수 | 원본 passage 텍스트 |
+| `title` | string 또는 null | 값은 선택, 준비된 JSONL에는 키 유지 | 원본 문서 제목. 제목이 없거나 비어 있으면 null |
 
-Source mapping:
-- _id → document_id
-- text → text
-- title → title
+원본 필드 매핑:
 
-Rules:
-- document_id must be nonempty and unique within the corpus.
-- Preserve the complete source ID, including its # suffix.
-- IDs are strings; do not replace them with array positions.
-- Preserve the passage-level retrieval unit.
-- Missing titles must be supported.
-- Preserve text for display; do not overwrite it with TF-IDF tokens.
+- `_id` → `document_id`
+- `text` → `text`
+- `title` → `title`
 
-Synthetic example:
+규칙:
+
+- `document_id`는 비어 있으면 안 되며, corpus 내에서 고유해야 합니다.
+- `#` 뒤에 붙는 부분까지 포함하여 원본 ID 전체를 유지합니다.
+- ID는 문자열이며, 배열의 위치 값으로 대체하지 않습니다.
+- passage 단위의 검색을 유지합니다.
+- 준비된 JSONL에는 `title` 키를 항상 포함하며, 제목이 없거나 비어 있으면 `null`로 저장합니다.
+- 화면 표시에 사용할 `text`를 보존하며, TF-IDF 토큰으로 덮어쓰지 않습니다.
+
+설명용 가상 예시:
 
 ```json
 {
@@ -37,18 +39,19 @@ Synthetic example:
 }
 ```
 
-## Query
+## 질의 (Query)
 
-| Field | Type | Required | Meaning |
+| 필드 | 자료형 | 필수 여부 | 의미 |
 | --- | --- | --- | --- |
-| query_id | string | Yes | Stable source query ID |
-| text | string | Yes | Query text |
+| `query_id` | string | 필수 | 원본에서 유지한 안정적인 질의 ID |
+| `text` | string | 필수 | 질의 텍스트 |
 
-Source mapping:
-- _id → query_id
-- text → text
+원본 필드 매핑:
 
-Synthetic example:
+- `_id` → `query_id`
+- `text` → `text`
+
+설명용 가상 예시:
 
 ```json
 {
@@ -57,31 +60,33 @@ Synthetic example:
 }
 ```
 
-Query IDs and document IDs belong to separate namespaces.
-Do not infer relevant documents from the appearance of a query ID.
+질의 ID와 문서 ID는 별도의 이름 공간에 속합니다.
+질의 ID의 형태만 보고 관련 문서를 추정하지 않습니다.
 
-## Relevance judgment / qrel
+## 관련성 판정 (Qrel)
 
-| Field | Type | Required | Meaning |
+| 필드 | 자료형 | 필수 여부 | 의미 |
 | --- | --- | --- | --- |
-| query_id | string | Yes | Referenced query |
-| document_id | string | Yes | Judged passage |
-| relevance | number | Yes | Original relevance label |
+| `query_id` | string | 필수 | 참조하는 질의 |
+| `document_id` | string | 필수 | 관련성을 판정한 passage |
+| `relevance` | number | 필수 | 원본 관련성 라벨 |
 
-Source mapping:
-- query-id → query_id
-- corpus-id → document_id
-- score → relevance
+원본 필드 매핑:
 
-Rules:
-- Preserve source label values and train/dev membership.
-- Verify observed label values before freezing evaluation rules.
-- Validate that referenced queries and documents exist.
-- Report conflicting duplicate judgments.
-- Relevance labels are not retriever similarity scores.
-- A missing judgment means unjudged, not an explicit negative.
+- `query-id` → `query_id`
+- `corpus-id` → `document_id`
+- `score` → `relevance`
 
-Synthetic example:
+규칙:
+
+- 원본 라벨 값과 train/dev 소속을 유지합니다.
+- 평가 규칙을 확정하기 전에 실제 라벨 값을 확인합니다.
+- 참조하는 질의와 문서가 존재하는지 검증합니다.
+- 중복된 판정의 라벨이 서로 충돌하면 보고합니다.
+- 관련성 라벨은 검색기의 유사도 점수가 아닙니다.
+- 판정이 없다는 것은 미판정을 의미하며, 명시적인 비관련 판정을 의미하지 않습니다.
+
+설명용 가상 예시:
 
 ```json
 {
@@ -91,29 +96,31 @@ Synthetic example:
 }
 ```
 
-## Proposed indexed content
+## 합의된 인덱싱 내용
 
-Both Sparse and Dense retrieval should use the same source content:
-title + newline + text when a title is available, otherwise text.
+Sparse와 Dense 검색 모두 동일한 원본 내용을 사용합니다.
+제목이 있으면 `title + "\n" + text`를 사용하고, 제목이 없거나 비어 있으면 `text`만 사용합니다.
+준비된 JSONL에서 `title`이 `null`인 경우에도 `text`만 사용합니다.
+검색 방식별 토큰화나 모델이 요구하는 입력 형식은 달라질 수 있습니다.
 
-This is a proposal requiring team agreement.
-Method-specific tokenization or model-required formatting may differ.
+## 기존 검색 계약
 
-## Existing search contract
+기존 `Retriever`와 `SearchResult` 정의를 유지합니다.
 
-Preserve the existing Retriever and SearchResult definitions.
+`search(query: str, top_k: int) -> list[SearchResult]`
 
-search(query: str, top_k: int) -> list[SearchResult]
+검색 결과는 안정적인 문서 ID를 사용하고, 관련도가 높은 결과부터 반환하며,
+순위 번호는 1부터 연속해서 부여합니다.
+점수는 검색 방식별로 의미가 다릅니다.
+RRF는 원시 점수를 직접 비교하지 않고 순위를 결합합니다.
 
-Results use stable document IDs, descending retrieval order,
-and contiguous ranks starting at 1.
+## 반영한 팀 의견
 
-Scores are specific to each retrieval method.
-RRF combines ranks rather than comparing raw scores directly.
+- [@shannonlee-dev의 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011200128): `document_id`, `text`, 선택적인 `title` 구성, 원본 passage ID 유지, `title + "\n" + text` 및 제목이 없거나 비어 있을 때의 `text` 단독 사용에 동의했습니다.
+- [@VectorSophie의 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011160460): 준비된 JSONL에서 없는 제목을 `null`로 일관되게 표현하도록 요청했으며, 기존 `Retriever` / `SearchResult` 계약을 유지하는 데 동의했습니다.
 
-## Pending decisions
+## 합의가 필요한 사항
 
-- Approve field names and missing-title handling.
-- Approve title + text as shared indexed content.
-- Agree on normalization and invalid-record handling.
-- Agree on JSONL file layout and split representation.
+- query/qrels 필드와 라벨 검증 규칙의 최종 확인.
+- 정규화와 유효하지 않은 레코드의 처리 방식 합의.
+- JSONL 파일 구성과 split 표현 방식 합의.
