@@ -1,6 +1,6 @@
 # 데이터셋 초안: Ko-miracl
 
-상태: 초안 — 팀 합의 대기
+상태: 초안 — 문서 구조 및 인덱싱 규칙 합의 반영, 나머지 사항은 합의 대기
 관련 Issue: #4
 담당: @bangahee
 
@@ -68,10 +68,20 @@ Ko-miracl은 MIRACL의 한국어 데이터를 BEIR 형식으로 변환한 데이
 - 대용량 데이터셋 파일은 Git에 포함하지 않습니다.
 - 다른 팀원이 재현할 수 있도록 데이터 준비 코드와 문서를 커밋합니다.
 
+## 반영한 팀 의견
+
+Issue #4의 [Dense 담당 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011200128)과 [Hybrid / Integration 담당 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011160460)을 반영했습니다.
+
+- 문서는 `document_id`, `text`, 선택적인 `title`로 구성합니다.
+- `document_id`에는 `#` 뒤에 붙는 부분을 포함한 원본 passage ID를 그대로 유지합니다.
+- 준비된 JSONL에는 `title` 키를 항상 포함하며, 제목이 없거나 비어 있으면 `null`로 저장합니다.
+- Sparse와 Dense는 제목이 있으면 `title + "\n" + text`, 제목이 없거나 비어 있으면 `text`만 인덱싱합니다.
+- 기존 `Retriever` / `SearchResult` 계약을 유지합니다.
+- 구체적인 필드 매핑과 규칙은 [SCHEMAS.md](SCHEMAS.md)에 정리합니다.
+
 ## 팀 합의가 필요한 사항
 
 - MVP corpus 규모와 질의 선정 방식.
-- 공통 문서 및 query/qrels 스키마.
-- 두 검색기 모두 `title + text`를 인덱싱할지 여부.
+- query/qrels 스키마와 라벨 검증 규칙의 최종 확인.
 - 공통 정규화 규칙.
 - 이후 별도 평가에 사용할 질의의 분리 및 보관 방식.
