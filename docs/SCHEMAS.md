@@ -1,6 +1,6 @@
 # 공통 데이터 스키마 초안
 
-상태: 초안 — 문서 구조 및 인덱싱 규칙 합의 반영, 나머지 사항은 합의 대기
+상태: 문서·인덱싱·query/qrels 필드 합의 반영, 파일 구성 및 추가 처리 규칙은 초안
 관련 Issue: #4
 담당: @bangahee
 
@@ -41,6 +41,8 @@
 
 ## 질의 (Query)
 
+아래 질의 필드는 팀 합의를 반영한 공통 형식입니다.
+
 | 필드 | 자료형 | 필수 여부 | 의미 |
 | --- | --- | --- | --- |
 | `query_id` | string | 필수 | 원본에서 유지한 안정적인 질의 ID |
@@ -63,7 +65,14 @@
 질의 ID와 문서 ID는 별도의 이름 공간에 속합니다.
 질의 ID의 형태만 보고 관련 문서를 추정하지 않습니다.
 
+질의의 `query_id`와 `text`는 비어 있지 않은 문자열이어야 합니다.
+질의 ID는 각 split 내에서 고유해야 하며, 원본 train/dev 소속을 유지합니다.
+split은 레코드에 필드를 추가하는 대신 아래의 파일명으로 구분하도록 제안합니다.
+
 ## 관련성 판정 (Qrel)
+
+아래 qrels 필드는 팀 합의를 반영한 공통 형식입니다.
+실제 원본 라벨 값과 중복·충돌 판정의 처리 규칙은 데이터 확인 후 정리합니다.
 
 | 필드 | 자료형 | 필수 여부 | 의미 |
 | --- | --- | --- | --- |
@@ -83,6 +92,8 @@
 - 평가 규칙을 확정하기 전에 실제 라벨 값을 확인합니다.
 - 참조하는 질의와 문서가 존재하는지 검증합니다.
 - 중복된 판정의 라벨이 서로 충돌하면 보고합니다.
+- 각 split의 `query_id`는 해당 split의 질의 파일에, `document_id`는 공통 corpus에 존재해야 합니다.
+- ID는 비어 있지 않은 문자열이어야 하며, `relevance`는 유한한 숫자여야 합니다. bool은 라벨로 허용하지 않습니다.
 - 관련성 라벨은 검색기의 유사도 점수가 아닙니다.
 - 판정이 없다는 것은 미판정을 의미하며, 명시적인 비관련 판정을 의미하지 않습니다.
 
@@ -95,6 +106,28 @@
   "relevance": 1
 }
 ```
+
+## 준비 결과 파일과 split 표현 제안
+
+각 JSONL은 UTF-8로 저장하며, 한 줄에 JSON 객체 하나를 기록합니다.
+`corpus.jsonl` 하나를 모든 검색 방식과 train/dev 질의가 공유합니다.
+
+| 파일 | 레코드 필드 | 용도 |
+| --- | --- | --- |
+| `data/processed/corpus.jsonl` | `document_id`, `text`, `title` | 공통 문서 집합 |
+| `data/processed/queries_train.jsonl` | `query_id`, `text` | train 질의 |
+| `data/processed/queries_dev.jsonl` | `query_id`, `text` | dev 질의 |
+| `data/processed/qrels_train.jsonl` | `query_id`, `document_id`, `relevance` | train 관련성 판정 |
+| `data/processed/qrels_dev.jsonl` | `query_id`, `document_id`, `relevance` | dev 관련성 판정 |
+| `data/processed/manifest.json` | 준비 설정과 실행 결과 | revision, seed, 실제 데이터 수 등의 재현성 기록 |
+
+위 구성은 제안이며, 실제 준비 결과 파일은 아직 생성하지 않았습니다.
+`manifest.json`은 JSON 객체 하나로 저장하고, query/qrel 레코드에 별도의 `split` 필드는 추가하지 않도록 제안합니다.
+원본의 train/dev 소속을 유지하며, dev 데이터를 이후 평가용으로 분리하여 보관합니다.
+목표 subset 규모와 선택 방식은 [DATASET.md](DATASET.md)의 설정표를 참조합니다.
+
+원본 `_id` 형식을 읽는 loader와 준비된 `document_id` 형식을 읽는 loader 또는 adapter의 입력 규격을 구분합니다.
+필드명을 바꾸더라도 원본 ID 값은 동일하게 보존합니다.
 
 ## 합의된 인덱싱 내용
 
@@ -121,6 +154,6 @@ RRF는 원시 점수를 직접 비교하지 않고 순위를 결합합니다.
 
 ## 합의가 필요한 사항
 
-- query/qrels 필드와 라벨 검증 규칙의 최종 확인.
+- 실제 라벨 값 확인 및 중복·충돌 판정의 처리 규칙.
 - 정규화와 유효하지 않은 레코드의 처리 방식 합의.
 - JSONL 파일 구성과 split 표현 방식 합의.
