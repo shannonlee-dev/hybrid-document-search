@@ -1,6 +1,6 @@
 # 공통 데이터 스키마 초안
 
-상태: 문서·인덱싱·query/qrels 필드 합의 반영, 파일 구성 및 추가 처리 규칙은 초안
+상태: 문서·인덱싱·query/qrels 필드 합의 반영, 파일 구성 및 중복 처리 정책 구현안 반영
 관련 Issue: #4
 담당: @bangahee
 
@@ -67,12 +67,12 @@
 
 질의의 `query_id`와 `text`는 비어 있지 않은 문자열이어야 합니다.
 질의 ID는 각 split 내에서 고유해야 하며, 원본 train/dev 소속을 유지합니다.
-split은 레코드에 필드를 추가하는 대신 아래의 파일명으로 구분하도록 제안합니다.
+준비 스크립트는 split을 레코드의 추가 필드 대신 아래의 파일명으로 구분합니다.
 
 ## 관련성 판정 (Qrel)
 
 아래 qrels 필드는 팀 합의를 반영한 공통 형식입니다.
-실제 원본 라벨 값과 중복·충돌 판정의 처리 규칙은 데이터 확인 후 정리합니다.
+고정 revision의 원본 train/dev JSONL에서 라벨 0과 1을 확인했습니다. 아래 중복 처리 규칙은 준비 스크립트의 구현 정책이며 팀 리뷰에서 확인합니다.
 
 | 필드 | 자료형 | 필수 여부 | 의미 |
 | --- | --- | --- | --- |
@@ -82,16 +82,16 @@ split은 레코드에 필드를 추가하는 대신 아래의 파일명으로 �
 
 원본 필드 매핑:
 
-- `query-id` → `query_id`
+- `query-id` → `query_id` (원본의 정수 ID는 문자열로 변환)
 - `corpus-id` → `document_id`
 - `score` → `relevance`
 
 규칙:
 
 - 원본 라벨 값과 train/dev 소속을 유지합니다.
-- 평가 규칙을 확정하기 전에 실제 라벨 값을 확인합니다.
+- 원본 라벨 0과 1을 보존하며, 0인 판정도 subset에 포함합니다.
 - 참조하는 질의와 문서가 존재하는지 검증합니다.
-- 중복된 판정의 라벨이 서로 충돌하면 보고합니다.
+- 같은 `(query_id, document_id)` 판정이 중복되면 동일 라벨은 하나로 합치며, 라벨이 충돌하면 오류로 중단합니다.
 - 각 split의 `query_id`는 해당 split의 질의 파일에, `document_id`는 공통 corpus에 존재해야 합니다.
 - ID는 비어 있지 않은 문자열이어야 하며, `relevance`는 유한한 숫자여야 합니다. bool은 라벨로 허용하지 않습니다.
 - 관련성 라벨은 검색기의 유사도 점수가 아닙니다.
@@ -107,7 +107,7 @@ split은 레코드에 필드를 추가하는 대신 아래의 파일명으로 �
 }
 ```
 
-## 준비 결과 파일과 split 표현 제안
+## 구현한 준비 결과 파일과 split 표현
 
 각 JSONL은 UTF-8로 저장하며, 한 줄에 JSON 객체 하나를 기록합니다.
 `corpus.jsonl` 하나를 모든 검색 방식과 train/dev 질의가 공유합니다.
@@ -121,8 +121,8 @@ split은 레코드에 필드를 추가하는 대신 아래의 파일명으로 �
 | `data/processed/qrels_dev.jsonl` | `query_id`, `document_id`, `relevance` | dev 관련성 판정 |
 | `data/processed/manifest.json` | 준비 설정과 실행 결과 | revision, seed, 실제 데이터 수 등의 재현성 기록 |
 
-위 구성은 제안이며, 실제 준비 결과 파일은 아직 생성하지 않았습니다.
-`manifest.json`은 JSON 객체 하나로 저장하고, query/qrel 레코드에 별도의 `split` 필드는 추가하지 않도록 제안합니다.
+위 파일 구성을 준비 스크립트에 구현했습니다. 실제 원본 corpus에 대한 결과 파일은 아직 생성하지 않았습니다.
+`manifest.json`은 JSON 객체 하나로 저장하며, query/qrel 레코드에 별도의 `split` 필드는 추가하지 않습니다.
 원본의 train/dev 소속을 유지하며, dev 데이터를 이후 평가용으로 분리하여 보관합니다.
 목표 subset 규모와 선택 방식은 [DATASET.md](DATASET.md)의 설정표를 참조합니다.
 
@@ -152,8 +152,10 @@ RRF는 원시 점수를 직접 비교하지 않고 순위를 결합합니다.
 - [@shannonlee-dev의 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011200128): `document_id`, `text`, 선택적인 `title` 구성, 원본 passage ID 유지, `title + "\n" + text` 및 제목이 없거나 비어 있을 때의 `text` 단독 사용에 동의했습니다.
 - [@VectorSophie의 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011160460): 준비된 JSONL에서 없는 제목을 `null`로 일관되게 표현하도록 요청했으며, 기존 `Retriever` / `SearchResult` 계약을 유지하는 데 동의했습니다.
 
-## 합의가 필요한 사항
+## 팀 리뷰에서 확인할 구현 정책
 
-- 실제 라벨 값 확인 및 중복·충돌 판정의 처리 규칙.
-- 정규화와 유효하지 않은 레코드의 처리 방식 합의.
-- JSONL 파일 구성과 split 표현 방식 합의.
+- 중복·충돌 판정의 처리 규칙.
+- 원문 보존 및 유효하지 않은 레코드에서 오류로 중단하는 방식.
+- JSONL 파일 구성과 split 표현 방식.
+
+준비 스크립트 실행과 검증 범위는 [DATA_PREPARATION.md](DATA_PREPARATION.md)를 참조합니다.
