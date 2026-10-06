@@ -22,7 +22,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | Hybrid / 평가 | 자체 RRF 구현 예정, ranx |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Frontend | Streamlit |
-| 저장 | JSONL 또는 SQLite 검토 예정; 현재 스키마 없음 |
+| 저장 | JSONL ([문서·질의·qrels 스키마](docs/SCHEMAS.md)); SQLite는 도입 검토 단계 |
 | 개발 | pytest, Ruff, GitHub Actions |
 
 ## Project Structure
