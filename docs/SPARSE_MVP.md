@@ -6,10 +6,11 @@
 
 ## 실행 흐름
 
-원본 corpus JSONL → `load_documents` → `build_index_text` →
+준비된 corpus JSONL → `load_prepared_documents` → `build_index_text` →
 `TfidfRetriever` 인덱싱 → `search(query, top_k)` → `SearchResult` 목록.
 
-원본 JSONL의 `_id`는 원본 passage ID 그대로 `document_id`에 매핑합니다.
+원본 JSONL은 `load_documents`로 읽고, `_id`를 원본 passage ID 그대로 `document_id`에 매핑합니다.
+준비된 JSONL은 `load_prepared_documents`로 읽고, 저장된 `document_id`를 그대로 사용합니다.
 제목이 있으면 `title + "\n" + text`, 없으면 `text`만 인덱싱합니다.
 
 ## 알고리즘 선정 이유
@@ -27,7 +28,7 @@ scikit-learn의 `TfidfVectorizer`를 사용합니다.
 
 문서 행렬과 질의 벡터는 희소 형식을 유지하고, 검색 시 점수 행렬을 밀집 배열로 변환하지 않습니다.
 양의 점수를 가진 후보 중 최대 `top_k`개를 heap으로 선택합니다.
-전체 corpus의 메모리 및 지연 시간 측정은 아직 수행하지 않았습니다.
+전체 corpus의 메모리 및 지연 시간 benchmark는 아직 수행하지 않았습니다.
 
 ## 결과와 예외 처리
 
@@ -58,10 +59,10 @@ fixture 테스트는 실제 Ko-miracl 전체 데이터의 성능 평가를 대�
 ## Python 사용 예시
 
 ```python
-from data.loader import load_documents
+from data.loader import load_prepared_documents
 from retrievers.tfidf import TfidfRetriever
 
-documents = load_documents("tests/fixtures/ko_miracl_corpus.jsonl")
+documents = load_prepared_documents("data/processed/corpus.jsonl")
 retriever = TfidfRetriever(documents)
 
 for result in retriever.search("제주", top_k=3):
@@ -70,6 +71,36 @@ for result in retriever.search("제주", top_k=3):
 
 프로젝트 루트에서 `uv run --extra sparse python`으로 실행한 Python에 위 예시를 입력할 수 있습니다.
 
+## CLI 사용 예시
+
+데이터가 아직 없다면 [DATA_PREPARATION.md](DATA_PREPARATION.md)를 따라 먼저 준비합니다.
+프로젝트 루트에서 실행합니다.
+
+```bash
+uv run --extra sparse python -m scripts.search --query "제주" --top-k 3
+```
+
+기본 corpus 경로는 `data/processed/corpus.jsonl`이며, `--corpus`로 다른 준비된 파일을 지정할 수 있습니다.
+데이터 다운로드 없이 fixture를 검색하려면 다음을 실행합니다.
+
+```bash
+uv run --extra sparse python -m scripts.search \
+  --corpus tests/fixtures/ko_miracl_prepared_corpus.jsonl \
+  --query "제주" --top-k 1
+```
+
+출력은 `SearchResult` 필드를 담은 JSON 배열입니다.
+`document_id`, `rank`, `score`, `title`, `snippet`을 포함하며, 검색 결과가 없으면 `[]`를 출력합니다.
+`--query`는 필수이며, `--top-k`는 기본 5입니다.
+잘못된 Top-K, 없는 파일, 유효하지 않은 corpus는 오류 메시지와 종료 코드 2로 보고합니다.
+실행마다 corpus를 로드하고 메모리에 TF-IDF 인덱스를 새로 만듭니다. 인덱스 파일 저장·로드는 구현하지 않았습니다.
+
+### 실데이터 smoke test
+
+2026-10-06 준비된 10,000개 passage와 train 질의 `1013`으로 CLI를 실행했습니다.
+Top-3 결과를 JSON으로 읽을 수 있었으며, 반환 ID가 corpus에 존재하고 순위가 1부터 연속이며 점수가 양수·내림차순임을 확인했습니다.
+이는 실행 흐름 검증이며 검색 품질 metric 또는 지연 시간 benchmark가 아닙니다.
+
 ## 참고 자료
 
 - [TfidfVectorizer 공식 문서](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html)
@@ -77,6 +108,7 @@ for result in retriever.search("제주", top_k=3):
 
 ## 이후 작업
 
-- 실제 Ko-miracl subset 준비 및 재현 가능한 데이터 준비 과정 문서화.
-- 평가용 query/qrels 형식 확정.
+- 실제 Ko-miracl subset 생성·검증 및 query/qrels 파일 준비를 완료했습니다. 결과는 [DATASET.md](DATASET.md)에 기록했습니다.
+- 준비된 corpus loader 및 검색 CLI를 구현했습니다.
+- 팀 리뷰에서 파일 구성과 중복 판정 처리 정책을 확인합니다.
 - BM25 및 평가 metric 구현은 별도 PR에서 진행합니다.

@@ -1,4 +1,4 @@
-"""원본 JSONL 문서를 공통 문서 형식으로 불러옵니다."""
+"""원본 및 준비된 JSONL 문서를 공통 문서 형식으로 불러옵니다."""
 
 import json
 from dataclasses import dataclass
@@ -16,6 +16,15 @@ class Document:
 
 def load_documents(path: str | Path) -> list[Document]:
     """Ko-miracl corpus 형식의 JSONL을 검증하고 문서 목록으로 반환합니다."""
+    return _load_documents(path, id_field="_id")
+
+
+def load_prepared_documents(path: str | Path) -> list[Document]:
+    """준비된 document_id 형식의 JSONL을 검증하고 문서 목록으로 반환합니다."""
+    return _load_documents(path, id_field="document_id")
+
+
+def _load_documents(path: str | Path, *, id_field: str) -> list[Document]:
     documents: list[Document] = []
     seen_ids: set[str] = set()
 
@@ -33,13 +42,13 @@ def load_documents(path: str | Path) -> list[Document]:
             if not isinstance(record, dict):
                 raise ValueError(f"{location}: JSON 객체여야 합니다.")
 
-            document_id = record.get("_id")
+            document_id = record.get(id_field)
             text = record.get("text")
             title = record.get("title")
 
             if not isinstance(document_id, str) or not document_id.strip():
                 raise ValueError(
-                    f"{location}: _id는 비어 있지 않은 문자열이어야 합니다."
+                    f"{location}: {id_field}는 비어 있지 않은 문자열이어야 합니다."
                 )
             if not isinstance(text, str) or not text.strip():
                 raise ValueError(

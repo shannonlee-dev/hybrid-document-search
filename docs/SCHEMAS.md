@@ -121,12 +121,13 @@
 | `data/processed/qrels_dev.jsonl` | `query_id`, `document_id`, `relevance` | dev 관련성 판정 |
 | `data/processed/manifest.json` | 준비 설정과 실행 결과 | revision, seed, 실제 데이터 수 등의 재현성 기록 |
 
-위 파일 구성을 준비 스크립트에 구현했습니다. 실제 원본 corpus에 대한 결과 파일은 아직 생성하지 않았습니다.
+위 파일 구성을 준비 스크립트에 구현하고 실제 원본 corpus로 결과를 생성했습니다. 수량과 검증 결과는 [DATASET.md](DATASET.md)에 기록했습니다.
 `manifest.json`은 JSON 객체 하나로 저장하며, query/qrel 레코드에 별도의 `split` 필드는 추가하지 않습니다.
 원본의 train/dev 소속을 유지하며, dev 데이터를 이후 평가용으로 분리하여 보관합니다.
 목표 subset 규모와 선택 방식은 [DATASET.md](DATASET.md)의 설정표를 참조합니다.
 
-원본 `_id` 형식을 읽는 loader와 준비된 `document_id` 형식을 읽는 loader 또는 adapter의 입력 규격을 구분합니다.
+원본 `_id` 형식은 `data.loader.load_documents`, 준비된 `document_id` 형식은 `data.loader.load_prepared_documents`로 읽습니다.
+두 함수는 ID·본문·제목과 중복 ID를 같은 규칙으로 검증하며, 입력 형식을 자동 추정하지 않습니다.
 필드명을 바꾸더라도 원본 ID 값은 동일하게 보존합니다.
 
 ## 합의된 인덱싱 내용

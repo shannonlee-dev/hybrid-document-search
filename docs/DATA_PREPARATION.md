@@ -81,5 +81,10 @@ uv run --extra sparse ruff format --check .
 
 오프라인 fixture로 필수 문서 포함, 정수 query ID 변환, 원문 보존, 중복 및 참조 오류, split 유지, 규모 조정, 체크섬과 반복 실행 재현성을 확인합니다.
 다운로드 테스트는 가짜 응답을 사용하여 고정 revision URL, 캐시 재사용 및 실패 시 임시 파일 정리를 확인합니다.
-전체 corpus 다운로드와 실데이터 subset 생성·검증은 별도 실행으로 확인해야 합니다.
-현재 `load_documents`는 원본 `_id`를 읽습니다. 준비 결과의 `document_id`를 읽는 loader 및 검색 CLI 연결은 다음 단계에서 구현합니다.
+2026-10-06 전체 원본 corpus 다운로드와 subset 생성 결과를 확인했습니다.
+원본·출력 체크섬, 실제 데이터 수, 질의 선택과 모든 선택 질의의 판정 보존, 참조 및 원문 보존을 검증했습니다.
+수량과 구성은 [DATASET.md](DATASET.md)의 실데이터 검증 결과를 참조합니다.
+검색 품질 metric과 전체 MIRACL 성능은 평가하지 않았습니다.
+
+`load_documents`는 원본 `_id` 형식을, `load_prepared_documents`는 준비 결과의 `document_id` 형식을 읽습니다.
+준비된 corpus는 [SPARSE_MVP.md](SPARSE_MVP.md)의 TF-IDF 검색 CLI에서 사용할 수 있습니다.
