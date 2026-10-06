@@ -1,7 +1,9 @@
 # TF-IDF Sparse MVP
 
-관련 Issue: #4  
-담당: @bangahee  
+관련 Issue: #4
+
+담당: @bangahee
+
 브랜치: `feat/dataset-tfidf`
 
 ## 실행 흐름
