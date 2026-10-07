@@ -3,7 +3,7 @@
 import pytest
 
 from app.schemas import RetrievalMethod
-from app.service import MethodUnavailableError, SearchService
+from app.service import MethodState, MethodStatus, MethodUnavailableError, SearchService
 from fusion.hybrid import HybridRetriever
 from retrievers.base import SearchResult
 
@@ -72,14 +72,19 @@ def test_empty_results_are_returned_as_empty_not_as_unavailable():
 def test_unconfigured_method_raises_with_reason():
     service = SearchService(
         {RetrievalMethod.TFIDF: FakeRetriever(["a"])},
-        unavailable={RetrievalMethod.BM25: "BM25 retriever is not merged yet."},
+        statuses={
+            RetrievalMethod.BM25: MethodStatus(
+                MethodState.NOT_IMPLEMENTED, "BM25 retriever is not merged yet."
+            )
+        },
     )
 
     with pytest.raises(MethodUnavailableError) as excinfo:
         service.search("q", RetrievalMethod.BM25, 1)
 
     assert excinfo.value.method is RetrievalMethod.BM25
-    assert "not merged yet" in excinfo.value.reason
+    assert excinfo.value.status.state is MethodState.NOT_IMPLEMENTED
+    assert "not merged yet" in str(excinfo.value)
 
 
 def test_unconfigured_method_without_reason_says_not_configured():
@@ -92,15 +97,17 @@ def test_unconfigured_method_without_reason_says_not_configured():
 def test_availability_reports_every_method():
     service = SearchService(
         {RetrievalMethod.TFIDF: FakeRetriever(["a"])},
-        unavailable={RetrievalMethod.BM25: "missing"},
+        statuses={
+            RetrievalMethod.BM25: MethodStatus(MethodState.INDEX_MISSING, "missing")
+        },
     )
 
     availability = service.availability()
 
     assert list(availability) == list(RetrievalMethod)
-    assert availability[RetrievalMethod.TFIDF] is None
-    assert availability[RetrievalMethod.BM25] == "missing"
-    assert availability[RetrievalMethod.DENSE] == "not configured"
+    assert availability[RetrievalMethod.TFIDF].available
+    assert availability[RetrievalMethod.BM25].state is MethodState.INDEX_MISSING
+    assert availability[RetrievalMethod.DENSE].state is MethodState.NOT_CONFIGURED
 
 
 def test_hybrid_routing_fuses_sparse_and_dense_with_rrf():

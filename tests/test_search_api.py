@@ -8,7 +8,7 @@ from fastapi.testclient import TestClient
 
 from app.api import create_app
 from app.schemas import RetrievalMethod
-from app.service import SearchService
+from app.service import MethodState, MethodStatus, SearchService
 from retrievers.base import SearchResult
 
 KOREAN_QUERY = "대한민국의 수도는 어디인가요?"
@@ -42,10 +42,17 @@ def fake_tfidf() -> FakeRetriever:
 def client(fake_tfidf: FakeRetriever) -> TestClient:
     service = SearchService(
         {RetrievalMethod.TFIDF: fake_tfidf},
-        unavailable={
-            RetrievalMethod.BM25: "BM25 retriever is not merged yet.",
-            RetrievalMethod.DENSE: "Dense retriever is not merged yet.",
-            RetrievalMethod.HYBRID: "requires BM25 and Dense, which is not available.",
+        statuses={
+            RetrievalMethod.BM25: MethodStatus(
+                MethodState.NOT_IMPLEMENTED, "BM25 retriever is not merged yet."
+            ),
+            RetrievalMethod.DENSE: MethodStatus(
+                MethodState.NOT_IMPLEMENTED, "Dense retriever is not merged yet."
+            ),
+            RetrievalMethod.HYBRID: MethodStatus(
+                MethodState.UPSTREAM_UNAVAILABLE,
+                "requires BM25 and Dense, which is not available.",
+            ),
         },
     )
     with TestClient(create_app(service=service)) as test_client:
@@ -150,8 +157,14 @@ def test_search_methods_lists_availability_and_reasons(client):
     assert response.status_code == 200
     methods = {item["method"]: item for item in response.json()["methods"]}
     assert set(methods) == {"tfidf", "bm25", "dense", "hybrid"}
-    assert methods["tfidf"] == {"method": "tfidf", "available": True, "reason": None}
+    assert methods["tfidf"] == {
+        "method": "tfidf",
+        "available": True,
+        "state": "available",
+        "reason": None,
+    }
     assert methods["bm25"]["available"] is False
+    assert methods["bm25"]["state"] == "not_implemented"
     assert "not merged" in methods["bm25"]["reason"]
 
 
