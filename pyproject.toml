@@ -7,7 +7,7 @@ dependencies = ["fastapi", "pydantic", "uvicorn", "streamlit"]
 
 [project.optional-dependencies]
 sparse = ["scikit-learn", "bm25s"]
-dense = ["sentence-transformers", "faiss-cpu"]
+dense = ["sentence-transformers", "faiss-cpu", "numpy"]
 evaluation = ["ranx"]
 
 [dependency-groups]
