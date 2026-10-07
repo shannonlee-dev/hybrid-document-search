@@ -117,6 +117,7 @@ uv run --extra sparse python -m scripts.search --query "제주" --top-k 3
 준비 결과는 `data/processed/`에 저장하고 Git에 포함하지 않습니다.
 데이터 준비는 [DATA_PREPARATION.md](docs/DATA_PREPARATION.md), 스키마는 [SCHEMAS.md](docs/SCHEMAS.md),
 TF-IDF 알고리즘과 fixture 검색 예시는 [SPARSE_MVP.md](docs/SPARSE_MVP.md)를 참조하세요.
+FastAPI 검색 서비스의 실행 방법과 응답 계약은 [SEARCH_SERVICE.md](docs/SEARCH_SERVICE.md)에 있습니다.
 
 ## Team Responsibilities
 
