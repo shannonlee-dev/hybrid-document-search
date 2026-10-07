@@ -913,6 +913,7 @@ dependencies = [
 [package.optional-dependencies]
 dense = [
     { name = "faiss-cpu" },
+    { name = "numpy" },
     { name = "sentence-transformers" },
 ]
 evaluation = [
@@ -935,6 +936,7 @@ requires-dist = [
     { name = "bm25s", marker = "extra == 'sparse'" },
     { name = "faiss-cpu", marker = "extra == 'dense'" },
     { name = "fastapi" },
+    { name = "numpy", marker = "extra == 'dense'" },
     { name = "pydantic" },
     { name = "ranx", marker = "extra == 'evaluation'" },
     { name = "scikit-learn", marker = "extra == 'sparse'" },

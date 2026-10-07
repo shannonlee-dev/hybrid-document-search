@@ -5,12 +5,12 @@
 Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로 통합하는
 3인 NLP 문서 검색 프로젝트입니다. Recall@K, MRR, nDCG로 검색 품질을 평가할 예정입니다.
 
-## Planned Retrieval Methods
+## Retrieval Methods
 
-- TF-IDF
-- BM25
-- Sentence Transformer + FAISS
-- Hybrid RRF
+- TF-IDF: 구현 완료
+- BM25: 후속 PR 예정
+- Sentence Transformer + FAISS: 현재 Dense 브랜치에 구현 완료
+- Hybrid RRF: main에 병합 완료. 현재 Dense 브랜치에서는 main 변경을 병합한 뒤 사용
 
 ## Tech Stack
 
@@ -19,7 +19,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | Python / 환경 | Python 3.12, uv |
 | Sparse | scikit-learn, bm25s |
 | Dense | sentence-transformers, faiss-cpu |
-| Hybrid / 평가 | 자체 RRF 구현 예정, ranx |
+| Hybrid / 평가 | 자체 RRF 구현, ranx 기반 평가 예정 |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Frontend | Streamlit |
 | 저장 | JSONL ([문서·질의·qrels 스키마](docs/SCHEMAS.md)); SQLite는 도입 검토 단계 |
@@ -37,8 +37,8 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | `indexing/` | FAISS index 생성·검색·저장·로드 |
 | `data/` | 데이터 로딩과 전처리 코드 |
 | `frontend/` | Streamlit 진입점 |
-| `scripts/` | 향후 index 생성 / 평가 실행 진입점 |
-| `tests/` | 공통 계약과 health smoke test |
+| `scripts/` | 데이터 준비, Dense index 생성, TF-IDF/Dense 검색 및 향후 평가 실행 진입점 |
+| `tests/` | 공통 계약, 데이터 준비, 검색·인덱스·CLI fixture 테스트와 health smoke test |
 | `.github/` | CI, Issue 및 PR 템플릿 |
 
 공통 계약은 `search(query: str, top_k: int) -> list[SearchResult]`입니다.
@@ -48,7 +48,9 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 `SearchResult`는 안정적인 문자열 `document_id`, 1부터 시작하는 `rank`, `score`,
 선택적인 `title` / `snippet`을 담습니다. 호출자는 양수 `top_k`를 전달하며,
 결과는 좋은 순서로 최대 `top_k`개를 반환합니다. 서로 다른 검색 방식의 원점수는
-직접 비교하지 않습니다. TF-IDF는 구현되었으며, 다른 검색 placeholder를 호출하면 `NotImplementedError`가 발생합니다.
+직접 비교하지 않습니다. TF-IDF와 Dense는 구현되었으며, main에 병합된 Hybrid는
+두 검색기를 주입받아 RRF로 결과를 결합합니다. BM25는 아직 placeholder이며,
+호출하면 `NotImplementedError`가 발생합니다.
 
 ## Development Setup
 
@@ -61,7 +63,8 @@ uv sync
 ```
 
 `uv sync`는 서비스와 개발 도구를 설치합니다. 검색 라이브러리는 무거운 의존성을
-기본 환경과 CI에서 제외하기 위해 역할별 extras로 정의했습니다.
+기본 환경과 기본 CI job에서 제외하기 위해 역할별 extras로 정의했습니다.
+별도 `dense-tests` CI job은 Dense 의존성을 설치합니다.
 
 ```bash
 # Role 1: Sparse / Evaluation
@@ -95,7 +98,15 @@ uv run streamlit run frontend/app.py
 
 의존성 변경 시 `uv add` / `uv add --dev` / `uv add --optional dense` 등을 사용하고
 `pyproject.toml`과 `uv.lock`을 함께 커밋합니다. CI는 Python 3.12에서
-`uv sync --locked`, Ruff, pytest만 수행하며 모델·데이터·인덱스를 생성하지 않습니다.
+기본 lint·format·pytest 검사와 별도 `dense-tests` job을 실행합니다.
+Dense job은 `uv sync --locked --extra dense` 후 오프라인 테스트를 실행하며,
+외부 데이터셋이나 사전 학습 모델을 다운로드하지 않습니다.
+테스트에서는 fixture와 임시 로컬 BoW Sentence Transformer·FAISS 인덱스를 사용합니다.
+검색 기능을 로컬에서 검증하려면 해당 extras를 포함해 실행합니다.
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 uv run --locked --extra sparse --extra dense pytest
+```
 
 다운로드 데이터는 `data/raw/` 또는 `datasets/`, 전처리 결과는 `data/processed/`,
 모델은 `models/`, 인덱스는 `indexes/`, 실험 산출물은 `artifacts/` 또는 `experiments/`에
@@ -110,7 +121,7 @@ Ko-miracl의 공통 subset을 준비한 뒤 TF-IDF Top-K 검색을 실행합니�
 ```bash
 uv sync --extra sparse
 uv run --extra sparse python -m scripts.prepare_dataset --download
-uv run --extra sparse python -m scripts.search --query "제주" --top-k 3
+uv run --extra sparse python -m scripts.search tfidf --query "제주" --top-k 3
 ```
 
 검색 결과는 공통 `SearchResult` 필드의 JSON 배열로 출력합니다.
@@ -118,6 +129,36 @@ uv run --extra sparse python -m scripts.search --query "제주" --top-k 3
 데이터 준비는 [DATA_PREPARATION.md](docs/DATA_PREPARATION.md), 스키마는 [SCHEMAS.md](docs/SCHEMAS.md),
 TF-IDF 알고리즘과 fixture 검색 예시는 [SPARSE_MVP.md](docs/SPARSE_MVP.md)를 참조하세요.
 FastAPI 검색 서비스의 실행 방법과 응답 계약은 [SEARCH_SERVICE.md](docs/SEARCH_SERVICE.md)에 있습니다.
+
+## Dense MVP 실행
+
+기본 모델은 `intfloat/multilingual-e5-base`입니다. 모델 크기와 인덱스 메모리를
+고려해 초기 baseline으로 선정했으며, BGE-M3·KURE-v1과의 정식 품질 비교는 후속 평가에서 진행합니다.
+작은 fixture로 인덱스를 생성·저장한 뒤, 새 프로세스에서 검색할 수 있습니다.
+모델이 로컬 캐시에 없으면 첫 빌드에서 다운로드합니다.
+
+```bash
+uv sync --locked --extra dense
+export HF_HOME="$PWD/models/huggingface"
+uv run --locked --extra dense python -m scripts.build_index \
+  --corpus tests/dense/fixtures/dense_corpus.jsonl \
+  --index indexes/dense-sample --device cpu
+uv run --locked --extra dense python -m scripts.search dense \
+  --index indexes/dense-sample --device cpu \
+  --query "고양이는 어떤 소리로 우나요?" --top-k 3
+```
+
+실제 subset을 사용하려면 빌드 명령의 `--corpus`를 `data/processed/corpus.jsonl`로 지정합니다.
+검색은 저장된 문서 벡터와 문서 매핑을 복원하고 질의만 임베딩합니다.
+Sparse와 Dense는 공통 `Document`와 `build_index_text()`를 사용하며,
+제목이 있으면 `title + "\n" + text`, 없으면 `text`만 인덱싱합니다.
+모델 후보, 설정, 저장 형식과 검증 범위는 [DENSE_RETRIEVAL.md](docs/DENSE_RETRIEVAL.md)를 참조하세요.
+
+Dense 담당 테스트와 전용 fixture는 `tests/dense/`에 있습니다. 해당 영역만 검증하려면 다음을 실행합니다.
+
+```bash
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 uv run --locked --extra dense pytest tests/dense
+```
 
 ## Team Responsibilities
 
@@ -134,7 +175,17 @@ Issue를 만들고 각자 브랜치에서 작업한 뒤 연결된 PR로 협업�
 
 ## Status
 
-공용 구조, 개발환경, health API와 UI placeholder를 기반으로 **Dataset + Sparse MVP**를 구현했습니다.
-Ko-miracl 공통 subset 준비, 원본·준비 corpus loader, TF-IDF Top-K 검색 CLI와 fixture 테스트를 제공합니다.
-현재 브랜치의 Dense·RRF·검색 서비스 통합과 BM25·평가 metric은 이후 작업입니다.
-`scripts/build_index.py`와 `scripts/evaluate.py`도 미구현 진입점입니다.
+**Dataset + Sparse MVP**와 현재 브랜치의 **Dense Retrieval MVP**를 구현했습니다.
+Ko-miracl 공통 subset 준비, 문서·query·qrels 스키마, 원본·준비 corpus loader,
+TF-IDF Top-K 검색, 문서·질의 embedding, FAISS index build/search/save/load와
+fixture 기반 테스트를 제공합니다.
+`scripts/prepare_dataset.py`, `scripts/build_index.py`, `scripts/search.py`는 구현된 CLI입니다.
+
+**Hybrid / Integration MVP**의 RRF, 검색기 주입 방식의 `HybridRetriever`,
+synthetic unit test, FastAPI request/response schema는 main에 병합되었습니다.
+현재 Dense 브랜치에 main 변경을 병합하면 세 MVP를 함께 사용할 수 있습니다.
+
+실제 Sparse/Dense를 서비스에서 초기화·연결하는 작업, `/search` API와 UI 검색 연동,
+BM25, Recall@K·MRR·nDCG 및 모델별 정식 성능 비교는 후속 작업입니다.
+API는 현재 `/health`만 제공하며 UI는 placeholder입니다.
+`evaluation/`과 `scripts/evaluate.py`는 아직 미구현입니다.
