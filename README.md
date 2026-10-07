@@ -3,14 +3,14 @@
 ## Project Overview
 
 Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로 통합하는
-3인 NLP 문서 검색 프로젝트입니다. Recall@K, MRR, nDCG로 검색 품질을 평가할 예정입니다.
+3인 NLP 문서 검색 프로젝트입니다. Recall@5/10, MRR@10, nDCG@10과 query latency로 검색 방식을 비교합니다.
 
 ## Retrieval Methods
 
 - TF-IDF: 구현 완료
-- BM25: 후속 PR 예정
-- Sentence Transformer + FAISS: 현재 Dense 브랜치에 구현 완료
-- Hybrid RRF: main에 병합 완료. 현재 Dense 브랜치에서는 main 변경을 병합한 뒤 사용
+- BM25: 검색기, CLI 및 공통 평가 파이프라인 구현 완료
+- Sentence Transformer + FAISS: main에 병합 완료
+- Hybrid RRF: main에 병합 완료
 
 ## Tech Stack
 
@@ -19,7 +19,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | Python / 환경 | Python 3.12, uv |
 | Sparse | scikit-learn, bm25s |
 | Dense | sentence-transformers, faiss-cpu |
-| Hybrid / 평가 | 자체 RRF 구현, ranx 기반 평가 예정 |
+| Hybrid / 평가 | 자체 RRF 및 표준 라이브러리 기반 지표 구현, ranx 평가 extra |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Frontend | Streamlit |
 | 저장 | JSONL ([문서·질의·qrels 스키마](docs/SCHEMAS.md)); SQLite는 도입 검토 단계 |
@@ -37,7 +37,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | `indexing/` | FAISS index 생성·검색·저장·로드 |
 | `data/` | 데이터 로딩과 전처리 코드 |
 | `frontend/` | Streamlit 진입점 |
-| `scripts/` | 데이터 준비, Dense index 생성, TF-IDF/Dense 검색 및 향후 평가 실행 진입점 |
+| `scripts/` | 데이터 준비, Dense index 생성, TF-IDF/BM25/Dense 검색 및 공통 평가 실행 진입점 |
 | `tests/` | 공통 계약, 데이터 준비, 검색·인덱스·CLI fixture 테스트와 health smoke test |
 | `.github/` | CI, Issue 및 PR 템플릿 |
 
@@ -49,8 +49,8 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 선택적인 `title` / `snippet`을 담습니다. 호출자는 양수 `top_k`를 전달하며,
 결과는 좋은 순서로 최대 `top_k`개를 반환합니다. 서로 다른 검색 방식의 원점수는
 직접 비교하지 않습니다. TF-IDF와 Dense는 구현되었으며, main에 병합된 Hybrid는
-두 검색기를 주입받아 RRF로 결과를 결합합니다. BM25는 아직 placeholder이며,
-호출하면 `NotImplementedError`가 발생합니다.
+두 검색기를 주입받아 RRF로 결과를 결합합니다. BM25는 공통 corpus를 TF-IDF와 동일한
+문자 n-gram 전처리로 인덱싱하며 원점수 순으로 Top-K 결과를 반환합니다.
 
 ## Development Setup
 
@@ -129,6 +129,30 @@ uv run --extra sparse python -m scripts.search tfidf --query "제주" --top-k 3
 데이터 준비는 [DATA_PREPARATION.md](docs/DATA_PREPARATION.md), 스키마는 [SCHEMAS.md](docs/SCHEMAS.md),
 TF-IDF 알고리즘과 fixture 검색 예시는 [SPARSE_MVP.md](docs/SPARSE_MVP.md)를 참조하세요.
 
+## BM25 실행
+
+TF-IDF와 동일하게 준비된 corpus를 사용합니다.
+
+```bash
+uv run --extra sparse python -m scripts.search bm25 --query "제주" --top-k 3
+```
+
+설정, fixture 실행 및 검증 결과는 [BM25_RETRIEVAL.md](docs/BM25_RETRIEVAL.md)를 참조하세요.
+공통 평가는 Recall@5 / Recall@10 / MRR@10 / nDCG@10과 warm-up 이후 latency 평균·P95를
+사용합니다. 준비 데이터 검증, 검색기 재사용, 지표·시간 측정과 JSON/CSV 저장을 구현했습니다.
+계산 규칙과 실행 조건은 [EVALUATION.md](docs/EVALUATION.md)를 참조하세요. Recall@100은 별도 참고용 지표입니다.
+
+```bash
+uv run --locked --extra sparse python -m scripts.evaluate \
+  --split dev --methods tfidf bm25 --warmup 1 --repeats 5 \
+  --output-dir artifacts/benchmarks/sparse-dev
+```
+
+`results.json`, `summary.csv`, `queries.csv`, `latencies.csv`, `comparison.md`를 생성합니다.
+로컬 Sparse 결과와 아직 측정하지 않은 항목은 [BENCHMARK_RESULTS.md](docs/BENCHMARK_RESULTS.md)에 정리합니다.
+동일 corpus의 저장된 Dense 인덱스가 있으면 `--methods tfidf bm25 dense hybrid --index <경로>`로
+공통 네 방식 비교를 실행할 수 있습니다.
+
 ## Dense MVP 실행
 
 기본 모델은 `intfloat/multilingual-e5-base`입니다. 모델 크기와 인덱스 메모리를
@@ -174,17 +198,19 @@ Issue를 만들고 각자 브랜치에서 작업한 뒤 연결된 PR로 협업�
 
 ## Status
 
-**Dataset + Sparse MVP**와 현재 브랜치의 **Dense Retrieval MVP**를 구현했습니다.
+**Dataset + Sparse MVP**와 **Dense Retrieval MVP**는 main에 병합되었으며, 현재 브랜치에 BM25와 공통 평가 pipeline을 구현했습니다.
 Ko-miracl 공통 subset 준비, 문서·query·qrels 스키마, 원본·준비 corpus loader,
-TF-IDF Top-K 검색, 문서·질의 embedding, FAISS index build/search/save/load와
+TF-IDF / BM25 Top-K 검색, 문서·질의 embedding, FAISS index build/search/save/load와
 fixture 기반 테스트를 제공합니다.
-`scripts/prepare_dataset.py`, `scripts/build_index.py`, `scripts/search.py`는 구현된 CLI입니다.
+`scripts/prepare_dataset.py`, `scripts/build_index.py`, `scripts/search.py`, `scripts/evaluate.py`는 구현된 CLI입니다.
 
 **Hybrid / Integration MVP**의 RRF, 검색기 주입 방식의 `HybridRetriever`,
 synthetic unit test, FastAPI request/response schema는 main에 병합되었습니다.
-현재 Dense 브랜치에 main 변경을 병합하면 세 MVP를 함께 사용할 수 있습니다.
+현재 브랜치는 세 MVP가 병합된 main에서 시작합니다.
 
 실제 Sparse/Dense를 서비스에서 초기화·연결하는 작업, `/search` API와 UI 검색 연동,
-BM25, Recall@K·MRR·nDCG 및 모델별 정식 성능 비교는 후속 작업입니다.
+실제 Dense/Hybrid를 포함한 네 방식 최종 benchmark 및 Dense 모델별 성능 비교는 후속 작업입니다.
 API는 현재 `/health`만 제공하며 UI는 placeholder입니다.
-`evaluation/`과 `scripts/evaluate.py`는 아직 미구현입니다.
+`evaluation/metrics.py`는 Recall@K, RR/MRR@10, 이진 nDCG@K 및 질의별 평균 집계를 제공합니다.
+`evaluation/data.py`, `evaluation/benchmark.py`와 `scripts/evaluate.py`는 고정 준비 데이터의 검증,
+Top-10 품질·latency 평가 및 JSON/CSV/Markdown 비교표 저장을 제공합니다.
