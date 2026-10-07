@@ -1,0 +1,92 @@
+# BM25 Sparse Retrieval
+
+관련 Issue: #12 · 담당: @bangahee · 브랜치: `feat/bm25-evaluation`
+
+## 구현과 공통 계약
+
+`BM25Retriever(documents, *, k1=1.5, b=0.75)`는 생성 시 메모리 인덱스를 한 번 만들고,
+`search(query, top_k)`로 공통 `SearchResult` 목록을 반환합니다.
+기존 Sparse extra의 `bm25s`와 scikit-learn을 사용하며 추가 의존성은 없습니다.
+
+- `build_index_text`의 `title + "\n" + text` 규칙을 따릅니다. 제목이 없으면 본문만 사용합니다.
+- TF-IDF와 동일하게 scikit-learn의 `char_wb`, `ngram_range=(2, 4)` 분석기를 사용합니다.
+  소문자화와 공백 처리를 문서 및 query에 동일하게 적용하며, 형태소 분석·불용어 제거·stemming은 적용하지 않습니다.
+- 분석기는 토큰만 생성합니다. TF-IDF 가중치와 L2 정규화는 BM25에 사용하지 않습니다.
+- 문서 ID, 제목과 본문 원본을 보존합니다. `snippet`은 본문 앞 200자입니다.
+- 양의 점수만 내림차순으로 반환하고, 동점은 입력 corpus 순서로 처리합니다. 순위는 1부터 시작합니다.
+- 빈 query 또는 vocabulary에 없는 query는 빈 목록을 반환합니다. 결과 수는 `top_k`보다 작을 수 있습니다.
+- 빈 corpus, 중복 ID, 빈 인덱싱 텍스트, 비문자열 query 및 잘못된 Top-K는 거부합니다.
+  Top-K는 bool을 제외한 양의 정수입니다.
+
+## BM25 설정과 점수
+
+`bm25s.BM25(method="lucene", idf_method="lucene", k1=1.5, b=0.75)`를 사용합니다.
+`k1`은 단어 빈도 포화, `b`는 문서 길이 정규화 강도를 제어합니다.
+`k1`은 유한한 양수, `b`는 0부터 1 사이의 유한한 수여야 합니다.
+문서 길이와 빈도는 문자 n-gram 토큰 기준입니다.
+
+현재 bm25s Lucene 방식의 토큰별 점수는 다음과 같습니다.
+
+```text
+idf = ln(1 + (N - df + 0.5) / (df + 0.5))
+score(token, document) = idf * tf / (tf + k1 * (1 - b + b * length / avg_length))
+```
+
+질의에 등장하는 토큰의 점수를 합산합니다. 같은 질의 토큰이 반복되면 반복 횟수만큼 합산됩니다.
+라이브러리 원점수를 그대로 반환하므로 `(k1 + 1)` 상수를 곱하는 다른 BM25 구현과
+점수 크기가 다를 수 있습니다. TF-IDF 또는 Dense 점수와 직접 비교하거나 더하지 않습니다.
+Hybrid는 기존 RRF가 순위를 결합하도록 합니다.
+
+초기 설정은 baseline이며 실제 품질 검증이나 파라미터 선택 결과가 아닙니다.
+설정 변경은 train 데이터에서 검토하고 dev 평가 전에 고정합니다.
+
+## Python 실행
+
+프로젝트 루트에서 `uv sync --extra sparse` 후
+`uv run --extra sparse python`을 실행하여 아래 예시를 사용할 수 있습니다.
+
+```python
+from data.loader import load_prepared_documents
+from retrievers.bm25 import BM25Retriever
+
+documents = load_prepared_documents("data/processed/corpus.jsonl")
+retriever = BM25Retriever(documents)
+for result in retriever.search("제주", top_k=3):
+    print(result.document_id, result.rank, result.score)
+```
+
+현재 단계는 검색기와 unit test 구현입니다. `scripts.search bm25` CLI 연결,
+평가 지표, benchmark 및 JSON/CSV 결과 저장은 이후 단계에서 구현합니다.
+인덱스 파일 저장·로드는 제공하지 않습니다. benchmark에서는 검색기를 한 번 준비해 재사용합니다.
+
+## 검증
+
+```bash
+uv run --extra sparse pytest tests/test_bm25.py
+uv run --extra sparse ruff check .
+uv run --extra sparse ruff format --check .
+```
+
+fixture로 한국어 부분 검색, 순위와 동점, 원본 metadata, 입력 검증, 양의 점수 필터를 검증합니다.
+별도 합성 문서로 수동 계산한 BM25 점수와 문서 길이 정규화 동작을 검증합니다.
+Sparse 의존성이 없는 기본 CI에서는 BM25 검색 테스트를 건너뛰므로 Sparse extra를 포함해 별도로 실행해야 합니다.
+fixture 및 smoke test는 실제 검색 품질 benchmark를 대신하지 않습니다.
+
+## 로컬 검증 결과
+
+2026-10-07, Python 3.12.15 / bm25s 0.3.12 환경에서 확인했습니다.
+
+- BM25 unit test: 40 passed.
+- 전체 테스트: 271 passed, 53 skipped. Dense 의존성 미설치로 FAISS 관련 테스트는 건너뛰었습니다.
+- 전체 Ruff lint / format 검사 및 `git diff --check` 통과.
+- 기존 준비 corpus 10,000개로 인덱싱 후 `제주` Top-3 검색 및 반복 검색 일치 확인.
+  반환 ID는 `1987050#0`, `736025#1`, `1664892#1`이며 모두 공통 corpus에 존재합니다.
+  순위 연속성, 양의 유한 점수 및 점수 내림차순을 확인했습니다.
+
+이는 실행 흐름 검증입니다. Recall / MRR / nDCG 및 latency benchmark 결과는 아직 없습니다.
+
+## 참고 자료
+
+- [bm25s 공식 저장소와 사용 예시](https://github.com/xhluca/bm25s)
+- [bm25s 점수 계산 구현](https://github.com/xhluca/bm25s/blob/main/bm25s/scoring.py)
+- [scikit-learn TfidfVectorizer 공식 문서](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html)
