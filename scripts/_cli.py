@@ -73,7 +73,7 @@ def _rebuild_hint(index: Path) -> str:
             "-m",
             "scripts.build_index",
             "--corpus",
-            str(DEFAULT_CORPUS_PATH),
+            DEFAULT_CORPUS_PATH.as_posix(),
             "--index",
             str(index),
         ]

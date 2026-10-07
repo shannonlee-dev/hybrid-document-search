@@ -48,11 +48,11 @@ def test_load_uses_runtime_device(
     before = retriever.search("고양이", 1)
     retriever.save(tmp_path)
     path = tmp_path / "metadata.json"
-    metadata = json.loads(path.read_text())
+    metadata = json.loads(path.read_text(encoding="utf-8"))
     assert "device" not in metadata["embedding_config"]
     if legacy_device is not None:
         metadata["embedding_config"]["device"] = legacy_device
-        path.write_text(json.dumps(metadata))
+        path.write_text(json.dumps(metadata), encoding="utf-8")
 
     restored = dense.DenseRetriever.load(tmp_path, device=device)
     assert restored.config == dense.DenseConfig(device=device, batch_size=2)
@@ -66,14 +66,14 @@ def test_corrupt_metadata_rejected(corruption, dense_documents, model_stub, tmp_
     retriever = dense.DenseRetriever.build(dense_documents)
     retriever.save(tmp_path)
     path = tmp_path / "metadata.json"
-    metadata = json.loads(path.read_text())
+    metadata = json.loads(path.read_text(encoding="utf-8"))
     if corruption == "mapping":
         metadata["documents"].pop()
     elif corruption == "config":
         metadata["embedding_config"] = {}
     else:
         metadata["version"] = 2
-    path.write_text(json.dumps(metadata))
+    path.write_text(json.dumps(metadata), encoding="utf-8")
     with pytest.raises(ValueError, match="count|mapping|configuration|version"):
         dense.DenseRetriever.load(tmp_path)
 
@@ -115,13 +115,13 @@ def test_saved_document_contract_rejected(
     retriever = dense.DenseRetriever.build(dense_documents)
     retriever.save(tmp_path)
     path = tmp_path / "metadata.json"
-    metadata = json.loads(path.read_text())
+    metadata = json.loads(path.read_text(encoding="utf-8"))
     if corruption == "dimension":
         metadata["dimension"] += 1
     else:
         metadata["documents"][1]["document_id"] = metadata["documents"][0][
             "document_id"
         ]
-    path.write_text(json.dumps(metadata))
+    path.write_text(json.dumps(metadata), encoding="utf-8")
     with pytest.raises(ValueError, match="dimension|unique"):
         dense.DenseRetriever.load(tmp_path)
