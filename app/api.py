@@ -6,7 +6,10 @@ service to ``create_app(service=...)``.
 
 Run from the repository root:
     uv run --extra sparse uvicorn app.api:app
-Set ``SEARCH_CORPUS_PATH`` to use a corpus other than data/processed/corpus.jsonl.
+Environment:
+    SEARCH_CORPUS_PATH  corpus JSONL (default data/processed/corpus.jsonl)
+    DENSE_INDEX_PATH    saved Dense index directory (Dense is off when unset)
+    DENSE_DEVICE        device for the Dense model, e.g. cpu or cuda (optional)
 """
 
 import logging
@@ -32,10 +35,11 @@ def create_app(service: SearchService | None = None) -> FastAPI:
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         if service is None:
-            corpus_path = Path(
-                os.environ.get("SEARCH_CORPUS_PATH", DEFAULT_CORPUS_PATH)
+            app.state.search_service = build_search_service(
+                Path(os.environ.get("SEARCH_CORPUS_PATH", DEFAULT_CORPUS_PATH)),
+                dense_index_path=_env_path("DENSE_INDEX_PATH"),
+                dense_device=os.environ.get("DENSE_DEVICE") or None,
             )
-            app.state.search_service = build_search_service(corpus_path)
         yield
 
     app = FastAPI(title="Hybrid Document Search", lifespan=lifespan)
@@ -59,11 +63,16 @@ def create_app(service: SearchService | None = None) -> FastAPI:
     def search_methods(
         search: SearchService = Depends(get_search_service),
     ) -> dict[str, list[dict[str, str | bool | None]]]:
-        """List each retrieval method, whether it is available, and why not."""
+        """List each retrieval method's state and, when unavailable, the reason."""
         return {
             "methods": [
-                {"method": method.value, "available": reason is None, "reason": reason}
-                for method, reason in search.availability().items()
+                {
+                    "method": method.value,
+                    "available": status.available,
+                    "state": status.state.value,
+                    "reason": status.reason,
+                }
+                for method, status in search.availability().items()
             ]
         }
 
@@ -103,6 +112,11 @@ def create_app(service: SearchService | None = None) -> FastAPI:
         )
 
     return app
+
+
+def _env_path(name: str) -> Path | None:
+    value = os.environ.get(name)
+    return Path(value) if value else None
 
 
 app = create_app()
