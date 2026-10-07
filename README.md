@@ -22,7 +22,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | Hybrid / 평가 | 자체 RRF 구현 예정, ranx |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Frontend | Streamlit |
-| 저장 | JSONL 또는 SQLite 검토 예정; 현재 스키마 없음 |
+| 저장 | JSONL ([문서·질의·qrels 스키마](docs/SCHEMAS.md)); SQLite는 도입 검토 단계 |
 | 개발 | pytest, Ruff, GitHub Actions |
 
 ## Project Structure
@@ -48,7 +48,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 `SearchResult`는 안정적인 문자열 `document_id`, 1부터 시작하는 `rank`, `score`,
 선택적인 `title` / `snippet`을 담습니다. 호출자는 양수 `top_k`를 전달하며,
 결과는 좋은 순서로 최대 `top_k`개를 반환합니다. 서로 다른 검색 방식의 원점수는
-직접 비교하지 않습니다. 현재 검색 placeholder를 호출하면 `NotImplementedError`가 발생합니다.
+직접 비교하지 않습니다. TF-IDF는 구현되었으며, 다른 검색 placeholder를 호출하면 `NotImplementedError`가 발생합니다.
 
 ## Development Setup
 
@@ -101,6 +101,23 @@ uv run streamlit run frontend/app.py
 모델은 `models/`, 인덱스는 `indexes/`, 실험 산출물은 `artifacts/` 또는 `experiments/`에
 보관하세요. 이 경로와 로컬 SQLite 파일은 Git에서 제외됩니다.
 
+## TF-IDF MVP 실행
+
+Ko-miracl의 공통 subset을 준비한 뒤 TF-IDF Top-K 검색을 실행합니다.
+첫 준비 명령은 전체 원본 corpus를 다운로드하고, 판정 문서를 포함한 10,000개 passage를 선택합니다.
+기존 준비 결과는 덮어쓰지 않으므로 이미 데이터가 있다면 검색 명령부터 실행합니다.
+
+```bash
+uv sync --extra sparse
+uv run --extra sparse python -m scripts.prepare_dataset --download
+uv run --extra sparse python -m scripts.search --query "제주" --top-k 3
+```
+
+검색 결과는 공통 `SearchResult` 필드의 JSON 배열로 출력합니다.
+준비 결과는 `data/processed/`에 저장하고 Git에 포함하지 않습니다.
+데이터 준비는 [DATA_PREPARATION.md](docs/DATA_PREPARATION.md), 스키마는 [SCHEMAS.md](docs/SCHEMAS.md),
+TF-IDF 알고리즘과 fixture 검색 예시는 [SPARSE_MVP.md](docs/SPARSE_MVP.md)를 참조하세요.
+
 ## Team Responsibilities
 
 | 역할 | 작업 영역 |
@@ -116,7 +133,7 @@ Issue를 만들고 각자 브랜치에서 작업한 뒤 연결된 PR로 협업�
 
 ## Status
 
-현재는 **scaffold 단계**입니다. 공용 구조, 개발환경, health API, UI placeholder와
-최소 smoke test만 준비되어 있습니다. 실제 검색·RRF·embedding·인덱싱·평가 알고리즘,
-데이터셋과 모델 선정, 검색 UI 및 DB 스키마는 아직 구현하지 않았습니다.
+공용 구조, 개발환경, health API와 UI placeholder를 기반으로 **Dataset + Sparse MVP**를 구현했습니다.
+Ko-miracl 공통 subset 준비, 원본·준비 corpus loader, TF-IDF Top-K 검색 CLI와 fixture 테스트를 제공합니다.
+현재 브랜치의 Dense·RRF·검색 서비스 통합과 BM25·평가 metric은 이후 작업입니다.
 `scripts/build_index.py`와 `scripts/evaluate.py`도 미구현 진입점입니다.
