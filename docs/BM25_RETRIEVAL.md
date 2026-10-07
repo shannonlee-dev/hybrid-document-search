@@ -78,9 +78,9 @@ uv run --extra sparse python -m scripts.search bm25 \
 BM25 검색기는 `bm25` subcommand가 선택된 경우에만 불러옵니다. 도움말에는 검색 의존성이 필요하지 않습니다.
 
 CLI를 실행할 때마다 corpus를 읽고 메모리 인덱스를 생성합니다.
-인덱스 파일 저장·로드는 제공하지 않습니다. 이후 benchmark에서는 검색기를 한 번 준비해 재사용합니다.
-평가 지표 코어와 fixture 테스트는 [EVALUATION.md](EVALUATION.md)에 정리했습니다.
-실제 데이터 benchmark와 JSON/CSV 결과 저장은 이후 단계에서 구현합니다.
+인덱스 파일 저장·로드는 제공하지 않습니다. 공통 benchmark에서는 검색기를 한 번 준비해 재사용합니다.
+평가 지표, 실제 데이터 benchmark 실행과 JSON/CSV 저장 방법은 [EVALUATION.md](EVALUATION.md)에 정리했습니다.
+현재 Sparse 비교 결과는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)를 참조하세요.
 
 ## 2차 공통 평가 합의
 
@@ -117,7 +117,7 @@ fixture 및 smoke test는 실제 검색 품질 benchmark를 대신하지 않습�
   반환 ID는 `1987050#0`, `736025#1`, `1664892#1`이며 모두 공통 corpus에 존재합니다.
   순위 연속성, 양의 유한 점수 및 점수 내림차순을 확인했습니다.
 
-이는 실행 흐름 검증입니다. Recall / MRR / nDCG 및 latency benchmark 결과는 아직 없습니다.
+Step 1에서는 실행 흐름을 검증했습니다. 이후 실제 평가 결과는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)에 기록합니다.
 
 ### 검색 CLI 연결 검증 (Step 2)
 
