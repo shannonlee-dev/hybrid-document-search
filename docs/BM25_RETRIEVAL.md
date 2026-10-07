@@ -79,14 +79,15 @@ BM25 검색기는 `bm25` subcommand가 선택된 경우에만 불러옵니다. �
 
 CLI를 실행할 때마다 corpus를 읽고 메모리 인덱스를 생성합니다.
 인덱스 파일 저장·로드는 제공하지 않습니다. 이후 benchmark에서는 검색기를 한 번 준비해 재사용합니다.
-평가 지표, benchmark 및 JSON/CSV 결과 저장은 이후 단계에서 구현합니다.
+평가 지표 코어와 fixture 테스트는 [EVALUATION.md](EVALUATION.md)에 정리했습니다.
+실제 데이터 benchmark와 JSON/CSV 결과 저장은 이후 단계에서 구현합니다.
 
 ## 2차 공통 평가 합의
 
-- 공통 지표: Recall@5 / Recall@10 / MRR@10 / nDCG@10.
+- 공통 지표: Recall@5 / Recall@10 / MRR@10 / nDCG@10. 공통 검색 깊이는 Top-10입니다.
 - Query-time latency: warm-up 이후 반복 측정한 평균과 P95. 모델·인덱스 최초 준비 시간은 별도 기록.
 - 실제 서비스는 Top-10 기준이므로 Dense 모델 선정은 Recall@10 / MRR@10 / nDCG@10을 우선합니다.
-- Dense 모델 비교용 Recall@100은 별도 참고 지표이며 공통 결과표의 필수 지표 또는 모델 선정의 주된 기준으로 사용하지 않습니다.
+- Dense 모델 비교용 Recall@100은 순수 참고용 지표입니다. 공통 결과표의 필수 지표 또는 모델 선정의 주된 기준으로 사용하지 않습니다.
 - 기존 평가 계획대로 모델·파라미터 선택은 train에서 진행하고, 고정된 dev query/qrels로 최종 성능을 비교합니다.
 - Metric cutoff와 Hybrid의 검색 후보 수는 별도 설정입니다. 후보 수와 측정 조건을 실행 결과에 기록합니다.
 

@@ -19,7 +19,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | Python / 환경 | Python 3.12, uv |
 | Sparse | scikit-learn, bm25s |
 | Dense | sentence-transformers, faiss-cpu |
-| Hybrid / 평가 | 자체 RRF 구현, ranx 기반 평가 예정 |
+| Hybrid / 평가 | 자체 RRF 및 표준 라이브러리 기반 지표 구현, ranx 평가 extra |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Frontend | Streamlit |
 | 저장 | JSONL ([문서·질의·qrels 스키마](docs/SCHEMAS.md)); SQLite는 도입 검토 단계 |
@@ -139,7 +139,8 @@ uv run --extra sparse python -m scripts.search bm25 --query "제주" --top-k 3
 
 설정, fixture 실행 및 검증 결과는 [BM25_RETRIEVAL.md](docs/BM25_RETRIEVAL.md)를 참조하세요.
 공통 평가는 Recall@5 / Recall@10 / MRR@10 / nDCG@10과 warm-up 이후 latency 평균·P95를
-사용하도록 합의했으며, 평가 파이프라인은 아직 구현 중입니다.
+사용하도록 합의했습니다. 지표 코어는 구현했으며, 실제 데이터 평가 파이프라인은 다음 단계입니다.
+계산 규칙과 테스트는 [EVALUATION.md](docs/EVALUATION.md)를 참조하세요. Recall@100은 별도 참고용 지표입니다.
 
 ## Dense MVP 실행
 
@@ -197,6 +198,7 @@ synthetic unit test, FastAPI request/response schema는 main에 병합되었습�
 현재 Dense 브랜치에 main 변경을 병합하면 세 MVP를 함께 사용할 수 있습니다.
 
 실제 Sparse/Dense를 서비스에서 초기화·연결하는 작업, `/search` API와 UI 검색 연동,
-Recall@K·MRR·nDCG 및 모델별 정식 성능 비교는 후속 작업입니다.
+실제 데이터의 검색 품질·latency benchmark 및 모델별 정식 성능 비교는 후속 작업입니다.
 API는 현재 `/health`만 제공하며 UI는 placeholder입니다.
-`evaluation/`과 `scripts/evaluate.py`는 아직 미구현입니다.
+`evaluation/metrics.py`는 Recall@K, RR/MRR@10, 이진 nDCG@K 및 질의별 평균 집계를 제공합니다.
+`evaluation/benchmark.py`와 `scripts/evaluate.py`는 아직 미구현입니다.
