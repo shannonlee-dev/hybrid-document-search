@@ -79,14 +79,14 @@ for result in retriever.search("제주", top_k=3):
 프로젝트 루트에서 실행합니다.
 
 ```bash
-uv run --extra sparse python -m scripts.search --query "제주" --top-k 3
+uv run --extra sparse python -m scripts.search tfidf --query "제주" --top-k 3
 ```
 
 기본 corpus 경로는 `data/processed/corpus.jsonl`이며, `--corpus`로 다른 준비된 파일을 지정할 수 있습니다.
 데이터 다운로드 없이 fixture를 검색하려면 다음을 실행합니다.
 
 ```bash
-uv run --extra sparse python -m scripts.search \
+uv run --extra sparse python -m scripts.search tfidf \
   --corpus tests/fixtures/ko_miracl_prepared_corpus.jsonl \
   --query "제주" --top-k 1
 ```
