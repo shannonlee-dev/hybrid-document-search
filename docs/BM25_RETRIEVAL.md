@@ -55,14 +55,45 @@ for result in retriever.search("제주", top_k=3):
     print(result.document_id, result.rank, result.score)
 ```
 
-현재 단계는 검색기와 unit test 구현입니다. `scripts.search bm25` CLI 연결,
+## CLI 실행
+
+프로젝트 루트에서 준비된 corpus를 검색합니다.
+
+```bash
+uv run --extra sparse python -m scripts.search bm25 --query "제주" --top-k 3
+```
+
+기본 corpus는 `data/processed/corpus.jsonl`입니다. 다운로드 없이 fixture를 사용하려면:
+
+```bash
+uv run --extra sparse python -m scripts.search bm25 \
+  --corpus tests/fixtures/ko_miracl_prepared_corpus.jsonl \
+  --query "제주" --top-k 1
+```
+
+`--query`는 필수이며 `--top-k` 기본값은 5입니다. 결과는 다른 방식과 동일한
+`document_id`, `rank`, `score`, `title`, `snippet` 필드의 JSON 배열입니다.
+빈 질의와 검색 결과가 없는 질의는 `[]`를 출력합니다. 잘못된 입력, corpus 및
+접근 권한 오류는 한국어 안내와 종료 코드 2로 보고합니다.
+BM25 검색기는 `bm25` subcommand가 선택된 경우에만 불러옵니다. 도움말에는 검색 의존성이 필요하지 않습니다.
+
+CLI를 실행할 때마다 corpus를 읽고 메모리 인덱스를 생성합니다.
+인덱스 파일 저장·로드는 제공하지 않습니다. 이후 benchmark에서는 검색기를 한 번 준비해 재사용합니다.
 평가 지표, benchmark 및 JSON/CSV 결과 저장은 이후 단계에서 구현합니다.
-인덱스 파일 저장·로드는 제공하지 않습니다. benchmark에서는 검색기를 한 번 준비해 재사용합니다.
+
+## 2차 공통 평가 합의
+
+- 공통 지표: Recall@5 / Recall@10 / MRR@10 / nDCG@10.
+- Query-time latency: warm-up 이후 반복 측정한 평균과 P95. 모델·인덱스 최초 준비 시간은 별도 기록.
+- 실제 서비스는 Top-10 기준이므로 Dense 모델 선정은 Recall@10 / MRR@10 / nDCG@10을 우선합니다.
+- Dense 모델 비교용 Recall@100은 별도 참고 지표이며 공통 결과표의 필수 지표 또는 모델 선정의 주된 기준으로 사용하지 않습니다.
+- 기존 평가 계획대로 모델·파라미터 선택은 train에서 진행하고, 고정된 dev query/qrels로 최종 성능을 비교합니다.
+- Metric cutoff와 Hybrid의 검색 후보 수는 별도 설정입니다. 후보 수와 측정 조건을 실행 결과에 기록합니다.
 
 ## 검증
 
 ```bash
-uv run --extra sparse pytest tests/test_bm25.py
+uv run --extra sparse pytest tests/test_bm25.py tests/test_search_cli.py
 uv run --extra sparse ruff check .
 uv run --extra sparse ruff format --check .
 ```
@@ -76,6 +107,8 @@ fixture 및 smoke test는 실제 검색 품질 benchmark를 대신하지 않습�
 
 2026-10-07, Python 3.12.15 / bm25s 0.3.12 환경에서 확인했습니다.
 
+### 검색기 구현 검증 (Step 1)
+
 - BM25 unit test: 40 passed.
 - 전체 테스트: 271 passed, 53 skipped. Dense 의존성 미설치로 FAISS 관련 테스트는 건너뛰었습니다.
 - 전체 Ruff lint / format 검사 및 `git diff --check` 통과.
@@ -84,6 +117,15 @@ fixture 및 smoke test는 실제 검색 품질 benchmark를 대신하지 않습�
   순위 연속성, 양의 유한 점수 및 점수 내림차순을 확인했습니다.
 
 이는 실행 흐름 검증입니다. Recall / MRR / nDCG 및 latency benchmark 결과는 아직 없습니다.
+
+### 검색 CLI 연결 검증 (Step 2)
+
+- Sparse CLI 테스트: TF-IDF / BM25 모두 포함하여 55 passed.
+- 전체 테스트: 297 passed, 53 skipped. Dense 의존성 관련 skip은 Step 1과 동일합니다.
+- 전체 Ruff lint / format 검사 및 `git diff --check` 통과.
+- 실제 `python -m scripts.search bm25 --query "제주" --top-k 3` 명령으로
+  10,000개 준비 corpus 검색 성공. JSON 파싱, 공통 ID / 원본 metadata, 순위 및 점수를 확인했습니다.
+- 검색 결과는 Step 1의 Python 검색 결과와 동일한 Top-3 문서입니다.
 
 ## 참고 자료
 

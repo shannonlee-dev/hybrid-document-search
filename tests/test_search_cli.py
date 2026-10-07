@@ -14,9 +14,12 @@ from scripts.search import main
 FIXTURE_PATH = Path(__file__).parent / "fixtures" / "ko_miracl_prepared_corpus.jsonl"
 
 
-@pytest.fixture
-def sparse_extra():
+@pytest.fixture(params=["tfidf", "bm25"])
+def sparse_mode(request):
     pytest.importorskip("sklearn")
+    if request.param == "bm25":
+        pytest.importorskip("bm25s")
+    return request.param
 
 
 def test_root_help_lists_search_commands(capsys):
@@ -24,11 +27,11 @@ def test_root_help_lists_search_commands(capsys):
         main(["--help"])
     captured = capsys.readouterr()
     assert exc.value.code == 0
-    assert "tfidf" in captured.out and "dense" in captured.out
+    assert all(mode in captured.out for mode in ("tfidf", "bm25", "dense"))
     assert captured.err == ""
 
 
-@pytest.mark.parametrize("command", [[], ["tfidf"]])
+@pytest.mark.parametrize("command", [[], ["tfidf"], ["bm25"]])
 def test_subcommand_help_without_dependencies(command):
     result = subprocess.run(
         [sys.executable, "-S", "-m", "scripts.search", *command, "--help"],
@@ -39,9 +42,9 @@ def test_subcommand_help_without_dependencies(command):
     )
     assert result.returncode == 0
     assert result.stderr == ""
-    if command == ["tfidf"]:
+    if command:
         assert "--corpus" in result.stdout
-        assert "python -m scripts.search tfidf" in result.stdout
+        assert f"python -m scripts.search {command[0]}" in result.stdout
 
 
 @pytest.mark.parametrize(
@@ -49,6 +52,8 @@ def test_subcommand_help_without_dependencies(command):
     [
         ("tfidf", "--index"),
         ("tfidf", "--device"),
+        ("bm25", "--index"),
+        ("bm25", "--device"),
     ],
 )
 def test_unknown_option_uses_selected_help(mode, option):
@@ -75,26 +80,27 @@ def test_missing_or_unknown_search_command_uses_root_help(args, capsys):
     captured = capsys.readouterr()
     assert exc.value.code == 2
     assert "오류:" in captured.err
-    assert "tfidf" in captured.err and "dense" in captured.err
+    assert all(mode in captured.err for mode in ("tfidf", "bm25", "dense"))
     assert "python -m scripts.search --help" in captured.err
     assert captured.out == ""
 
 
-def test_empty_query_invalid_top_k_is_rejected_before_loading(capsys):
-    args = ["tfidf", "--query", "", "--top-k", "0", "--corpus", "missing.jsonl"]
+@pytest.mark.parametrize("mode", ["tfidf", "bm25"])
+def test_empty_query_invalid_top_k_is_rejected_before_loading(mode, capsys):
+    args = [mode, "--query", "", "--top-k", "0", "--corpus", "missing.jsonl"]
     with pytest.raises(SystemExit) as exc:
         main(args)
     captured = capsys.readouterr()
     assert exc.value.code == 2
     assert "1 이상의 정수" in captured.err
-    assert "python -m scripts.search tfidf --help" in captured.err
+    assert f"python -m scripts.search {mode} --help" in captured.err
     assert captured.out == ""
 
 
-def test_backend_dependencies_are_independent(monkeypatch, capsys):
-    pytest.importorskip("sklearn")
-    args = ["tfidf", "--corpus", str(FIXTURE_PATH), "--query", "제주"]
-    forbidden = ("retrievers.dense", "faiss", "sentence_transformers")
+def test_backend_dependencies_are_independent(monkeypatch, sparse_mode, capsys):
+    args = [sparse_mode, "--corpus", str(FIXTURE_PATH), "--query", "제주"]
+    other_sparse = "retrievers.bm25" if sparse_mode == "tfidf" else "retrievers.tfidf"
+    forbidden = (other_sparse, "retrievers.dense", "faiss", "sentence_transformers")
     original_import = builtins.__import__
 
     def _isolated_import(name, *args, **kwargs):
@@ -112,11 +118,10 @@ def test_backend_dependencies_are_independent(monkeypatch, capsys):
     assert captured.err == ""
 
 
-def test_internal_non_string_query_is_not_hidden(capsys):
+def test_internal_non_string_query_is_not_hidden(sparse_mode, capsys):
     from scripts.search import _build_parser
 
-    pytest.importorskip("sklearn")
-    argv = ["tfidf", "--corpus", str(FIXTURE_PATH), "--query", "제주"]
+    argv = [sparse_mode, "--corpus", str(FIXTURE_PATH), "--query", "제주"]
     args = _build_parser().parse_args(argv)
     args.query = None
     with pytest.raises(TypeError, match="query"):
@@ -125,7 +130,8 @@ def test_internal_non_string_query_is_not_hidden(capsys):
     assert captured.out == captured.err == ""
 
 
-def test_sparse_permission_failure_includes_corpus_and_help(monkeypatch, capsys):
+@pytest.mark.parametrize("mode", ["tfidf", "bm25"])
+def test_sparse_permission_failure_includes_corpus_and_help(mode, monkeypatch, capsys):
     from data import loader
 
     def _denied(path):
@@ -133,67 +139,69 @@ def test_sparse_permission_failure_includes_corpus_and_help(monkeypatch, capsys)
 
     monkeypatch.setattr(loader, "load_prepared_documents", _denied)
     with pytest.raises(SystemExit) as exc:
-        main(["tfidf", "--corpus", str(FIXTURE_PATH), "--query", "제주"])
+        main([mode, "--corpus", str(FIXTURE_PATH), "--query", "제주"])
     captured = capsys.readouterr()
     assert exc.value.code == 2
     assert "권한" in captured.err
     assert str(FIXTURE_PATH) in captured.err
     assert "corpus access denied" in captured.err
-    assert "python -m scripts.search tfidf --help" in captured.err
+    assert f"python -m scripts.search {mode} --help" in captured.err
     assert captured.out == ""
 
 
-def test_help_without_loading_corpus(capsys):
+@pytest.mark.parametrize("mode", ["tfidf", "bm25"])
+def test_help_without_loading_corpus(mode, capsys):
     with pytest.raises(SystemExit) as exc:
-        main(["tfidf", "--help"])
+        main([mode, "--help"])
     assert exc.value.code == 0
     assert "--corpus" in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("top_k", ["0", "-1", "abc", "1.5"])
-def test_invalid_top_k_is_rejected_before_loading(top_k, capsys):
+@pytest.mark.parametrize("mode", ["tfidf", "bm25"])
+def test_invalid_top_k_is_rejected_before_loading(mode, top_k, capsys):
     with pytest.raises(SystemExit) as exc:
-        main(
-            ["tfidf", "--query", "제주", "--corpus", "missing.jsonl", "--top-k", top_k]
-        )
+        main([mode, "--query", "제주", "--corpus", "missing.jsonl", "--top-k", top_k])
     assert exc.value.code == 2
     assert "1 이상의 정수" in capsys.readouterr().err
 
 
-def test_missing_query_is_rejected():
+@pytest.mark.parametrize("mode", ["tfidf", "bm25"])
+def test_missing_query_is_rejected(mode):
     with pytest.raises(SystemExit) as exc:
         main(
             [
-                "tfidf",
+                mode,
             ]
         )
     assert exc.value.code == 2
 
 
-def test_missing_corpus_reports_error(tmp_path, capsys):
+@pytest.mark.parametrize("mode", ["tfidf", "bm25"])
+def test_missing_corpus_reports_error(mode, tmp_path, capsys):
     with pytest.raises(SystemExit) as exc:
-        main(["tfidf", "--query", "제주", "--corpus", str(tmp_path / "missing.jsonl")])
+        main([mode, "--query", "제주", "--corpus", str(tmp_path / "missing.jsonl")])
     assert exc.value.code == 2
     captured = capsys.readouterr()
     assert "missing.jsonl" in captured.err
-    assert "python -m scripts.search tfidf --help" in captured.err
+    assert f"python -m scripts.search {mode} --help" in captured.err
     assert not captured.out
 
 
-def test_default_corpus_path(tmp_path, monkeypatch, sparse_extra, capsys):
+def test_default_corpus_path(tmp_path, monkeypatch, sparse_mode, capsys):
     directory = tmp_path / "data" / "processed"
     directory.mkdir(parents=True)
     (directory / "corpus.jsonl").write_bytes(FIXTURE_PATH.read_bytes())
     monkeypatch.chdir(tmp_path)
-    assert main(["tfidf", "--query", "제주", "--top-k", "1"]) == 0
+    assert main([sparse_mode, "--query", "제주", "--top-k", "1"]) == 0
     assert json.loads(capsys.readouterr().out)[0]["document_id"] == "fixture-002#0"
 
 
-def test_cli_serializes_ranked_search_results(sparse_extra, capsys):
+def test_cli_serializes_ranked_search_results(sparse_mode, capsys):
     assert (
         main(
             [
-                "tfidf",
+                sparse_mode,
                 "--corpus",
                 str(FIXTURE_PATH),
                 "--query",
@@ -219,8 +227,8 @@ def test_cli_serializes_ranked_search_results(sparse_extra, capsys):
 
 
 @pytest.mark.parametrize("query", ["", "   ", "\n\t", "zzzzzz"])
-def test_cli_no_matches_returns_json_list(query, sparse_extra, capsys):
-    assert main(["tfidf", "--corpus", str(FIXTURE_PATH), "--query", query]) == 0
+def test_cli_no_matches_returns_json_list(query, sparse_mode, capsys):
+    assert main([sparse_mode, "--corpus", str(FIXTURE_PATH), "--query", query]) == 0
     assert json.loads(capsys.readouterr().out) == []
 
 
@@ -235,45 +243,51 @@ def test_cli_no_matches_returns_json_list(query, sparse_extra, capsys):
         ("", "문서"),
     ],
 )
-def test_cli_invalid_corpus(tmp_path, sparse_extra, capsys, records, message):
+def test_cli_invalid_corpus(tmp_path, sparse_mode, capsys, records, message):
     path = tmp_path / "corpus.jsonl"
     path.write_text(records, encoding="utf-8")
     with pytest.raises(SystemExit) as exc:
-        main(["tfidf", "--corpus", str(path), "--query", "서울"])
+        main([sparse_mode, "--corpus", str(path), "--query", "서울"])
     assert exc.value.code == 2
     captured = capsys.readouterr()
     assert message in captured.err
     assert str(path) in captured.err
-    assert "python -m scripts.search tfidf --help" in captured.err
+    assert f"python -m scripts.search {sparse_mode} --help" in captured.err
 
 
-def test_missing_sparse_extra_reports_installation_command(monkeypatch, capsys):
+@pytest.mark.parametrize(
+    ("mode", "dependency"),
+    [("tfidf", "sklearn"), ("bm25", "bm25s"), ("bm25", "sklearn.feature_extraction")],
+)
+def test_missing_sparse_extra_reports_installation_command(
+    mode, dependency, monkeypatch, capsys
+):
     original_import = builtins.__import__
 
     def _without_sparse(name, *args, **kwargs):
-        if name == "retrievers.tfidf":
-            raise ModuleNotFoundError("No module named sklearn", name="sklearn")
+        if name == f"retrievers.{mode}":
+            raise ModuleNotFoundError(f"No module named {dependency}", name=dependency)
         return original_import(name, *args, **kwargs)
 
     monkeypatch.setattr(builtins, "__import__", _without_sparse)
     with pytest.raises(SystemExit) as exc:
-        main(["tfidf", "--corpus", str(FIXTURE_PATH), "--query", "제주"])
+        main([mode, "--corpus", str(FIXTURE_PATH), "--query", "제주"])
     assert exc.value.code == 2
     captured = capsys.readouterr()
     assert "uv sync --extra sparse" in captured.err
-    assert "python -m scripts.search tfidf" in captured.err
-    assert "python -m scripts.search tfidf --help" in captured.err
+    assert f"python -m scripts.search {mode}" in captured.err
+    assert f"python -m scripts.search {mode} --help" in captured.err
     assert captured.out == ""
 
 
-def test_module_entry_point(sparse_extra):
+def test_module_entry_point(sparse_mode):
     completed = subprocess.run(
         [
             sys.executable,
             "-B",
             "-m",
             "scripts.search",
-            "tfidf",
+            sparse_mode,
             "--corpus",
             str(FIXTURE_PATH),
             "--query",

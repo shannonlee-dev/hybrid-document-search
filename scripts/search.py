@@ -31,11 +31,11 @@ def main(argv: list[str] | None = None) -> int:
 def _build_parser() -> argparse.ArgumentParser:
     parser = CliArgumentParser(
         prog="python -m scripts.search",
-        description="TF-IDF 또는 Dense 방식으로 검색하고 공통 SearchResult JSON을 출력합니다.",
+        description="TF-IDF, BM25 또는 Dense 방식으로 검색하고 공통 SearchResult JSON을 출력합니다.",
         allow_abbrev=False,
     )
     commands = parser.add_subparsers(
-        dest="mode", required=True, title="검색 방식", metavar="{tfidf,dense}"
+        dest="mode", required=True, title="검색 방식", metavar="{tfidf,bm25,dense}"
     )
     tfidf = commands.add_parser(
         "tfidf",
@@ -50,6 +50,24 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     tfidf.add_argument(
+        "--corpus",
+        type=Path,
+        default=DEFAULT_CORPUS_PATH,
+        help=f"준비된 JSONL corpus (기본: {DEFAULT_CORPUS_PATH})",
+    )
+    bm25 = commands.add_parser(
+        "bm25",
+        help="준비된 corpus를 BM25로 검색",
+        description="준비된 JSONL corpus를 읽어 BM25로 검색합니다.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        allow_abbrev=False,
+        epilog=(
+            "예시: 준비된 corpus 검색\n"
+            f"  python -m scripts.search bm25 --corpus {DEFAULT_CORPUS_PATH} "
+            "--query '제주' --top-k 3"
+        ),
+    )
+    bm25.add_argument(
         "--corpus",
         type=Path,
         default=DEFAULT_CORPUS_PATH,
@@ -75,7 +93,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--index", type=Path, required=True, help="빌드해 둔 인덱스 디렉터리"
     )
     dense.add_argument("--device", help="cpu, cuda 또는 cuda:0 (생략하면 자동 선택)")
-    for child, run in ((tfidf, _run_tfidf), (dense, _run_dense)):
+    for child, run in ((tfidf, _run_tfidf), (bm25, _run_bm25), (dense, _run_dense)):
         child.add_argument("--query", required=True, help="검색할 문장 또는 키워드")
         child.add_argument(
             "--top-k",
@@ -111,6 +129,34 @@ def _run_tfidf(args: argparse.Namespace) -> list["SearchResult"]:
     except (OSError, ValueError) as exc:
         args.parser.error(
             f"corpus를 읽거나 TF-IDF 검색을 실행할 수 없습니다: {args.corpus}\n"
+            f"--corpus 경로와 JSONL 형식을 확인해 주세요.\n상세: {exc}"
+        )
+
+
+def _run_bm25(args: argparse.Namespace) -> list["SearchResult"]:
+    try:
+        from data.loader import load_prepared_documents
+
+        documents = load_prepared_documents(args.corpus)
+        from retrievers.bm25 import BM25Retriever
+
+        return BM25Retriever(documents).search(args.query, args.top_k)
+    except ModuleNotFoundError as exc:
+        if exc.name and exc.name.split(".")[0] in {"bm25s", "sklearn"}:
+            args.parser.error(
+                "BM25 실행에 필요한 Sparse 의존성이 없습니다. "
+                "uv sync --extra sparse로 설치하고 다음 명령으로 실행하세요:\n"
+                "  uv run --extra sparse python -m scripts.search bm25 --query '제주'"
+            )
+        raise
+    except PermissionError as exc:
+        args.parser.error(
+            f"corpus를 읽을 권한이 없습니다: {args.corpus}\n"
+            f"파일·디렉터리의 접근 권한을 확인해 주세요.\n상세: {exc}"
+        )
+    except (OSError, ValueError) as exc:
+        args.parser.error(
+            f"corpus를 읽거나 BM25 검색을 실행할 수 없습니다: {args.corpus}\n"
             f"--corpus 경로와 JSONL 형식을 확인해 주세요.\n상세: {exc}"
         )
 
