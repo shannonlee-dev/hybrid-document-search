@@ -4,9 +4,10 @@ Sentence Transformers로 임베딩하고 CPU FAISS `IndexFlatIP`로 검색한다
 모델 후보와 revision, 기본 모델은 [`config/dense_models.toml`](../config/dense_models.toml)에서 관리한다.
 `default_model = "bge"`로 **`BAAI/bge-m3`**를 지정하며 선정 정책은 **`config_default`**이다.
 기본값은 프로젝트 설정으로 지정하고 Train/Dev 점수로 자동 변경하지 않는다.
+Train nDCG@10을 우선하고 MRR@10·Recall@10·latency·구축 비용을 함께 검토해 BGE-M3를 선정했다.
 `[models.<alias>]`에 모델명과 고정 revision을 추가하면 통합 실행기의 후보 목록에 반영된다.
 
-## 고정 모델과 조건
+## 고정 모델과 측정 조건
 
 | 모델 | Revision |
 | --- | --- |
@@ -20,7 +21,7 @@ E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix�
 모델별 tokenizer와 원래 최대 입력 길이를 유지한다. 길이를 넘는 입력은 모델에서 잘리며
 별도 chunking은 하지 않는다. 제목과 본문을 합치는 규칙은 [DATASET.md](DATASET.md)에 있다.
 
-## 신규 Train 3모델 비교
+## Train 3모델 비교
 
 | 모델 / 방식 | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -32,7 +33,7 @@ E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix�
 수치 순위와 기본 모델 정책은 별도로 기록한다. [선정 기록](../results/dense/train/selection.json)과
 [Train 비교 CSV](../results/dense/train/comparison.csv)를 참조한다.
 
-## 신규 Dev 3모델 비교
+## Dev 3모델 비교
 
 | 모델 / 방식 | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -46,7 +47,7 @@ Dev 결과로 모델이나 설정을 튜닝하지 않았다. [Dev 비교 CSV](..
 [검색 방식 비교](BENCHMARK_RESULTS.md)에 별도로 기록했다.
 각 split의 `e5.json`, `bge.json`, `kure.json`은 평가 CLI의 원본 JSON을 바꾸지 않고 복사했다.
 
-## 신규 인덱스 구축과 복원
+## 인덱스 구축과 복원
 
 | 모델 | Embedding s | FAISS build s | Save s | 준비 합계 s | Peak GPU MiB | 최대 tokens |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -85,4 +86,5 @@ revision 없는 기본 모델 인덱스는 거부한다. 저장 장치는 재사
 Float32 벡터 자체는 10,000개 기준 768차원 약 29.3 MiB, 1024차원 약 39.1 MiB다.
 모델·원문·Python 객체와 임시 행렬은 별도 메모리가 필요하다.
 
-고정된 기존 데이터와 Dev를 다시 사용하는 재현성·결과 정리 실험이다. 새로운 독립 테스트나 전체 MIRACL 공식 벤치마크 성능을 뜻하지 않는다. 단일 GPU 환경의 순차 실행이며 동시 요청 처리량·API 응답 시간은 측정하지 않았다. latency는 실행 당시 시스템 부하에 영향을 받는다.
+10k subset의 순차 실행 결과로, 전체 MIRACL 성능이나 API 응답 시간을 뜻하지 않는다.
+독립적인 전체 실험 반복은 수행하지 않았다. 측정 범위와 한계는 [EVALUATION.md](EVALUATION.md)를 참조한다.

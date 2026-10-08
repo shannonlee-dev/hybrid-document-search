@@ -6,14 +6,13 @@
 
 Sparse, Dense, Hybrid에서 동일하게 사용할 corpus와 train/dev 질의 및 판정 파일을 생성합니다.
 기본 설정은 팀이 합의한 corpus 10,000 passage, train 100 질의, dev 50 질의, seed 42입니다.
-BM25와 본격적인 평가 metric 구현은 이번 작업에 포함하지 않습니다.
 
 ## 실행 방법
 
 저장소 루트에서 실행합니다. 추가 의존성 없이 Python 표준 라이브러리를 사용합니다.
 
 ```bash
-uv run --extra sparse python -m scripts.prepare_dataset --download
+uv run --locked python -m scripts.prepare_dataset --download
 ```
 
 원본은 `data/raw/ko-miracl/5c7690518e481375551916f24241048cf7b017d0/`에 저장하며, 준비 결과는 `data/processed/`에 저장합니다.
@@ -25,7 +24,7 @@ uv run --extra sparse python -m scripts.prepare_dataset --download
 `--raw-dir`에는 `corpus.jsonl`, `queries.jsonl`, `qrels/train.jsonl`, `qrels/dev.jsonl`이 있는 디렉터리를 지정합니다.
 
 ```bash
-uv run --extra sparse python -m scripts.prepare_dataset \
+uv run --locked python -m scripts.prepare_dataset \
   --raw-dir data/raw/ko-miracl/5c7690518e481375551916f24241048cf7b017d0 \
   --output-dir data/processed
 ```
@@ -47,7 +46,6 @@ uv run --extra sparse python -m scripts.prepare_dataset \
 ID와 본문, 유효한 제목은 원문 그대로 보존합니다. 없는 제목과 빈 제목, 공백뿐인 제목은 `null`로 변환합니다.
 원본 `_id`는 준비된 corpus의 `document_id`로, qrels의 정수 `query-id`는 문자열 `query_id`로 매핑합니다.
 동일 query/document 판정의 중복은 동일 라벨일 때 하나로 합치고, 서로 다른 라벨이면 오류로 중단합니다.
-이 중복 처리 방식과 파일 구성은 팀 리뷰에서 확인할 구현 정책입니다.
 
 ## 검증과 메모리 사용
 
@@ -84,7 +82,8 @@ uv run --extra sparse ruff format --check .
 2026-10-06 전체 원본 corpus 다운로드와 subset 생성 결과를 확인했습니다.
 원본·출력 체크섬, 실제 데이터 수, 질의 선택과 모든 선택 질의의 판정 보존, 참조 및 원문 보존을 검증했습니다.
 수량과 구성은 [DATASET.md](DATASET.md)의 실데이터 검증 결과를 참조합니다.
-검색 품질 metric과 전체 MIRACL 성능은 평가하지 않았습니다.
+데이터 준비 검증과 검색 품질 평가는 별개입니다. subset 검색 결과는
+[BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)를 참조하세요.
 
 `load_documents`는 원본 `_id` 형식을, `load_prepared_documents`는 준비 결과의 `document_id` 형식을 읽습니다.
 준비된 corpus는 [SPARSE_MVP.md](SPARSE_MVP.md)의 TF-IDF 검색 CLI에서 사용할 수 있습니다.

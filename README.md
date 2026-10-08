@@ -7,16 +7,15 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 
 ## Retrieval Methods
 
-- TF-IDF: 구현 완료
-- BM25: 검색기, CLI 및 공통 평가 파이프라인 구현 완료
-- Sentence Transformer + FAISS: main에 병합 완료
-- Hybrid RRF: main에 병합 완료
+- TF-IDF / BM25: 문자 n-gram 기반 Sparse 검색
+- Dense: BGE-M3 기본 모델, Sentence Transformers + CPU FAISS
+- Hybrid: BM25 + Dense 결과를 RRF로 결합
 
 ## Tech Stack
 
 | 영역 | 기술 |
 | --- | --- |
-| Python / 환경 | Python 3.12, uv |
+| Python / 환경 | Python >=3.12, uv (기본 개발 버전 3.12) |
 | Sparse | scikit-learn, bm25s |
 | Dense | sentence-transformers, faiss-cpu |
 | Hybrid / 평가 | 자체 RRF 및 표준 라이브러리 기반 지표 구현, ranx 평가 extra |
@@ -29,7 +28,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 
 | 경로 | 책임 |
 | --- | --- |
-| `app/` | health API 및 향후 검색 서비스 통합 |
+| `app/` | FastAPI 엔드포인트 및 검색 서비스 초기화·라우팅 |
 | `retrievers/base.py` | 공통 `Retriever` 계약과 `SearchResult` |
 | `retrievers/{tfidf,bm25,dense}.py` | 각 검색 방식의 독립 구현 영역 |
 | `fusion/` | RRF와 Hybrid Retrieval |
@@ -38,7 +37,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | `data/` | 데이터 로딩과 전처리 코드 |
 | `frontend/` | Streamlit 진입점 |
 | `scripts/` | 데이터 준비, Dense index 생성, TF-IDF/BM25/Dense 검색 및 공통 평가 실행 진입점 |
-| `tests/` | 공통 계약, 데이터 준비, 검색·인덱스·CLI fixture 테스트와 health smoke test |
+| `tests/` | 공통 계약, 데이터 준비, 검색·인덱스·CLI·API 및 서비스 통합 테스트 |
 | `.github/` | CI, Issue 및 PR 템플릿 |
 
 공통 계약은 `search(query: str, top_k: int) -> list[SearchResult]`입니다.
@@ -48,13 +47,13 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 `SearchResult`는 안정적인 문자열 `document_id`, 1부터 시작하는 `rank`, `score`,
 선택적인 `title` / `snippet`을 담습니다. 호출자는 양수 `top_k`를 전달하며,
 결과는 좋은 순서로 최대 `top_k`개를 반환합니다. 서로 다른 검색 방식의 원점수는
-직접 비교하지 않습니다. TF-IDF와 Dense는 구현되었으며, main에 병합된 Hybrid는
-두 검색기를 주입받아 RRF로 결과를 결합합니다. BM25는 공통 corpus를 TF-IDF와 동일한
-문자 n-gram 전처리로 인덱싱하며 원점수 순으로 Top-K 결과를 반환합니다.
+직접 비교하지 않습니다. Hybrid는 두 검색기를 주입받아 RRF로 결과를 결합합니다.
+BM25는 공통 corpus를 TF-IDF와 동일한 문자 n-gram 전처리로 인덱싱하며
+원점수 순으로 Top-K 결과를 반환합니다.
 
 ## Development Setup
 
-Python 3.12와 uv를 준비한 뒤 다음을 실행합니다.
+Python 3.12 이상과 uv를 준비한 뒤 다음을 실행합니다.
 
 ```bash
 git clone https://github.com/shannonlee-dev/hybrid-document-search.git
@@ -89,12 +88,14 @@ uv run pytest
 # lint
 uv run ruff check .
 
-# API (GET /health → {"status": "ok"})
-uv run uvicorn app.api:app --reload
+# API (기본 corpus로 TF-IDF/BM25 검색)
+uv run --extra sparse uvicorn app.api:app --reload
 
 # UI placeholder
 uv run streamlit run frontend/app.py
 ```
+
+API 검색에는 준비된 corpus가 필요하며, 준비 상태는 `GET /search/methods`로 확인합니다.
 
 의존성 변경 시 `uv add` / `uv add --dev` / `uv add --optional dense` 등을 사용하고
 `pyproject.toml`과 `uv.lock`을 함께 커밋합니다. CI는 Python 3.12에서
@@ -128,7 +129,7 @@ uv run --extra sparse python -m scripts.search tfidf --query "제주" --top-k 3
 준비 결과는 `data/processed/`에 저장하고 Git에 포함하지 않습니다.
 데이터 준비는 [DATA_PREPARATION.md](docs/DATA_PREPARATION.md), 스키마는 [SCHEMAS.md](docs/SCHEMAS.md),
 TF-IDF 알고리즘과 fixture 검색 예시는 [SPARSE_MVP.md](docs/SPARSE_MVP.md)를 참조하세요.
-FastAPI 검색 서비스의 실행 방법과 응답 계약은 [SEARCH_SERVICE.md](docs/SEARCH_SERVICE.md)에 있습니다.
+FastAPI 검색 서비스의 실행 방법·설정과 응답 계약은 [SEARCH_SERVICE.md](docs/SEARCH_SERVICE.md)에 있습니다.
 
 ## BM25 실행
 
@@ -141,7 +142,7 @@ uv run --extra sparse python -m scripts.search bm25 --query "제주" --top-k 3
 설정, fixture 실행 및 검증 결과는 [BM25_RETRIEVAL.md](docs/BM25_RETRIEVAL.md)를 참조하세요.
 공통 평가는 Recall@5 / Recall@10 / MRR@10 / nDCG@10과 warm-up 이후 latency 평균·P95를
 사용합니다. 준비 데이터 검증, 검색기 재사용, 지표·시간 측정과 JSON/CSV 저장을 구현했습니다.
-계산 규칙과 실행 조건은 [EVALUATION.md](docs/EVALUATION.md)를 참조하세요. Recall@100은 별도 참고용 지표입니다.
+계산 규칙과 실행 조건은 [EVALUATION.md](docs/EVALUATION.md)를 참조하세요.
 
 ```bash
 uv run --locked --extra sparse python -m scripts.evaluate \
@@ -150,14 +151,14 @@ uv run --locked --extra sparse python -m scripts.evaluate \
 ```
 
 `results.json`, `summary.csv`, `queries.csv`, `latencies.csv`, `comparison.md`를 생성합니다.
-로컬 Sparse 결과와 아직 측정하지 않은 항목은 [BENCHMARK_RESULTS.md](docs/BENCHMARK_RESULTS.md)에 정리합니다.
+동일 환경에서 측정한 네 방식의 Dev 결과는 [BENCHMARK_RESULTS.md](docs/BENCHMARK_RESULTS.md)에 있습니다.
 동일 corpus의 저장된 Dense 인덱스가 있으면 `--methods tfidf bm25 dense hybrid --index <경로>`로
-공통 네 방식 비교를 실행할 수 있습니다.
+공통 네 방식 비교를 실행할 수 있습니다. 이때 `uv run`에도 `--extra sparse --extra dense`를 지정합니다.
 
 ## Dense MVP 실행
 
-기본 모델은 `intfloat/multilingual-e5-base`입니다. 모델 크기와 인덱스 메모리를
-고려해 초기 baseline으로 선정했으며, BGE-M3·KURE-v1과의 정식 품질 비교는 후속 평가에서 진행합니다.
+기본 모델은 `BAAI/bge-m3`이며, 후보 모델과 고정 revision은 `config/dense_models.toml`에서 관리합니다.
+E5-base·BGE-M3·KURE-v1을 공통 10k corpus에서 비교하고 Train 검색 품질을 우선해 선정했습니다.
 작은 fixture로 인덱스를 생성·저장한 뒤, 새 프로세스에서 검색할 수 있습니다.
 모델이 로컬 캐시에 없으면 첫 빌드에서 다운로드합니다.
 
@@ -184,6 +185,14 @@ Dense 담당 테스트와 전용 fixture는 `tests/dense/`에 있습니다. 해�
 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 uv run --locked --extra dense pytest tests/dense
 ```
 
+전체 모델 비교와 네 방식 Dev 평가는 아래 명령으로 실행·재개합니다.
+통합 실행기는 Linux 환경과 작동하는 CUDA가 필요합니다. 측정 조건·재개·`--fresh`는
+[EVALUATION.md](docs/EVALUATION.md)를 참조하세요.
+
+```bash
+uv run --locked --extra sparse --extra dense python -m scripts.run_experiment
+```
+
 ## Team Responsibilities
 
 | 역할 | 작업 영역 |
@@ -199,19 +208,10 @@ Issue를 만들고 각자 브랜치에서 작업한 뒤 연결된 PR로 협업�
 
 ## Status
 
-**Dataset + Sparse MVP**와 **Dense Retrieval MVP**는 main에 병합되었으며, 현재 브랜치에 BM25와 공통 평가 pipeline을 구현했습니다.
-Ko-miracl 공통 subset 준비, 문서·query·qrels 스키마, 원본·준비 corpus loader,
-TF-IDF / BM25 Top-K 검색, 문서·질의 embedding, FAISS index build/search/save/load와
-fixture 기반 테스트를 제공합니다.
-`scripts/prepare_dataset.py`, `scripts/build_index.py`, `scripts/search.py`, `scripts/evaluate.py`는 구현된 CLI입니다.
-
-**Hybrid / Integration MVP**의 RRF, 검색기 주입 방식의 `HybridRetriever`,
-synthetic unit test, FastAPI request/response schema는 main에 병합되었습니다.
-현재 브랜치는 세 MVP가 병합된 main에서 시작합니다.
-
-실제 Sparse/Dense를 서비스에서 초기화·연결하는 작업, `/search` API와 UI 검색 연동,
-실제 Dense/Hybrid를 포함한 네 방식 최종 benchmark 및 Dense 모델별 성능 비교는 후속 작업입니다.
-API는 현재 `/health`만 제공하며 UI는 placeholder입니다.
-`evaluation/metrics.py`는 Recall@K, RR/MRR@10, 이진 nDCG@K 및 질의별 평균 집계를 제공합니다.
-`evaluation/data.py`, `evaluation/benchmark.py`와 `scripts/evaluate.py`는 고정 준비 데이터의 검증,
-Top-10 품질·latency 평가 및 JSON/CSV/Markdown 비교표 저장을 제공합니다.
+데이터 준비, TF-IDF/BM25/Dense 검색, Hybrid RRF, FAISS 저장·복원과 공통 평가를 제공합니다.
+10k corpus의 Dense 3모델 Train/Dev 비교와 네 방식 Dev 평가를 완료했으며, 결과는 `results/`에 있습니다.
+이번 subset에서는 Dense(BGE-M3)가 Hybrid보다 우수했습니다.
+FastAPI는 `/health`, `/search/methods`, `POST /search`를 제공합니다.
+Dense/Hybrid는 공통 corpus와 일치하는 저장 인덱스 및 `DENSE_INDEX_PATH` 설정이 필요합니다.
+UI는 placeholder이며, UI 검색 연동·실제 10k 데이터의 Dense/Hybrid API smoke test,
+독립적인 전체 실험 반복과 Hybrid 개선은 후속 작업입니다.

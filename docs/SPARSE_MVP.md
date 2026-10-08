@@ -4,8 +4,6 @@
 
 담당: @bangahee
 
-브랜치: `feat/dataset-tfidf`
-
 ## 실행 흐름
 
 준비된 corpus JSONL → `load_prepared_documents` → `build_index_text` →
@@ -18,19 +16,19 @@
 ## 알고리즘 선정 이유
 
 scikit-learn의 `TfidfVectorizer`를 사용합니다.
-초기 설정은 `analyzer="char_wb"`, `ngram_range=(2, 4)`, `norm="l2"`입니다.
+기본 설정은 `analyzer="char_wb"`, `ngram_range=(2, 4)`, `norm="l2"`입니다.
 
 한국어의 조사 및 어미 때문에 단어가 정확히 일치하지 않는 경우를 고려하여,
 추가 형태소 분석기 없이 부분 문자열을 비교할 수 있는 문자 n-gram을 baseline으로 선택했습니다.
 예를 들어 fixture의 `제주도는`에 대해 `제주`로 검색할 수 있습니다.
-이 선택의 실제 검색 품질은 평가 데이터셋을 준비한 후 별도로 검증해야 합니다.
+10k subset의 검색 품질과 latency는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)에 있습니다.
 
 문서에서 TF-IDF vocabulary와 IDF를 학습하고, 질의에는 동일한 vectorizer의
 `transform`만 적용합니다. L2 정규화된 벡터의 내적으로 코사인 유사도를 계산합니다.
 
 문서 행렬과 질의 벡터는 희소 형식을 유지하고, 검색 시 점수 행렬을 밀집 배열로 변환하지 않습니다.
 양의 점수를 가진 후보 중 최대 `top_k`개를 heap으로 선택합니다.
-전체 corpus의 메모리 및 지연 시간 benchmark는 아직 수행하지 않았습니다.
+원본 전체 corpus의 메모리 및 지연 시간은 측정하지 않았습니다.
 
 ## 결과와 예외 처리
 
@@ -108,9 +106,5 @@ Top-3 결과를 JSON으로 읽을 수 있었으며, 반환 ID가 corpus에 존�
 - [TfidfVectorizer 공식 문서](https://scikit-learn.org/stable/modules/generated/sklearn.feature_extraction.text.TfidfVectorizer.html)
 - [코사인 유사도 공식 문서](https://scikit-learn.org/stable/modules/generated/sklearn.metrics.pairwise.cosine_similarity.html)
 
-## 이후 작업
-
-- 실제 Ko-miracl subset 생성·검증 및 query/qrels 파일 준비를 완료했습니다. 결과는 [DATASET.md](DATASET.md)에 기록했습니다.
-- 준비된 corpus loader 및 검색 CLI를 구현했습니다.
-- 팀 리뷰에서 파일 구성과 중복 판정 처리 정책을 확인합니다.
-- BM25 및 평가 metric 구현은 별도 PR에서 진행합니다.
+데이터 구성은 [DATASET.md](DATASET.md), BM25는 [BM25_RETRIEVAL.md](BM25_RETRIEVAL.md),
+평가 방법은 [EVALUATION.md](EVALUATION.md)를 참조하세요.

@@ -57,4 +57,5 @@ Dense와 Hybrid의 질의별 nDCG 차이가 가장 큰 양쪽 사례를 사후�
 `artifacts/ko-miracl-bge-default/retrieval/`에 보존했다.
 계산 규칙과 재개 방법은 [EVALUATION.md](EVALUATION.md)를 참조한다.
 
-고정된 기존 데이터와 Dev를 다시 사용하는 재현성·결과 정리 실험이다. 새로운 독립 테스트나 전체 MIRACL 공식 벤치마크 성능을 뜻하지 않는다. 단일 GPU 환경의 순차 실행이며 동시 요청 처리량·API 응답 시간은 측정하지 않았다. latency는 실행 당시 시스템 부하에 영향을 받는다.
+10k subset의 순차 실행 결과로, 전체 MIRACL 성능이나 API 응답 시간을 뜻하지 않는다.
+독립적인 전체 실험 반복은 수행하지 않았다. 측정 범위와 한계는 [EVALUATION.md](EVALUATION.md)를 참조한다.
