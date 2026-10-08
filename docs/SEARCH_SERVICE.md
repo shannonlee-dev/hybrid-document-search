@@ -14,14 +14,16 @@ HTTP POST /search
       v
 SearchService (app/service.py)
       |
-      +-- tfidf  -> TfidfRetriever      (구현됨, sparse extra)
-      +-- bm25   -> BM25Retriever       (미병합, unavailable)
-      +-- dense  -> DenseRetriever      (미병합, unavailable)
-      +-- hybrid -> HybridRetriever     (BM25 + Dense + RRF, unavailable)
+      +-- tfidf  -> TfidfRetriever      (sparse extra 필요)
+      +-- bm25   -> BM25Retriever       (sparse extra 필요)
+      +-- dense  -> DenseRetriever      (dense extra + 저장된 FAISS 인덱스 필요)
+      +-- hybrid -> HybridRetriever     (BM25 + Dense + RRF, 둘 다 있어야 함)
       |
       v
 SearchResult -> SearchHit -> SearchResponse
 ```
+
+TF-IDF, BM25, Dense 모두 실제 구현이 `main`에 있습니다 (PR #6, #13, #10). `tfidf`/`bm25`는 corpus만 있으면 바로 쓸 수 있고, `dense`/`hybrid`는 추가로 저장된 FAISS 인덱스가 필요합니다.
 
 서비스는 검색 알고리즘이나 RRF를 구현하지 않습니다. 요청을 선택된 retriever로 보내고 결과를 그대로 반환합니다.
 
@@ -39,38 +41,43 @@ SearchResult -> SearchHit -> SearchResponse
 | 환경 변수 | 기본값 | 의미 |
 | --- | --- | --- |
 | `SEARCH_CORPUS_PATH` | `data/processed/corpus.jsonl` | 준비된 공통 corpus JSONL 경로 |
-
-Dense 인덱스 경로와 장치 설정은 Role 2 구현이 병합된 뒤 추가합니다. 지금은 설정 항목을 만들지 않습니다.
+| `DENSE_INDEX_PATH` | 없음 | `scripts.build_index`로 저장한 Dense 인덱스 디렉터리. 설정하지 않으면 Dense는 `not_configured`(503) |
+| `DENSE_DEVICE` | 자동 선택 | Dense 모델을 올릴 장치 (`cpu`, `cuda`, `cuda:0` 등). 선택 사항 |
 
 ## 실행
 
 저장소 루트에서 실행합니다. 상대 경로 기본값이 현재 디렉터리를 기준으로 하기 때문입니다.
 
 ```bash
-uv sync --locked --extra sparse
-uv run --extra sparse uvicorn app.api:app
+uv sync --locked --extra sparse --extra dense
+export DENSE_INDEX_PATH=indexes/dense  # Dense/Hybrid를 쓰려면 설정
+uv run --extra sparse --extra dense uvicorn app.api:app
 ```
+
+Dense/Hybrid 없이 TF-IDF와 BM25만 쓰려면 `--extra sparse`만 설치하고 `DENSE_INDEX_PATH`를 설정하지 않으면 됩니다.
 
 ## 사용 가능한 검색 방식
 
-| method | 상태 (이번 PR 기준) | 조건 |
+| method | 상태 | 조건 |
 | --- | --- | --- |
-| `tfidf` | 사용 가능 | `corpus.jsonl`이 있고 sparse extra가 설치되어 있어야 함 |
-| `bm25` | 미병합 (503) | BM25 retriever가 병합되면 `build_search_service`에 등록 |
-| `dense` | 미병합 (503) | Dense retriever가 병합되면 `build_search_service`에 등록 |
-| `hybrid` | 미병합 (503) | BM25와 Dense가 모두 있어야 함. TF-IDF 대체 경로 없음 |
+| `tfidf` | 사용 가능 | `corpus.jsonl`이 있고 sparse extra 설치 |
+| `bm25` | 사용 가능 | `corpus.jsonl`이 있고 sparse extra 설치 (`bm25s`) |
+| `dense` | `DENSE_INDEX_PATH` 설정 시 사용 가능 | dense extra 설치 + 저장된 FAISS 인덱스가 현재 corpus와 일치해야 함 |
+| `hybrid` | `bm25`와 `dense`가 모두 사용 가능할 때 사용 가능 | BM25 + Dense + RRF. TF-IDF 대체 경로 없음 |
 
-Hybrid 기준선은 BM25 + Dense + RRF입니다. BM25가 없을 때 TF-IDF + Dense로 조용히 바꾸지 않습니다.
+Hybrid 기준선은 BM25 + Dense + RRF입니다. BM25나 Dense가 없을 때 TF-IDF로 조용히 바꾸지 않습니다. 각 방식의 정확한 상태는 `state` 값(아래 `GET /search/methods`)으로 구분합니다: `available`, `not_implemented`, `not_configured`, `corpus_unavailable`, `dependency_missing`, `index_missing`, `load_failed`, `upstream_unavailable`.
 
 ## 필요한 artifact
 
-- `data/processed/corpus.jsonl` (TF-IDF에 필요)
-- Dense 인덱스 (Dense 병합 후 필요)
+- `data/processed/corpus.jsonl` (TF-IDF, BM25, Dense, Hybrid 공통)
+- Dense를 쓰려면 저장된 FAISS 인덱스 디렉터리 (`metadata.json` + `index.faiss`)
 
 재현 명령:
 
 ```bash
 uv run --extra sparse python -m scripts.prepare_dataset --download
+uv run --extra dense python -m scripts.build_index \
+  --corpus data/processed/corpus.jsonl --index indexes/dense
 ```
 
 생성된 파일과 인덱스는 커밋하지 않습니다.
@@ -92,8 +99,13 @@ uv run --extra sparse python -m scripts.prepare_dataset --download
 ```json
 {
   "methods": [
-    {"method": "tfidf", "available": true, "reason": null},
-    {"method": "bm25", "available": false, "reason": "BM25 retriever is not merged yet."}
+    {"method": "tfidf", "available": true, "state": "available", "reason": null},
+    {
+      "method": "dense",
+      "available": false,
+      "state": "not_configured",
+      "reason": "set DENSE_INDEX_PATH to a saved index directory."
+    }
   ]
 }
 ```
@@ -150,8 +162,10 @@ uv run --extra sparse python -m scripts.prepare_dataset --download
 | --- | --- |
 | corpus 파일 없음 | 프로세스는 계속 실행됩니다. 모든 방식이 503이며, 이유에 준비 명령을 포함합니다. |
 | corpus 형식 오류 | 위와 같습니다. 세부 내용은 서버 로그에만 남깁니다. |
-| sklearn 없음 | TF-IDF만 503입니다. 설치 명령을 이유에 포함합니다. |
-| BM25 또는 Dense 미병합 | 해당 방식과 Hybrid만 503입니다. |
+| sklearn 없음 | TF-IDF와 BM25가 503입니다. 설치 명령을 이유에 포함합니다. |
+| `DENSE_INDEX_PATH` 미설정 | Dense와 Hybrid만 503 (`not_configured`)입니다. |
+| Dense 인덱스 경로 없음/손상/의존성 없음 | Dense와 Hybrid만 503 (`index_missing`/`load_failed`/`dependency_missing`)입니다. |
+| Dense 인덱스가 현재 corpus와 다름 | Dense와 Hybrid만 503 (`load_failed`)입니다. 재빌드 안내만 하고 임의로 다시 빌드하지 않습니다. |
 
 선택 기능이 없다고 프로세스가 종료되지는 않습니다. 대신 상태 엔드포인트와 503 이유로 드러납니다.
 
@@ -169,24 +183,25 @@ uv run --extra sparse python -m scripts.prepare_dataset --download
 uv run --locked pytest
 ```
 
-- `tests/test_service.py`: fake retriever로 라우팅, top_k, 순위, 메타데이터, RRF 연결, 503 조건을 검증합니다.
+- `tests/test_service.py`, `tests/test_service_build.py`: fake retriever와 초기화 상태(test double)로 라우팅, top_k, 순위, 메타데이터, RRF 연결, 각 `MethodState`를 검증합니다.
 - `tests/test_search_api.py`: 주입한 fake 서비스로 FastAPI 계약, 422/503, 한국어 질의를 검증합니다.
-- `tests/test_integration.py`: 실제 TF-IDF와 `tests/fixtures/ko_miracl_prepared_corpus.jsonl`로 lifespan 전체 경로를 검증합니다. sklearn이 없으면 건너뜁니다.
+- `tests/test_integration.py`: 실제 TF-IDF/BM25와 `tests/fixtures/ko_miracl_prepared_corpus.jsonl`로 lifespan 전체 경로를 검증합니다. 실제 Dense와 Hybrid(BM25+Dense+RRF)도 로컬 결정적 임베딩 함수로 FAISS 인덱스를 만들어 HTTP까지 검증합니다 (모델 다운로드 없음). sklearn이나 faiss가 없으면 해당 테스트는 건너뜁니다.
 
 ## 실제 데이터 스모크 테스트
 
-전체 데이터셋이 준비된 환경에서 다음 순서로 확인합니다. 이 저장소에는 준비된 데이터가 없으므로 결과를 보고하지 않았습니다.
+전체 데이터셋이 준비된 환경에서 다음 순서로 확인합니다. 이 저장소에는 준비된 데이터와 Dense 인덱스가 없으므로 결과를 보고하지 않았습니다.
 
 ```bash
-uv run --extra sparse python -m scripts.prepare_dataset --download
-uv run --extra sparse uvicorn app.api:app
+uv run --extra sparse --extra dense python -m scripts.prepare_dataset --download
+uv run --extra dense python -m scripts.build_index \
+  --corpus data/processed/corpus.jsonl --index indexes/dense
+DENSE_INDEX_PATH=indexes/dense uv run --extra sparse --extra dense uvicorn app.api:app
 curl -X POST localhost:8000/search -H "Content-Type: application/json" \
-  -d '{"query": "대한민국의 수도는 어디인가요?", "method": "tfidf", "top_k": 5}'
+  -d '{"query": "대한민국의 수도는 어디인가요?", "method": "hybrid", "top_k": 5}'
 ```
 
 ## 남은 제한
 
-- BM25 미병합: `bm25`와 `hybrid`는 사용할 수 없습니다.
-- Dense 미병합: `dense`와 `hybrid`는 사용할 수 없습니다. 연결 지점은 `build_search_service`입니다.
-- 실제 데이터 스모크 테스트는 아직 실행하지 않았습니다.
+- 실제 10,000 passage Ko-MIRACL 데이터와 Dense 모델(`multilingual-e5-base`)로 돌린 스모크 테스트는 아직 실행하지 않았습니다. `data/processed/`와 Dense 인덱스가 저장소에 없습니다.
+- 검색 품질(Recall/MRR/nDCG)과 latency 비교는 평가 pipeline(`evaluation/`, Role A)의 결과를 참고합니다. 이 서비스 자체는 벤치마크를 만들지 않습니다.
 - 인증, 요청 제한, 캐시는 없습니다. 이번 단계의 범위가 아닙니다.
