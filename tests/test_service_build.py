@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from app.schemas import RetrievalMethod
-from app.service import MethodState, build_search_service
+from app.service import MethodState, _is_placeholder, build_search_service
 from data.loader import Document, load_prepared_documents
 from retrievers.base import SearchResult
 
@@ -113,6 +113,19 @@ def _install_dense(monkeypatch, cls):
     return cls
 
 
+class _PlaceholderBM25:
+    """Simulates an unmerged BM25: no constructor, like retrievers/bm25.py's stub."""
+
+    def search(self, query, top_k):
+        raise NotImplementedError
+
+
+def _install_placeholder_bm25(monkeypatch):
+    import retrievers.bm25 as bm25_module
+
+    monkeypatch.setattr(bm25_module, "BM25Retriever", _PlaceholderBM25)
+
+
 def test_corpus_missing_marks_every_method_and_hides_path(tmp_path):
     missing = tmp_path / "private-dir" / "absent.jsonl"
 
@@ -175,14 +188,42 @@ def test_missing_sklearn_reports_dependency_state(monkeypatch):
     assert "uv sync --extra sparse" in status.reason
 
 
-def test_bm25_placeholder_reports_not_implemented(fake_tfidf_module):
-    # The unmodified placeholder defines no constructor.
+def test_is_placeholder_detects_a_missing_constructor():
+    class Placeholder:
+        def search(self, query, top_k):
+            raise NotImplementedError
+
+    class Implemented:
+        def __init__(self, documents):
+            self.documents = documents
+
+        def search(self, query, top_k):
+            return []
+
+    assert _is_placeholder(Placeholder)
+    assert not _is_placeholder(Implemented)
+
+
+def test_bm25_placeholder_reports_not_implemented(monkeypatch, fake_tfidf_module):
+    # Simulated: an unmerged BM25 defines no constructor, like the real stub did
+    # before Role A's implementation merged.
+    _install_placeholder_bm25(monkeypatch)
+
     service = build_search_service(FIXTURE_CORPUS)
 
     assert (
         service.availability()[RetrievalMethod.BM25].state
         is MethodState.NOT_IMPLEMENTED
     )
+
+
+def test_bm25_registers_as_available_with_the_real_implementation(fake_tfidf_module):
+    # BM25 is merged (PR #13): the real retrievers.bm25.BM25Retriever is used as is.
+    service = build_search_service(FIXTURE_CORPUS)
+
+    assert service.availability()[RetrievalMethod.BM25].available
+    hits = service.search("서울", RetrievalMethod.BM25, 3)
+    assert hits[0].document_id == "fixture-001#0"
 
 
 def test_dense_index_missing_is_reported_with_build_hint(
@@ -300,6 +341,7 @@ def test_hybrid_is_bm25_plus_dense_with_rrf_when_both_available(
 def test_hybrid_does_not_substitute_tfidf_for_missing_bm25(
     monkeypatch, fake_tfidf_module, tmp_path
 ):
+    _install_placeholder_bm25(monkeypatch)
     _install_dense(monkeypatch, fake_dense_class())
 
     service = build_search_service(FIXTURE_CORPUS, dense_index_path=tmp_path)

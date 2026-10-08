@@ -58,18 +58,25 @@ def test_tfidf_search_is_repeatable_across_requests(monkeypatch):
     assert first == second
 
 
-def test_unavailable_methods_are_reported_over_real_startup(monkeypatch):
+def test_tfidf_and_bm25_are_available_over_real_startup_dense_and_hybrid_are_not(
+    monkeypatch,
+):
+    # BM25 is merged (PR #13); Dense is merged (PR #10) but has no DENSE_INDEX_PATH here.
     with _client_with_corpus(monkeypatch, FIXTURE_CORPUS) as client:
         methods = {
             item["method"]: item
             for item in client.get("/search/methods").json()["methods"]
         }
-        bm25 = client.post("/search", json={"query": "q", "method": "bm25"})
+        bm25 = client.post(
+            "/search", json={"query": "대한민국의 수도", "method": "bm25", "top_k": 1}
+        )
 
     assert methods["tfidf"]["available"] is True
-    assert methods["bm25"]["available"] is False
+    assert methods["bm25"]["available"] is True
+    assert methods["dense"]["available"] is False
     assert methods["hybrid"]["available"] is False
-    assert bm25.status_code == 503
+    assert bm25.status_code == 200
+    assert bm25.json()["results"][0]["document_id"] == "fixture-001#0"
 
 
 def test_missing_corpus_keeps_api_alive_and_reports_setup_hint(monkeypatch, tmp_path):
@@ -190,6 +197,41 @@ def test_real_dense_through_http_api(monkeypatch, real_dense):
     assert response.status_code == 200
     assert response.json()["results"][0]["document_id"] == "fixture-001#0"
     assert methods["dense"]["available"] is True
-    # BM25 is still not merged, so Hybrid must stay unavailable.
-    assert methods["hybrid"]["available"] is False
-    assert methods["hybrid"]["state"] == "upstream_unavailable"
+
+
+def test_real_hybrid_combines_real_bm25_and_real_dense_through_http(
+    monkeypatch, real_dense
+):
+    # Both Role A's BM25 (PR #13) and Role B's Dense (PR #10) are merged, so Hybrid
+    # should now wire real components together through the existing RRF, with no
+    # TF-IDF fallback and no synthetic placeholder results.
+    monkeypatch.setenv("SEARCH_CORPUS_PATH", str(FIXTURE_CORPUS))
+    monkeypatch.setenv("DENSE_INDEX_PATH", str(real_dense))
+    monkeypatch.setenv("DENSE_DEVICE", "cpu")
+
+    with TestClient(create_app()) as client:
+        methods = {
+            item["method"]: item
+            for item in client.get("/search/methods").json()["methods"]
+        }
+        response = client.post(
+            "/search", json={"query": "서울", "method": "hybrid", "top_k": 4}
+        )
+
+    assert methods["bm25"]["available"] is True
+    assert methods["dense"]["available"] is True
+    assert methods["hybrid"]["available"] is True
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["method"] == "hybrid"
+    document_ids = {hit["document_id"] for hit in body["results"]}
+    # Every corpus document is indexed by both components; the fused ranking must
+    # still only contain real corpus IDs, never duplicate or fabricated entries.
+    assert document_ids <= {
+        doc.document_id for doc in load_prepared_documents(FIXTURE_CORPUS)
+    }
+    assert [hit["rank"] for hit in body["results"]] == list(
+        range(1, len(body["results"]) + 1)
+    )
+    assert body["results"][0]["document_id"] == "fixture-001#0"
