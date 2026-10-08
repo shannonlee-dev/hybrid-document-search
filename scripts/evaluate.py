@@ -72,14 +72,22 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+    uses_dense = bool(set(args.methods) & {"dense", "hybrid"})
     try:
         runtime = None
         if args.threads is not None:
-            import sentence_transformers  # noqa: F401
+            if uses_dense:
+                import sentence_transformers  # noqa: F401
 
-            from evaluation.runtime_config import configure_runtime
+                from evaluation.runtime_config import configure_runtime
 
-            runtime = configure_runtime(args.threads, cuda=args.device == CUDA_DEVICE)
+                runtime = configure_runtime(
+                    args.threads, cuda=args.device == CUDA_DEVICE
+                )
+            else:
+                from evaluation.runtime_config import configure_sparse_runtime
+
+                runtime = configure_sparse_runtime(args.threads)
         check_output_directory(args.output_dir)
         report = run_benchmark(
             args.data_dir,
@@ -89,7 +97,9 @@ def main(argv: list[str] | None = None) -> int:
             device=args.device,
             warmup=args.warmup,
             repeats=args.repeats,
-            strict_runtime=args.threads is not None and args.device == CUDA_DEVICE,
+            strict_runtime=uses_dense
+            and args.threads is not None
+            and args.device == CUDA_DEVICE,
             progress=lambda message: print(message, file=sys.stderr, flush=True),
         )
         if runtime is not None:

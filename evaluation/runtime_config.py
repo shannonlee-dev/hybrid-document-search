@@ -13,6 +13,23 @@ CUDA_DEVICE = "cuda:0"
 _LIMITER = None
 
 
+def configure_sparse_runtime(threads: int):
+    """Limit Sparse numerical libraries without importing Dense dependencies."""
+    global _LIMITER
+    for name in THREAD_ENV:
+        os.environ[name] = str(threads)
+    # Load the numerical libraries before inspecting their active threadpools.
+    import numpy  # noqa: F401
+    import scipy.linalg  # noqa: F401
+    from threadpoolctl import threadpool_info, threadpool_limits
+
+    _LIMITER = threadpool_limits(limits=threads)
+    pools = threadpool_info()
+    if any(pool["num_threads"] != threads for pool in pools):
+        raise RuntimeError("effective thread count differs from requested value")
+    return {"threadpools": pools}
+
+
 def configure_runtime(threads: int, *, cuda: bool = False):
     global _LIMITER
     for name in THREAD_ENV:
