@@ -50,7 +50,20 @@ DATASET_SETTINGS = {
     "dev_queries": 50,
     "seed": CONDITIONS["seed"],
 }
-RETRIEVAL_EXPORTS = ("summary.csv",)
+PACKAGE_FILES = {
+    "runtime": "dense/runtime.json",
+    "retrieval_results": "retrieval/dev/results.json",
+    "retrieval_summary": "retrieval/dev/summary.csv",
+    **{
+        f"dense_{split}_{alias}": f"dense/{split}/{alias}.json"
+        for split in ("train", "dev")
+        for alias in ALIASES
+    },
+    **{
+        f"comparison_{split}": f"dense/{split}/comparison.csv"
+        for split in ("train", "dev")
+    },
+}
 _METRIC_TOLERANCE = 1e-10
 # Linux renameat2 uses these values for the current directory and atomic exchange.
 _AT_FDCWD = -100
@@ -148,36 +161,35 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
             }
             for phase in ("build", "restore", "download")
         }
-    write_json(stage / "dense/runtime.json", runtime)
+    write_json(stage / PACKAGE_FILES["runtime"], runtime)
     for split in ("train", "dev"):
         rows = {}
         for alias, model in ALIASES.items():
             source = root / f"{split}-{alias}/evaluation/results.json"
             report = read_json(source)
             _validate_report(report, datasets[split], ("dense",), model)
-            raw_results[f"dense/{split}/{alias}.json"] = {
+            output = PACKAGE_FILES[f"dense_{split}_{alias}"]
+            raw_results[output] = {
                 "path": str(source),
                 "sha256": file_sha256(source),
             }
-            _write_evidence(
-                stage / f"dense/{split}/{alias}.json", report, datasets[split]
-            )
+            _write_evidence(stage / output, report, datasets[split])
             rows[alias] = report["methods"]["dense"]
-        _write_comparison(stage / f"dense/{split}/comparison.csv", rows)
+        _write_comparison(stage / PACKAGE_FILES[f"comparison_{split}"], rows)
     source = retrieval_root / "evaluation/results.json"
     report = read_json(source)
     _validate_report(
         report, datasets["dev"], ("tfidf", "bm25", "dense", "hybrid"), DEFAULT_MODEL
     )
-    destination = stage / "retrieval/dev"
-    destination.mkdir(parents=True, exist_ok=True)
-    for name in RETRIEVAL_EXPORTS:
-        shutil.copyfile(retrieval_root / "evaluation" / name, destination / name)
-    raw_results["retrieval/dev/results.json"] = {
+    summary = stage / PACKAGE_FILES["retrieval_summary"]
+    summary.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(retrieval_root / "evaluation/summary.csv", summary)
+    output = PACKAGE_FILES["retrieval_results"]
+    raw_results[output] = {
         "path": str(source),
         "sha256": file_sha256(source),
     }
-    _write_evidence(destination / "results.json", report, datasets["dev"])
+    _write_evidence(stage / output, report, datasets["dev"])
     write_json(
         stage / "experiment.json",
         {
@@ -222,16 +234,10 @@ def verify_package(directory):
         report["status"] == "completed" and actual == report["files_sha256"],
         "final package hash mismatch",
     )
-    required = {"dense/runtime.json"}
-    for split in ("train", "dev"):
-        required.update(
-            f"dense/{split}/{name}"
-            for name in (*[f"{alias}.json" for alias in ALIASES], "comparison.csv")
-        )
-    required.update(
-        f"retrieval/dev/{name}" for name in (*RETRIEVAL_EXPORTS, "results.json")
+    _require(
+        set(actual) == set(PACKAGE_FILES.values()),
+        "final package file inventory mismatch",
     )
-    _require(set(actual) == required, "final package file inventory mismatch")
 
 
 def promote(stage, final):

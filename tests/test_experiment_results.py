@@ -6,35 +6,24 @@ import pytest
 
 from evaluation.benchmark import benchmark_retriever
 from evaluation.data import load_evaluation_dataset
+from evaluation.experiment_results import PACKAGE_FILES
 from retrievers.base import SearchResult
 
 
 @pytest.fixture
 def curated_package(tmp_path):
     # A checkout must be verifiable without local raw reports or model files.
-    names = (
-        "dense/runtime.json",
-        "dense/train/e5.json",
-        "dense/train/bge.json",
-        "dense/train/kure.json",
-        "dense/train/comparison.csv",
-        "dense/dev/e5.json",
-        "dense/dev/bge.json",
-        "dense/dev/kure.json",
-        "dense/dev/comparison.csv",
-        "retrieval/dev/results.json",
-        "retrieval/dev/summary.csv",
-    )
+    directory = tmp_path / "package"
     files = {}
-    for name in names:
-        path = tmp_path / name
+    for name in PACKAGE_FILES.values():
+        path = directory / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(b"fixture\n")
         files[name] = hashlib.sha256(b"fixture\n").hexdigest()
-    (tmp_path / "experiment.json").write_text(
+    (directory / "experiment.json").write_text(
         json.dumps({"status": "completed", "files_sha256": files})
     )
-    return tmp_path
+    return directory
 
 
 def test_curated_package_verifies_without_raw_reports(curated_package):
@@ -43,7 +32,9 @@ def test_curated_package_verifies_without_raw_reports(curated_package):
     verify_package(curated_package)
 
 
-@pytest.mark.parametrize("mutation", ("extra_csv", "missing_summary", "changed"))
+@pytest.mark.parametrize(
+    "mutation", ("extra_csv", "missing_summary", "deleted", "changed", "incomplete")
+)
 def test_curated_package_rejects_inventory_or_hash_changes(curated_package, mutation):
     from evaluation.experiment_results import verify_package
 
@@ -53,10 +44,13 @@ def test_curated_package_rejects_inventory_or_hash_changes(curated_package, muta
         name = "retrieval/dev/queries.csv"
         (curated_package / name).write_bytes(b"{}\n")
         report["files_sha256"][name] = hashlib.sha256(b"{}\n").hexdigest()
-    elif mutation == "missing_summary":
+    elif mutation in {"missing_summary", "deleted"}:
         name = "retrieval/dev/summary.csv"
         (curated_package / name).unlink()
-        del report["files_sha256"][name]
+        if mutation == "missing_summary":
+            del report["files_sha256"][name]
+    elif mutation == "incomplete":
+        report["status"] = "running"
     else:
         (curated_package / "retrieval/dev/summary.csv").write_bytes(b"changed\n")
     manifest.write_text(json.dumps(report))
