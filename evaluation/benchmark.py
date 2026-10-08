@@ -1,4 +1,4 @@
-"""공통 dataset의 검색 품질과 warm-up 이후 query-time latency를 비교합니다."""
+"""Compare retrieval quality and post-warm-up query latency on a shared dataset."""
 
 import csv
 import importlib.metadata
@@ -15,20 +15,17 @@ from numbers import Real
 from pathlib import Path
 from time import perf_counter
 
-from evaluation.data import EvaluationDataset, file_sha256, load_evaluation_dataset
-from evaluation.latency import (
+from evaluation.constants import (
+    CUDA_DEVICE,
     DEFAULT_REPEATS,
     DEFAULT_WARMUP,
-    latency_summary,
-    measure_query_latency,
-)
-from evaluation.metrics import (
     EVALUATION_TOP_K,
     METRIC_NAMES,
-    evaluate_query,
-    evaluate_run,
+    THREAD_ENV,
 )
-from evaluation.runtime_config import CUDA_DEVICE, THREAD_ENV
+from evaluation.data import EvaluationDataset, file_sha256, load_evaluation_dataset
+from evaluation.latency import latency_summary, measure_query_latency
+from evaluation.metrics import evaluate_query, evaluate_run
 from fusion.rrf import DEFAULT_RANK_CONSTANT
 from retrievers.base import Retriever, SearchResult
 
@@ -43,6 +40,7 @@ SUMMARY_FIELDS = (
     "query_count",
     "sample_count",
 )
+_DENSE_INDEX_FILENAMES = ("metadata.json", "index.faiss")
 
 
 def benchmark_retriever(
@@ -52,7 +50,10 @@ def benchmark_retriever(
     warmup: int = DEFAULT_WARMUP,
     repeats: int = DEFAULT_REPEATS,
 ) -> dict:
-    """검색기를 재사용하고 각 pass에서 동일한 순서로 모든 query를 검색합니다."""
+    """Measure retrieval quality and post-warm-up latency in a fixed query order.
+
+    Quality uses the first measured results; request latency excludes result validation.
+    """
     _positive(warmup, "warmup")
     _positive(repeats, "repeats")
     if not dataset.queries:
@@ -110,7 +111,10 @@ def run_benchmark(
     progress=None,
     strict_runtime: bool = False,
 ) -> dict:
-    """같은 corpus와 query/qrels로 요청한 모든 방법을 평가하며 실패를 숨기지 않습니다."""
+    """Evaluate retrieval methods on shared prepared data and propagate failures.
+
+    strict_runtime verifies Dense model revisions, FP32 precision and CUDA execution.
+    """
     _validate_methods(methods, dense_index)
     _positive(warmup, "warmup")
     _positive(repeats, "repeats")
@@ -149,7 +153,7 @@ def run_benchmark(
             progress(f"검색기 준비: {name}")
         started = perf_counter()
         retriever, config = _build_retriever(name, dataset, dense_index, device)
-        # Dense 모델은 lazy load이므로 첫 실제 검색도 준비 시간에 포함합니다.
+        # 첫 검색에서 Dense 모델을 로드하므로 이 시간은 준비 시간에 포함합니다.
         if name == "dense" and strict_runtime:
             from evaluation.dense_runtime import (
                 _checkpoint_revisions,
@@ -220,13 +224,17 @@ def run_benchmark(
 
 
 def check_output_directory(directory: str | Path) -> None:
+    """Allow only new paths or empty directories to preserve existing results."""
     directory = Path(directory)
     if directory.exists() and (not directory.is_dir() or any(directory.iterdir())):
         raise ValueError("output-dir은 새 경로 또는 비어 있는 디렉터리여야 합니다.")
 
 
 def write_report(report: dict, directory: str | Path) -> None:
-    """JSON, 요약/질의/원시 latency CSV와 비교표를 UTF-8로 저장합니다."""
+    """Write UTF-8 JSON, CSV and comparison reports to a new or empty directory.
+
+    Prepare all files in a temporary directory, then move each file to the output path.
+    """
     directory = Path(directory)
     check_output_directory(directory)
     payload = json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
@@ -349,7 +357,7 @@ def _build_retriever(name, dataset, dense_index, device):
         }
     if name == "dense":
         index = Path(dense_index)
-        for filename in ("metadata.json", "index.faiss"):
+        for filename in _DENSE_INDEX_FILENAMES:
             if not (index / filename).is_file():
                 raise ValueError(f"Dense 인덱스 파일이 없습니다: {index / filename}")
         from retrievers.dense import DenseRetriever
@@ -441,6 +449,7 @@ def _environment():
 def _code_provenance():
     root = Path(__file__).resolve().parents[1]
     paths = (
+        "evaluation/constants.py",
         "evaluation/data.py",
         "evaluation/metrics.py",
         "evaluation/latency.py",

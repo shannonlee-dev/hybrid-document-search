@@ -1,4 +1,4 @@
-"""Dense 복원, revision·입력 무결성, 실패 기록과 기존 파일 보존을 검증한다."""
+"""Verify Dense restoration, input/revision integrity and failure recording."""
 
 import hashlib
 import json
@@ -8,7 +8,7 @@ import pytest
 
 pytest.importorskip("faiss")
 
-CANDIDATES = (
+_CANDIDATES = (
     ("intfloat/multilingual-e5-base", "d128750597153bb5987e10b1c3493a34e5a4502a"),
     ("BAAI/bge-m3", "5617a9f61b028005a4858fdac845db406aefb181"),
     ("nlpai-lab/KURE-v1", "8b418a58414668e75532ed045c22d9ca018ae2b2"),
@@ -211,7 +211,7 @@ def test_rejects_unsafe_index_paths_before_execution(
         assert not inputs.index_root.exists()
 
 
-@pytest.mark.parametrize("model,revision", CANDIDATES)
+@pytest.mark.parametrize("model,revision", _CANDIDATES)
 @pytest.mark.parametrize("saved_revision", [None, "f" * 40, "missing"])
 def test_validation_rejects_changed_metadata_revision_before_model_load(
     inputs, model_stub, monkeypatch, model, revision, saved_revision
@@ -236,7 +236,7 @@ def test_validation_rejects_changed_metadata_revision_before_model_load(
         validate(inputs, index)
 
 
-@pytest.mark.parametrize("model,revision", CANDIDATES)
+@pytest.mark.parametrize("model,revision", _CANDIDATES)
 @pytest.mark.parametrize("phase", ["build", "validate"])
 @pytest.mark.parametrize("actual", [None, "f" * 40])
 def test_rejects_unverifiable_or_different_loaded_revision(

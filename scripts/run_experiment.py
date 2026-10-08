@@ -10,6 +10,7 @@ from pathlib import Path
 from time import perf_counter
 
 from data.preparation import PINNED_REVISION
+from evaluation.constants import THREAD_ENV
 from evaluation.data import file_sha256
 from evaluation.experiment_results import CONDITIONS as CONDITIONS
 from evaluation.experiment_results import (
@@ -22,13 +23,13 @@ from evaluation.experiment_results import (
 )
 from evaluation.experiment_runner import Experiment, Step, hashes, reject_symlinks
 from evaluation.json_io import write_json
-from evaluation.runtime_config import THREAD_ENV, configure_runtime
+from evaluation.runtime_config import configure_runtime
 from fusion.rrf import DEFAULT_RANK_CONSTANT
 from retrievers.model_config import ALIASES, DEFAULT_MODEL_ALIAS, MODELS
 
 try:
     import fcntl
-except ImportError:  # Windows has no fcntl; the exclusive lock is Unix-only.
+except ImportError:  # Windows에는 fcntl이 없으므로 배타 잠금은 Unix에서만 적용한다.
     fcntl = None
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -147,8 +148,7 @@ def _make_steps(experiment, env):
     measurement_code = _code_hashes(
         "evaluation", "retrievers", "indexing", "fusion", "scripts", "data"
     )
-    # Data/build fingerprints exclude evaluation/packaging code so changes to reports
-    # do not require re-embedding successfully validated indexes.
+    # 보고서 변경으로 검증된 데이터와 인덱스를 다시 생성하지 않도록 분리한다.
     base = {"conditions": CONDITIONS, "environment": env}
     data_inputs = {
         "revision": PINNED_REVISION,
@@ -242,12 +242,12 @@ def _make_steps(experiment, env):
                     directory / "report.json", read_json(directory / "stdout.log")
                 )
 
-            # Model/revision are fingerprinted below; the default selection policy
-            # only affects evaluation and must not invalidate explicit-model indexes.
+            # 명시적 모델의 고정 revision은 기본 모델 선택 정책과 무관하다.
             build_code = _code_hashes(
                 "retrievers", "indexing", include_model_config=False
             )
             for name_code in (
+                "evaluation/constants.py",
                 "evaluation/dense_runtime.py",
                 "evaluation/runtime_config.py",
                 "evaluation/latency.py",
@@ -395,6 +395,7 @@ def _download_model(model, output):
 
 
 def main(argv=None):
+    """Run or resume the pinned GPU experiment and publish its verified package."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fresh", action="store_true")
     parser.add_argument(

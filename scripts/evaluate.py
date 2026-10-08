@@ -1,4 +1,4 @@
-"""동일한 준비 데이터로 검색 방식별 품질과 latency를 평가합니다."""
+"""Evaluate retrieval quality and latency on shared prepared data."""
 
 import argparse
 import json
@@ -11,8 +11,7 @@ from evaluation.benchmark import (
     run_benchmark,
     write_report,
 )
-from evaluation.latency import DEFAULT_REPEATS, DEFAULT_WARMUP
-from evaluation.runtime_config import CUDA_DEVICE
+from evaluation.constants import CUDA_DEVICE, DEFAULT_REPEATS, DEFAULT_WARMUP
 from scripts._cli import CliArgumentParser, _positive_int
 
 
@@ -70,6 +69,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """Evaluate retrieval quality and latency and save reports to a new directory."""
     parser = _build_parser()
     args = parser.parse_args(argv)
     uses_dense = bool(set(args.methods) & {"dense", "hybrid"})

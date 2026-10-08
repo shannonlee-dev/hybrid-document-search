@@ -1,4 +1,4 @@
-"""평가 CLI의 실제 Sparse 실행, 출력 파일과 입력 오류를 검증합니다."""
+"""Verify Sparse evaluation commands, output files and input errors."""
 
 import builtins
 import json
@@ -15,6 +15,7 @@ from scripts.evaluate import main
 
 @pytest.fixture
 def sparse_runtime(monkeypatch):
+    """Record numerical thread limits while rejecting all Dense dependency imports."""
     from evaluation import runtime_config
 
     for name in runtime_config.THREAD_ENV:
@@ -28,7 +29,7 @@ def sparse_runtime(monkeypatch):
     pools = [{"num_threads": 1}]
     requested_limits = []
 
-    def record_limit(*, limits):
+    def _record_limit(*, limits):
         pools[0]["num_threads"] = limits
         requested_limits.append(limits)
         return object()
@@ -38,17 +39,17 @@ def sparse_runtime(monkeypatch):
         "threadpoolctl",
         SimpleNamespace(
             threadpool_info=lambda: pools,
-            threadpool_limits=record_limit,
+            threadpool_limits=_record_limit,
         ),
     )
     original_import = builtins.__import__
 
-    def without_dense(name, *args, **kwargs):
+    def _without_dense(name, *args, **kwargs):
         if name.split(".")[0] in {"sentence_transformers", "faiss", "torch"}:
             raise ModuleNotFoundError(f"No module named {name!r}", name=name)
         return original_import(name, *args, **kwargs)
 
-    monkeypatch.setattr(builtins, "__import__", without_dense)
+    monkeypatch.setattr(builtins, "__import__", _without_dense)
     return requested_limits, pools
 
 
@@ -71,11 +72,11 @@ def test_sparse_threads_without_dense_dependencies(
     options = []
     original_benchmark = evaluate.run_benchmark
 
-    def run_benchmark(*args, **kwargs):
+    def _run_benchmark(*args, **kwargs):
         options.append(kwargs)
         return original_benchmark(*args, **kwargs)
 
-    monkeypatch.setattr(evaluate, "run_benchmark", run_benchmark)
+    monkeypatch.setattr(evaluate, "run_benchmark", _run_benchmark)
     directory = tmp_path / "sparse-threads"
     args = [
         "--data-dir",

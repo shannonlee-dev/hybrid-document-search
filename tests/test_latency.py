@@ -1,4 +1,4 @@
-"""질의 순서, 임의 Top-K 및 검색 호출만의 시간 측정을 검증합니다."""
+"""Verify query ordering, custom Top-K values and search-only timing."""
 
 import pytest
 
@@ -22,7 +22,7 @@ def test_measurement_preserves_duplicate_queries_top_k_and_first_results(monkeyp
         nonlocal elapsed
         assert position in (0, 1, 2)
         assert len(results) == 1
-        # Validation must not contribute to measured request latency.
+        # 검증 시간을 늘려 요청 지연에 섞이는 경우를 드러낸다.
         elapsed += 100
 
     monkeypatch.setattr(latency, "perf_counter", lambda: elapsed)

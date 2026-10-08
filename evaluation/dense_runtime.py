@@ -1,4 +1,4 @@
-"""Dense 모델별 runtime/index 측정, 입력·복원 검증과 report 구성을 담당한다."""
+"""Measure Dense build and search runtimes and verify input and index integrity."""
 
 import hashlib
 import json
@@ -16,8 +16,9 @@ from time import perf_counter
 from unittest.mock import patch
 
 from data.loader import load_prepared_documents
-from evaluation.latency import MILLISECONDS_PER_SECOND, measure_query_latency
-from evaluation.runtime_config import DEFAULT_THREADS
+from evaluation.constants import DEFAULT_THREADS, MILLISECONDS_PER_SECOND
+from evaluation.json_io import write_json
+from evaluation.latency import measure_query_latency
 from retrievers.model_config import COMMIT_SHA_PATTERN
 from retrievers.model_config import MODELS as MODELS
 
@@ -31,11 +32,12 @@ MEASUREMENTS = (
 )
 _RESTORE_RTOL = 1e-5
 _RESTORE_ATOL = 1e-6
+_BUILD_REPORT_FILENAME = "benchmark_build.json"
 
 
 @dataclass
 class DenseRuntimeConfig:
-    """CLI와 worker에서 공유하는 명시적인 runtime benchmark 설정."""
+    """Dense runtime and measurement settings shared by the CLI and workers."""
 
     corpus: Path
     queries: Path
@@ -68,6 +70,7 @@ class DenseRuntimeConfig:
 
 
 def build(config: DenseRuntimeConfig, model_name: str, index: Path):
+    """Build and save an index, recording timings and reference results for restore checks."""
     started = perf_counter()
     from retrievers.dense import DenseConfig, DenseRetriever
 
@@ -107,7 +110,7 @@ def build(config: DenseRuntimeConfig, model_name: str, index: Path):
     )
     result["index_sha256"] = _sha256(index / "index.faiss")
     result["metadata_sha256"] = _sha256(index / "metadata.json")
-    # 비교 기준은 저장 전의 in-memory index에서 얻는다. 준비 시간에 포함하지 않는다.
+    # 복원 비교 기준은 메모리 인덱스에서 얻고 준비 시간에서 제외한다.
     baseline = {
         "provenance": provenance,
         "model_name": model_name,
@@ -139,21 +142,16 @@ def build(config: DenseRuntimeConfig, model_name: str, index: Path):
             config.device
         )
         result["cuda_version"] = torch.version.cuda
-    path = index / "benchmark_build.json"
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(
-        json.dumps(baseline, ensure_ascii=False, indent=2, allow_nan=False) + "\n",
-        encoding="utf-8",
-    )
-    temporary.replace(path)
+    write_json(index / _BUILD_REPORT_FILENAME, baseline)
     return result
 
 
 def validate(config: DenseRuntimeConfig, index: Path):
+    """Verify index restoration without re-embedding documents and measure search latency."""
     from retrievers.dense import DenseEmbedder, DenseRetriever
 
     documents, queries, provenance = check_inputs(config)
-    baseline = json.loads((index / "benchmark_build.json").read_text(encoding="utf-8"))
+    baseline = json.loads((index / _BUILD_REPORT_FILENAME).read_text(encoding="utf-8"))
     if baseline["provenance"] != provenance or baseline["top_k"] != config.top_k:
         raise ValueError("build/validation inputs changed")
     model_name = config.model[0] if config.model else baseline["model_name"]
@@ -217,11 +215,11 @@ def validate(config: DenseRuntimeConfig, index: Path):
         )
     latency = measurement.latency
     return {
-        # 공통 측정의 ms를 기존 Dense runtime 출력 단위인 초로 변환한다.
+        # 기존 Dense runtime 보고서는 지연을 초 단위로 저장한다.
         "latency_mean_seconds": latency["mean_ms"] / MILLISECONDS_PER_SECOND,
         "latency_p95_seconds": latency["p95_ms"] / MILLISECONDS_PER_SECOND,
         "latency_samples": latency["sample_count"],
-        # 0-based input position × repetition; duplicate query texts stay separate.
+        # 중복 질의도 0부터 시작하는 입력 위치별로 구분한다.
         "latency_samples_ms": measurement.samples_ms,
         "latency_sample_axes": ["query_index", "repeat_index"],
         "validation_runtime_threads": _runtime_threads(),
@@ -243,7 +241,7 @@ def validate(config: DenseRuntimeConfig, index: Path):
 
 
 def create_report(config: DenseRuntimeConfig, provenance: dict[str, object]):
-    """실행 환경과 모델별 초기 상태를 기존 runtime 출력 schema로 구성한다."""
+    """Create a runtime report with environment details and initial model states."""
     report = {
         "schema_version": 1,
         "started_at": datetime.now(UTC).isoformat(),
@@ -287,6 +285,7 @@ def create_report(config: DenseRuntimeConfig, provenance: dict[str, object]):
 
 
 def check_inputs(config: DenseRuntimeConfig):
+    """Verify input hashes and document counts; return documents, queries and provenance."""
     if config.corpus.name == config.queries.name:
         raise ValueError(
             f"input basename collision: {config.corpus.name!r}; "
@@ -339,10 +338,9 @@ def check_inputs(config: DenseRuntimeConfig):
 
 @contextmanager
 def _checkpoint_revisions():
-    """Capture the snapshot paths actually used for loading Transformer weights.
+    """Capture revisions from snapshot paths used to load Transformer weights.
 
-    Transformers v5 no longer retains config._commit_hash. Inspect the checkpoint
-    resolver's returned files without changing its arguments or loading behavior.
+    Checkpoint paths provide evidence when config._commit_hash is absent.
     """
     from transformers import modeling_utils
 
@@ -416,6 +414,7 @@ def _code_provenance() -> dict[str, object]:
     paths = (
         "data/loader.py",
         "data/preprocess.py",
+        "evaluation/constants.py",
         "evaluation/dense_runtime.py",
         "evaluation/json_io.py",
         "evaluation/latency.py",

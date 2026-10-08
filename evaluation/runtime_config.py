@@ -2,14 +2,11 @@
 
 import os
 
-DEFAULT_THREADS = 2
-THREAD_ENV = ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS")
-THREAD_COUNT_KEYS = (
-    "torch_num_threads",
-    "torch_num_interop_threads",
-    "faiss_omp_max_threads",
-)
-CUDA_DEVICE = "cuda:0"
+from evaluation.constants import CUDA_DEVICE as CUDA_DEVICE
+from evaluation.constants import DEFAULT_THREADS as DEFAULT_THREADS
+from evaluation.constants import THREAD_COUNT_KEYS as THREAD_COUNT_KEYS
+from evaluation.constants import THREAD_ENV as THREAD_ENV
+
 _LIMITER = None
 
 
@@ -18,7 +15,7 @@ def configure_sparse_runtime(threads: int):
     global _LIMITER
     for name in THREAD_ENV:
         os.environ[name] = str(threads)
-    # Load the numerical libraries before inspecting their active threadpools.
+    # 스레드 풀 검사에 포함되도록 수치 연산 라이브러리를 먼저 로드한다.
     import numpy  # noqa: F401
     import scipy.linalg  # noqa: F401
     from threadpoolctl import threadpool_info, threadpool_limits
@@ -31,6 +28,10 @@ def configure_sparse_runtime(threads: int):
 
 
 def configure_runtime(threads: int, *, cuda: bool = False):
+    """Set and verify library thread limits, requiring CUDA when requested.
+
+    Call before model execution; this changes process-wide numerical settings.
+    """
     global _LIMITER
     for name in THREAD_ENV:
         os.environ[name] = str(threads)

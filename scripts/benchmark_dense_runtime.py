@@ -1,4 +1,4 @@
-"""Dense runtime benchmark의 CLI와 모델별 worker 프로세스 실행을 담당한다."""
+"""Run the Dense runtime benchmark CLI and per-model worker processes."""
 
 import argparse
 import json
@@ -8,10 +8,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from evaluation import dense_runtime
+from evaluation.constants import (
+    CUDA_DEVICE,
+    DEFAULT_REPEATS,
+    DEFAULT_THREADS,
+    DEFAULT_WARMUP,
+    EVALUATION_TOP_K,
+)
 from evaluation.json_io import write_json
-from evaluation.latency import DEFAULT_REPEATS, DEFAULT_WARMUP
-from evaluation.metrics import EVALUATION_TOP_K
-from evaluation.runtime_config import CUDA_DEVICE, DEFAULT_THREADS
 from scripts._cli import _positive_int
 
 _WORKER_ERROR_TAIL_LENGTH = 6000
@@ -61,6 +65,7 @@ def _run_worker(
 
 
 def main(argv=None):
+    """Run model build and restore workers, recording measurements and failures."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--corpus", type=Path, default=Path("data/processed/corpus.jsonl")

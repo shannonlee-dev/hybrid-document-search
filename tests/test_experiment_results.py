@@ -1,3 +1,5 @@
+"""Verify curated result integrity and recomputable metrics without raw artifacts."""
+
 import copy
 import hashlib
 import json
@@ -12,7 +14,7 @@ from retrievers.base import SearchResult
 
 @pytest.fixture
 def curated_package(tmp_path):
-    # A checkout must be verifiable without local raw reports or model files.
+    """Provide a complete file inventory without raw reports or model files."""
     directory = tmp_path / "package"
     files = {}
     for name in PACKAGE_FILES.values():
@@ -99,7 +101,7 @@ def test_evidence_preserves_recomputable_results_without_document_excerpts(
         assert query["text"] == raw["text"]
         assert query["latency_samples_ms"] == raw["latency_samples_ms"]
     _validate_method(saved["methods"]["dense"], dataset)
-    # Readers can recompute metrics and latency from the exported JSON alone.
+    # 내보낸 JSON만으로 품질 지표와 지연을 다시 계산할 수 있어야 한다.
     run = {
         query["query_id"]: [SearchResult(**hit) for hit in query["results"]]
         for query in queries

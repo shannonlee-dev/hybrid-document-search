@@ -12,17 +12,20 @@ from pathlib import Path
 
 from data.preparation import PINNED_REVISION
 from evaluation.benchmark import _check_results
+from evaluation.constants import (
+    CUDA_DEVICE,
+    DEFAULT_REPEATS,
+    DEFAULT_THREADS,
+    DEFAULT_WARMUP,
+    EVALUATION_TOP_K,
+    METRIC_NAMES,
+    THREAD_COUNT_KEYS,
+)
 from evaluation.data import file_sha256, load_evaluation_dataset
 from evaluation.experiment_runner import hashes, reject_symlinks
 from evaluation.json_io import write_json
-from evaluation.latency import DEFAULT_REPEATS, DEFAULT_WARMUP, latency_summary
-from evaluation.metrics import (
-    EVALUATION_TOP_K,
-    METRIC_NAMES,
-    evaluate_query,
-    evaluate_run,
-)
-from evaluation.runtime_config import CUDA_DEVICE, DEFAULT_THREADS, THREAD_COUNT_KEYS
+from evaluation.latency import latency_summary
+from evaluation.metrics import evaluate_query, evaluate_run
 from fusion.rrf import DEFAULT_RANK_CONSTANT
 from retrievers.base import SearchResult
 from retrievers.model_config import ALIASES as ALIASES
@@ -65,16 +68,18 @@ PACKAGE_FILES = {
     },
 }
 _METRIC_TOLERANCE = 1e-10
-# Linux renameat2 uses these values for the current directory and atomic exchange.
+# Linux renameat2의 현재 디렉터리 지정값과 원자적 교환 플래그다.
 _AT_FDCWD = -100
 _RENAME_EXCHANGE = 2
 
 
 def read_json(path):
+    """Read a UTF-8 JSON file."""
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
 def validate_dataset(data, raw):
+    """Verify the pinned dataset, source hashes and split sizes before packaging."""
     datasets = {
         split: load_evaluation_dataset(data, split) for split in ("train", "dev")
     }
@@ -103,6 +108,10 @@ def validate_dataset(data, raw):
 
 
 def package_results(root, stage, identifier, provenance, *, retrieval_root=None):
+    """Validate raw measurements and write a verifiable review package.
+
+    Preserve qrels, rankings and latency samples; omit document titles and excerpts.
+    """
     retrieval_root = (
         root / "retrieval" if retrieval_root is None else Path(retrieval_root)
     )
@@ -227,6 +236,7 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
 
 
 def verify_package(directory):
+    """Verify the package inventory and hashes without requiring local raw reports."""
     report = read_json(directory / "experiment.json")
     actual = hashes(directory)
     actual.pop("experiment.json")
@@ -241,7 +251,7 @@ def verify_package(directory):
 
 
 def promote(stage, final):
-    """Linux renameat2 exchange makes replacement visible as one complete set."""
+    """Publish a verified package, using Linux renameat2 for atomic replacement."""
     verify_package(stage)
     reject_symlinks(final)
     if final.exists() and hashes(final) == hashes(stage):
@@ -364,7 +374,7 @@ def _runtime_summary(model, build, restored, download):
 
 
 def _write_evidence(path, report, dataset):
-    """Keep remote metric/ranking evidence without repeating corpus excerpts."""
+    """Export recomputable quality and latency evidence without corpus excerpts."""
     evidence = copy.deepcopy(report)
     evidence["qrels"] = dataset.qrels
     evidence["export"] = {

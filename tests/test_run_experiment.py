@@ -39,12 +39,12 @@ def test_environment_accepts_cuda_without_hardware_or_os_restrictions(
         run_experiment.importlib.metadata, "version", lambda name: "fixture-version"
     )
 
-    def configure_runtime(threads, *, cuda):
+    def _configure_runtime(threads, *, cuda):
         if not cuda:
             raise RuntimeError("CUDA must be required for the experiment")
         return {"gpu": gpu, "cuda": "12.8", "device": "cuda:0"}
 
-    monkeypatch.setattr(run_experiment, "configure_runtime", configure_runtime)
+    monkeypatch.setattr(run_experiment, "configure_runtime", _configure_runtime)
 
     environment = run_experiment._environment()
 
@@ -55,12 +55,12 @@ def test_environment_accepts_cuda_without_hardware_or_os_restrictions(
 
 
 def test_environment_does_not_fall_back_when_cuda_is_unavailable(monkeypatch):
-    def configure_runtime(threads, *, cuda):
+    def _configure_runtime(threads, *, cuda):
         if cuda:
             raise RuntimeError("cuda:0 is required; CPU fallback is forbidden")
         return {"device": "cpu"}
 
-    monkeypatch.setattr(run_experiment, "configure_runtime", configure_runtime)
+    monkeypatch.setattr(run_experiment, "configure_runtime", _configure_runtime)
 
     with pytest.raises(RuntimeError, match="CPU fallback is forbidden"):
         run_experiment._environment()

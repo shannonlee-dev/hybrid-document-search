@@ -13,10 +13,13 @@ from evaluation.data import file_sha256
 from evaluation.json_io import write_json
 
 MARKER = ".ko-miracl-experiment"
+_STAGE_NAME_PATTERN = r"[a-z0-9_-]+"
 
 
 @dataclass
 class Step:
+    """Stage action with dependencies and inputs used to decide whether to rerun."""
+
     name: str
     dependencies: tuple[str, ...]
     inputs: dict
@@ -24,6 +27,8 @@ class Step:
 
 
 class Experiment:
+    """Resume verified stages within a marked experiment directory."""
+
     def __init__(self, root: Path):
         reject_symlinks(root)
         self.root = root.absolute()
@@ -44,6 +49,7 @@ class Experiment:
             raise ValueError("checkpoint experiment identity mismatch")
 
     def fresh(self):
+        """Remove the owned workspace and create a new experiment identity."""
         reject_symlinks(self.root)
         if (self.root / MARKER).read_text().strip() != self.identifier:
             raise ValueError("not an owned experiment directory")
@@ -51,9 +57,13 @@ class Experiment:
         self.__init__(self.root)
 
     def run(self, steps: list[Step]):
+        """Run stages in dependency order, reusing outputs whose hashes still match.
+
+        Persist failed stages before propagating errors so later runs can resume.
+        """
         seen = set()
         for step in steps:
-            if not re.fullmatch(r"[a-z0-9_-]+", step.name) or step.name in seen:
+            if not re.fullmatch(_STAGE_NAME_PATTERN, step.name) or step.name in seen:
                 raise ValueError("invalid or duplicate stage name")
             if not set(step.dependencies) <= seen:
                 raise ValueError("stages must follow dependency order")
@@ -115,6 +125,7 @@ class Experiment:
 
 
 def hashes(directory: Path):
+    """Return file hashes keyed by relative path, rejecting symlinks."""
     reject_symlinks(directory)
     return {
         str(path.relative_to(directory)): file_sha256(path)
@@ -124,6 +135,7 @@ def hashes(directory: Path):
 
 
 def reject_symlinks(path: Path):
+    """Reject symlinks in the path, its ancestors and its existing directory tree."""
     path = path.absolute()
     for parent in (path, *path.parents):
         if parent.is_symlink():

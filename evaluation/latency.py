@@ -1,4 +1,4 @@
-"""품질 평가와 독립적으로 검색 지연을 측정하고 밀리초 단위로 집계합니다."""
+"""Measure search latency in milliseconds independently of quality evaluation."""
 
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
@@ -6,18 +6,18 @@ from math import ceil, fsum, isfinite
 from numbers import Real
 from time import perf_counter
 
-from evaluation.metrics import EVALUATION_TOP_K
+from evaluation.constants import DEFAULT_REPEATS as DEFAULT_REPEATS
+from evaluation.constants import DEFAULT_WARMUP as DEFAULT_WARMUP
+from evaluation.constants import EVALUATION_TOP_K
+from evaluation.constants import MILLISECONDS_PER_SECOND as MILLISECONDS_PER_SECOND
 from retrievers.base import Retriever, SearchResult
 
-DEFAULT_WARMUP = 1
-DEFAULT_REPEATS = 5
-MILLISECONDS_PER_SECOND = 1000
 _P95_QUANTILE = 0.95
 
 
 @dataclass(frozen=True)
 class LatencyMeasurement:
-    """입력 위치별 시간 샘플과 품질 평가에서 재사용할 첫 측정 검색 결과입니다."""
+    """Per-query latency samples and first measured results for quality evaluation."""
 
     latency: dict[str, float | int]
     warmup_seconds: float
@@ -26,7 +26,7 @@ class LatencyMeasurement:
 
 
 def latency_summary(samples: list[float]) -> dict[str, float | int]:
-    """전체 요청 샘플의 평균과 선형 보간 P95를 계산합니다(단위 ms)."""
+    """Compute mean latency and linearly interpolated P95 from millisecond samples."""
     if not samples or any(
         isinstance(value, bool)
         or not isinstance(value, Real)
@@ -58,11 +58,10 @@ def measure_query_latency(
     repeats: int = DEFAULT_REPEATS,
     validate_results: Callable[[int, list[SearchResult]], None] | None = None,
 ) -> LatencyMeasurement:
-    """고정 순서로 예열·반복하며 search 호출만 측정합니다.
+    """Warm up and repeat queries in a fixed order, timing only search calls.
 
-    같은 텍스트의 질의도 입력 위치별로 별도 요청으로 보존합니다. 선택적인
-    결과 검증은 예열 및 매 측정 검색 직후, 요청 타이머 밖에서 수행합니다.
-    예열 전체 시간에는 결과 검증이 포함되며 품질 지표는 계산하지 않습니다.
+    Measure duplicate queries by input position. Validate results after each search;
+    request latency excludes validation, while total warm-up time includes it.
     """
     for name, value in (("top_k", top_k), ("warmup", warmup), ("repeats", repeats)):
         if isinstance(value, bool) or not isinstance(value, int) or value <= 0:

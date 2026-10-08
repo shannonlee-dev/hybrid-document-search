@@ -1,19 +1,18 @@
-"""공통 검색 순위와 이진 qrels로 Recall, RR/MRR, nDCG를 계산합니다."""
+"""Compute Recall, RR/MRR and nDCG from shared search rankings and binary qrels."""
 
 from collections.abc import Iterable, Mapping
 from math import fsum, isfinite, log2
 from numbers import Real
 
+from evaluation.constants import EVALUATION_TOP_K as EVALUATION_TOP_K
+from evaluation.constants import METRIC_NAMES as METRIC_NAMES
 from retrievers.base import SearchResult
-
-EVALUATION_TOP_K = 10
-METRIC_NAMES = ("recall@5", "recall@10", "mrr@10", "ndcg@10")
 
 
 def recall_at_k(
     results: Iterable[SearchResult], qrels: Mapping[str, float], k: int
 ) -> float:
-    """전체 양의 qrels 중 상위 k개에서 찾은 관련 문서의 비율입니다."""
+    """Return the fraction of positively judged documents found in the top k results."""
     document_ids, relevant = _validate_inputs(results, qrels, k)
     return _recall(document_ids, relevant, k)
 
@@ -21,7 +20,7 @@ def recall_at_k(
 def reciprocal_rank_at_k(
     results: Iterable[SearchResult], qrels: Mapping[str, float], k: int
 ) -> float:
-    """상위 k개에서 처음 찾은 관련 문서의 순위 역수이며, 없으면 0입니다."""
+    """Return the reciprocal rank of the first relevant top-k result, or zero."""
     document_ids, relevant = _validate_inputs(results, qrels, k)
     return _reciprocal_rank(document_ids, relevant, k)
 
@@ -29,7 +28,7 @@ def reciprocal_rank_at_k(
 def ndcg_at_k(
     results: Iterable[SearchResult], qrels: Mapping[str, float], k: int
 ) -> float:
-    """relevance > 0을 gain 1로 취급하는 이진 nDCG@K입니다."""
+    """Compute binary nDCG@K, treating positive relevance as a gain of one."""
     document_ids, relevant = _validate_inputs(results, qrels, k)
     return _ndcg(document_ids, relevant, k)
 
@@ -37,7 +36,7 @@ def ndcg_at_k(
 def evaluate_query(
     results: Iterable[SearchResult], qrels: Mapping[str, float]
 ) -> dict[str, float]:
-    """한 질의의 Recall@5/10, RR@10, nDCG@10을 계산합니다."""
+    """Compute Recall@5/10, RR@10 and nDCG@10 for one query."""
     document_ids, relevant = _validate_inputs(results, qrels, EVALUATION_TOP_K)
     return {
         "recall@5": _recall(document_ids, relevant, 5),
@@ -51,10 +50,10 @@ def evaluate_run(
     run: Mapping[str, Iterable[SearchResult]],
     qrels: Mapping[str, Mapping[str, float]],
 ) -> dict[str, float]:
-    """평가 대상 모든 질의에 대해 공통 지표를 macro average합니다.
+    """Compute macro-averaged metrics across all judged queries.
 
-    run에 없는 질의는 빈 검색 결과로 평가합니다. qrels에 없는 질의의 결과는
-    평가 대상 불일치이므로 거부합니다. 질의 집합이 비어 있으면 평균이 정의되지 않습니다.
+    Missing queries use empty results. Reject results for unknown query IDs and
+    empty qrels, for which the mean is undefined.
     """
     if not isinstance(run, Mapping) or not isinstance(qrels, Mapping):
         raise TypeError("run과 qrels는 query_id를 키로 갖는 mapping이어야 합니다.")
