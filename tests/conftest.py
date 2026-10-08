@@ -29,7 +29,7 @@ def refresh_manifest(directory):
     counts, hashes = {}, {}
     for path in directory.glob("*.jsonl"):
         counts[path.name] = sum(
-            bool(line.strip()) for line in path.read_text().splitlines()
+            bool(line.strip()) for line in path.read_text(encoding="utf-8").splitlines()
         )
         hashes[path.name] = file_sha256(path)
     manifest = {
