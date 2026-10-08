@@ -1,4 +1,4 @@
-"""Dense Top-K 검색, 공통 검색 계약과 문서 매핑을 확인한다."""
+"""Verify Dense Top-K search, shared result contracts and document mappings."""
 
 import numpy as np
 import pytest

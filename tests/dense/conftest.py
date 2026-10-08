@@ -1,4 +1,4 @@
-"""Dense 테스트에 문서 fixture와 네트워크를 사용하지 않는 모델 대역을 제공한다."""
+"""Provide Dense document fixtures and an offline embedding model double."""
 
 import sys
 from pathlib import Path
@@ -21,9 +21,10 @@ def dense_documents(dense_corpus_path):
 
 @pytest.fixture
 def model_stub(monkeypatch):
+    """Install a model double mapping cat, dog and search tokens to orthogonal vectors."""
     import numpy as np
 
-    class Model:
+    class _Model:
         def __init__(self, model_name, device=None, revision=None):
             self.model_name = model_name
             self.device = device
@@ -57,6 +58,8 @@ def model_stub(monkeypatch):
             return vectors
 
     monkeypatch.setitem(
-        sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=Model)
+        sys.modules,
+        "sentence_transformers",
+        SimpleNamespace(SentenceTransformer=_Model),
     )
-    return Model
+    return _Model

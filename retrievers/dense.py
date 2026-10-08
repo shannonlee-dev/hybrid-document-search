@@ -1,4 +1,4 @@
-"""임베딩 설정과 문서 매핑을 관리하며 모델은 첫 임베딩 요청에서 로드한다."""
+"""Manage embedding settings and document mappings; load models on first encoding."""
 
 import hashlib
 import json
@@ -35,7 +35,7 @@ _E5_INPUT_PREFIXES = (("query_prefix", "query: "), ("passage_prefix", "passage: 
 
 @dataclass(frozen=True)
 class DenseConfig:
-    """등록된 후보 모델의 revision을 고정하고 E5 계열의 기본 접두사를 적용한다."""
+    """Pin registered model revisions and apply default prefixes for E5 models."""
 
     model_name: str = DEFAULT_MODEL
     device: str | None = None
@@ -73,13 +73,14 @@ class DenseConfig:
 
 
 class DenseEmbedder:
-    """문서와 질의에 동일한 모델과 정규화 설정을 적용한다."""
+    """Apply shared model and normalization settings to documents and queries."""
 
     def __init__(self, config: DenseConfig | None = None):
         self.config = config or DenseConfig()
         self.model = None
 
     def encode_documents(self, texts: list[str]) -> "np.ndarray":
+        """Apply the passage prefix and return one FP32 vector per document."""
         if (
             not isinstance(texts, (list, tuple))
             or not texts
@@ -89,6 +90,7 @@ class DenseEmbedder:
         return self._encode(texts, self.config.passage_prefix)
 
     def encode_query(self, query: str) -> "np.ndarray":
+        """Apply the query prefix and return an FP32 array with one vector row."""
         if not isinstance(query, str) or not query.strip():
             raise ValueError("query must be a non-empty string")
         return self._encode([query], self.config.query_prefix)
@@ -118,7 +120,7 @@ class DenseEmbedder:
 
 
 class DenseRetriever:
-    """FAISS 행 순서와 문서 매핑을 유지하며 공통 SearchResult 계약을 따른다."""
+    """Preserve FAISS row-to-document mappings and return shared SearchResult records."""
 
     def __init__(
         self,
@@ -127,7 +129,7 @@ class DenseRetriever:
         documents: Sequence[Document],
         embedder: DenseEmbedder,
     ) -> None:
-        """완성된 인덱스의 행 순서와 동일한 문서를 받아 독립된 매핑 사본을 보관한다."""
+        """Copy documents in index row order into an independent mapping snapshot."""
         _validate_documents(documents)
         if index.count != len(documents):
             raise ValueError("index count does not match document mapping")
@@ -147,7 +149,7 @@ class DenseRetriever:
         documents: Sequence[Document],
         config: DenseConfig | None = None,
     ) -> "DenseRetriever":
-        """공통 인덱싱 규칙으로 제목과 본문을 임베딩하고 입력 문서 순서대로 인덱싱한다."""
+        """Embed shared title/body text and build an index in input document order."""
         started = perf_counter()
         _validate_documents(documents)
         embedder = DenseEmbedder(config)
@@ -169,7 +171,11 @@ class DenseRetriever:
     def load(
         cls, directory: str | Path, *, device: str | None = None
     ) -> "DenseRetriever":
-        """체크섬·차원·문서 매핑을 검증한 뒤 복원하며 device=None이면 장치를 자동 선택한다."""
+        """Verify checksums, dimensions and document mappings before restoring an index.
+
+        Load the model on first encoding; device=None selects the runtime device
+        automatically.
+        """
         directory = Path(directory)
         metadata = json.loads(
             (directory / METADATA_FILENAME).read_text(encoding="utf-8")
@@ -219,7 +225,10 @@ class DenseRetriever:
         return cls(index=index, documents=documents, embedder=embedder)
 
     def search(self, query: str, top_k: int) -> list[SearchResult]:
-        """빈 질의는 모델을 로드하지 않고 빈 결과를 반환하되 top_k 검증은 수행한다."""
+        """Return at most top_k results ranked by inner-product score.
+
+        Empty queries return no results without loading the model. Always validate top_k.
+        """
         _validate_top_k(top_k)
         if not isinstance(query, str):
             raise TypeError("query must be a string")
@@ -244,9 +253,9 @@ class DenseRetriever:
         return self._documents_by_id[document_id]
 
     def save(self, directory: str | Path) -> None:
-        """인덱스와 문서 매핑을 체크섬으로 연결해 저장하고 실행 장치는 제외한다.
+        """Save the index and document mapping with a checksum, omitting the runtime device.
 
-        두 파일은 원자적으로 저장되지 않으며 불일치한 저장 결과는 load에서 거부한다.
+        The two files are not saved atomically; load rejects inconsistent saved pairs.
         """
         directory = Path(directory)
         index_path = directory / INDEX_FILENAME

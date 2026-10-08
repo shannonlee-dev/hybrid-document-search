@@ -1,4 +1,4 @@
-"""문서·질의 임베딩, 모델 설정과 입력 검증을 확인한다."""
+"""Verify document/query embeddings, model settings and input validation."""
 
 import numpy as np
 import pytest

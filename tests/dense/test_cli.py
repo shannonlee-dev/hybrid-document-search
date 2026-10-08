@@ -1,4 +1,4 @@
-"""오프라인 환경에서 Dense 빌드·검색 CLI와 재시작 후 복원을 검증한다."""
+"""Verify offline Dense build/search commands and restoration after restart."""
 
 import builtins
 import importlib
@@ -241,7 +241,7 @@ def test_empty_query_cli_returns_json_list(
     from retrievers.dense import DenseConfig, DenseRetriever
     from scripts.search import main
 
-    # 빈 질의는 모델이 없어도 저장된 인덱스를 복원한 뒤 빈 결과를 반환해야 한다.
+    # 빈 질의의 검색은 모델 파일 없이도 동작해야 한다.
     retriever = DenseRetriever.build(
         dense_documents, DenseConfig(model_name=str(tmp_path / "missing-model"))
     )
@@ -262,7 +262,7 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
     monkeypatch.setenv("HF_HUB_OFFLINE", "1")
     monkeypatch.setenv("TRANSFORMERS_OFFLINE", "1")
     model_path = tmp_path / "model"
-    # 로컬 BoW 모델로 가중치 다운로드 없이 실제 Sentence Transformers API를 검증한다.
+    # 로컬 BoW 모델로 다운로드 없이 실제 임베딩 API를 검증한다.
     model = st.SentenceTransformer(
         modules=[BoW(["고양이", "야옹", "강아지", "멍멍", "문서", "검색"])],
         device="cpu",
@@ -300,7 +300,7 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
         timeout=45,
     )
     assert json.loads(build.stdout) == {"index": str(index), "documents": 3}
-    # 원본 corpus를 삭제해 재시작한 검색이 저장된 문서 매핑만으로 동작하는지 확인한다.
+    # corpus 없이 재시작해 저장된 문서 매핑만 사용하는지 확인한다.
     corpus.unlink()
     search = subprocess.run(
         [*search_command, *common_args, *query_args],
@@ -360,7 +360,6 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
     assert "Traceback" not in missing_model.stderr
     assert missing_model.stdout == ""
 
-    # 인덱스 손상에는 재빌드를 안내해야 하며 모델 로딩 실패와 구분해야 한다.
     (index / "metadata.json").write_text("{broken", encoding="utf-8")
     corrupt = subprocess.run(
         [*search_command, *common_args, *query_args],

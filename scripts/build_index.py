@@ -1,4 +1,4 @@
-"""준비된 corpus로 Dense 인덱스를 생성하고 단계별 실패 원인을 안내한다."""
+"""Build a Dense index from prepared documents and report stage-specific failures."""
 
 import argparse
 import json
@@ -11,6 +11,7 @@ from scripts._cli import CliArgumentParser, _dependency_hint, _positive_int
 
 
 def main(argv: list[str] | None = None) -> None:
+    """Embed and save a corpus, reporting recovery guidance for failed stages."""
     parser = CliArgumentParser(
         prog="python -m scripts.build_index",
         description="준비된 corpus의 문서를 임베딩하고 Dense 인덱스를 저장합니다.",

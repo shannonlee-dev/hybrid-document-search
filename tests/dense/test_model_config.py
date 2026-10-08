@@ -1,4 +1,4 @@
-"""Dense 모델 설정과 고정 revision을 검증한다."""
+"""Verify Dense model settings and pinned revisions."""
 
 import pytest
 

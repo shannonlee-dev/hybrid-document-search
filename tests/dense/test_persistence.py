@@ -1,4 +1,4 @@
-"""문서 매핑과 임베딩 설정을 포함한 Dense 인덱스 저장·복원을 확인한다."""
+"""Verify Dense index persistence, document mappings and embedding settings."""
 
 import json
 

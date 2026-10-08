@@ -6,9 +6,11 @@ from pathlib import Path
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config/dense_models.toml"
 COMMIT_SHA_PATTERN = r"[0-9a-f]{40}"
+_MODEL_ALIAS_PATTERN = r"[a-z][a-z0-9_-]*"
 
 
 def load_model_config(path=CONFIG_PATH):
+    """Load model settings, rejecting invalid aliases, defaults and revision pins."""
     with Path(path).open("rb") as source:
         config = tomllib.load(source)
     models = config.get("models")
@@ -16,7 +18,7 @@ def load_model_config(path=CONFIG_PATH):
         raise ValueError("dense_models.toml: models must be a non-empty table")
     names = set()
     for alias, model in models.items():
-        if not re.fullmatch(r"[a-z][a-z0-9_-]*", alias):
+        if not re.fullmatch(_MODEL_ALIAS_PATTERN, alias):
             raise ValueError("dense_models.toml: invalid model alias")
         if not isinstance(model, dict):
             raise ValueError(f"dense_models.toml: invalid model table: {alias}")
@@ -40,6 +42,7 @@ def load_model_config(path=CONFIG_PATH):
     return config
 
 
+# 공개 상수는 TOML 설정에 의존하므로 검증 후 초기화한다.
 _CONFIG = load_model_config()
 MODEL_CONFIGS = _CONFIG["models"]
 DEFAULT_MODEL_ALIAS = _CONFIG["default_model"]
