@@ -247,6 +247,12 @@ def _dense(
             MethodState.DEPENDENCY_MISSING,
             "dense dependencies are missing. Install them with: uv sync --extra dense",
         )
+    except OSError as exc:
+        # NotADirectoryError, PermissionError, etc: the configured path is unusable.
+        logger.error("dense index path is unusable: %s", exc)
+        return MethodStatus(
+            MethodState.LOAD_FAILED, "index path could not be read; see server logs."
+        )
     except ValueError:
         logger.exception("dense index could not be loaded")
         return MethodStatus(
@@ -259,8 +265,9 @@ def _dense(
             "index was built from a different corpus. Rebuild it from the current corpus.",
         )
     try:
-        # Load the embedding model now, so "available" means it can actually search.
-        retriever.embedder.encode_query("warm-up")
+        # Run a real search now (not just encode_query), so "available" means the
+        # model and the FAISS index are actually dimension-compatible and can search.
+        retriever.search("warm-up", 1)
     except Exception:
         # The embedding stack raises library-specific errors; the detail is logged.
         logger.exception("dense model could not be loaded")

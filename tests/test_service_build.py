@@ -198,6 +198,20 @@ def test_dense_index_missing_is_reported_with_build_hint(
     assert str(tmp_path) not in status.reason
 
 
+def test_dense_unusable_path_is_load_failed_not_a_startup_crash(
+    monkeypatch, fake_tfidf_module, tmp_path
+):
+    # NotADirectoryError (DENSE_INDEX_PATH pointing at a file, say) is an OSError
+    # that is not FileNotFoundError; it must not propagate out of build_search_service.
+    _install_dense(monkeypatch, fake_dense_class(load_error=NotADirectoryError()))
+
+    service = build_search_service(FIXTURE_CORPUS, dense_index_path=tmp_path)
+
+    assert (
+        service.availability()[RetrievalMethod.DENSE].state is MethodState.LOAD_FAILED
+    )
+
+
 def test_dense_dependency_missing_is_reported(monkeypatch, fake_tfidf_module, tmp_path):
     _install_dense(
         monkeypatch, fake_dense_class(load_error=ModuleNotFoundError("faiss"))
