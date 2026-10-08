@@ -1,7 +1,6 @@
 """Fresh or checksum-validated resumable Ko-MIRACL GPU experiment."""
 
 import argparse
-import fcntl
 import importlib.metadata
 import os
 import platform
@@ -26,6 +25,11 @@ from evaluation.json_io import write_json
 from evaluation.runtime_config import THREAD_ENV, configure_runtime
 from fusion.rrf import DEFAULT_RANK_CONSTANT
 from retrievers.model_config import ALIASES, DEFAULT_MODEL_ALIAS, MODELS
+
+try:
+    import fcntl
+except ImportError:  # Windows has no fcntl; the exclusive lock is Unix-only.
+    fcntl = None
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKSPACE = ROOT / "artifacts/ko-miracl-full"
@@ -410,7 +414,8 @@ def main(argv=None):
     lock.parent.mkdir(parents=True, exist_ok=True)
     reject_symlinks(lock)
     with lock.open("w") as handle:
-        fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        if fcntl is not None:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         _ensure_old_results_preserved(args.fresh)
         changed_code = subprocess.check_output(
             [

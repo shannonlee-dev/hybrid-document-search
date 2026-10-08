@@ -1,8 +1,19 @@
 """Experiment preflight accepts different environments while requiring CUDA."""
 
+import runpy
+import sys
+
 import pytest
 
 from scripts import run_experiment
+
+
+def test_module_loads_without_fcntl(monkeypatch):
+    monkeypatch.setitem(sys.modules, "fcntl", None)
+
+    module = runpy.run_path(run_experiment.__file__)
+
+    assert callable(module["main"])
 
 
 @pytest.mark.parametrize(
