@@ -30,8 +30,7 @@ E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix�
 | KURE-v1 | 0.878222 | 0.968444 | 0.797373 | 0.814188 | 21.013247 | 31.478979 |
 
 모델별 100개 질의, latency 샘플 500개다. Train nDCG@10 최고 모델은 BGE-M3이다.
-모델별 수치는 [Train 비교 CSV](../results/dense/train/comparison.csv),
-실험 당시 기본 모델과 선정 정책은 [전체 실험 기록](../results/experiment.json)을 참조한다.
+수치 순위와 기본 모델 정책은 별도로 기록한다.
 
 ## Dev 3모델 비교
 
@@ -41,12 +40,14 @@ E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix�
 | BGE-M3 | 0.813667 | 0.958333 | 0.861024 | 0.854857 | 21.091188 | 29.918226 |
 | KURE-v1 | 0.836000 | 0.961000 | 0.849000 | 0.845513 | 20.818919 | 28.696750 |
 
-모델별 50개 질의, latency 샘플 250개다. Dev nDCG@10 최고 모델은 BGE-M3이다.
-Dev 결과로 모델이나 설정을 튜닝하지 않았다. [Dev 비교 CSV](../results/dense/dev/comparison.csv).
+모델별 50개 질의, latency 샘플 250개다. 위 측정에서 Dev nDCG@10 최고 모델은 BGE-M3이다.
+Dev 결과로 모델이나 설정을 튜닝하지 않았다.
 이 표는 최초 전체 실험의 3모델 비교다. 기본 모델 변경 후 네 방식의 재평가와 latency는
 [검색 방식 비교](BENCHMARK_RESULTS.md)에 별도로 기록했다.
-각 split의 모델별 JSON에는 질의별 검색 결과와 qrels를 저장한다.
-저장 형식은 [EVALUATION.md](EVALUATION.md)를 참조한다.
+
+현재 실행의 모델별 평가 결과는 `artifacts/ko-miracl-full/dev-<alias>/evaluation/`에 생성된다.
+`<alias>`는 `e5`, `bge`, `kure`이며, 각 디렉터리의 `results.json`에는 질의별 검색 결과·지표·
+latency 샘플이, `summary.csv`에는 집계값이 저장된다.
 
 ## 인덱스 구축과 복원
 
@@ -56,7 +57,7 @@ Dev 결과로 모델이나 설정을 튜닝하지 않았다. [Dev 비교 CSV](..
 | BGE-M3 | 193.561 | 0.039 | 0.103 | 196.027 | 2273.052 | 8192 |
 | KURE-v1 | 193.291 | 0.066 | 0.096 | 195.896 | 2273.052 | 8192 |
 
-모델 snapshot 다운로드는 빌드 전 별도 단계이며 runtime JSON의 `download_seconds`에 기록한다.
+모델 snapshot 다운로드는 빌드 전 별도 단계다.
 Embedding 시간에는 lazy 모델 로딩과 문서 임베딩이 포함된다. 준비 합계는 입력 확인·빌드·저장 등을
 포함하며 별도 프로세스의 복원 평가 시간은 제외한다. Peak는 PyTorch 텐서 최대 할당량이다.
 

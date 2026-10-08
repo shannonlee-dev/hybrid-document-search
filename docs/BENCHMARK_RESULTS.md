@@ -24,35 +24,48 @@ Dense 단독과 Hybrid의 차이를 실제 측정 그대로 보고하며 Hybrid 
 기본 모델은 `config/dense_models.toml`의 `default_model = "bge"`로 지정하고
 Train/Dev 점수로 자동 선택하지 않는다. 검색 알고리즘과 평가 조건은 유지했다.
 
-## 질의별 검색 순위 사례
+## 원문·qrels 대조 사례
 
 Dense와 Hybrid의 질의별 nDCG 차이가 가장 큰 양쪽 사례를 사후에 골랐다.
 대표성을 통계적으로 보장하는 표본이 아니며 개별 검색 동작을 설명하기 위한 사례다.
 
 ### 1391: 발해는 언제 건국되나요?
 
-- Dense (BGE-M3): 관련 문서 순위 1; 1위 `122372#0`.
-- Hybrid (BM25 + BGE-M3): 관련 문서 순위 6; 1위 `122372#12`.
+- Dense (BGE-M3): 관련 문서 순위 1; 1위 `122372#0`, 제목 ‘발해’.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 6; 1위 `122372#12`, 제목 ‘발해’.
 
 ### 606: 조선에서 가장 어린 왕은 누구인가?
 
-- Dense (BGE-M3): 관련 문서 순위 4; 1위 `11027#0`.
-- Hybrid (BM25 + BGE-M3): 관련 문서 순위 1; 1위 `867281#3`.
+- Dense (BGE-M3): 관련 문서 순위 4; 1위 `11027#0`, 제목 ‘조선 현종’.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 1; 1위 `867281#3`, 제목 ‘빈 (지위)’.
 
-전체 Top-10 문서 ID·순위와 판정값(`qrels`)은
-[질의별 결과 JSON](../results/retrieval/dev/results.json)에서 확인할 수 있다.
+각 결과의 문서 ID를 corpus 및 qrels와 대조했다.
 
 ## 출처와 재현
 
-- [질의별 결과·판정값·실행 환경·코드 SHA·인덱스 설정](../results/retrieval/dev/results.json)
-- [요약 CSV](../results/retrieval/dev/summary.csv)
-- [실행 명령·전체 실험 해시 및 검증](../results/experiment.json)
+위 표는 2026-10-08 측정 기록이다. 당시 네 방식 재평가의 원본 경로는
+`artifacts/ko-miracl-bge-default/retrieval/`이며, 기존 데이터·인덱스·3모델 측정 코드의
+commit은 `5a6a60024d602b23312eafdb3b3c371d282ddcc9`이다.
 
-기존 데이터·인덱스·3모델 측정 코드 commit: `5a6a60024d602b23312eafdb3b3c371d282ddcc9`.
-이번 네 방식 재평가의 코드 SHA와 변경 상태는 결과 JSON의 `code` 및
-`experiment.json`의 `retrieval_code`에 별도로 기록했다. 원본 재평가는
-`artifacts/ko-miracl-bge-default/retrieval/`에 보존했다.
-저장 형식·계산 규칙·재개 방법은 [EVALUATION.md](EVALUATION.md)를 참조한다.
+현재 코드의 전체 실험은 다음 명령으로 실행·재개한다.
+
+```bash
+uv run --locked --extra sparse --extra dense python -m scripts.run_experiment
+```
+
+새 실행의 네 방식 Dev 결과는 `artifacts/ko-miracl-full/retrieval/evaluation/`에 생성된다.
+
+- `results.json`: 질의별 검색 결과·지표·latency 샘플, 측정 조건·환경·코드 출처
+- `summary.csv`: 방식별 품질 지표와 latency 집계
+- `queries.csv`: 질의별 지표
+- `latencies.csv`: 질의별 반복 측정 샘플
+- `comparison.md`: 방식별 비교표
+
+실행 명령은 `artifacts/ko-miracl-full/retrieval/command.json`, 사전 점검 환경은
+`artifacts/ko-miracl-full/preflight.json`, 단계 상태·입출력 해시는
+`artifacts/ko-miracl-full/checkpoint.json`에 기록한다.
+판정값은 `artifacts/ko-miracl-full/data/prepared/qrels_dev.jsonl`에서 확인한다.
+실험 결과, 모델 인덱스, 로그, checkpoint는 로컬 `artifacts/`에 생성하며 Git에 포함하지 않는다.
 
 10k subset의 순차 실행 결과로, 전체 MIRACL 성능이나 API 응답 시간을 뜻하지 않는다.
 독립적인 전체 실험 반복은 수행하지 않았다. 측정 범위와 한계는 [EVALUATION.md](EVALUATION.md)를 참조한다.

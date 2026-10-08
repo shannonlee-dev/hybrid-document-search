@@ -8,6 +8,9 @@ from math import isfinite
 from pathlib import Path
 
 from data.loader import Document, load_prepared_documents
+from data.preparation import PINNED_REVISION
+from evaluation.constants import DATASET_SETTINGS
+from evaluation.json_io import read_json
 
 
 @dataclass(frozen=True)
@@ -187,3 +190,28 @@ def _check_count(manifest: dict, name: str, actual: int) -> None:
         or expected != actual
     ):
         raise ValueError(f"manifest output_counts와 파일 레코드 수가 다릅니다: {name}")
+
+
+def validate_dataset(data, raw):
+    """Verify the pinned dataset, source hashes and split sizes before running the experiment."""
+    datasets = {
+        split: load_evaluation_dataset(data, split) for split in ("train", "dev")
+    }
+    manifest = read_json(data / "manifest.json")
+    if manifest["dataset_revision"] != PINNED_REVISION:
+        raise ValueError("dataset revision mismatch")
+    if manifest["settings"] != DATASET_SETTINGS:
+        raise ValueError("dataset settings mismatch")
+    for name, digest in manifest["source_sha256"].items():
+        if file_sha256(raw / PINNED_REVISION / name) != digest:
+            raise ValueError("source hash mismatch")
+    for split, count in (
+        ("train", DATASET_SETTINGS["train_queries"]),
+        ("dev", DATASET_SETTINGS["dev_queries"]),
+    ):
+        if (
+            len(datasets[split].documents) != DATASET_SETTINGS["corpus_size"]
+            or len(datasets[split].queries) != count
+        ):
+            raise ValueError("dataset counts mismatch")
+    return datasets

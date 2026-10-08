@@ -35,19 +35,19 @@ uv run --locked --extra sparse --extra dense python -m scripts.run_experiment --
 통합 실행기는 Python 3.12 이상·Linux·작동하는 CUDA가 필요하며, WSL2나 특정 GPU 모델을 강제하지 않는다.
 CUDA를 감지한 뒤 실제 할당·연산을 확인하고, 사용할 수 없으면 CPU로 대체하지 않고 종료한다.
 Python·OS·GPU·CUDA·패키지 버전은 실행 환경과 단계 입력에 기록한다.
-작업 공간 lock과 결과 승격은 Linux API를 사용한다.
+작업 공간 lock은 Linux API를 사용한다.
 아래 환경은 저장된 벤치마크의 측정 조건이다.
 
 Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / WSL2 / NVIDIA RTX 4060, embedding `cuda:0`, CPU FAISS. FP32, L2 정규화, batch size 1, Top-K 10, 전체 질의 warm-up 1회, 측정 5회. PyTorch intra/inter-op·FAISS·OMP/MKL/OpenBLAS 2 threads, tokenizer 병렬화 비활성화, TF32 비활성화.
 
-측정 코드는 실행 전에 커밋해야 한다. 모델 revision은 [Dense 문서](DENSE_RETRIEVAL.md)에 고정돼 있다.
+모델 revision은 [Dense 문서](DENSE_RETRIEVAL.md)에 고정돼 있다.
 후보 모델과 고정 revision은 `config/dense_models.toml`의 `[models.<alias>]`에서 읽는다.
 기본 모델은 같은 파일의 `default_model = "bge"`로 지정하며 `config_default` 정책으로 기록한다.
 `retrievers/model_config.py`는 TOML을 읽고 검증하며, 실험 실행기와 Dense 검색기가 같은 설정을 사용한다.
-Train/Dev 순위는 비교용으로만 기록한다. TOML 변경도 단계 입력 해시와 실행 전 변경 검사에 포함한다.
+Train/Dev 순위는 비교용으로만 기록한다. TOML 변경도 단계 입력 해시에 포함한다.
 
 실행 순서는 환경·revision 사전 점검 → 데이터 준비 → 모델별 다운로드·build·별도 subprocess 복원 →
-Train 3모델 → Dev 3모델 → 기본 모델(BGE-M3) 기반 Dev 4방식 → 검증·staging·최종 승격이다.
+Train 3모델 → Dev 3모델 → 기본 모델(BGE-M3) 기반 Dev 4방식이다.
 다운로드 실패는 최대 3회 시도하고, 다른 단계 실패는 실패 상태와 오류를 기록한 뒤 종료한다.
 
 `artifacts/ko-miracl-full/checkpoint.json`에는 단계 상태·설정·코드 해시·의존 단계의 출력 경로 및 SHA·
@@ -59,43 +59,11 @@ Train 3모델 → Dev 3모델 → 기본 모델(BGE-M3) 기반 Dev 4방식 → �
 `--fresh`는 소유 marker가 있는 실험 작업 공간만 삭제한다. 심볼릭 링크와 경로 이탈을 거부하고
 동시 실행은 lock으로 막는다. 전역 모델 캐시와 다른 팀원의 인덱스는 보존한다.
 원본 데이터는 다시 다운로드하며 모델 가중치는 정확한 revision의 캐시를 재사용할 수 있다.
-기존 `results/`는 Git에 보존돼 있어야 한다. 모든 검증이 끝난 staging만 Linux 원자적 디렉터리 교환으로
-승격하므로 실패·중간 결과는 최종 결과에 섞이지 않는다.
-
-## 최종 산출물
-
-```text
-results/
-  experiment.json
-  dense/
-    runtime.json
-    train/ e5.json bge.json kure.json comparison.csv
-    dev/   e5.json bge.json kure.json comparison.csv
-  retrieval/dev/
-    results.json summary.csv
-```
-
-패키징 시 위 파일만 생성해 `results/`에 저장하고 Git에 커밋한다.
-
-Train/Dev 모델별·검색 방식별 JSON에는 질의 원문, Top-10 문서 ID·순위·점수, 지표·latency 샘플,
-측정 조건·환경·코드 출처를 저장한다. 원시 JSON에서 검색 결과의 `title`·`snippet`을 제거하고
-`qrels`와 변환 설명인 `export`를 추가한다. 지표와 Mean/P95는 이 JSON으로 재계산할 수 있다.
-질의별 검색 결과와 판정값은 모델별·검색 방식별 JSON에서 확인한다.
-
-`experiment.json`의 `files_sha256`은 자기 자신을 제외한 결과 파일 해시,
-`raw_results`는 원시 JSON의 로컬 경로와 해시를 기록한다.
-
-원시 출력은 `artifacts/`에 보관한다. JSON과 내용이 겹치는 `queries.csv`·`latencies.csv`·`comparison.md`,
-로그·checkpoint·중간 결과·원본 corpus·모델·FAISS 바이너리는 Git에서 제외한다.
 
 ## 검증
 
-`PACKAGE_FILES`의 출력 경로를 패키징·검증이 공유하며 완료 상태·필수 파일·체크섬을 검사한다.
-산출물 변경 시 공통 경로·생성 처리·문서를 맞추고 `files_sha256`을 갱신한다.
-
-패키징 전에 corpus/query/qrels와 원본·manifest 해시, 10000/100/50개 수량, 모델별 revision,
-FP32·정규화·장치·실효 스레드, 인덱스 복원을 검증한다. 원시 결과로 모든 질의별/집계 품질과
-latency를 재계산하고 Train 500개·Dev 250개 샘플을 확인한다. 세 모델·네 방식 중 하나라도 누락되면 실패한다.
+corpus/query/qrels와 원본·manifest 해시, 10000/100/50개 수량, 모델별 revision,
+FP32·정규화·장치·실효 스레드, 인덱스 복원을 검증한다.
 
 ```bash
 uv run --locked --extra sparse --extra dense ruff check .

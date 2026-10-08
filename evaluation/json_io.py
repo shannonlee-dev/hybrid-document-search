@@ -1,6 +1,7 @@
 """Shared JSON output for evaluation reports and experiment checkpoints."""
 
 import json
+from pathlib import Path
 
 
 def write_json(path, value):
@@ -12,3 +13,8 @@ def write_json(path, value):
         encoding="utf-8",
     )
     temporary.replace(path)
+
+
+def read_json(path):
+    """Read a UTF-8 JSON file."""
+    return json.loads(Path(path).read_text(encoding="utf-8"))

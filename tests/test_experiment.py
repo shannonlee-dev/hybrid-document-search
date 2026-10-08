@@ -109,3 +109,26 @@ def _pipeline(tmp_path, fail=None, changed=None):
         Step("evaluate", ("e5", "bge"), {}, _action("evaluate")),
     ]
     return experiment, steps, calls
+
+
+def test_completed_steps_are_reused_after_removing_final_stage(tmp_path):
+    from evaluation.experiment_runner import Step
+
+    exp, steps, _ = _pipeline(tmp_path)
+    exp.run(
+        [
+            *steps,
+            Step(
+                "package",
+                ("evaluate",),
+                {},
+                lambda directory: (directory / "old.json").write_text("{}"),
+            ),
+        ]
+    )
+    resumed, steps, calls = _pipeline(tmp_path)
+    resumed.run(steps)
+    assert calls == []
+    assert all(
+        resumed.state["steps"][step.name]["status"] == "completed" for step in steps
+    )

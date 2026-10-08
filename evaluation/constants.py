@@ -15,3 +15,21 @@ THREAD_COUNT_KEYS = (
     "faiss_omp_max_threads",
 )
 CUDA_DEVICE = "cuda:0"
+
+CONDITIONS = {
+    "device": CUDA_DEVICE,
+    "batch_size": 1,
+    "dtype": "float32",
+    "normalize_embeddings": True,
+    "top_k": EVALUATION_TOP_K,
+    "warmup": DEFAULT_WARMUP,
+    "repeats": DEFAULT_REPEATS,
+    "threads": DEFAULT_THREADS,
+    "seed": 42,
+}
+DATASET_SETTINGS = {
+    "corpus_size": 10000,
+    "train_queries": 100,
+    "dev_queries": 50,
+    "seed": CONDITIONS["seed"],
+}

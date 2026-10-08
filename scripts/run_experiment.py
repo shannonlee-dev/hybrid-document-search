@@ -10,19 +10,10 @@ from pathlib import Path
 from time import perf_counter
 
 from data.preparation import PINNED_REVISION
-from evaluation.constants import THREAD_ENV
-from evaluation.data import file_sha256
-from evaluation.experiment_results import CONDITIONS as CONDITIONS
-from evaluation.experiment_results import (
-    DATASET_SETTINGS,
-    package_results,
-    promote,
-    read_json,
-    validate_dataset,
-    verify_package,
-)
-from evaluation.experiment_runner import Experiment, Step, hashes, reject_symlinks
-from evaluation.json_io import write_json
+from evaluation.constants import CONDITIONS, DATASET_SETTINGS, THREAD_ENV
+from evaluation.data import file_sha256, validate_dataset
+from evaluation.experiment_runner import Experiment, Step, reject_symlinks
+from evaluation.json_io import read_json, write_json
 from evaluation.runtime_config import configure_runtime
 from fusion.rrf import DEFAULT_RANK_CONSTANT
 from retrievers.model_config import ALIASES, DEFAULT_MODEL_ALIAS, MODELS
@@ -108,38 +99,6 @@ def _environment():
             )
         },
     }
-
-
-def _ensure_old_results_preserved(fresh=False):
-    """Refuse publication over results not already recoverable from local Git."""
-    final = ROOT / "results"
-    reject_symlinks(final)
-    if not fresh and (final / "experiment.json").exists():
-        try:
-            verify_package(final)
-            if hashes(final) == hashes(WORKSPACE / "package"):
-                return
-        except (ValueError, KeyError):
-            pass
-    status = subprocess.check_output(
-        ["git", "status", "--porcelain", "--untracked-files=all", "--", "results"],
-        cwd=ROOT,
-        text=True,
-    )
-    if status.strip():
-        raise ValueError(
-            "Preserve current results in a reviewed local commit before running"
-        )
-    tracked = subprocess.check_output(
-        ["git", "ls-files", "--", "results"], cwd=ROOT, text=True
-    ).splitlines()
-    actual = {
-        str(path.relative_to(ROOT)) for path in final.rglob("*") if path.is_file()
-    }
-    if actual - set(tracked):
-        raise ValueError(
-            "Untracked/ignored results must be preserved before replacement"
-        )
 
 
 def _make_steps(experiment, env):
@@ -316,31 +275,6 @@ def _make_steps(experiment, env):
             _retrieval,
         )
     )
-    dependencies = tuple(step.name for step in steps)
-
-    def _package(directory):
-        commit = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
-        ).strip()
-        provenance = {
-            "conditions": CONDITIONS,
-            "environment": env,
-            "code_sha256": measurement_code,
-            "code_commit": commit,
-            "lock_sha256": file_sha256(ROOT / "uv.lock"),
-            "command": COMMAND,
-            "fresh_command": COMMAND + " --fresh",
-            "index_regeneration": "--fresh rebuilds all three indexes from newly downloaded sources",
-            "retrieval_command": read_json(root / "retrieval/command.json")["argv"],
-            "stage_commands": {
-                step.name: read_json(root / step.name / "command.json")
-                for step in steps[:-1]
-            },
-            "preflight": read_json(root / "preflight.json"),
-        }
-        package_results(root, directory, experiment.identifier, provenance)
-
-    steps.append(Step("package", dependencies, {"code": measurement_code}, _package))
     return steps
 
 
@@ -395,7 +329,7 @@ def _download_model(model, output):
 
 
 def main(argv=None):
-    """Run or resume the pinned GPU experiment and publish its verified package."""
+    """Run or resume the pinned GPU experiment in the local artifacts workspace."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fresh", action="store_true")
     parser.add_argument(
@@ -417,27 +351,6 @@ def main(argv=None):
     with lock.open("w") as handle:
         if fcntl is not None:
             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        _ensure_old_results_preserved(args.fresh)
-        changed_code = subprocess.check_output(
-            [
-                "git",
-                "status",
-                "--porcelain",
-                "--",
-                "data",
-                "retrievers",
-                "indexing",
-                "evaluation",
-                "fusion",
-                "scripts",
-                "config",
-                "pyproject.toml",
-                "uv.lock",
-            ],
-            text=True,
-        )
-        if changed_code.strip():
-            raise ValueError("Commit measurement code before starting the experiment")
         experiment = Experiment(WORKSPACE)
         try:
             env = _environment()
@@ -461,14 +374,9 @@ def main(argv=None):
                         ),
                         "accessible_model_revisions": accessible,
                         "command": COMMAND + (" --fresh" if args.fresh else ""),
-                        "initial_head": subprocess.check_output(
-                            ["git", "rev-parse", "HEAD"], text=True
-                        ).strip(),
                     },
                 )
             experiment.run(_make_steps(experiment, env))
-            promote(experiment.root / "package", ROOT / "results")
-            verify_package(ROOT / "results")
         except Exception as exc:
             write_json(
                 experiment.root / "failure.json",
@@ -476,7 +384,7 @@ def main(argv=None):
             )
             print(str(exc), file=sys.stderr)
             return 1
-    print("Verified complete experiment: results/", flush=True)
+    print(f"Experiment completed successfully: {experiment.root}", flush=True)
     return 0
 
 

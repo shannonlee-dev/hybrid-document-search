@@ -38,7 +38,6 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | `frontend/` | Streamlit 진입점 |
 | `scripts/` | 데이터 준비, Dense index 생성, TF-IDF/BM25/Dense 검색 및 공통 평가 실행 진입점 |
 | `tests/` | 공통 계약, 데이터 준비, 검색·인덱스·CLI·API 및 서비스 통합 테스트 |
-| `results/` | 결과 JSON·비교 CSV·전체 실험 기록 |
 | `.github/` | CI, Issue 및 PR 템플릿 |
 
 공통 계약은 `search(query: str, top_k: int) -> list[SearchResult]`입니다.
@@ -111,11 +110,8 @@ HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 uv run --locked --extra sparse --extra d
 ```
 
 다운로드 데이터는 `data/raw/` 또는 `datasets/`, 전처리 결과는 `data/processed/`,
-모델은 `models/`, 인덱스는 `indexes/`, 원시 실험 출력·로그·checkpoint는
-`artifacts/` 또는 `experiments/`에 보관하세요. 이 경로와 로컬 SQLite 파일은 Git에서 제외됩니다.
-
-결과 JSON·비교 CSV와 전체 실험 기록(`experiment.json`)은 `results/`에 커밋합니다.
-저장 파일과 JSON 형식은 [EVALUATION.md](docs/EVALUATION.md)를 참조하세요.
+모델은 `models/`, 인덱스는 `indexes/`, 실험 산출물은 `artifacts/` 또는 `experiments/`에
+보관하세요. 이 경로와 로컬 SQLite 파일은 Git에서 제외됩니다.
 
 ## TF-IDF MVP 실행
 
@@ -213,7 +209,7 @@ Issue를 만들고 각자 브랜치에서 작업한 뒤 연결된 PR로 협업�
 ## Status
 
 데이터 준비, TF-IDF/BM25/Dense 검색, Hybrid RRF, FAISS 저장·복원과 공통 평가를 제공합니다.
-10k corpus의 Dense 3모델 Train/Dev 비교와 네 방식 Dev 평가를 완료했으며, 결과는 `results/`에 있습니다.
+10k corpus의 Dense 3모델 Train/Dev 비교와 네 방식 Dev 평가를 완료했습니다.
 이번 subset에서는 Dense(BGE-M3)가 Hybrid보다 우수했습니다.
 FastAPI는 `/health`, `/search/methods`, `POST /search`를 제공합니다.
 Dense/Hybrid는 공통 corpus와 일치하는 저장 인덱스 및 `DENSE_INDEX_PATH` 설정이 필요합니다.

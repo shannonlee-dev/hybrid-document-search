@@ -204,3 +204,34 @@ def test_dense_index_document_mismatch_is_rejected(
     )
     with pytest.raises(ValueError, match="공통 corpus"):
         benchmark._build_retriever("dense", dataset, index, "cpu")
+
+
+def test_local_report_metrics_and_latency_are_recomputable(
+    evaluation_directory, tmp_path
+):
+    from evaluation.metrics import evaluate_query, evaluate_run
+
+    dataset = load_evaluation_dataset(evaluation_directory)
+    result = benchmark.benchmark_retriever(_FixtureRetriever(), dataset)
+    directory = tmp_path / "artifacts/evaluation"
+    benchmark.write_report(
+        {
+            "dataset": {"split": dataset.split, **dataset.provenance},
+            "methods": {"tfidf": {"setup_seconds": 0.0, **result}},
+        },
+        directory,
+    )
+    saved = json.loads((directory / "results.json").read_text())["methods"]["tfidf"]
+    run, samples = {}, []
+    for actual, query in zip(saved["queries"], dataset.queries, strict=True):
+        hits = [SearchResult(**hit) for hit in actual["results"]]
+        assert actual["query_id"] == query.query_id
+        assert actual["text"] == query.text
+        assert actual["metrics"] == evaluate_query(hits, dataset.qrels[query.query_id])
+        assert actual["latency"] == latency.latency_summary(
+            actual["latency_samples_ms"]
+        )
+        run[query.query_id] = hits
+        samples.extend(actual["latency_samples_ms"])
+    assert saved["metrics"] == evaluate_run(run, dataset.qrels)
+    assert saved["latency"] == latency.latency_summary(samples)
