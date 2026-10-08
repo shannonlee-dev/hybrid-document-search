@@ -63,7 +63,6 @@ Embedding 시간에는 lazy 모델 로딩과 문서 임베딩이 포함된다. �
 세 인덱스 모두 별도 subprocess에서 복원해 문서 10,000개와 전체 ID·행 순서·원문,
 모델명·revision, 저장 전후 Top-K와 score (`rtol=1e-5`, `atol=1e-6`)를 검증했다.
 문서 재임베딩을 금지한 상태에서 복원 검색을 수행했고 저장 벡터의 FP32·L2 정규화를 확인했다.
-[전체 build/restore 기록](../results/dense/runtime.json)에 인덱스·metadata 해시와 실제 스레드 수가 있다.
 
 ## 사용과 저장 형식
 

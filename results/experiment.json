@@ -623,7 +623,7 @@
     "dense/dev/comparison.csv": "6787237ec92a9d760b25249a039444e7d479cd7ce6f10265c5ad9f64c2a39313",
     "dense/dev/e5.json": "144c7bb9b432d1d4dc98d73408e05726b5ec309ba1ba77a21b33acc8dccd9d62",
     "dense/dev/kure.json": "ef9ef549bce25eea13a1a5728d20f6dfddb320382010e1b27f82f7b57a5dcec2",
-    "dense/runtime.json": "dab23f1328001375511d533b139a617d6888bfbbbce682a840c75a316c769634",
+    "dense/runtime.json": "9d565541d38d19399e2b397ef8baebaec68d9ff540eec6127c857ad4d854cb81",
     "dense/train/bge.json": "b0d2a30a5d038f91020e4ffa19bb08bda5fbe3b84d3eb0c9bd8f151e41964256",
     "dense/train/comparison.csv": "5c48cb43f509b0015ceda7aed14465c10f1f0de69f47ac37fdd106f5cb52da70",
     "dense/train/e5.json": "b5008bd2b081a6712262e8c5adb13ec322d08871774d7d6146005455edc9a2fd",
@@ -672,6 +672,50 @@
     "retrieval/dev/results.json": {
       "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-bge-default/retrieval/evaluation/results.json",
       "sha256": "73d91d6432d8dde34b9ad4d2a2a7f13dd9ac5d1b43a9bf17598b33ea0be16b9a"
+    }
+  },
+  "raw_runtime": {
+    "e5": {
+      "build": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/build-e5/report.json",
+        "sha256": "032647e8396d120ff715c482bfaf171be0553d7fc607a293d9470d8e23cfedc7"
+      },
+      "restore": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/restore-e5/report.json",
+        "sha256": "6859472f16afa574d07f1bf7d2e5e06cdbb49fa28a383cb3cba373c64f149182"
+      },
+      "download": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/download-e5/report.json",
+        "sha256": "a7bb4804b46de8ae2cdee272f949fa980a8ed645bd924dd8f39aa046c6d43b4b"
+      }
+    },
+    "bge": {
+      "build": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/build-bge/report.json",
+        "sha256": "7d0e2a04bb3430d80d219ea17dcd86fca8ef0e5e7863bda086ac2a19d1e991a0"
+      },
+      "restore": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/restore-bge/report.json",
+        "sha256": "ccc30c148d6db9e40b175461481053ac832269846b959e8f0a2bcf9faead86de"
+      },
+      "download": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/download-bge/report.json",
+        "sha256": "9b1e6f137864da8ab07eb2ea58ec3b7a88a377656697467535582bdede830b04"
+      }
+    },
+    "kure": {
+      "build": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/build-kure/report.json",
+        "sha256": "12dc99eef092248908f25893796325788c8db694ba69ca500bdf6ead57d3145e"
+      },
+      "restore": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/restore-kure/report.json",
+        "sha256": "61d18fa63de2faacbcda921096a6c6ddaf5590b125e17b9f04fc5273119fe0e4"
+      },
+      "download": {
+        "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/download-kure/report.json",
+        "sha256": "0624db543bfd33853af1b94855a5f5afc373cae8fda1dd7f5e78982c7559d0d8"
+      }
     }
   }
 }

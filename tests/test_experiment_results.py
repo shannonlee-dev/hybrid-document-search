@@ -156,3 +156,97 @@ def test_revision_mismatch_fails():
     config["revision"] = "0" * 40
     with pytest.raises(ValueError, match="revision"):
         _validate_embedding(config, model)
+
+
+def test_runtime_summary_preserves_measurements_without_bulk_samples_or_excerpts():
+    from evaluation import experiment_results
+
+    build = {
+        "embedding_seconds": 12.5,
+        "faiss_build_seconds": 0.1,
+        "save_seconds": 0.2,
+        "total_preparation_seconds": 13.0,
+        "peak_gpu_allocated_bytes": 1024,
+        "index_sha256": "a" * 64,
+        "metadata_sha256": "b" * 64,
+        "loaded_model_revision": "c" * 40,
+        "build_runtime_threads": {"faiss_omp_max_threads": 2},
+        "gpu_name": "fixture GPU",
+        "cuda_version": "fixture CUDA",
+        "cached_model_revision": "c" * 40,
+    }
+    restored = {
+        "latency_mean_seconds": 0.002,
+        "latency_p95_seconds": 0.003,
+        "latency_samples": 3,
+        "latency_samples_ms": [[1.0, 2.0, 3.0]],
+        "latency_sample_axes": ["query_index", "repeat_index"],
+        "validation_runtime_threads": {"faiss_omp_max_threads": 2},
+        "smoke_validation": {
+            "full_mapping_matches": True,
+            "fp32_vectors": True,
+            "l2_normalized": True,
+            "document_embeddings_recreated": False,
+            "top_k_preserved": True,
+            "score_rtol": 1e-5,
+            "score_atol": 1e-6,
+            "query": "fixture query",
+            "hits": [{"title": "fixture title", "snippet": "fixture text"}],
+        },
+    }
+    download = {
+        "model": "fixture-model",
+        "revision": "c" * 40,
+        "snapshot": "/local/cache/fixture-model",
+        "download_seconds": 1.5,
+        "global_cache_preserved": True,
+    }
+    original = copy.deepcopy((build, restored, download))
+
+    summary = experiment_results._runtime_summary(
+        "fixture-model", build, restored, download
+    )
+
+    assert (build, restored, download) == original
+    assert summary["model_name"] == "fixture-model"
+    assert summary["status"] == "completed"
+    for key in (
+        "embedding_seconds",
+        "faiss_build_seconds",
+        "save_seconds",
+        "total_preparation_seconds",
+        "peak_gpu_allocated_bytes",
+        "index_sha256",
+        "metadata_sha256",
+        "loaded_model_revision",
+        "build_runtime_threads",
+    ):
+        assert summary[key] == build[key]
+    for key in (
+        "latency_mean_seconds",
+        "latency_p95_seconds",
+        "latency_samples",
+        "validation_runtime_threads",
+    ):
+        assert summary[key] == restored[key]
+    assert summary["download"] == {
+        "download_seconds": 1.5,
+        "global_cache_preserved": True,
+    }
+    assert summary["smoke_validation"] == {
+        "full_mapping_matches": True,
+        "fp32_vectors": True,
+        "l2_normalized": True,
+        "document_embeddings_recreated": False,
+        "top_k_preserved": True,
+        "score_rtol": 1e-5,
+        "score_atol": 1e-6,
+    }
+    for key in (
+        "gpu_name",
+        "cuda_version",
+        "cached_model_revision",
+        "latency_samples_ms",
+        "latency_sample_axes",
+    ):
+        assert key not in summary

@@ -96,6 +96,7 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
     data = root / "data/prepared"
     datasets = validate_dataset(data, root / "data/raw")
     raw_results = {}
+    raw_runtime = {}
     runtime = {"models": []}
     for alias, model in ALIASES.items():
         build = read_json(root / f"build-{alias}/report.json")
@@ -133,14 +134,20 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
             "restore revision mismatch",
         )
         runtime["models"].append(
-            {
-                "model_name": model,
-                "status": "completed",
-                **build,
-                **restored,
-                "download": read_json(root / f"download-{alias}/report.json"),
-            }
+            _runtime_summary(
+                model,
+                build,
+                restored,
+                read_json(root / f"download-{alias}/report.json"),
+            )
         )
+        raw_runtime[alias] = {
+            phase: {
+                "path": str(root / f"{phase}-{alias}/report.json"),
+                "sha256": file_sha256(root / f"{phase}-{alias}/report.json"),
+            }
+            for phase in ("build", "restore", "download")
+        }
     write_json(stage / "dense/runtime.json", runtime)
     for split in ("train", "dev"):
         rows = {}
@@ -189,6 +196,7 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
             },
             "files_sha256": hashes(stage),
             "raw_results": raw_results,
+            "raw_runtime": raw_runtime,
             "validations": [
                 "source/output hashes",
                 "10000/100/50 dataset and qrels",
@@ -320,6 +328,33 @@ def _validate_report(report, dataset, methods, model):
                 result["config"]["rank_constant"] == DEFAULT_RANK_CONSTANT,
                 "RRF mismatch",
             )
+
+
+def _runtime_summary(model, build, restored, download):
+    """Keep build/restore measurements while raw samples stay in artifacts."""
+    return {
+        "model_name": model,
+        "status": "completed",
+        **{
+            key: value
+            for key, value in build.items()
+            if key not in {"gpu_name", "cuda_version", "cached_model_revision"}
+        },
+        **{
+            key: value
+            for key, value in restored.items()
+            if key
+            not in {"latency_samples_ms", "latency_sample_axes", "smoke_validation"}
+        },
+        "smoke_validation": {
+            key: value
+            for key, value in restored["smoke_validation"].items()
+            if key not in {"query", "hits"}
+        },
+        "download": {
+            key: download[key] for key in ("download_seconds", "global_cache_preserved")
+        },
+    }
 
 
 def _write_evidence(path, report, dataset):
