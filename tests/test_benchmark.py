@@ -6,7 +6,7 @@ from dataclasses import replace
 
 import pytest
 
-from evaluation import benchmark
+from evaluation import benchmark, latency
 from evaluation.data import load_evaluation_dataset
 from retrievers.base import SearchResult
 
@@ -25,7 +25,7 @@ def test_warmup_and_repeated_calls_are_timed_separately(
 ):
     dataset = load_evaluation_dataset(evaluation_directory)
     clock = iter([0, 0.050, 0.100, 0.101, 0.200, 0.203, 0.300, 0.305, 0.400, 0.407])
-    monkeypatch.setattr(benchmark, "perf_counter", lambda: next(clock))
+    monkeypatch.setattr(latency, "perf_counter", lambda: next(clock))
     retriever = FixtureRetriever()
     result = benchmark.benchmark_retriever(retriever, dataset, warmup=1, repeats=2)
     assert retriever.calls == [("수도", 10), ("한글", 10)] * 3
@@ -47,13 +47,13 @@ def test_warmup_and_repeated_calls_are_timed_separately(
     "samples, expected", [([1], 1), ([1, 2, 3, 4], 3.85), ([0, 10], 9.5)]
 )
 def test_p95_uses_linear_interpolation(samples, expected):
-    assert benchmark.latency_summary(samples)["p95_ms"] == pytest.approx(expected)
+    assert latency.latency_summary(samples)["p95_ms"] == pytest.approx(expected)
 
 
 @pytest.mark.parametrize("samples", [[], [True], [-1], [float("nan")], [float("inf")]])
 def test_invalid_latency_samples(samples):
     with pytest.raises(ValueError, match="latency"):
-        benchmark.latency_summary(samples)
+        latency.latency_summary(samples)
 
 
 @pytest.mark.parametrize(

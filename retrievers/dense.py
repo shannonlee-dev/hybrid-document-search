@@ -6,6 +6,7 @@ import re
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
+from time import perf_counter
 from typing import TYPE_CHECKING
 
 from data.loader import Document
@@ -137,6 +138,7 @@ class DenseRetriever:
         self.documents = snapshot
         self.embedder = embedder
         self.config = embedder.config
+        self.build_timings: dict[str, float] | None = None
         self._documents_by_id = {doc.document_id: doc for doc in snapshot}
 
     @classmethod
@@ -146,13 +148,22 @@ class DenseRetriever:
         config: DenseConfig | None = None,
     ) -> "DenseRetriever":
         """공통 인덱싱 규칙으로 제목과 본문을 임베딩하고 입력 문서 순서대로 인덱싱한다."""
+        started = perf_counter()
         _validate_documents(documents)
         embedder = DenseEmbedder(config)
         texts = [build_index_text(document) for document in documents]
+        embedding_started = perf_counter()
         vectors = embedder.encode_documents(texts)
-        return cls(
-            index=FaissIndex.build(vectors), documents=documents, embedder=embedder
-        )
+        embedding_finished = perf_counter()
+        index = FaissIndex.build(vectors)
+        index_finished = perf_counter()
+        retriever = cls(index=index, documents=documents, embedder=embedder)
+        retriever.build_timings = {
+            "embedding_seconds": embedding_finished - embedding_started,
+            "faiss_build_seconds": index_finished - embedding_finished,
+            "build_seconds": perf_counter() - started,
+        }
+        return retriever
 
     @classmethod
     def load(

@@ -5,6 +5,7 @@ import json
 import shlex
 import sys
 from pathlib import Path
+from time import perf_counter
 
 from scripts._cli import CliArgumentParser, _dependency_hint, _positive_int
 
@@ -55,7 +56,11 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument(
         "--passage-prefix", help="문서 앞에 붙일 문자열 (생략하면 모델별 기본값)"
     )
+    parser.add_argument(
+        "--timings", action="store_true", help="빌드 단계별 소요 시간(초)을 JSON에 포함"
+    )
     args = parser.parse_args(argv)
+    started = perf_counter()
     stage = "corpus 읽기"
     hint = (
         "--corpus에 읽을 수 있는 UTF-8 JSONL 파일을 지정해 주세요.\n"
@@ -98,7 +103,13 @@ def main(argv: list[str] | None = None) -> None:
         stage = "인덱스 저장"
         hint = "--index 경로에 쓸 수 있는지, 디스크 공간이 충분한지 확인해 주세요."
         retriever.save(args.index)
-        print(json.dumps({"index": str(args.index), "documents": len(documents)}))
+        summary = {"index": str(args.index), "documents": len(documents)}
+        if args.timings:
+            summary["timings"] = {
+                **retriever.build_timings,
+                "total_preparation_seconds": perf_counter() - started,
+            }
+        print(json.dumps(summary))
         search_command = shlex.join(
             [
                 "python",

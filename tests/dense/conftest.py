@@ -31,6 +31,13 @@ def model_stub(monkeypatch):
             self.inputs = []
             self.options = []
 
+        def _first_module(self):
+            return SimpleNamespace(
+                auto_model=SimpleNamespace(
+                    config=SimpleNamespace(_commit_hash=self.revision)
+                )
+            )
+
         def encode(self, texts, **kwargs):
             self.inputs.extend(texts)
             self.options.append(kwargs)
@@ -52,3 +59,4 @@ def model_stub(monkeypatch):
     monkeypatch.setitem(
         sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=Model)
     )
+    return Model
