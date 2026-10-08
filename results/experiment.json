@@ -619,22 +619,20 @@
     "default_alias": "bge"
   },
   "files_sha256": {
-    "dense/dev/bge.json": "cba545267d4ee7d78209dc29ff98cc629fbe4b074798cb59dac17525d827a720",
+    "dense/dev/bge.json": "65dd015e5a206d5ef171c00acff6100ad2f5b411b89302f77800e72edeea14a2",
     "dense/dev/comparison.csv": "6787237ec92a9d760b25249a039444e7d479cd7ce6f10265c5ad9f64c2a39313",
-    "dense/dev/e5.json": "b7ac2eab119a410853b3ef096907f5b1b864bd7cb9dbafe36ebfaf476c5d1417",
-    "dense/dev/kure.json": "d3f781e1f99023b07aa1045bce2892d0e72f0091264a8a50c0758be75127646e",
+    "dense/dev/e5.json": "144c7bb9b432d1d4dc98d73408e05726b5ec309ba1ba77a21b33acc8dccd9d62",
+    "dense/dev/kure.json": "ef9ef549bce25eea13a1a5728d20f6dfddb320382010e1b27f82f7b57a5dcec2",
     "dense/runtime.json": "dab23f1328001375511d533b139a617d6888bfbbbce682a840c75a316c769634",
-    "dense/train/bge.json": "9c28b35fc10decd7d3ddbaf60c144585a4c8d1ba57860bd50eda3e5791aeaad5",
+    "dense/train/bge.json": "b0d2a30a5d038f91020e4ffa19bb08bda5fbe3b84d3eb0c9bd8f151e41964256",
     "dense/train/comparison.csv": "5c48cb43f509b0015ceda7aed14465c10f1f0de69f47ac37fdd106f5cb52da70",
-    "dense/train/e5.json": "656d002a29bba69fc90450d5cdd0396e9efa41978b18dabe0ce4edacdeea3243",
-    "dense/train/kure.json": "4e7afdc42a4cc92a0a880511402359b9e7c6a2bf7ec287b4e081352d0ba615d3",
+    "dense/train/e5.json": "b5008bd2b081a6712262e8c5adb13ec322d08871774d7d6146005455edc9a2fd",
+    "dense/train/kure.json": "c27f60ff0e0118edc5a95cec6f0bffb2b5e82cb9ada04aed676dc64e1aeb5969",
     "dense/train/selection.json": "64a9da4d0f2e52dd5db876e8c2711ff3a730c12b70cc9c951f2c6243f039cf51",
     "retrieval/dev/cases.json": "fedb4fe27813d45be92a73dfe92feba71ee7981320053a4ea78cb829d7d4800e",
     "retrieval/dev/comparison.md": "8a0c17d08019f1ca56ff96e000798fd58d3730bfcb07874eee6aadf4b0b71460",
     "retrieval/dev/execution.json": "70e8582e4871e52ca729fa6c92e3508436cb1725b128c474de4c875105034c30",
-    "retrieval/dev/latencies.csv": "a76383931ad2276cb82446581fe67cf695ad10ffe533c9018786ce4ef79ba0b0",
-    "retrieval/dev/queries.csv": "280d5840e5f208f3b49b3a56f4eea795216e9e8169169fadd3741f55bc74feb1",
-    "retrieval/dev/results.json": "73d91d6432d8dde34b9ad4d2a2a7f13dd9ac5d1b43a9bf17598b33ea0be16b9a",
+    "retrieval/dev/results.json": "f3a8f748b66d248d89025623f79566a9198cdd3c64c0a231f5d1d20b916c17e5",
     "retrieval/dev/summary.csv": "ea45904a197f813086d8fc1fbfca7884487e85162b07e7c3b92316af28bf5933"
   },
   "validations": [
@@ -646,7 +644,38 @@
     "four retrieval methods",
     "recomputed metrics and latency samples",
     "effective library threads",
-    "raw JSON preserved"
+    "raw JSON preserved",
+    "review exports omit hit title/snippet and include qrels; ranking/metric/latency evidence preserved"
   ],
-  "scope": "Reused Ko-MIRACL subset/dev reproducibility experiment; not independent testing or full MIRACL."
+  "scope": "Reused Ko-MIRACL subset/dev reproducibility experiment; not independent testing or full MIRACL.",
+  "raw_results": {
+    "dense/train/e5.json": {
+      "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/train-e5/evaluation/results.json",
+      "sha256": "656d002a29bba69fc90450d5cdd0396e9efa41978b18dabe0ce4edacdeea3243"
+    },
+    "dense/train/bge.json": {
+      "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/train-bge/evaluation/results.json",
+      "sha256": "9c28b35fc10decd7d3ddbaf60c144585a4c8d1ba57860bd50eda3e5791aeaad5"
+    },
+    "dense/train/kure.json": {
+      "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/train-kure/evaluation/results.json",
+      "sha256": "4e7afdc42a4cc92a0a880511402359b9e7c6a2bf7ec287b4e081352d0ba615d3"
+    },
+    "dense/dev/e5.json": {
+      "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/dev-e5/evaluation/results.json",
+      "sha256": "b7ac2eab119a410853b3ef096907f5b1b864bd7cb9dbafe36ebfaf476c5d1417"
+    },
+    "dense/dev/bge.json": {
+      "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/dev-bge/evaluation/results.json",
+      "sha256": "cba545267d4ee7d78209dc29ff98cc629fbe4b074798cb59dac17525d827a720"
+    },
+    "dense/dev/kure.json": {
+      "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/dev-kure/evaluation/results.json",
+      "sha256": "d3f781e1f99023b07aa1045bce2892d0e72f0091264a8a50c0758be75127646e"
+    },
+    "retrieval/dev/results.json": {
+      "path": "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-bge-default/retrieval/evaluation/results.json",
+      "sha256": "73d91d6432d8dde34b9ad4d2a2a7f13dd9ac5d1b43a9bf17598b33ea0be16b9a"
+    }
+  }
 }

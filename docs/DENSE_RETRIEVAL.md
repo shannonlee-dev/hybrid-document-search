@@ -45,7 +45,8 @@ E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix�
 Dev 결과로 모델이나 설정을 튜닝하지 않았다. [Dev 비교 CSV](../results/dense/dev/comparison.csv).
 이 표는 최초 전체 실험의 3모델 비교다. 기본 모델 변경 후 네 방식의 재평가와 latency는
 [검색 방식 비교](BENCHMARK_RESULTS.md)에 별도로 기록했다.
-각 split의 `e5.json`, `bge.json`, `kure.json`은 평가 CLI의 원본 JSON을 바꾸지 않고 복사했다.
+각 split의 모델별 JSON에는 질의별 검색 결과와 qrels를 저장한다.
+저장 형식은 [EVALUATION.md](EVALUATION.md)를 참조한다.
 
 ## 인덱스 구축과 복원
 

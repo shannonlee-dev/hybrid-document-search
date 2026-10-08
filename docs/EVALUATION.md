@@ -72,12 +72,21 @@ results/
     train/ e5.json bge.json kure.json comparison.csv selection.json
     dev/   e5.json bge.json kure.json comparison.csv
   retrieval/dev/
-    results.json summary.csv queries.csv latencies.csv comparison.md cases.json execution.json
+    results.json summary.csv comparison.md cases.json execution.json
 ```
 
-Dense split별 JSON은 기존 평가 CLI 출력의 변경 없는 복사본이다. 비교 CSV와 문서는 요약본이다.
-`experiment.json`은 자기 자신을 제외한 결과 파일 SHA, 코드·lock·데이터·모델 출처와 실행 명령을 기록한다.
-로그·checkpoint·원본 corpus·모델·FAISS 바이너리는 로컬 작업 공간에만 두며 Git에 넣지 않는다.
+패키징 시 위 파일만 생성해 `results/`에 저장하고 Git에 커밋한다.
+
+모델별·검색 방식별 JSON에는 질의 원문, Top-10 문서 ID·순위·점수, 지표·latency 샘플,
+측정 조건·환경·코드 출처를 저장한다. 원시 JSON에서 검색 결과의 `title`·`snippet`을 제거하고
+`qrels`와 변환 설명인 `export`를 추가한다. 지표와 Mean/P95는 이 JSON으로 재계산할 수 있다.
+대표 사례의 제목·원문은 `cases.json`에 저장한다.
+
+`experiment.json`의 `files_sha256`은 자기 자신을 제외한 결과 파일 해시,
+`raw_results`는 원시 JSON의 로컬 경로와 해시를 기록한다.
+
+원시 출력은 `artifacts/`에 보관한다. JSON과 내용이 겹치는 `queries.csv`·`latencies.csv`,
+로그·checkpoint·중간 결과·원본 corpus·모델·FAISS 바이너리는 Git에서 제외한다.
 
 ## 검증
 

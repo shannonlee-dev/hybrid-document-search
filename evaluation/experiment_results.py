@@ -1,5 +1,6 @@
-"""Validate measured results before packaging; never rewrite raw evaluation JSON."""
+"""Validate raw reports in artifacts and publish only curated result files."""
 
+import copy
 import csv
 import ctypes
 import json
@@ -49,6 +50,10 @@ DATASET_SETTINGS = {
     "dev_queries": 50,
     "seed": CONDITIONS["seed"],
 }
+RETRIEVAL_EXPORTS = (
+    "summary.csv",
+    "comparison.md",
+)
 _METRIC_TOLERANCE = 1e-10
 # Linux renameat2 uses these values for the current directory and atomic exchange.
 _AT_FDCWD = -100
@@ -93,6 +98,7 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
     )
     data = root / "data/prepared"
     datasets = validate_dataset(data, root / "data/raw")
+    raw_results = {}
     runtime = {"models": []}
     for alias, model in ALIASES.items():
         build = read_json(root / f"build-{alias}/report.json")
@@ -145,19 +151,31 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
             source = root / f"{split}-{alias}/evaluation/results.json"
             report = read_json(source)
             _validate_report(report, datasets[split], ("dense",), model)
-            destination = stage / f"dense/{split}/{alias}.json"
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(source, destination)
+            raw_results[f"dense/{split}/{alias}.json"] = {
+                "path": str(source),
+                "sha256": file_sha256(source),
+            }
+            _write_evidence(
+                stage / f"dense/{split}/{alias}.json", report, datasets[split]
+            )
             rows[alias] = report["methods"]["dense"]
         _write_comparison(stage / f"dense/{split}/comparison.csv", rows)
         if split == "train":
             _write_selection(stage / "dense/train/selection.json", rows)
-    report = read_json(retrieval_root / "evaluation/results.json")
+    source = retrieval_root / "evaluation/results.json"
+    report = read_json(source)
     _validate_report(
         report, datasets["dev"], ("tfidf", "bm25", "dense", "hybrid"), DEFAULT_MODEL
     )
     destination = stage / "retrieval/dev"
-    shutil.copytree(retrieval_root / "evaluation", destination)
+    destination.mkdir(parents=True, exist_ok=True)
+    for name in RETRIEVAL_EXPORTS:
+        shutil.copyfile(retrieval_root / "evaluation" / name, destination / name)
+    raw_results["retrieval/dev/results.json"] = {
+        "path": str(source),
+        "sha256": file_sha256(source),
+    }
+    _write_evidence(destination / "results.json", report, datasets["dev"])
     write_json(
         destination / "execution.json",
         {
@@ -188,6 +206,7 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
                 "default_alias": DEFAULT_MODEL_ALIAS,
             },
             "files_sha256": hashes(stage),
+            "raw_results": raw_results,
             "validations": [
                 "source/output hashes",
                 "10000/100/50 dataset and qrels",
@@ -197,7 +216,7 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
                 "four retrieval methods",
                 "recomputed metrics and latency samples",
                 "effective library threads",
-                "raw JSON preserved",
+                "raw JSON preserved; review exports omit hit title/snippet and include qrels",
             ],
             "scope": "Reused Ko-MIRACL subset/dev reproducibility experiment; not independent testing or full MIRACL.",
         },
@@ -221,15 +240,7 @@ def verify_package(directory):
         )
     required.update(
         f"retrieval/dev/{name}"
-        for name in (
-            "results.json",
-            "summary.csv",
-            "queries.csv",
-            "latencies.csv",
-            "comparison.md",
-            "cases.json",
-            "execution.json",
-        )
+        for name in (*RETRIEVAL_EXPORTS, "results.json", "cases.json", "execution.json")
     )
     _require(set(actual) == required, "final package file inventory mismatch")
 
@@ -328,6 +339,22 @@ def _validate_report(report, dataset, methods, model):
                 result["config"]["rank_constant"] == DEFAULT_RANK_CONSTANT,
                 "RRF mismatch",
             )
+
+
+def _write_evidence(path, report, dataset):
+    """Keep remote metric/ranking evidence without repeating corpus excerpts."""
+    evidence = copy.deepcopy(report)
+    evidence["qrels"] = dataset.qrels
+    evidence["export"] = {
+        "kind": "review_evidence",
+        "omitted_result_fields": ["title", "snippet"],
+    }
+    for result in evidence["methods"].values():
+        for query in result["queries"]:
+            for hit in query["results"]:
+                hit.pop("title", None)
+                hit.pop("snippet", None)
+    write_json(path, evidence)
 
 
 def _validate_embedding(config, model):

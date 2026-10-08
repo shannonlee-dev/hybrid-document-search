@@ -44,10 +44,8 @@ Dense와 Hybrid의 질의별 nDCG 차이가 가장 큰 양쪽 사례를 사후�
 
 ## 출처와 재현
 
-- [평가 결과 JSON](../results/retrieval/dev/results.json)
+- [질의별 결과 JSON](../results/retrieval/dev/results.json)
 - [요약 CSV](../results/retrieval/dev/summary.csv)
-- [질의별 결과](../results/retrieval/dev/queries.csv)
-- [원시 latency 샘플](../results/retrieval/dev/latencies.csv)
 - [실행 환경·명령](../results/retrieval/dev/execution.json)
 - [전체 실험 해시 및 검증](../results/experiment.json)
 
@@ -55,7 +53,7 @@ Dense와 Hybrid의 질의별 nDCG 차이가 가장 큰 양쪽 사례를 사후�
 이번 네 방식 재평가의 코드 SHA와 변경 상태는 결과 JSON의 `code` 및
 `experiment.json`의 `retrieval_code`에 별도로 기록했다. 원본 재평가는
 `artifacts/ko-miracl-bge-default/retrieval/`에 보존했다.
-계산 규칙과 재개 방법은 [EVALUATION.md](EVALUATION.md)를 참조한다.
+저장 형식·계산 규칙·재개 방법은 [EVALUATION.md](EVALUATION.md)를 참조한다.
 
 10k subset의 순차 실행 결과로, 전체 MIRACL 성능이나 API 응답 시간을 뜻하지 않는다.
 독립적인 전체 실험 반복은 수행하지 않았다. 측정 범위와 한계는 [EVALUATION.md](EVALUATION.md)를 참조한다.
