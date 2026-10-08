@@ -99,10 +99,13 @@ def fake_tfidf_module(monkeypatch):
 
 @pytest.fixture
 def fake_bm25(monkeypatch):
+    # Install as a module stub (not a real import): retrievers.bm25 imports bm25s
+    # and sklearn at module level now that BM25 is implemented (PR #13), so this
+    # must run without either package installed, the same as fake_tfidf_module.
     FakeBM25.built_from.clear()
-    import retrievers.bm25 as bm25_module
-
-    monkeypatch.setattr(bm25_module, "BM25Retriever", FakeBM25)
+    module = types.ModuleType("retrievers.bm25")
+    module.BM25Retriever = FakeBM25
+    monkeypatch.setitem(sys.modules, "retrievers.bm25", module)
     return FakeBM25
 
 
@@ -121,9 +124,9 @@ class _PlaceholderBM25:
 
 
 def _install_placeholder_bm25(monkeypatch):
-    import retrievers.bm25 as bm25_module
-
-    monkeypatch.setattr(bm25_module, "BM25Retriever", _PlaceholderBM25)
+    module = types.ModuleType("retrievers.bm25")
+    module.BM25Retriever = _PlaceholderBM25
+    monkeypatch.setitem(sys.modules, "retrievers.bm25", module)
 
 
 def test_corpus_missing_marks_every_method_and_hides_path(tmp_path):
@@ -218,7 +221,10 @@ def test_bm25_placeholder_reports_not_implemented(monkeypatch, fake_tfidf_module
 
 
 def test_bm25_registers_as_available_with_the_real_implementation(fake_tfidf_module):
-    # BM25 is merged (PR #13): the real retrievers.bm25.BM25Retriever is used as is.
+    # BM25 is merged (PR #13), but needs bm25s + scikit-learn installed to run for
+    # real; skip cleanly in the default CI job, which installs no extras.
+    pytest.importorskip("bm25s")
+    pytest.importorskip("sklearn")
     service = build_search_service(FIXTURE_CORPUS)
 
     assert service.availability()[RetrievalMethod.BM25].available
