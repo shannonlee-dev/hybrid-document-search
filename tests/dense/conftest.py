@@ -24,9 +24,10 @@ def model_stub(monkeypatch):
     import numpy as np
 
     class Model:
-        def __init__(self, model_name, device=None):
+        def __init__(self, model_name, device=None, revision=None):
             self.model_name = model_name
             self.device = device
+            self.revision = revision
             self.inputs = []
             self.options = []
 

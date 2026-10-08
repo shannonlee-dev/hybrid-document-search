@@ -7,7 +7,11 @@ from retrievers import dense
 
 
 def test_document_and_query_embeddings(model_stub):
-    embedder = dense.DenseEmbedder(dense.DenseConfig(batch_size=2, device="cpu"))
+    embedder = dense.DenseEmbedder(
+        dense.DenseConfig(
+            model_name="intfloat/multilingual-e5-base", batch_size=2, device="cpu"
+        )
+    )
     documents = embedder.encode_documents(["고양이", "강아지"])
     query = embedder.encode_query("고양이")
     assert documents.shape == (2, 3)
@@ -71,3 +75,31 @@ def test_invalid_embedding_input(texts, model_stub):
 def test_invalid_config(kwargs):
     with pytest.raises(ValueError):
         dense.DenseConfig(**kwargs)
+
+
+def test_selected_default_has_pinned_revision_and_no_e5_prefix(model_stub):
+    embedder = dense.DenseEmbedder()
+    embedder.encode_documents(["고양이"])
+    embedder.encode_query("고양이")
+    assert embedder.config.model_name == "BAAI/bge-m3"
+    assert embedder.model.inputs == ["고양이", "고양이"]
+    revision = "5617a9f61b028005a4858fdac845db406aefb181"
+    assert embedder.config.revision == revision
+    assert embedder.model.revision == revision
+
+
+@pytest.mark.parametrize("name", ["nlpai-lab/KURE-v1", "/local/model"])
+@pytest.mark.parametrize("revision", [None, "a" * 40])
+def test_other_models_use_only_explicit_revision(name, revision, model_stub):
+    embedder = dense.DenseEmbedder(
+        dense.DenseConfig(model_name=name, revision=revision)
+    )
+    embedder.encode_query("고양이")
+    assert embedder.config.revision == revision
+    assert embedder.model.revision == revision
+
+
+@pytest.mark.parametrize("revision", ["main", "a" * 39, "g" * 40, 42])
+def test_revision_must_be_an_immutable_commit(revision):
+    with pytest.raises(ValueError, match="revision"):
+        dense.DenseConfig(revision=revision)

@@ -12,6 +12,31 @@ from pathlib import Path
 import pytest
 
 
+def test_build_persists_requested_revision(
+    dense_corpus_path, model_stub, tmp_path, capsys
+):
+    pytest.importorskip("faiss")
+    from scripts.build_index import main
+
+    index = tmp_path / "index"
+    main(
+        [
+            "--corpus",
+            str(dense_corpus_path),
+            "--index",
+            str(index),
+            "--model",
+            "BAAI/bge-m3",
+            "--revision",
+            "a" * 40,
+        ]
+    )
+    report = json.loads(capsys.readouterr().out)
+    assert report["documents"] == 3
+    metadata = json.loads((index / "metadata.json").read_text(encoding="utf-8"))
+    assert metadata["embedding_config"]["revision"] == "a" * 40
+
+
 def test_backend_dependencies_are_independent(
     monkeypatch, dense_documents, model_stub, tmp_path, capsys
 ):

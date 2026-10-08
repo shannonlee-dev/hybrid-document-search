@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import re
 from collections.abc import Sequence
 from dataclasses import asdict, dataclass, fields
 from pathlib import Path
@@ -15,11 +16,13 @@ from indexing.faiss_index import (
     _validate_top_k,
 )
 from retrievers.base import SearchResult
+from retrievers.model_config import COMMIT_SHA_PATTERN
+from retrievers.model_config import DEFAULT_MODEL as DEFAULT_MODEL
+from retrievers.model_config import DEFAULT_MODEL_REVISION as DEFAULT_MODEL_REVISION
 
 if TYPE_CHECKING:
     import numpy as np
 
-DEFAULT_MODEL = "intfloat/multilingual-e5-base"
 DEFAULT_BATCH_SIZE = 32
 INDEX_FILENAME = "index.faiss"
 METADATA_FILENAME = "metadata.json"
@@ -31,7 +34,7 @@ _E5_INPUT_PREFIXES = (("query_prefix", "query: "), ("passage_prefix", "passage: 
 
 @dataclass(frozen=True)
 class DenseConfig:
-    """E5 계열의 기본 접두사를 적용하고 명시된 접두사는 그대로 보존한다."""
+    """선정 모델의 revision을 고정하고 E5 계열의 기본 접두사를 적용한다."""
 
     model_name: str = DEFAULT_MODEL
     device: str | None = None
@@ -39,10 +42,18 @@ class DenseConfig:
     normalize_embeddings: bool = True
     query_prefix: str | None = None
     passage_prefix: str | None = None
+    revision: str | None = None
 
     def __post_init__(self):
         if not isinstance(self.model_name, str) or not self.model_name.strip():
             raise ValueError("model_name must be a non-empty string")
+        if self.revision is None and self.model_name == DEFAULT_MODEL:
+            object.__setattr__(self, "revision", DEFAULT_MODEL_REVISION)
+        if self.revision is not None and (
+            not isinstance(self.revision, str)
+            or not re.fullmatch(COMMIT_SHA_PATTERN, self.revision)
+        ):
+            raise ValueError("revision must be a fixed 40-character commit SHA or None")
         if type(self.batch_size) is not int or self.batch_size <= 0:
             raise ValueError("batch_size must be a positive integer")
         if type(self.normalize_embeddings) is not bool:
@@ -86,7 +97,9 @@ class DenseEmbedder:
             from sentence_transformers import SentenceTransformer
 
             self.model = SentenceTransformer(
-                self.config.model_name, device=self.config.device
+                self.config.model_name,
+                device=self.config.device,
+                revision=self.config.revision,
             )
         vectors = self.model.encode(
             [prefix + text for text in texts],
@@ -163,6 +176,8 @@ class DenseRetriever:
         index = FaissIndex.load(index_path)
         if index.dimension != metadata.get("dimension"):
             raise ValueError("saved index dimension does not match metadata")
+        if not isinstance(metadata.get("documents"), list) or not metadata["documents"]:
+            raise ValueError("invalid saved document mapping metadata")
         try:
             documents = [Document(**doc) for doc in metadata["documents"]]
             config = metadata["embedding_config"]
@@ -172,6 +187,12 @@ class DenseRetriever:
             raise ValueError("invalid embedding configuration")
         # 이전 저장 형식의 빌드 장치는 무시하고 현재 실행 환경의 device를 적용한다.
         config.pop("device", None)
+        # 이전 인덱스의 가중치를 확인할 수 없으므로 현재 기본 SHA를 소급 적용하지 않는다.
+        if config.get("model_name") == DEFAULT_MODEL and config.get("revision") is None:
+            raise ValueError(
+                "saved default-model index has no revision; rebuild the index"
+            )
+        config.setdefault("revision", None)
         if set(config) != {
             field.name for field in fields(DenseConfig) if field.name != "device"
         }:

@@ -34,7 +34,10 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument("--device", help="cpu, cuda 또는 cuda:0 (생략하면 자동 선택)")
     parser.add_argument(
-        "--model", help="모델 이름 또는 로컬 경로 (기본: 다국어 E5-base)"
+        "--model", help="모델 이름 또는 로컬 경로 (기본: dense_models.toml 설정)"
+    )
+    parser.add_argument(
+        "--revision", help="모델의 고정 40자리 commit SHA (기본 모델은 TOML의 SHA 사용)"
     )
     parser.add_argument(
         "--batch-size",
@@ -76,6 +79,7 @@ def main(argv: list[str] | None = None) -> None:
         defaults = DenseConfig()
         config = DenseConfig(
             model_name=args.model if args.model is not None else defaults.model_name,
+            revision=args.revision,
             device=args.device,
             batch_size=args.batch_size
             if args.batch_size is not None
