@@ -17,7 +17,7 @@ from indexing.faiss_index import (
     _validate_top_k,
 )
 from retrievers.base import SearchResult
-from retrievers.model_config import COMMIT_SHA_PATTERN
+from retrievers.model_config import COMMIT_SHA_PATTERN, MODELS
 from retrievers.model_config import DEFAULT_MODEL as DEFAULT_MODEL
 from retrievers.model_config import DEFAULT_MODEL_REVISION as DEFAULT_MODEL_REVISION
 
@@ -35,7 +35,7 @@ _E5_INPUT_PREFIXES = (("query_prefix", "query: "), ("passage_prefix", "passage: 
 
 @dataclass(frozen=True)
 class DenseConfig:
-    """선정 모델의 revision을 고정하고 E5 계열의 기본 접두사를 적용한다."""
+    """등록된 후보 모델의 revision을 고정하고 E5 계열의 기본 접두사를 적용한다."""
 
     model_name: str = DEFAULT_MODEL
     device: str | None = None
@@ -48,8 +48,8 @@ class DenseConfig:
     def __post_init__(self):
         if not isinstance(self.model_name, str) or not self.model_name.strip():
             raise ValueError("model_name must be a non-empty string")
-        if self.revision is None and self.model_name == DEFAULT_MODEL:
-            object.__setattr__(self, "revision", DEFAULT_MODEL_REVISION)
+        if self.revision is None:
+            object.__setattr__(self, "revision", MODELS.get(self.model_name))
         if self.revision is not None and (
             not isinstance(self.revision, str)
             or not re.fullmatch(COMMIT_SHA_PATTERN, self.revision)
@@ -198,10 +198,14 @@ class DenseRetriever:
             raise ValueError("invalid embedding configuration")
         # 이전 저장 형식의 빌드 장치는 무시하고 현재 실행 환경의 device를 적용한다.
         config.pop("device", None)
-        # 이전 인덱스의 가중치를 확인할 수 없으므로 현재 기본 SHA를 소급 적용하지 않는다.
-        if config.get("model_name") == DEFAULT_MODEL and config.get("revision") is None:
+        # 이전 인덱스의 가중치를 확인할 수 없으므로 현재 후보 SHA를 소급 적용하지 않는다.
+        if (
+            isinstance(config.get("model_name"), str)
+            and config["model_name"] in MODELS
+            and config.get("revision") is None
+        ):
             raise ValueError(
-                "saved default-model index has no revision; rebuild the index"
+                "saved registered-model index has no revision; rebuild the index"
             )
         config.setdefault("revision", None)
         if set(config) != {

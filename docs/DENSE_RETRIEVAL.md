@@ -74,13 +74,16 @@ uv run --locked --extra dense python -m scripts.search dense \
   --index indexes/dense-sample --device cpu --query '고양이는 어떤 소리로 우나요?' --top-k 3
 ```
 
-개별 CLI의 기본 batch size는 32이고 통합 실험에서는 1로 고정한다. 다른 모델은
-`--model`과 `--revision <40자리 SHA>`로 지정한다. Dense Runtime CLI도 `--model` 순서에 맞춰
+개별 CLI의 기본 batch size는 32이고 통합 실험에서는 1로 고정한다. 개별 인덱스 빌드에서
+`--model`로 등록된 후보를 지정하면 `--revision` 생략 시 TOML의 고정 SHA를 자동 적용한다.
+`--revision <40자리 SHA>`를 명시하면 해당 값이 우선하며, 미등록 모델이나 로컬 경로는
+revision을 생략할 수 있다. Dense Runtime CLI도 `--model` 순서에 맞춰
 `--revision`을 반복 지정할 수 있다. 전체 재실행 방법은 [EVALUATION.md](EVALUATION.md)에 있다.
 
 `index.faiss`는 문서 벡터, `metadata.json`은 인덱스 해시·차원·임베딩 설정·문서 매핑을 저장한다.
 로드 시 체크섬·타입·차원·문서 매핑을 검사하고 첫 검색에서 지정 revision의 모델을 로드한다.
-revision 없는 기본 모델 인덱스는 거부한다. 저장 장치는 재사용하지 않고 로드 시 지정한다.
+revision 없는 등록 후보 모델 인덱스는 거부하므로 다시 빌드해야 한다.
+저장 장치는 재사용하지 않고 로드 시 지정한다.
 문서 벡터는 재사용하고 질의만 임베딩한다. 두 파일 저장은 순차적이므로 완성된 인덱스만 사용한다.
 
 Float32 벡터 자체는 10,000개 기준 768차원 약 29.3 MiB, 1024차원 약 39.1 MiB다.

@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from retrievers import dense
+from retrievers.model_config import MODELS
 
 
 def test_document_and_query_embeddings(model_stub):
@@ -88,9 +89,27 @@ def test_selected_default_has_pinned_revision_and_no_e5_prefix(model_stub):
     assert embedder.model.revision == revision
 
 
-@pytest.mark.parametrize("name", ["nlpai-lab/KURE-v1", "/local/model"])
+@pytest.mark.parametrize("name,revision", MODELS.items())
+def test_registered_models_use_pinned_revision(name, revision, model_stub):
+    embedder = dense.DenseEmbedder(dense.DenseConfig(model_name=name))
+    embedder.encode_query("고양이")
+    assert embedder.config.revision == revision
+    assert embedder.model.revision == revision
+
+
+@pytest.mark.parametrize("name", MODELS)
+def test_explicit_revision_overrides_registered_pin(name, model_stub):
+    embedder = dense.DenseEmbedder(
+        dense.DenseConfig(model_name=name, revision="a" * 40)
+    )
+    embedder.encode_query("고양이")
+    assert embedder.config.revision == "a" * 40
+    assert embedder.model.revision == "a" * 40
+
+
+@pytest.mark.parametrize("name", ["other/unregistered-model", "/local/model"])
 @pytest.mark.parametrize("revision", [None, "a" * 40])
-def test_other_models_use_only_explicit_revision(name, revision, model_stub):
+def test_unregistered_models_use_only_explicit_revision(name, revision, model_stub):
     embedder = dense.DenseEmbedder(
         dense.DenseConfig(model_name=name, revision=revision)
     )

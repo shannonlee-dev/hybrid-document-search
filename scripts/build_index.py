@@ -38,7 +38,8 @@ def main(argv: list[str] | None = None) -> None:
         "--model", help="모델 이름 또는 로컬 경로 (기본: dense_models.toml 설정)"
     )
     parser.add_argument(
-        "--revision", help="모델의 고정 40자리 commit SHA (기본 모델은 TOML의 SHA 사용)"
+        "--revision",
+        help="모델의 고정 40자리 commit SHA (등록된 후보는 TOML의 SHA 사용)",
     )
     parser.add_argument(
         "--batch-size",

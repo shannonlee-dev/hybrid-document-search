@@ -5,6 +5,7 @@ import json
 import pytest
 
 from retrievers import dense
+from retrievers.model_config import MODELS
 
 
 def test_top_k_and_persistence(dense_documents, model_stub, tmp_path):
@@ -37,7 +38,7 @@ def test_top_k_and_persistence(dense_documents, model_stub, tmp_path):
     )
 
 
-@pytest.mark.parametrize("model_name", ["nlpai-lab/KURE-v1", "BAAI/bge-m3"])
+@pytest.mark.parametrize("model_name", MODELS)
 def test_saved_revision_survives_default_change(
     model_name, dense_documents, model_stub, tmp_path, monkeypatch
 ):
@@ -47,7 +48,7 @@ def test_saved_revision_survives_default_change(
     retriever.save(tmp_path)
     metadata = json.loads((tmp_path / "metadata.json").read_text(encoding="utf-8"))
     assert metadata["embedding_config"]["revision"] == "a" * 40
-    monkeypatch.setattr(dense, "DEFAULT_MODEL_REVISION", "b" * 40)
+    monkeypatch.setitem(MODELS, model_name, "b" * 40)
     restored = dense.DenseRetriever.load(tmp_path)
     restored.search("고양이", 1)
     assert restored.config.revision == "a" * 40
@@ -55,11 +56,14 @@ def test_saved_revision_survives_default_change(
 
 
 @pytest.mark.parametrize("missing", [True, False])
-def test_unpinned_selected_index_requires_rebuild(
-    missing, dense_documents, model_stub, tmp_path
+@pytest.mark.parametrize("model_name", MODELS)
+def test_unpinned_registered_index_requires_rebuild(
+    model_name, missing, dense_documents, model_stub, tmp_path
 ):
     pytest.importorskip("faiss")
-    retriever = dense.DenseRetriever.build(dense_documents)
+    retriever = dense.DenseRetriever.build(
+        dense_documents, dense.DenseConfig(model_name=model_name)
+    )
     retriever.save(tmp_path)
     path = tmp_path / "metadata.json"
     metadata = json.loads(path.read_text(encoding="utf-8"))
@@ -72,7 +76,7 @@ def test_unpinned_selected_index_requires_rebuild(
         dense.DenseRetriever.load(tmp_path)
 
 
-@pytest.mark.parametrize("model_name", ["nlpai-lab/KURE-v1", "/local/model"])
+@pytest.mark.parametrize("model_name", ["other/unregistered-model", "/local/model"])
 def test_legacy_other_model_index_still_loads(
     model_name, dense_documents, model_stub, tmp_path
 ):

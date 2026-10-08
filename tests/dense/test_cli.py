@@ -11,6 +11,35 @@ from pathlib import Path
 
 import pytest
 
+from retrievers.model_config import MODELS
+
+
+@pytest.mark.parametrize("model_name,pinned_revision", MODELS.items())
+@pytest.mark.parametrize("revision", [None, "a" * 40])
+def test_build_persists_registered_model_revision(
+    model_name, pinned_revision, revision, dense_corpus_path, model_stub, tmp_path
+):
+    pytest.importorskip("faiss")
+    from scripts.build_index import main
+
+    index = tmp_path / "index"
+    arguments = [
+        "--corpus",
+        str(dense_corpus_path),
+        "--index",
+        str(index),
+        "--model",
+        model_name,
+    ]
+    if revision is not None:
+        arguments.extend(["--revision", revision])
+    main(arguments)
+    metadata = json.loads((index / "metadata.json").read_text(encoding="utf-8"))
+    assert metadata["embedding_config"]["model_name"] == model_name
+    assert metadata["embedding_config"]["revision"] == (
+        pinned_revision if revision is None else revision
+    )
+
 
 def test_build_persists_requested_revision(
     dense_corpus_path, model_stub, tmp_path, capsys
