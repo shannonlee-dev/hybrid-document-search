@@ -38,7 +38,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | `frontend/` | Streamlit 진입점 |
 | `scripts/` | 데이터 준비, Dense index 생성, TF-IDF/BM25/Dense 검색 및 공통 평가 실행 진입점 |
 | `tests/` | 공통 계약, 데이터 준비, 검색·인덱스·CLI·API 및 서비스 통합 테스트 |
-| `results/` | 실험 결과·비교표·실행 기록 |
+| `results/` | 결과 JSON·비교 CSV·전체 실험 기록 |
 | `.github/` | CI, Issue 및 PR 템플릿 |
 
 공통 계약은 `search(query: str, top_k: int) -> list[SearchResult]`입니다.
@@ -114,7 +114,7 @@ HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 uv run --locked --extra sparse --extra d
 모델은 `models/`, 인덱스는 `indexes/`, 원시 실험 출력·로그·checkpoint는
 `artifacts/` 또는 `experiments/`에 보관하세요. 이 경로와 로컬 SQLite 파일은 Git에서 제외됩니다.
 
-실험 결과·비교표·실행 기록은 `results/`에 커밋합니다.
+결과 JSON·비교 CSV와 전체 실험 기록(`experiment.json`)은 `results/`에 커밋합니다.
 저장 파일과 JSON 형식은 [EVALUATION.md](docs/EVALUATION.md)를 참조하세요.
 
 ## TF-IDF MVP 실행

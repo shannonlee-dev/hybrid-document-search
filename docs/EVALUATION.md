@@ -69,10 +69,10 @@ results/
   experiment.json
   dense/
     runtime.json
-    train/ e5.json bge.json kure.json comparison.csv selection.json
+    train/ e5.json bge.json kure.json comparison.csv
     dev/   e5.json bge.json kure.json comparison.csv
   retrieval/dev/
-    results.json summary.csv comparison.md cases.json execution.json
+    results.json summary.csv
 ```
 
 패키징 시 위 파일만 생성해 `results/`에 저장하고 Git에 커밋한다.
@@ -80,12 +80,12 @@ results/
 모델별·검색 방식별 JSON에는 질의 원문, Top-10 문서 ID·순위·점수, 지표·latency 샘플,
 측정 조건·환경·코드 출처를 저장한다. 원시 JSON에서 검색 결과의 `title`·`snippet`을 제거하고
 `qrels`와 변환 설명인 `export`를 추가한다. 지표와 Mean/P95는 이 JSON으로 재계산할 수 있다.
-대표 사례의 제목·원문은 `cases.json`에 저장한다.
+질의별 검색 결과와 판정값은 모델별·검색 방식별 JSON에서 확인한다.
 
 `experiment.json`의 `files_sha256`은 자기 자신을 제외한 결과 파일 해시,
 `raw_results`는 원시 JSON의 로컬 경로와 해시를 기록한다.
 
-원시 출력은 `artifacts/`에 보관한다. JSON과 내용이 겹치는 `queries.csv`·`latencies.csv`,
+원시 출력은 `artifacts/`에 보관한다. JSON과 내용이 겹치는 `queries.csv`·`latencies.csv`·`comparison.md`,
 로그·checkpoint·중간 결과·원본 corpus·모델·FAISS 바이너리는 Git에서 제외한다.
 
 ## 검증

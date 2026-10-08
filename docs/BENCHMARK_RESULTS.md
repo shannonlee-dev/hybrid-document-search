@@ -24,30 +24,29 @@ Dense 단독과 Hybrid의 차이를 실제 측정 그대로 보고하며 Hybrid 
 기본 모델은 `config/dense_models.toml`의 `default_model = "bge"`로 지정하고
 Train/Dev 점수로 자동 선택하지 않는다. 검색 알고리즘과 평가 조건은 유지했다.
 
-## 원문·qrels 대조 사례
+## 질의별 검색 순위 사례
 
 Dense와 Hybrid의 질의별 nDCG 차이가 가장 큰 양쪽 사례를 사후에 골랐다.
 대표성을 통계적으로 보장하는 표본이 아니며 개별 검색 동작을 설명하기 위한 사례다.
 
 ### 1391: 발해는 언제 건국되나요?
 
-- Dense (BGE-M3): 관련 문서 순위 1; 1위 `122372#0`, 제목 ‘발해’.
-- Hybrid (BM25 + BGE-M3): 관련 문서 순위 6; 1위 `122372#12`, 제목 ‘발해’.
+- Dense (BGE-M3): 관련 문서 순위 1; 1위 `122372#0`.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 6; 1위 `122372#12`.
 
 ### 606: 조선에서 가장 어린 왕은 누구인가?
 
-- Dense (BGE-M3): 관련 문서 순위 4; 1위 `11027#0`, 제목 ‘조선 현종’.
-- Hybrid (BM25 + BGE-M3): 관련 문서 순위 1; 1위 `867281#3`, 제목 ‘빈 (지위)’.
+- Dense (BGE-M3): 관련 문서 순위 4; 1위 `11027#0`.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 1; 1위 `867281#3`.
 
-각 결과의 문서 ID를 corpus 및 qrels와 대조했다. 전체 Top-10, 판정값, 제목·원문은
-[cases.json](../results/retrieval/dev/cases.json)에 보존했다.
+전체 Top-10 문서 ID·순위와 판정값(`qrels`)은
+[질의별 결과 JSON](../results/retrieval/dev/results.json)에서 확인할 수 있다.
 
 ## 출처와 재현
 
-- [질의별 결과 JSON](../results/retrieval/dev/results.json)
+- [질의별 결과·판정값·실행 환경·코드 SHA·인덱스 설정](../results/retrieval/dev/results.json)
 - [요약 CSV](../results/retrieval/dev/summary.csv)
-- [실행 환경·명령](../results/retrieval/dev/execution.json)
-- [전체 실험 해시 및 검증](../results/experiment.json)
+- [실행 명령·전체 실험 해시 및 검증](../results/experiment.json)
 
 기존 데이터·인덱스·3모델 측정 코드 commit: `5a6a60024d602b23312eafdb3b3c371d282ddcc9`.
 이번 네 방식 재평가의 코드 SHA와 변경 상태는 결과 JSON의 `code` 및

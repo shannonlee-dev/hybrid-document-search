@@ -30,8 +30,8 @@ E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix�
 | KURE-v1 | 0.878222 | 0.968444 | 0.797373 | 0.814188 | 21.013247 | 31.478979 |
 
 모델별 100개 질의, latency 샘플 500개다. Train nDCG@10 최고 모델은 BGE-M3이다.
-수치 순위와 기본 모델 정책은 별도로 기록한다. [선정 기록](../results/dense/train/selection.json)과
-[Train 비교 CSV](../results/dense/train/comparison.csv)를 참조한다.
+모델별 수치는 [Train 비교 CSV](../results/dense/train/comparison.csv),
+실험 당시 기본 모델과 선정 정책은 [전체 실험 기록](../results/experiment.json)을 참조한다.
 
 ## Dev 3모델 비교
 

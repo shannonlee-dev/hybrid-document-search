@@ -50,10 +50,7 @@ DATASET_SETTINGS = {
     "dev_queries": 50,
     "seed": CONDITIONS["seed"],
 }
-RETRIEVAL_EXPORTS = (
-    "summary.csv",
-    "comparison.md",
-)
+RETRIEVAL_EXPORTS = ("summary.csv",)
 _METRIC_TOLERANCE = 1e-10
 # Linux renameat2 uses these values for the current directory and atomic exchange.
 _AT_FDCWD = -100
@@ -160,8 +157,6 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
             )
             rows[alias] = report["methods"]["dense"]
         _write_comparison(stage / f"dense/{split}/comparison.csv", rows)
-        if split == "train":
-            _write_selection(stage / "dense/train/selection.json", rows)
     source = retrieval_root / "evaluation/results.json"
     report = read_json(source)
     _validate_report(
@@ -176,19 +171,6 @@ def package_results(root, stage, identifier, provenance, *, retrieval_root=None)
         "sha256": file_sha256(source),
     }
     _write_evidence(destination / "results.json", report, datasets["dev"])
-    write_json(
-        destination / "execution.json",
-        {
-            "command": provenance["retrieval_command"],
-            "environment": report["environment"],
-            "code": report["code"],
-            "index": report["methods"]["dense"]["config"],
-            "conditions": report["conditions"],
-        },
-    )
-    write_json(
-        destination / "cases.json", _representative_cases(report, datasets["dev"])
-    )
     write_json(
         stage / "experiment.json",
         {
@@ -232,15 +214,14 @@ def verify_package(directory):
         report["status"] == "completed" and actual == report["files_sha256"],
         "final package hash mismatch",
     )
-    required = {"dense/runtime.json", "dense/train/selection.json"}
+    required = {"dense/runtime.json"}
     for split in ("train", "dev"):
         required.update(
             f"dense/{split}/{name}"
             for name in (*[f"{alias}.json" for alias in ALIASES], "comparison.csv")
         )
     required.update(
-        f"retrieval/dev/{name}"
-        for name in (*RETRIEVAL_EXPORTS, "results.json", "cases.json", "execution.json")
+        f"retrieval/dev/{name}" for name in (*RETRIEVAL_EXPORTS, "results.json")
     )
     _require(set(actual) == required, "final package file inventory mismatch")
 
@@ -402,20 +383,6 @@ def _validate_method(result, dataset):
     _close_mapping(result["latency"], latency_summary(samples), "aggregate latency")
 
 
-def _write_selection(path, rows):
-    write_json(
-        path,
-        {
-            "selection_policy": "config_default",
-            "model": DEFAULT_MODEL,
-            "revision": MODELS[DEFAULT_MODEL],
-            "train_ndcg_ranking": sorted(
-                rows, key=lambda alias: rows[alias]["metrics"]["ndcg@10"], reverse=True
-            ),
-        },
-    )
-
-
 def _write_comparison(path, rows):
     fields = ("model", *METRIC_NAMES, "mean_ms", "p95_ms", "sample_count")
     with path.open("w", encoding="utf-8", newline="") as target:
@@ -425,48 +392,6 @@ def _write_comparison(path, rows):
             writer.writerow(
                 {"model": ALIASES[alias], **result["metrics"], **result["latency"]}
             )
-
-
-def _representative_cases(report, dataset):
-    dense = report["methods"]["dense"]["queries"]
-    hybrid = report["methods"]["hybrid"]["queries"]
-    differences = [
-        a["metrics"]["ndcg@10"] - b["metrics"]["ndcg@10"]
-        for a, b in zip(dense, hybrid, strict=True)
-    ]
-    positions = list(
-        dict.fromkeys(
-            (
-                max(range(len(dense)), key=differences.__getitem__),
-                min(range(len(dense)), key=differences.__getitem__),
-            )
-        )
-    )
-    documents = {doc.document_id: doc for doc in dataset.documents}
-    cases = []
-    for position in positions:
-        query = dataset.queries[position]
-        hits = {
-            name: result["queries"][position]["results"]
-            for name, result in report["methods"].items()
-        }
-        ids = set(dataset.qrels[query.query_id]) | {
-            hit["document_id"] for rows in hits.values() for hit in rows
-        }
-        cases.append(
-            {
-                "query_id": query.query_id,
-                "text": query.text,
-                "selection": "extreme dense-minus-hybrid nDCG difference (descriptive)",
-                "qrels": dataset.qrels[query.query_id],
-                "results": hits,
-                "documents": {
-                    key: {"title": documents[key].title, "text": documents[key].text}
-                    for key in sorted(ids)
-                },
-            }
-        )
-    return cases
 
 
 def _close_mapping(actual, expected, name):

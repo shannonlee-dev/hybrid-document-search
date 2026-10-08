@@ -628,10 +628,6 @@
     "dense/train/comparison.csv": "5c48cb43f509b0015ceda7aed14465c10f1f0de69f47ac37fdd106f5cb52da70",
     "dense/train/e5.json": "b5008bd2b081a6712262e8c5adb13ec322d08871774d7d6146005455edc9a2fd",
     "dense/train/kure.json": "c27f60ff0e0118edc5a95cec6f0bffb2b5e82cb9ada04aed676dc64e1aeb5969",
-    "dense/train/selection.json": "64a9da4d0f2e52dd5db876e8c2711ff3a730c12b70cc9c951f2c6243f039cf51",
-    "retrieval/dev/cases.json": "fedb4fe27813d45be92a73dfe92feba71ee7981320053a4ea78cb829d7d4800e",
-    "retrieval/dev/comparison.md": "8a0c17d08019f1ca56ff96e000798fd58d3730bfcb07874eee6aadf4b0b71460",
-    "retrieval/dev/execution.json": "70e8582e4871e52ca729fa6c92e3508436cb1725b128c474de4c875105034c30",
     "retrieval/dev/results.json": "f3a8f748b66d248d89025623f79566a9198cdd3c64c0a231f5d1d20b916c17e5",
     "retrieval/dev/summary.csv": "ea45904a197f813086d8fc1fbfca7884487e85162b07e7c3b92316af28bf5933"
   },
