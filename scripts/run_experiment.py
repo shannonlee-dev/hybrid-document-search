@@ -34,8 +34,6 @@ COMMAND = (
 )
 _DOWNLOAD_ATTEMPTS = 3
 _ERROR_TAIL_LENGTH = 6000
-_REQUIRED_PYTHON_VERSION = (3, 12)
-_REQUIRED_GPU = "RTX 4060"
 
 
 def _code_hashes(*directories, include_model_config=True):
@@ -84,13 +82,7 @@ def _run_command(directory, module, arguments):
 
 
 def _environment():
-    if sys.version_info[:2] != _REQUIRED_PYTHON_VERSION:
-        raise RuntimeError("Python 3.12 is required")
-    if "microsoft" not in platform.release().lower():
-        raise RuntimeError("WSL2 is required for the declared experiment")
     runtime = configure_runtime(CONDITIONS["threads"], cuda=True)
-    if _REQUIRED_GPU not in runtime["gpu"]:
-        raise RuntimeError("NVIDIA RTX 4060 is required")
     return {
         "python": platform.python_version(),
         "platform": platform.platform(),

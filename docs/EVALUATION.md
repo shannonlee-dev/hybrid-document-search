@@ -32,6 +32,12 @@ uv run --locked --extra sparse --extra dense python -m scripts.run_experiment
 uv run --locked --extra sparse --extra dense python -m scripts.run_experiment --fresh
 ```
 
+프로젝트의 Python 최소 버전은 3.12이며, 통합 실행기는 CUDA 사용 가능 여부를 검사한다.
+Python 3.12로 세부 버전을 고정하거나 WSL2·특정 GPU 모델을 요구하지 않는다.
+CUDA가 없으면 CPU로 대체하지 않고 종료한다. 실제 Python·OS·GPU·CUDA·패키지 버전은
+실행 환경과 단계 입력에 기록한다. 작업 공간 lock과 결과 승격은 Linux API를 사용한다.
+아래 환경은 저장된 벤치마크의 측정 조건이다.
+
 Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / WSL2 / NVIDIA RTX 4060, embedding `cuda:0`, CPU FAISS. FP32, L2 정규화, batch size 1, Top-K 10, 전체 질의 warm-up 1회, 측정 5회. PyTorch intra/inter-op·FAISS·OMP/MKL/OpenBLAS 2 threads, tokenizer 병렬화 비활성화, TF32 비활성화.
 
 측정 코드는 실행 전에 커밋해야 한다. 모델 revision은 [Dense 문서](DENSE_RETRIEVAL.md)에 고정돼 있다.
