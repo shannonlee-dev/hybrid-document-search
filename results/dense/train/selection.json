@@ -1,0 +1,10 @@
+{
+  "selection_policy": "config_default",
+  "model": "BAAI/bge-m3",
+  "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "train_ndcg_ranking": [
+    "bge",
+    "kure",
+    "e5"
+  ]
+}
