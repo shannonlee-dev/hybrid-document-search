@@ -5,7 +5,9 @@ rules without loading any real model or FAISS index. Doubles are installed with
 monkeypatch, so the results do not depend on whether Role A or Role B has merged.
 """
 
+import builtins
 import sys
+import tomllib
 import types
 from pathlib import Path
 
@@ -230,6 +232,38 @@ def test_bm25_registers_as_available_with_the_real_implementation(fake_tfidf_mod
     assert service.availability()[RetrievalMethod.BM25].available
     hits = service.search("서울", RetrievalMethod.BM25, 3)
     assert hits[0].document_id == "fixture-001#0"
+
+
+@pytest.mark.parametrize(
+    "import_error",
+    [
+        FileNotFoundError("C:/secret/dense_models.toml"),
+        PermissionError("C:/secret/dense_models.toml"),
+        ValueError("invalid model in C:/secret/dense_models.toml"),
+        tomllib.TOMLDecodeError("invalid TOML in C:/secret/dense_models.toml"),
+    ],
+    ids=["missing", "unreadable", "invalid-model", "invalid-toml"],
+)
+def test_dense_config_import_failure_keeps_sparse_search_available(
+    monkeypatch, fake_tfidf_module, fake_bm25, tmp_path, import_error
+):
+    original_import = builtins.__import__
+
+    def failing_dense_import(name, *args, **kwargs):
+        if name == "retrievers.dense":
+            raise import_error
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", failing_dense_import)
+
+    service = build_search_service(FIXTURE_CORPUS, dense_index_path=tmp_path)
+
+    statuses = service.availability()
+    assert statuses[RetrievalMethod.DENSE].state is MethodState.LOAD_FAILED
+    assert "C:/secret" not in statuses[RetrievalMethod.DENSE].reason
+    assert statuses[RetrievalMethod.HYBRID].state is MethodState.UPSTREAM_UNAVAILABLE
+    for method in (RetrievalMethod.TFIDF, RetrievalMethod.BM25):
+        assert service.search("서울", method, 1)
 
 
 def test_dense_index_missing_is_reported_with_build_hint(

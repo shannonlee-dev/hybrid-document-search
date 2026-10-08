@@ -228,6 +228,12 @@ def _dense(
             MethodState.DEPENDENCY_MISSING,
             "dense dependencies are missing. Install them with: uv sync --extra dense",
         )
+    except (OSError, ValueError):
+        logger.exception("dense module could not be imported")
+        return MethodStatus(
+            MethodState.LOAD_FAILED,
+            "dense module could not be imported; see server logs.",
+        )
 
     if _is_placeholder(DenseRetriever):
         return MethodStatus(
