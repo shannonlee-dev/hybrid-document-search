@@ -1,6 +1,7 @@
 """평가 CLI의 실제 Sparse 실행, 출력 파일과 입력 오류를 검증합니다."""
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -18,6 +19,7 @@ def test_help_without_search_dependencies():
         text=True,
         encoding="utf-8",
         timeout=10,
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     assert result.returncode == 0
     assert "--methods" in result.stdout and "--index" in result.stdout

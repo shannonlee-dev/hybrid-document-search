@@ -258,7 +258,7 @@ def test_existing_output_is_not_overwritten(raw, tmp_path):
 
 def test_invalid_json_reports_line(raw, tmp_path):
     path = raw / "corpus.jsonl"
-    path.write_text(path.read_text() + "{invalid}\n", encoding="utf-8")
+    path.write_text(path.read_text(encoding="utf-8") + "{invalid}\n", encoding="utf-8")
 
     with pytest.raises(ValueError, match="corpus.jsonl:11"):
         prepare(raw, tmp_path / "processed")
