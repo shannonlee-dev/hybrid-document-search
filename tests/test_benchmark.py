@@ -139,7 +139,9 @@ def test_report_json_csv_and_markdown_are_consistent(
     )
     directory = tmp_path / "result"
     benchmark.write_report(report, directory)
-    assert json.loads((directory / "results.json").read_text()) == report
+    assert (
+        json.loads((directory / "results.json").read_text(encoding="utf-8")) == report
+    )
     with (directory / "summary.csv").open(encoding="utf-8", newline="") as source:
         rows = list(csv.DictReader(source))
     assert len(rows) == 1
@@ -149,7 +151,9 @@ def test_report_json_csv_and_markdown_are_consistent(
         assert len(list(csv.DictReader(source))) == 2
     with (directory / "latencies.csv").open(encoding="utf-8", newline="") as source:
         assert len(list(csv.DictReader(source))) == 4
-    assert "Recall@100은 참고용" in (directory / "comparison.md").read_text()
+    assert "Recall@100은 참고용" in (
+        (directory / "comparison.md").read_text(encoding="utf-8")
+    )
     with pytest.raises(ValueError, match="output-dir"):
         benchmark.write_report(report, directory)
 

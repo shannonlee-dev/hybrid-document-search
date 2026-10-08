@@ -19,7 +19,7 @@ def refresh_manifest(directory):
     counts, hashes = {}, {}
     for path in directory.glob("*.jsonl"):
         counts[path.name] = sum(
-            bool(line.strip()) for line in path.read_text().splitlines()
+            bool(line.strip()) for line in path.read_text(encoding="utf-8").splitlines()
         )
         hashes[path.name] = file_sha256(path)
     manifest = {
@@ -52,7 +52,7 @@ def test_fixture_dataset_loads_original_fields_and_split(evaluation_directory):
 
 def test_modified_data_is_rejected_by_manifest(evaluation_directory):
     path = evaluation_directory / "queries_dev.jsonl"
-    path.write_text(path.read_text() + "\n", encoding="utf-8")
+    path.write_text(path.read_text(encoding="utf-8") + "\n", encoding="utf-8")
     with pytest.raises(ValueError, match="체크섬"):
         load_evaluation_dataset(evaluation_directory)
 
@@ -62,7 +62,7 @@ def test_modified_data_is_rejected_by_manifest(evaluation_directory):
 )
 def test_invalid_manifest_field(evaluation_directory, field):
     path = evaluation_directory / "manifest.json"
-    manifest = json.loads(path.read_text())
+    manifest = json.loads(path.read_text(encoding="utf-8"))
     manifest[field] = None
     path.write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(ValueError, match=field):
@@ -71,13 +71,13 @@ def test_invalid_manifest_field(evaluation_directory, field):
 
 def test_manifest_counts_and_selected_ids_must_match(evaluation_directory):
     path = evaluation_directory / "manifest.json"
-    manifest = json.loads(path.read_text())
+    manifest = json.loads(path.read_text(encoding="utf-8"))
     manifest["output_counts"]["queries_dev.jsonl"] = 1
     path.write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(ValueError, match="레코드 수"):
         load_evaluation_dataset(evaluation_directory)
     refresh_manifest(evaluation_directory)
-    manifest = json.loads(path.read_text())
+    manifest = json.loads(path.read_text(encoding="utf-8"))
     manifest["selected_document_ids"] = ["wrong#0"]
     path.write_text(json.dumps(manifest), encoding="utf-8")
     with pytest.raises(ValueError, match="selected_document_ids"):

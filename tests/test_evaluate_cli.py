@@ -2,6 +2,7 @@
 
 import builtins
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -161,6 +162,7 @@ def test_help_without_search_dependencies():
         text=True,
         encoding="utf-8",
         timeout=10,
+        env={**os.environ, "PYTHONIOENCODING": "utf-8"},
     )
     assert result.returncode == 0
     assert "--methods" in result.stdout and "--index" in result.stdout
