@@ -166,6 +166,7 @@ def _make_steps(experiment, env):
                     "lock": file_sha256(ROOT / "uv.lock"),
                 },
                 _download,
+                can_reuse=_model_cache_available,
             )
         )
         index = root / f"build-{alias}/index"
@@ -301,6 +302,16 @@ def _evaluation_arguments(root, data, directory, split, alias, methods):
     ]
 
 
+def _model_cache_available(directory):
+    """Check recorded snapshot files, following Hugging Face cache symlinks."""
+    report = read_json(directory / "report.json")
+    files = report.get("snapshot_files")
+    if not files or not report.get("snapshot"):
+        return False
+    snapshot = Path(report["snapshot"])
+    return all((snapshot / name).is_file() for name in files)
+
+
 def _download_model(model, output):
     from huggingface_hub import HfApi, snapshot_download
 
@@ -322,6 +333,11 @@ def _download_model(model, output):
             "model": model,
             "revision": revision,
             "snapshot": snapshot,
+            "snapshot_files": [
+                str(path.relative_to(snapshot))
+                for path in sorted(Path(snapshot).rglob("*"))
+                if path.is_file() or path.is_symlink()
+            ],
             "download_seconds": perf_counter() - started,
             "global_cache_preserved": True,
         },

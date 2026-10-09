@@ -24,6 +24,7 @@ class Step:
     dependencies: tuple[str, ...]
     inputs: dict
     action: Callable[[Path], None]
+    can_reuse: Callable[[Path], bool] | None = None
 
 
 class Experiment:
@@ -84,6 +85,7 @@ class Experiment:
                 and previous.get("inputs") == inputs
                 and previous.get("outputs")
                 and hashes(destination) == previous["outputs"]
+                and (step.can_reuse is None or step.can_reuse(destination))
             ):
                 print(f"verified: {step.name}", flush=True)
                 continue

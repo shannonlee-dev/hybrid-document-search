@@ -1,7 +1,9 @@
 """Experiment preflight accepts different environments while requiring CUDA."""
 
 import runpy
+import shutil
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -98,13 +100,26 @@ def local_pipeline(tmp_path, monkeypatch, evaluation_directory):
     monkeypatch.setattr(run_experiment, "_environment", lambda: {"gpu": "fixture"})
     monkeypatch.setattr(run_experiment, "configure_runtime", lambda *a, **kw: {})
     monkeypatch.setattr(run_experiment, "validate_dataset", lambda *args: None)
+
+    def _snapshot_download(model, *, revision, ignore_patterns):
+        snapshot = tmp_path / "hf-cache" / model / "snapshots" / revision
+        snapshot.mkdir(parents=True, exist_ok=True)
+        blob = snapshot.parent.parent / "weights-blob"
+        blob.write_bytes(b"model weights")
+        weights = snapshot / "model.safetensors"
+        if not weights.is_symlink():
+            weights.symlink_to(blob)
+        (snapshot / "config.json").write_text("{}")
+        return str(snapshot)
+
     monkeypatch.setitem(
         sys.modules,
         "huggingface_hub",
         SimpleNamespace(
+            snapshot_download=_snapshot_download,
             HfApi=lambda: SimpleNamespace(
                 model_info=lambda model, revision: SimpleNamespace(sha=revision)
-            )
+            ),
         ),
     )
 
@@ -131,7 +146,11 @@ def local_pipeline(tmp_path, monkeypatch, evaluation_directory):
         )
         if directory.name in failures:
             raise RuntimeError("fixture worker failed")
-        if module == "scripts.benchmark_dense_runtime":
+        if module == "scripts.run_experiment":
+            model = arguments[arguments.index("--download-model") + 1]
+            output = arguments[arguments.index("--worker-output") + 1]
+            run_experiment._download_model(model, output)
+        elif module == "scripts.benchmark_dense_runtime":
             (directory / "stdout.log").write_text(json.dumps({"restored": True}))
         elif module == "scripts.evaluate":
             output = arguments[arguments.index("--output-dir") + 1]
@@ -220,4 +239,41 @@ def test_workspace_lock_prevents_concurrent_run(local_pipeline):
         run_experiment.fcntl.flock(handle, run_experiment.fcntl.LOCK_EX)
         with pytest.raises(BlockingIOError):
             run_experiment.main([])
+    assert calls == []
+
+
+@pytest.mark.parametrize("damage", ["snapshot", "file", "blob", "legacy-report"])
+def test_resume_repairs_missing_model_cache(local_pipeline, damage):
+    from evaluation.experiment_runner import hashes
+    from evaluation.json_io import read_json, write_json
+
+    workspace, calls, _ = local_pipeline
+    assert run_experiment.main([]) == 0
+    report = read_json(workspace / "download-bge/report.json")
+    snapshot = Path(report["snapshot"])
+    weights = snapshot / "model.safetensors"
+    if damage == "snapshot":
+        shutil.rmtree(snapshot)
+    elif damage == "file":
+        weights.unlink()
+    elif damage == "blob":
+        weights.resolve().unlink()
+    else:
+        del report["snapshot_files"]
+        write_json(workspace / "download-bge/report.json", report)
+        checkpoint = read_json(workspace / "checkpoint.json")
+        checkpoint["steps"]["download-bge"]["outputs"] = hashes(
+            workspace / "download-bge"
+        )
+        write_json(workspace / "checkpoint.json", checkpoint)
+    calls.clear()
+
+    assert run_experiment.main([]) == 0
+    assert calls[:3] == ["download-bge", "build-bge", "restore-bge"]
+    assert "train-bge" in calls
+    assert "dev-bge" in calls
+    assert "data" not in calls
+    assert weights.read_bytes() == b"model weights"
+    calls.clear()
+    assert run_experiment.main([]) == 0
     assert calls == []
