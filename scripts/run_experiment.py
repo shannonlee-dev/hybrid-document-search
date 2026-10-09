@@ -393,6 +393,7 @@ def main(argv=None):
                     },
                 )
             experiment.run(_make_steps(experiment, env))
+            (experiment.root / "failure.json").unlink(missing_ok=True)
         except Exception as exc:
             write_json(
                 experiment.root / "failure.json",

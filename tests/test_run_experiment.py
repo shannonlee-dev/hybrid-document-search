@@ -226,6 +226,7 @@ def test_failed_stage_resumes_completed_work(local_pipeline):
     calls.clear()
     failures.clear()
     assert run_experiment.main([]) == 0
+    assert not (workspace / "failure.json").exists()
     assert calls[0] == "train-bge"
     assert not set(calls) & set(completed)
 
