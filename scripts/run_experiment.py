@@ -344,7 +344,7 @@ def _download_model(model, output):
     )
 
 
-def main(argv=None):
+def _run_experiment(argv=None):
     """Run or resume the pinned GPU experiment in the local artifacts workspace."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fresh", action="store_true")
@@ -403,6 +403,15 @@ def main(argv=None):
             return 1
     print(f"Experiment completed successfully: {experiment.root}", flush=True)
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Run the experiment CLI and report user cancellation without a traceback."""
+    try:
+        return _run_experiment(argv)
+    except KeyboardInterrupt:
+        print("\nCancelled by user.", file=sys.stderr)
+        return 130
 
 
 if __name__ == "__main__":

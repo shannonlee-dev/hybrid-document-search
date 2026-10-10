@@ -10,7 +10,7 @@ from time import perf_counter
 from scripts._cli import CliArgumentParser, _dependency_hint, _positive_int
 
 
-def main(argv: list[str] | None = None) -> None:
+def _build_index(argv: list[str] | None = None) -> None:
     """Embed and save a corpus, reporting recovery guidance for failed stages."""
     parser = CliArgumentParser(
         prog="python -m scripts.build_index",
@@ -139,5 +139,15 @@ def main(argv: list[str] | None = None) -> None:
         parser.error(f"{stage}에 실패했습니다.\n{hint}\n상세: {exc}")
 
 
+def main(argv: list[str] | None = None) -> int:
+    """Run the build CLI and report user cancellation without a traceback."""
+    try:
+        _build_index(argv)
+    except KeyboardInterrupt:
+        print("\nCancelled by user.", file=sys.stderr)
+        return 130
+    return 0
+
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

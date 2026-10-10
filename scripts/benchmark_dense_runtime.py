@@ -64,7 +64,7 @@ def _run_worker(
     return json.loads(process.stdout)
 
 
-def main(argv=None):
+def _run_benchmark(argv=None):
     """Run model build and restore workers, recording measurements and failures."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -182,5 +182,15 @@ def main(argv=None):
         raise SystemExit(2)
 
 
+def main(argv: list[str] | None = None) -> int:
+    """Run the benchmark CLI and report user cancellation without a traceback."""
+    try:
+        _run_benchmark(argv)
+    except KeyboardInterrupt:
+        print("\nCancelled by user.", file=sys.stderr)
+        return 130
+    return 0
+
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
