@@ -42,10 +42,7 @@ def _run_worker(
     if revision is not None:
         command.extend(["--revision", revision])
     options = {
-        "corpus": config.corpus,
-        "queries": config.queries,
-        "manifest": config.manifest,
-        "expected_documents": config.expected_documents,
+        "data_dir": config.corpus.parent,
         "device": config.device,
         "batch_size": config.batch_size,
         "top_k": config.top_k,
@@ -67,16 +64,7 @@ def _run_worker(
 def _run_benchmark(argv=None):
     """Run model build and restore workers, recording measurements and failures."""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--corpus", type=Path, default=Path("data/processed/corpus.jsonl")
-    )
-    parser.add_argument(
-        "--queries", type=Path, default=Path("data/processed/queries_train.jsonl")
-    )
-    parser.add_argument(
-        "--manifest", type=Path, default=Path("data/processed/manifest.json")
-    )
-    parser.add_argument("--expected-documents", type=_positive_int, default=10000)
+    parser.add_argument("--data-dir", type=Path, default=Path("data/processed"))
     parser.add_argument(
         "--model", action="append", help="반복 지정 가능; 기본: 세 후보"
     )
@@ -105,10 +93,9 @@ def _run_benchmark(argv=None):
     args = parser.parse_args(argv)
     try:
         config = dense_runtime.DenseRuntimeConfig(
-            corpus=args.corpus,
-            queries=args.queries,
-            manifest=args.manifest,
-            expected_documents=args.expected_documents,
+            corpus=args.data_dir / "corpus.jsonl",
+            queries=args.data_dir / "queries_train.jsonl",
+            manifest=args.data_dir / "manifest.json",
             device=args.device,
             batch_size=args.batch_size,
             top_k=args.top_k,
@@ -138,10 +125,10 @@ def _run_benchmark(argv=None):
     if args.output.exists():
         parser.error(f"output already exists; use a new --output: {args.output}")
     try:
-        _, _, provenance = dense_runtime.check_inputs(config)
+        documents, _, provenance = dense_runtime.check_inputs(config)
     except (ValueError, OSError, KeyError) as exc:
         parser.error(str(exc))
-    report = dense_runtime.create_report(config, provenance)
+    report = dense_runtime.create_report(config, provenance, len(documents))
     seen_indexes: dict[Path, str] = {}
     output_path = args.output.resolve()
     for row in report["models"]:

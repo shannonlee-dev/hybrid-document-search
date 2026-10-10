@@ -151,6 +151,15 @@ def local_pipeline(tmp_path, monkeypatch, evaluation_directory):
             output = arguments[arguments.index("--worker-output") + 1]
             run_experiment._download_model(model, output)
         elif module == "scripts.benchmark_dense_runtime":
+            assert arguments[arguments.index("--data-dir") + 1] == (
+                workspace / "data/prepared"
+            )
+            assert not {"--corpus", "--queries", "--manifest"} & set(arguments)
+            model = arguments[arguments.index("--model") + 1]
+            assert (
+                arguments[arguments.index("--revision") + 1]
+                == (run_experiment.MODELS[model])
+            )
             (directory / "stdout.log").write_text(json.dumps({"restored": True}))
         elif module == "scripts.evaluate":
             output = arguments[arguments.index("--output-dir") + 1]

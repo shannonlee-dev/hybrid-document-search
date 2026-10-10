@@ -39,7 +39,6 @@ def inputs(tmp_path, dense_corpus_path):
         corpus=corpus,
         queries=queries,
         manifest=manifest,
-        expected_documents=3,
         device="cpu",
         batch_size=1,
         top_k=2,
@@ -69,7 +68,7 @@ def test_build_and_reload_without_document_embedding(
     monkeypatch.setattr(benchmark, "evaluate_query", _forbidden)
     monkeypatch.setattr(benchmark, "evaluate_run", _forbidden)
     after = validate(inputs, index)
-    assert before["document_count"] == inputs.expected_documents
+    assert before["document_count"] == 3
     assert before["embedding_seconds"] >= 0
     assert before["faiss_build_seconds"] >= 0
     assert before["build_seconds"] >= (
@@ -77,7 +76,7 @@ def test_build_and_reload_without_document_embedding(
     )
     assert before["total_preparation_seconds"] >= before["build_seconds"]
     smoke = after["smoke_validation"]
-    assert len(smoke["hits"]) == min(top_k, inputs.expected_documents)
+    assert len(smoke["hits"]) == min(top_k, 3)
     assert smoke["hits"] == baseline["hits"]
     assert smoke["full_mapping_matches"] is True
     assert smoke["document_embeddings_recreated"] is False
@@ -89,7 +88,7 @@ def test_build_and_reload_without_document_embedding(
     assert after["latency_p95_seconds"] == pytest.approx(summary["p95_ms"] / 1000)
 
 
-@pytest.mark.parametrize("change", ["corpus", "queries", "count"])
+@pytest.mark.parametrize("change", ["corpus", "queries"])
 def test_rejects_changed_inputs_before_embedding(inputs, change, monkeypatch):
     from evaluation.dense_runtime import build
     from retrievers.dense import DenseEmbedder
@@ -99,12 +98,9 @@ def test_rejects_changed_inputs_before_embedding(inputs, change, monkeypatch):
 
     monkeypatch.setattr(DenseEmbedder, "encode_documents", _forbidden)
 
-    if change != "count":
-        path = getattr(inputs, change)
-        path.write_text(path.read_text() + "\n")
-    else:
-        inputs.expected_documents = 10000
-    with pytest.raises(ValueError, match="hash|count"):
+    path = getattr(inputs, change)
+    path.write_text(path.read_text() + "\n")
+    with pytest.raises(ValueError, match="hash"):
         build(inputs, "nlpai-lab/KURE-v1", inputs.index_root / "fixture")
 
 
@@ -144,6 +140,7 @@ def test_failure_is_persisted_without_fabricated_measurements(
     report = json.loads(output.read_text())
     assert len(report["models"]) == 3
     for row in report["models"]:
+        assert row["document_count"] == 3
         assert row["status"] == "failed"
         assert "CUDA out of memory" in row["error"]
         assert row["failed_stage"] == failed_stage
@@ -176,6 +173,34 @@ def test_existing_report_is_preserved_before_any_work(tmp_path, monkeypatch):
         benchmark_dense_runtime.main(["--output", str(output)])
     assert exc.value.code == 2
     assert output.read_text() == original
+
+
+def test_benchmark_workers_use_data_dir(inputs, tmp_path, monkeypatch):
+    st = pytest.importorskip("sentence_transformers")
+    from sentence_transformers.sentence_transformer.modules import BoW
+
+    from scripts import benchmark_dense_runtime
+
+    monkeypatch.setenv("HF_HUB_OFFLINE", "1")
+    monkeypatch.setenv("TRANSFORMERS_OFFLINE", "1")
+    model = tmp_path / "local-model"
+    st.SentenceTransformer(
+        modules=[BoW(["고양이", "야옹", "강아지", "멍멍", "문서", "검색"])],
+        device="cpu",
+    ).save(str(model))
+    output = tmp_path / "report.json"
+
+    assert benchmark_dense_runtime.main(_cli_args(inputs, output, model)) == 0
+
+    report = json.loads(output.read_text())
+    row = report["models"][0]
+    assert row["status"] == "completed"
+    assert row["document_count"] == 3
+    assert row["smoke_validation"]["document_count"] == 3
+    assert row["smoke_validation"]["full_mapping_matches"] is True
+    assert row["latency_samples"] == inputs.repeats
+    assert report["provenance"]["corpus"] == str(inputs.corpus)
+    assert report["provenance"]["queries"] == str(inputs.queries)
 
 
 @pytest.mark.parametrize("case", ["existing_last", "output_inside"])
@@ -263,10 +288,7 @@ def test_rejects_unverifiable_or_different_loaded_revision(
 
 def _cli_args(inputs, output, *models):
     options = {
-        "corpus": inputs.corpus,
-        "queries": inputs.queries,
-        "manifest": inputs.manifest,
-        "expected-documents": inputs.expected_documents,
+        "data-dir": inputs.corpus.parent,
         "index-root": inputs.index_root,
         "output": output,
         "device": inputs.device,

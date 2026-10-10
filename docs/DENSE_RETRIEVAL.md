@@ -70,12 +70,26 @@ Embedding 시간에는 lazy 모델 로딩과 문서 임베딩이 포함된다. �
 ```bash
 uv run --locked --extra dense python -m scripts.build_index \
   --corpus tests/dense/fixtures/dense_corpus.jsonl \
-  --index indexes/dense-sample --device cpu --batch-size 1 --timings
+  --index indexes/dense-sample --device cpu --batch-size 1
 uv run --locked --extra dense python -m scripts.search dense \
   --index indexes/dense-sample --device cpu --query '고양이는 어떤 소리로 우나요?' --top-k 3
 ```
 
-개별 CLI의 기본 batch size는 32이고 통합 실험에서는 1로 고정한다. 개별 인덱스 빌드에서
+빌드 결과 JSON에는 `index`, `documents`, `timings`가 항상 포함된다.
+`timings`는 기존 빌드 단계별 시간과 `total_preparation_seconds`를 제공한다.
+
+Dense Runtime 벤치마크는 `--data-dir`(기본 `data/processed`) 아래의
+`corpus.jsonl`, `queries_train.jsonl`, `manifest.json`을 사용한다.
+보고서의 문서 수는 실제 로드한 corpus 크기이며, 입력 파일의 manifest 해시 검증과
+저장된 인덱스의 복원·문서 매핑 검증을 수행한다.
+
+```bash
+uv run --locked --extra dense python -m scripts.benchmark_dense_runtime \
+  --data-dir data/processed --index-root indexes/dense-runtime \
+  --output artifacts/dense-runtime.json
+```
+
+개별 빌드 CLI의 기본 batch size는 32이고 통합 실험에서는 1로 고정한다. 개별 인덱스 빌드에서
 `--model`로 등록된 후보를 지정하면 `--revision` 생략 시 TOML의 고정 SHA를 자동 적용한다.
 `--revision <40자리 SHA>`를 명시하면 해당 값이 우선하며, 미등록 모델이나 로컬 경로는
 revision을 생략할 수 있다. Dense Runtime CLI도 `--model` 순서에 맞춰

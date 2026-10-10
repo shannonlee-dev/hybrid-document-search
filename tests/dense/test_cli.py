@@ -177,7 +177,16 @@ def test_build_prints_new_shell_safe_search_command(
     index = tmp_path / "index with spaces '$(echo unsafe)'"
     main(["--corpus", str(dense_corpus_path), "--index", str(index)])
     captured = capsys.readouterr()
-    assert json.loads(captured.out) == {"index": str(index), "documents": 3}
+    report = json.loads(captured.out)
+    assert set(report) == {"index", "documents", "timings"}
+    assert report["index"] == str(index)
+    assert report["documents"] == 3
+    assert report["timings"]["embedding_seconds"] >= 0
+    assert report["timings"]["faiss_build_seconds"] >= 0
+    assert (
+        report["timings"]["total_preparation_seconds"]
+        >= report["timings"]["build_seconds"]
+    )
     command = next(
         line.strip()
         for line in captured.err.splitlines()
@@ -299,7 +308,16 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
         check=True,
         timeout=45,
     )
-    assert json.loads(build.stdout) == {"index": str(index), "documents": 3}
+    report = json.loads(build.stdout)
+    assert set(report) == {"index", "documents", "timings"}
+    assert report["index"] == str(index)
+    assert report["documents"] == 3
+    assert report["timings"]["embedding_seconds"] >= 0
+    assert report["timings"]["faiss_build_seconds"] >= 0
+    assert (
+        report["timings"]["total_preparation_seconds"]
+        >= report["timings"]["build_seconds"]
+    )
     # corpus 없이 재시작해 저장된 문서 매핑만 사용하는지 확인한다.
     corpus.unlink()
     search = subprocess.run(
