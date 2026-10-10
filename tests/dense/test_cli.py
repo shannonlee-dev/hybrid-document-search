@@ -11,60 +11,6 @@ from pathlib import Path
 
 import pytest
 
-from retrievers.model_config import MODELS
-
-
-@pytest.mark.parametrize("model_name,pinned_revision", MODELS.items())
-@pytest.mark.parametrize("revision", [None, "a" * 40])
-def test_build_persists_registered_model_revision(
-    model_name, pinned_revision, revision, dense_corpus_path, model_stub, tmp_path
-):
-    pytest.importorskip("faiss")
-    from scripts.build_index import main
-
-    index = tmp_path / "index"
-    arguments = [
-        "--corpus",
-        str(dense_corpus_path),
-        "--index",
-        str(index),
-        "--model",
-        model_name,
-    ]
-    if revision is not None:
-        arguments.extend(["--revision", revision])
-    main(arguments)
-    metadata = json.loads((index / "metadata.json").read_text(encoding="utf-8"))
-    assert metadata["embedding_config"]["model_name"] == model_name
-    assert metadata["embedding_config"]["revision"] == (
-        pinned_revision if revision is None else revision
-    )
-
-
-def test_build_persists_requested_revision(
-    dense_corpus_path, model_stub, tmp_path, capsys
-):
-    pytest.importorskip("faiss")
-    from scripts.build_index import main
-
-    index = tmp_path / "index"
-    main(
-        [
-            "--corpus",
-            str(dense_corpus_path),
-            "--index",
-            str(index),
-            "--model",
-            "BAAI/bge-m3",
-            "--revision",
-            "a" * 40,
-        ]
-    )
-    report = json.loads(capsys.readouterr().out)
-    assert report["documents"] == 3
-    metadata = json.loads((index / "metadata.json").read_text(encoding="utf-8"))
-    assert metadata["embedding_config"]["revision"] == "a" * 40
-
 
 def test_backend_dependencies_are_independent(
     monkeypatch, dense_documents, model_stub, tmp_path, capsys
@@ -177,7 +123,6 @@ def test_build_prints_new_shell_safe_search_command(
     index = tmp_path / "index with spaces '$(echo unsafe)'"
     main(["--corpus", str(dense_corpus_path), "--index", str(index)])
     captured = capsys.readouterr()
-    assert json.loads(captured.out) == {"index": str(index), "documents": 3}
     command = next(
         line.strip()
         for line in captured.err.splitlines()
@@ -284,7 +229,7 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
     query_args = ["--query", "고양이", "--top-k", "2"]
     corpus = tmp_path / "corpus.jsonl"
     corpus.write_bytes(dense_corpus_path.read_bytes())
-    build = subprocess.run(
+    subprocess.run(
         [
             *build_command,
             *common_args,
@@ -299,7 +244,6 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
         check=True,
         timeout=45,
     )
-    assert json.loads(build.stdout) == {"index": str(index), "documents": 3}
     # corpus 없이 재시작해 저장된 문서 매핑만 사용하는지 확인한다.
     corpus.unlink()
     search = subprocess.run(

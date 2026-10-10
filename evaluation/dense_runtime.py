@@ -42,7 +42,6 @@ class DenseRuntimeConfig:
     corpus: Path
     queries: Path
     manifest: Path
-    expected_documents: int
     device: str
     batch_size: int
     top_k: int
@@ -167,8 +166,6 @@ def validate(config: DenseRuntimeConfig, index: Path):
         side_effect=RuntimeError("document re-embedding forbidden"),
     ):
         restored = DenseRetriever.load(index, device=config.device)
-        if restored.index.count != config.expected_documents:
-            raise ValueError("loaded index document count mismatch")
         if restored.documents != tuple(documents):
             raise ValueError("loaded document mapping differs from corpus")
         if restored.config.model_name != baseline["model_name"]:
@@ -240,7 +237,9 @@ def validate(config: DenseRuntimeConfig, index: Path):
     }
 
 
-def create_report(config: DenseRuntimeConfig, provenance: dict[str, object]):
+def create_report(
+    config: DenseRuntimeConfig, provenance: dict[str, object], document_count: int
+):
     """Create a runtime report with environment details and initial model states."""
     report = {
         "schema_version": 1,
@@ -274,7 +273,7 @@ def create_report(config: DenseRuntimeConfig, provenance: dict[str, object]):
                 "revision": config.revision_for(model),
                 "device": config.device,
                 "batch_size": config.batch_size,
-                "document_count": config.expected_documents,
+                "document_count": document_count,
                 "top_k": config.top_k,
                 "index": str(index),
                 "status": "not_run",
@@ -285,7 +284,7 @@ def create_report(config: DenseRuntimeConfig, provenance: dict[str, object]):
 
 
 def check_inputs(config: DenseRuntimeConfig):
-    """Verify input hashes and document counts; return documents, queries and provenance."""
+    """Verify input hashes; return documents, queries and provenance."""
     if config.corpus.name == config.queries.name:
         raise ValueError(
             f"input basename collision: {config.corpus.name!r}; "
@@ -300,10 +299,6 @@ def check_inputs(config: DenseRuntimeConfig):
         if manifest.get("output_sha256", {}).get(name) != digest:
             raise ValueError(f"manifest hash mismatch: {name}")
     documents = load_prepared_documents(config.corpus)
-    if len(documents) != config.expected_documents:
-        raise ValueError(
-            f"document count: expected {config.expected_documents}, got {len(documents)}"
-        )
     records = []
     for line_number, line in enumerate(
         config.queries.read_text(encoding="utf-8").splitlines(), start=1

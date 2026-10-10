@@ -39,27 +39,9 @@ def _build_index(argv: list[str] | None = None) -> None:
         "--model", help="모델 이름 또는 로컬 경로 (기본: dense_models.toml 설정)"
     )
     parser.add_argument(
-        "--revision",
-        help="모델의 고정 40자리 commit SHA (등록된 후보는 TOML의 SHA 사용)",
-    )
-    parser.add_argument(
         "--batch-size",
         type=_positive_int,
         help="한 번에 임베딩할 문서 수 (기본: 32)",
-    )
-    parser.add_argument(
-        "--no-normalize",
-        action="store_true",
-        help="벡터 정규화를 끄고 원시 내적 점수 사용 (기본: cosine similarity)",
-    )
-    parser.add_argument(
-        "--query-prefix", help="질의 앞에 붙일 문자열 (생략하면 모델별 기본값)"
-    )
-    parser.add_argument(
-        "--passage-prefix", help="문서 앞에 붙일 문자열 (생략하면 모델별 기본값)"
-    )
-    parser.add_argument(
-        "--timings", action="store_true", help="빌드 단계별 소요 시간(초)을 JSON에 포함"
     )
     args = parser.parse_args(argv)
     started = perf_counter()
@@ -86,14 +68,10 @@ def _build_index(argv: list[str] | None = None) -> None:
         defaults = DenseConfig()
         config = DenseConfig(
             model_name=args.model if args.model is not None else defaults.model_name,
-            revision=args.revision,
             device=args.device,
             batch_size=args.batch_size
             if args.batch_size is not None
             else defaults.batch_size,
-            normalize_embeddings=not args.no_normalize,
-            query_prefix=args.query_prefix,
-            passage_prefix=args.passage_prefix,
         )
         stage = "문서 임베딩 및 인덱스 생성"
         hint = (
@@ -105,12 +83,14 @@ def _build_index(argv: list[str] | None = None) -> None:
         stage = "인덱스 저장"
         hint = "--index 경로에 쓸 수 있는지, 디스크 공간이 충분한지 확인해 주세요."
         retriever.save(args.index)
-        summary = {"index": str(args.index), "documents": len(documents)}
-        if args.timings:
-            summary["timings"] = {
+        summary = {
+            "index": str(args.index),
+            "documents": len(documents),
+            "timings": {
                 **retriever.build_timings,
                 "total_preparation_seconds": perf_counter() - started,
-            }
+            },
+        }
         print(json.dumps(summary))
         search_command = shlex.join(
             [

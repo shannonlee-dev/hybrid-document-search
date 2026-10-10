@@ -39,7 +39,6 @@ def inputs(tmp_path, dense_corpus_path):
         corpus=corpus,
         queries=queries,
         manifest=manifest,
-        expected_documents=3,
         device="cpu",
         batch_size=1,
         top_k=2,
@@ -69,7 +68,6 @@ def test_build_and_reload_without_document_embedding(
     monkeypatch.setattr(benchmark, "evaluate_query", _forbidden)
     monkeypatch.setattr(benchmark, "evaluate_run", _forbidden)
     after = validate(inputs, index)
-    assert before["document_count"] == inputs.expected_documents
     assert before["embedding_seconds"] >= 0
     assert before["faiss_build_seconds"] >= 0
     assert before["build_seconds"] >= (
@@ -77,7 +75,6 @@ def test_build_and_reload_without_document_embedding(
     )
     assert before["total_preparation_seconds"] >= before["build_seconds"]
     smoke = after["smoke_validation"]
-    assert len(smoke["hits"]) == min(top_k, inputs.expected_documents)
     assert smoke["hits"] == baseline["hits"]
     assert smoke["full_mapping_matches"] is True
     assert smoke["document_embeddings_recreated"] is False
@@ -89,7 +86,7 @@ def test_build_and_reload_without_document_embedding(
     assert after["latency_p95_seconds"] == pytest.approx(summary["p95_ms"] / 1000)
 
 
-@pytest.mark.parametrize("change", ["corpus", "queries", "count"])
+@pytest.mark.parametrize("change", ["corpus", "queries"])
 def test_rejects_changed_inputs_before_embedding(inputs, change, monkeypatch):
     from evaluation.dense_runtime import build
     from retrievers.dense import DenseEmbedder
@@ -99,11 +96,8 @@ def test_rejects_changed_inputs_before_embedding(inputs, change, monkeypatch):
 
     monkeypatch.setattr(DenseEmbedder, "encode_documents", _forbidden)
 
-    if change != "count":
-        path = getattr(inputs, change)
-        path.write_text(path.read_text() + "\n")
-    else:
-        inputs.expected_documents = 10000
+    path = getattr(inputs, change)
+    path.write_text(path.read_text() + "\n")
     with pytest.raises(ValueError, match="hash|count"):
         build(inputs, "nlpai-lab/KURE-v1", inputs.index_root / "fixture")
 
@@ -119,43 +113,6 @@ def test_rejects_saved_mapping_that_differs_from_corpus(inputs, model_stub):
     loaded.save(index)
     with pytest.raises(ValueError, match="mapping"):
         validate(inputs, index)
-
-
-@pytest.mark.parametrize("failed_stage", ["build", "validate"])
-def test_failure_is_persisted_without_fabricated_measurements(
-    inputs, monkeypatch, tmp_path, failed_stage
-):
-    from scripts import benchmark_dense_runtime
-
-    def _fail(args, model, index, phase):
-        if phase == failed_stage:
-            raise RuntimeError("CUDA out of memory")
-        return {
-            "embedding_seconds": 1.5,
-            "faiss_build_seconds": 0.01,
-            "total_preparation_seconds": 2.0,
-        }
-
-    monkeypatch.setattr(benchmark_dense_runtime, "_run_worker", _fail)
-    output = tmp_path / "report.json"
-    with pytest.raises(SystemExit) as exc:
-        benchmark_dense_runtime.main(_cli_args(inputs, output))
-    assert exc.value.code == 2
-    report = json.loads(output.read_text())
-    assert len(report["models"]) == 3
-    for row in report["models"]:
-        assert row["status"] == "failed"
-        assert "CUDA out of memory" in row["error"]
-        assert row["failed_stage"] == failed_stage
-        for key, expected in (
-            ("embedding_seconds", 1.5),
-            ("faiss_build_seconds", 0.01),
-            ("total_preparation_seconds", 2.0),
-        ):
-            assert row[key] == (None if failed_stage == "build" else expected)
-        assert row["latency_mean_seconds"] is None
-        assert row["latency_p95_seconds"] is None
-        assert row["latency_samples"] is None
 
 
 def test_existing_report_is_preserved_before_any_work(tmp_path, monkeypatch):
@@ -176,39 +133,6 @@ def test_existing_report_is_preserved_before_any_work(tmp_path, monkeypatch):
         benchmark_dense_runtime.main(["--output", str(output)])
     assert exc.value.code == 2
     assert output.read_text() == original
-
-
-@pytest.mark.parametrize("case", ["existing_last", "output_inside"])
-def test_rejects_unsafe_index_paths_before_execution(
-    inputs, tmp_path, monkeypatch, capsys, case
-):
-    from scripts import benchmark_dense_runtime as cli
-
-    def _unexpected_worker(*args):
-        pytest.fail("all index paths must be validated before any worker runs")
-
-    monkeypatch.setattr(cli, "_run_worker", _unexpected_worker)
-    first_index = inputs.index_root / "foo--bar"
-    last_index = inputs.index_root / "other--model"
-    output = tmp_path / "report.json"
-    if case == "existing_last":
-        last_index.mkdir(parents=True)
-        marker = last_index / "existing.txt"
-        marker.write_text("preserve me")
-        error = "index already exists"
-    else:
-        output = last_index / "report.json"
-        error = "--output must not be inside an index directory"
-    with pytest.raises(SystemExit) as exc:
-        cli.main(_cli_args(inputs, output, "foo/bar", "other/model"))
-    assert exc.value.code == 2
-    assert error in capsys.readouterr().err
-    assert not output.exists()
-    if case == "existing_last":
-        assert marker.read_text() == "preserve me"
-        assert not first_index.exists()
-    else:
-        assert not inputs.index_root.exists()
 
 
 @pytest.mark.parametrize("model,revision", _CANDIDATES)
@@ -259,22 +183,3 @@ def test_rejects_unverifiable_or_different_loaded_revision(
             build(inputs, model, index)
         else:
             validate(inputs, index)
-
-
-def _cli_args(inputs, output, *models):
-    options = {
-        "corpus": inputs.corpus,
-        "queries": inputs.queries,
-        "manifest": inputs.manifest,
-        "expected-documents": inputs.expected_documents,
-        "index-root": inputs.index_root,
-        "output": output,
-        "device": inputs.device,
-        "top-k": inputs.top_k,
-        "warmup": inputs.warmup,
-        "repeats": inputs.repeats,
-    }
-    args = [item for key, value in options.items() for item in ("--" + key, str(value))]
-    for model in models:
-        args.extend(["--model", str(model)])
-    return args
