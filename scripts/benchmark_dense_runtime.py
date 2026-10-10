@@ -38,8 +38,14 @@ def _run_worker(
         "--index-root",
         str(index),
     ]
+    revision = config.revision_for(model)
+    if revision is not None:
+        command.extend(["--revision", revision])
     options = {
-        "data_dir": config.corpus.parent,
+        "corpus": config.corpus,
+        "queries": config.queries,
+        "manifest": config.manifest,
+        "expected_documents": config.expected_documents,
         "device": config.device,
         "batch_size": config.batch_size,
         "top_k": config.top_k,
@@ -60,15 +66,24 @@ def _run_worker(
 
 def _run_benchmark(argv=None):
     """Run model build and restore workers, recording measurements and failures."""
-    parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--data-dir",
-        type=Path,
-        default=Path("data/processed"),
-        help="corpus.jsonl, queries_train.jsonl과 manifest.json이 있는 준비 데이터 디렉터리",
+        "--corpus", type=Path, default=Path("data/processed/corpus.jsonl")
     )
     parser.add_argument(
+        "--queries", type=Path, default=Path("data/processed/queries_train.jsonl")
+    )
+    parser.add_argument(
+        "--manifest", type=Path, default=Path("data/processed/manifest.json")
+    )
+    parser.add_argument("--expected-documents", type=_positive_int, default=10000)
+    parser.add_argument(
         "--model", action="append", help="반복 지정 가능; 기본: 세 후보"
+    )
+    parser.add_argument(
+        "--revision",
+        action="append",
+        help="고정 40자리 SHA; 지정 시 각 --model 순서에 맞춰 하나씩 반복 지정",
     )
     parser.add_argument(
         "--device", default=CUDA_DEVICE, help="명시적 장치; 기본 cuda:0"
@@ -88,19 +103,24 @@ def _run_benchmark(argv=None):
         "--worker", choices=("build", "validate"), help=argparse.SUPPRESS
     )
     args = parser.parse_args(argv)
-    config = dense_runtime.DenseRuntimeConfig(
-        corpus=args.data_dir / "corpus.jsonl",
-        queries=args.data_dir / "queries_train.jsonl",
-        manifest=args.data_dir / "manifest.json",
-        device=args.device,
-        batch_size=args.batch_size,
-        top_k=args.top_k,
-        warmup=args.warmup,
-        repeats=args.repeats,
-        threads=args.threads,
-        index_root=args.index_root,
-        model=tuple(args.model) if args.model else None,
-    )
+    try:
+        config = dense_runtime.DenseRuntimeConfig(
+            corpus=args.corpus,
+            queries=args.queries,
+            manifest=args.manifest,
+            expected_documents=args.expected_documents,
+            device=args.device,
+            batch_size=args.batch_size,
+            top_k=args.top_k,
+            warmup=args.warmup,
+            repeats=args.repeats,
+            threads=args.threads,
+            index_root=args.index_root,
+            model=tuple(args.model) if args.model else None,
+            revision=tuple(args.revision) if args.revision else None,
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
     if args.worker:
         from evaluation.runtime_config import configure_runtime
 
@@ -118,10 +138,10 @@ def _run_benchmark(argv=None):
     if args.output.exists():
         parser.error(f"output already exists; use a new --output: {args.output}")
     try:
-        documents, _, provenance = dense_runtime.check_inputs(config)
+        _, _, provenance = dense_runtime.check_inputs(config)
     except (ValueError, OSError, KeyError) as exc:
         parser.error(str(exc))
-    report = dense_runtime.create_report(config, provenance, len(documents))
+    report = dense_runtime.create_report(config, provenance)
     seen_indexes: dict[Path, str] = {}
     output_path = args.output.resolve()
     for row in report["models"]:
