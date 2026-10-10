@@ -41,11 +41,10 @@ class Experiment:
             marker.write_text(str(uuid4()) + "\n")
         self.identifier = marker.read_text().strip()
         self.checkpoint = self.root / "checkpoint.json"
-        self.state = (
-            json.loads(self.checkpoint.read_text())
-            if self.checkpoint.exists()
-            else {"experiment_id": self.identifier, "steps": {}}
-        )
+        if self.checkpoint.exists():
+            self.state = json.loads(self.checkpoint.read_text())
+        else:
+            self.state = {"experiment_id": self.identifier, "steps": {}}
         if self.state["experiment_id"] != self.identifier:
             raise ValueError("checkpoint experiment identity mismatch")
 
@@ -66,20 +65,22 @@ class Experiment:
         for step in steps:
             if not re.fullmatch(_STAGE_NAME_PATTERN, step.name) or step.name in seen:
                 raise ValueError("invalid or duplicate stage name")
-            if not set(step.dependencies) <= seen:
+            if not set(step.dependencies).issubset(seen):
                 raise ValueError("stages must follow dependency order")
             seen.add(step.name)
         for step in steps:
-            dependencies = {
-                name: {
-                    "generation": self.state["steps"][name]["generation"],
-                    "outputs": self.state["steps"][name]["outputs"],
+            dependencies = {}
+            for name in step.dependencies:
+                dependency = self.state["steps"][name]
+                # 출력이 같아도 선행 단계를 다시 실행했다면 후속 단계도 갱신한다.
+                dependencies[name] = {
+                    "generation": dependency["generation"],
+                    "outputs": dependency["outputs"],
                 }
-                for name in step.dependencies
-            }
             inputs = {"configuration": step.inputs, "dependencies": dependencies}
             destination = self.root / step.name
             previous = self.state["steps"].get(step.name, {})
+            # 다운로드 단계는 기록된 출력뿐 아니라 외부 모델 캐시도 남아 있어야 한다.
             if (
                 previous.get("status") == "completed"
                 and previous.get("inputs") == inputs
@@ -116,6 +117,7 @@ class Experiment:
                     error=None,
                 )
             except BaseException as exc:
+                # 사용자 중단도 실패로 기록한 뒤 다시 전파해 재개 지점을 보존한다.
                 row.update(
                     status="failed",
                     error=f"{type(exc).__name__}: {exc}",

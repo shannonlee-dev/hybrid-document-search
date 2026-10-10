@@ -49,6 +49,7 @@ class DenseConfig:
         if not isinstance(self.model_name, str) or not self.model_name.strip():
             raise ValueError("model_name must be a non-empty string")
         if self.revision is None:
+            # frozen 설정은 초기화 중에만 기본값을 채우고 이후에는 변경하지 않는다.
             object.__setattr__(self, "revision", MODELS.get(self.model_name))
         if self.revision is not None and (
             not isinstance(self.revision, str)
@@ -214,9 +215,10 @@ class DenseRetriever:
                 "saved registered-model index has no revision; rebuild the index"
             )
         config.setdefault("revision", None)
-        if set(config) != {
+        saved_config_fields = {
             field.name for field in fields(DenseConfig) if field.name != "device"
-        }:
+        }
+        if set(config) != saved_config_fields:
             raise ValueError("invalid saved embedding configuration")
         try:
             embedder = DenseEmbedder(DenseConfig(**config, device=device))

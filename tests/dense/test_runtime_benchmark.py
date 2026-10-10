@@ -296,7 +296,9 @@ def _cli_args(inputs, output, *models):
         "warmup": inputs.warmup,
         "repeats": inputs.repeats,
     }
-    args = [item for key, value in options.items() for item in ("--" + key, str(value))]
+    args = []
+    for key, value in options.items():
+        args.extend(["--" + key, str(value)])
     for model in models:
         args.extend(["--model", str(model)])
     return args

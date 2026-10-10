@@ -112,18 +112,20 @@ def local_pipeline(tmp_path, monkeypatch, evaluation_directory):
         (snapshot / "config.json").write_text("{}")
         return str(snapshot)
 
+    class _HfApi:
+        def model_info(self, model, revision):
+            return SimpleNamespace(sha=revision)
+
     monkeypatch.setitem(
         sys.modules,
         "huggingface_hub",
         SimpleNamespace(
             snapshot_download=_snapshot_download,
-            HfApi=lambda: SimpleNamespace(
-                model_info=lambda model, revision: SimpleNamespace(sha=revision)
-            ),
+            HfApi=_HfApi,
         ),
     )
 
-    # The experiment must also run from a checkout without Git publication checks.
+    # Git 게시 상태와 무관하게 로컬 체크아웃에서도 실험을 실행할 수 있어야 한다.
     def _unexpected_git(*args, **kwargs):
         raise AssertionError("experiment attempted a Git command")
 
@@ -142,7 +144,7 @@ def local_pipeline(tmp_path, monkeypatch, evaluation_directory):
         calls.append(directory.name)
         write_json(
             directory / "command.json",
-            {"argv": list(map(str, arguments)), "exit_code": 0},
+            {"argv": [str(argument) for argument in arguments], "exit_code": 0},
         )
         if directory.name in failures:
             raise RuntimeError("fixture worker failed")
@@ -194,11 +196,9 @@ def test_local_completion_resume_and_fresh(local_pipeline, capsys):
     expected = ["data"]
     for alias in run_experiment.ALIASES:
         expected.extend([f"download-{alias}", f"build-{alias}", f"restore-{alias}"])
-    expected.extend(
-        f"{split}-{alias}"
-        for split in ("train", "dev")
-        for alias in run_experiment.ALIASES
-    )
+    for split in ("train", "dev"):
+        for alias in run_experiment.ALIASES:
+            expected.append(f"{split}-{alias}")
     expected.append("retrieval")
     assert calls == expected
     assert not (workspace / "package").exists()

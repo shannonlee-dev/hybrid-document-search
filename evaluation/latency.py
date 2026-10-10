@@ -41,6 +41,7 @@ def latency_summary(samples: list[float]) -> dict[str, float | int]:
     position = (len(ordered) - 1) * _P95_QUANTILE
     lower = int(position)
     upper = ceil(position)
+    # P95 위치가 두 샘플 사이에 있으면 거리 비율로 선형 보간한다.
     p95 = ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower)
     return {
         "mean_ms": fsum(samples) / len(samples),
@@ -89,13 +90,17 @@ def measure_query_latency(
             started = perf_counter()
             results = retriever.search(query, top_k)
             elapsed_ms = (perf_counter() - started) * MILLISECONDS_PER_SECOND
+            # 검증 비용이 검색 지연에 섞이지 않도록 시간을 먼저 확정한다.
             if validate_results is not None:
                 validate_results(position, results)
             samples[position].append(elapsed_ms)
             if repetition == 0:
                 first_results.append(results)
+    all_samples = []
+    for query_samples in samples:
+        all_samples.extend(query_samples)
     return LatencyMeasurement(
-        latency=latency_summary([sample for values in samples for sample in values]),
+        latency=latency_summary(all_samples),
         warmup_seconds=warmup_seconds,
         samples_ms=samples,
         first_results=first_results,

@@ -160,6 +160,7 @@ def validate(config: DenseRuntimeConfig, index: Path):
     if "revision" not in baseline or baseline["revision"] != revision:
         raise ValueError("requested revision differs from build revision")
     _verify_saved_revision(index, model_name, revision)
+    # 복원 중 문서를 재임베딩하면 저장된 인덱스를 검증한 것으로 볼 수 없다.
     with patch.object(
         DenseEmbedder,
         "encode_documents",
@@ -198,6 +199,7 @@ def validate(config: DenseRuntimeConfig, index: Path):
                 for key in ("document_id", "rank", "title", "snippet")
             ):
                 raise ValueError("Top-K mapping/rank changed after load")
+            # FP32 연산 오차는 허용하되 문서와 순위는 위에서 정확히 비교한다.
             if not math.isclose(
                 before["score"],
                 after["score"],
@@ -351,14 +353,12 @@ def _checkpoint_revisions():
         result = resolver(*args, **kwargs)
         for filename in result[0] or []:
             parts = Path(filename).parts
-            revision = next(
-                (
-                    parts[i + 1]
-                    for i, part in enumerate(parts[:-1])
-                    if part == "snapshots"
-                ),
-                None,
-            )
+            revision = None
+            # Hugging Face 캐시의 snapshots/<SHA>/ 경로에서 실제 가중치 버전을 얻는다.
+            for position, part in enumerate(parts[:-1]):
+                if part == "snapshots":
+                    revision = parts[position + 1]
+                    break
             revisions.append(revision)
         return result
 
@@ -372,12 +372,12 @@ def _verify_loaded_revision(retriever, revision, checkpoint_revisions):
     model = retriever.embedder.model
     module = model._first_module() if hasattr(model, "_first_module") else None
     transformer = getattr(module, "auto_model", None)
-    loaded_revision = getattr(
-        getattr(transformer, "config", None), "_commit_hash", None
-    )
+    transformer_config = getattr(transformer, "config", None)
+    loaded_revision = getattr(transformer_config, "_commit_hash", None)
     observed = list(checkpoint_revisions)
     if loaded_revision is not None:
         observed.append(loaded_revision)
+    # 요청한 SHA만으로는 부족하며 실제로 로드한 설정이나 가중치의 증거가 필요하다.
     if revision is None or not observed or any(sha != revision for sha in observed):
         raise ValueError(
             f"loaded model revision mismatch or unverifiable: "

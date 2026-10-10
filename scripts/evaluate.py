@@ -72,11 +72,15 @@ def main(argv: list[str] | None = None) -> int:
     """Evaluate retrieval quality and latency and save reports to a new directory."""
     parser = _build_parser()
     args = parser.parse_args(argv)
-    uses_dense = bool(set(args.methods) & {"dense", "hybrid"})
+    uses_dense = "dense" in args.methods or "hybrid" in args.methods
+    strict_runtime = (
+        uses_dense and args.threads is not None and args.device == CUDA_DEVICE
+    )
     try:
         runtime = None
         if args.threads is not None:
             if uses_dense:
+                # 관련 수치 라이브러리까지 로드한 뒤 실효 스레드 수를 제한한다.
                 import sentence_transformers  # noqa: F401
 
                 from evaluation.runtime_config import configure_runtime
@@ -97,9 +101,7 @@ def main(argv: list[str] | None = None) -> int:
             device=args.device,
             warmup=args.warmup,
             repeats=args.repeats,
-            strict_runtime=uses_dense
-            and args.threads is not None
-            and args.device == CUDA_DEVICE,
+            strict_runtime=strict_runtime,
             progress=lambda message: print(message, file=sys.stderr, flush=True),
         )
         if runtime is not None:

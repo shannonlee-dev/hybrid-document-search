@@ -69,10 +69,12 @@ def evaluate_run(
         for query_id, judgments in qrels.items()
     ]
     names = ("recall@5", "recall@10", "rr@10", "ndcg@10")
-    return {
-        name: fsum(metrics[query_name] for metrics in per_query) / len(per_query)
-        for name, query_name in zip(METRIC_NAMES, names, strict=True)
-    }
+    averages = {}
+    # 질의별 RR의 평균은 보고서에서 MRR로 표기한다.
+    for name, query_name in zip(METRIC_NAMES, names, strict=True):
+        values = [metrics[query_name] for metrics in per_query]
+        averages[name] = fsum(values) / len(per_query)
+    return averages
 
 
 def _validate_inputs(

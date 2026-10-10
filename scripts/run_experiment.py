@@ -49,18 +49,18 @@ def _code_hashes(*directories, include_model_config=True):
 
 
 def _run_command(directory, module, arguments):
-    argv = [sys.executable, "-m", module, *map(str, arguments)]
+    argv = [sys.executable, "-m", module]
+    argv.extend(str(argument) for argument in arguments)
     environment = dict(os.environ, TOKENIZERS_PARALLELISM="false")
     environment.update({name: str(CONDITIONS["threads"]) for name in THREAD_ENV})
     with (
         (directory / "stdout.log").open("w") as stdout,
         (directory / "stderr.log").open("w") as stderr,
     ):
-        attempts = (
-            _DOWNLOAD_ATTEMPTS
-            if module in {"scripts.prepare_dataset", "scripts.run_experiment"}
-            else 1
-        )
+        # 네트워크 다운로드 단계만 재시도하고 측정 작업은 한 번만 실행한다.
+        attempts = 1
+        if module in {"scripts.prepare_dataset", "scripts.run_experiment"}:
+            attempts = _DOWNLOAD_ATTEMPTS
         for attempt in range(attempts):
             process = subprocess.run(
                 argv, cwd=ROOT, env=environment, stdout=stdout, stderr=stderr
@@ -143,7 +143,7 @@ def _make_steps(experiment, env):
 
     steps = [Step("data", (), data_inputs, _prepare)]
     for alias, model in ALIASES.items():
-
+        # 작업은 루프가 끝난 뒤 실행하므로 기본 인자로 현재 모델을 고정한다.
         def _download(directory, model=model):
             _run_command(
                 directory,
@@ -174,7 +174,7 @@ def _make_steps(experiment, env):
             ("build", f"build-{alias}", ("data", f"download-{alias}")),
             ("validate", f"restore-{alias}", (f"build-{alias}",)),
         ):
-
+            # 모델·인덱스·단계가 다음 반복의 값으로 바뀌지 않게 함께 고정한다.
             def _worker(directory, model=model, index=index, phase=phase):
                 _run_command(
                     directory,
@@ -225,7 +225,7 @@ def _make_steps(experiment, env):
             )
     for split in ("train", "dev"):
         for alias, model in ALIASES.items():
-
+            # 지연 실행 시에도 이 작업에 지정한 split과 모델 별칭을 유지한다.
             def _evaluate(directory, split=split, alias=alias):
                 _run_command(
                     directory,
@@ -305,6 +305,7 @@ def _model_cache_available(directory):
     if not files or not report.get("snapshot"):
         return False
     snapshot = Path(report["snapshot"])
+    # 캐시 링크 자체가 있어도 대상 파일이 사라졌으면 다시 다운로드해야 한다.
     return all((snapshot / name).is_file() for name in files)
 
 
@@ -323,17 +324,18 @@ def _download_model(model, output):
     )
     if Path(snapshot).name != revision:
         raise ValueError("downloaded snapshot revision mismatch")
+    snapshot_files = []
+    for path in sorted(Path(snapshot).rglob("*")):
+        # 끊어진 링크도 기록해야 재개 시 캐시 누락을 감지할 수 있다.
+        if path.is_file() or path.is_symlink():
+            snapshot_files.append(str(path.relative_to(snapshot)))
     write_json(
         output,
         {
             "model": model,
             "revision": revision,
             "snapshot": snapshot,
-            "snapshot_files": [
-                str(path.relative_to(snapshot))
-                for path in sorted(Path(snapshot).rglob("*"))
-                if path.is_file() or path.is_symlink()
-            ],
+            "snapshot_files": snapshot_files,
             "download_seconds": perf_counter() - started,
             "global_cache_preserved": True,
         },
@@ -362,6 +364,7 @@ def _run_experiment(argv=None):
     reject_symlinks(lock)
     with lock.open("w") as handle:
         if fcntl is not None:
+            # 같은 작업 공간을 동시에 갱신하지 않도록 대기 없이 잠금을 획득한다.
             fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
         experiment = Experiment(WORKSPACE)
         try:

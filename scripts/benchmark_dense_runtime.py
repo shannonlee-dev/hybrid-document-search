@@ -52,6 +52,7 @@ def _run_worker(
     }
     for option, value in options.items():
         command.extend(["--" + option.replace("_", "-"), str(value)])
+    # 새 프로세스에서 복원해야 빌드 중 로드한 모델이나 인덱스를 재사용하지 않는다.
     process = subprocess.run(command, text=True, capture_output=True)
     if process.returncode:
         raise RuntimeError(

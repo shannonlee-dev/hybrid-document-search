@@ -1,4 +1,4 @@
-"""준비된 평가 파일의 schema, split, corpus 참조와 manifest를 검증합니다."""
+"""Verify prepared evaluation schemas, splits, corpus references and manifests."""
 
 import json
 from pathlib import Path

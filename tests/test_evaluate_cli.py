@@ -110,18 +110,20 @@ def test_dense_threads_keep_cuda_runtime(monkeypatch, tmp_path, method):
     )
     calls = []
     runtime = {"device": "cuda:0"}
-    monkeypatch.setattr(
-        runtime_config,
-        "configure_runtime",
-        lambda threads, *, cuda: calls.append((threads, cuda)) or runtime,
-    )
+
+    def _configure_runtime(threads, *, cuda):
+        calls.append((threads, cuda))
+        return runtime
+
+    monkeypatch.setattr(runtime_config, "configure_runtime", _configure_runtime)
     options = []
     report = {"environment": {}, "methods": {}}
-    monkeypatch.setattr(
-        evaluate,
-        "run_benchmark",
-        lambda *args, **kwargs: options.append(kwargs) or report,
-    )
+
+    def _run_benchmark(*args, **kwargs):
+        options.append(kwargs)
+        return report
+
+    monkeypatch.setattr(evaluate, "run_benchmark", _run_benchmark)
     monkeypatch.setattr(evaluate, "write_report", lambda *args: None)
     assert (
         main(

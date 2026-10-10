@@ -1,4 +1,4 @@
-"""준비된 corpus / train·dev query / qrels와 manifest를 검증합니다."""
+"""Validate prepared documents, train/dev queries, qrels and their manifest."""
 
 import hashlib
 import json
@@ -36,7 +36,7 @@ def file_sha256(path: Path) -> str:
 def load_evaluation_dataset(
     directory: str | Path, split: str = "dev"
 ) -> EvaluationDataset:
-    """manifest가 가리키는 준비 파일을 그대로 읽으며 재선별하지 않습니다."""
+    """Load and validate the manifest's prepared files without resampling."""
     if split not in {"train", "dev"}:
         raise ValueError("split은 train 또는 dev여야 합니다.")
     directory = Path(directory)
@@ -55,11 +55,11 @@ def load_evaluation_dataset(
     if not isinstance(manifest.get("selected_query_ids", {}), dict):
         raise ValueError("manifest selected_query_ids는 split별 mapping이어야 합니다.")
 
-    names = ["corpus.jsonl"] + [
-        f"{kind}_{part}.jsonl"
-        for part in ("train", "dev")
-        for kind in ("queries", "qrels")
-    ]
+    # 한 split만 평가해도 전체 준비 데이터가 같은 manifest에 속하는지 확인한다.
+    names = ["corpus.jsonl"]
+    for part in ("train", "dev"):
+        for kind in ("queries", "qrels"):
+            names.append(f"{kind}_{part}.jsonl")
     hashes = {}
     for name in names:
         hashes[name] = file_sha256(directory / name)
@@ -161,6 +161,31 @@ def load_qrels(
     return judgments, row_count
 
 
+def validate_dataset(data, raw):
+    """Verify the pinned dataset, source hashes and split sizes before an experiment."""
+    datasets = {
+        split: load_evaluation_dataset(data, split) for split in ("train", "dev")
+    }
+    manifest = read_json(data / "manifest.json")
+    if manifest["dataset_revision"] != PINNED_REVISION:
+        raise ValueError("dataset revision mismatch")
+    if manifest["settings"] != DATASET_SETTINGS:
+        raise ValueError("dataset settings mismatch")
+    for name, digest in manifest["source_sha256"].items():
+        if file_sha256(raw / PINNED_REVISION / name) != digest:
+            raise ValueError("source hash mismatch")
+    for split, count in (
+        ("train", DATASET_SETTINGS["train_queries"]),
+        ("dev", DATASET_SETTINGS["dev_queries"]),
+    ):
+        if (
+            len(datasets[split].documents) != DATASET_SETTINGS["corpus_size"]
+            or len(datasets[split].queries) != count
+        ):
+            raise ValueError("dataset counts mismatch")
+    return datasets
+
+
 def _records(path: Path):
     with path.open(encoding="utf-8") as source:
         for number, line in enumerate(source, start=1):
@@ -190,28 +215,3 @@ def _check_count(manifest: dict, name: str, actual: int) -> None:
         or expected != actual
     ):
         raise ValueError(f"manifest output_counts와 파일 레코드 수가 다릅니다: {name}")
-
-
-def validate_dataset(data, raw):
-    """Verify the pinned dataset, source hashes and split sizes before running the experiment."""
-    datasets = {
-        split: load_evaluation_dataset(data, split) for split in ("train", "dev")
-    }
-    manifest = read_json(data / "manifest.json")
-    if manifest["dataset_revision"] != PINNED_REVISION:
-        raise ValueError("dataset revision mismatch")
-    if manifest["settings"] != DATASET_SETTINGS:
-        raise ValueError("dataset settings mismatch")
-    for name, digest in manifest["source_sha256"].items():
-        if file_sha256(raw / PINNED_REVISION / name) != digest:
-            raise ValueError("source hash mismatch")
-    for split, count in (
-        ("train", DATASET_SETTINGS["train_queries"]),
-        ("dev", DATASET_SETTINGS["dev_queries"]),
-    ):
-        if (
-            len(datasets[split].documents) != DATASET_SETTINGS["corpus_size"]
-            or len(datasets[split].queries) != count
-        ):
-            raise ValueError("dataset counts mismatch")
-    return datasets

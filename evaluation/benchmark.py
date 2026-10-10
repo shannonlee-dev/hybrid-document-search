@@ -196,7 +196,8 @@ def run_benchmark(
         if method == "hybrid":
             from fusion.hybrid import HybridRetriever
 
-            sparse, dense = _prepare("bm25"), _prepare("dense")
+            sparse = _prepare("bm25")
+            dense = _prepare("dense")
             started = perf_counter()
             retriever = HybridRetriever(
                 sparse, dense, rank_constant=DEFAULT_RANK_CONSTANT
@@ -270,15 +271,15 @@ def write_report(report: dict, directory: str | Path) -> None:
                         "result_count": len(query["results"]),
                     }
                 )
-                samples.extend(
-                    {
-                        "method": method,
-                        "query_id": query["query_id"],
-                        "repetition": number,
-                        "latency_ms": value,
-                    }
-                    for number, value in enumerate(query["latency_samples_ms"], start=1)
-                )
+                for number, value in enumerate(query["latency_samples_ms"], start=1):
+                    samples.append(
+                        {
+                            "method": method,
+                            "query_id": query["query_id"],
+                            "repetition": number,
+                            "latency_ms": value,
+                        }
+                    )
         _write_csv(stage / "summary.csv", SUMMARY_FIELDS, summary)
         _write_csv(
             stage / "queries.csv",
@@ -310,16 +311,10 @@ def write_report(report: dict, directory: str | Path) -> None:
             "| --- | --- | --- | --- | --- | --- | --- |",
         ]
         for row in summary:
-            table.append(
-                "| "
-                + row["method"]
-                + " | "
-                + " | ".join(
-                    f"{row[name]:.6f}"
-                    for name in (*METRIC_NAMES, "latency_mean_ms", "latency_p95_ms")
-                )
-                + " |"
-            )
+            cells = [row["method"]]
+            for name in (*METRIC_NAMES, "latency_mean_ms", "latency_p95_ms"):
+                cells.append(f"{row[name]:.6f}")
+            table.append("| " + " | ".join(cells) + " |")
         table.extend(
             [
                 "",

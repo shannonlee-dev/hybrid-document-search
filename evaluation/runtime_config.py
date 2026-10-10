@@ -42,6 +42,7 @@ def configure_runtime(threads: int, *, cuda: bool = False):
     import torch
     from threadpoolctl import threadpool_info, threadpool_limits
 
+    # FP32 비교 실험에서 GPU가 정밀도가 낮은 TF32 연산을 선택하지 않게 한다.
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
     torch.set_num_threads(threads)
@@ -64,6 +65,7 @@ def configure_runtime(threads: int, *, cuda: bool = False):
     if cuda:
         if not torch.cuda.is_available():
             raise RuntimeError("cuda:0 is required; CPU fallback is forbidden")
+        # 장치 감지만 통과한 상태를 배제하고 실제 CUDA 연산 완료까지 확인한다.
         torch.zeros(1, device=CUDA_DEVICE).sum().item()
         result.update(
             gpu=torch.cuda.get_device_name(0),
