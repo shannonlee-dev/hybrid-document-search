@@ -1,4 +1,4 @@
-"""오프라인 환경에서 Dense 빌드·검색 CLI와 재시작 후 복원을 검증한다."""
+"""Verify offline Dense build/search commands and restoration after restart."""
 
 import builtins
 import importlib
@@ -10,6 +10,60 @@ import sys
 from pathlib import Path
 
 import pytest
+
+from retrievers.model_config import MODELS
+
+
+@pytest.mark.parametrize("model_name,pinned_revision", MODELS.items())
+@pytest.mark.parametrize("revision", [None, "a" * 40])
+def test_build_persists_registered_model_revision(
+    model_name, pinned_revision, revision, dense_corpus_path, model_stub, tmp_path
+):
+    pytest.importorskip("faiss")
+    from scripts.build_index import main
+
+    index = tmp_path / "index"
+    arguments = [
+        "--corpus",
+        str(dense_corpus_path),
+        "--index",
+        str(index),
+        "--model",
+        model_name,
+    ]
+    if revision is not None:
+        arguments.extend(["--revision", revision])
+    main(arguments)
+    metadata = json.loads((index / "metadata.json").read_text(encoding="utf-8"))
+    assert metadata["embedding_config"]["model_name"] == model_name
+    assert metadata["embedding_config"]["revision"] == (
+        pinned_revision if revision is None else revision
+    )
+
+
+def test_build_persists_requested_revision(
+    dense_corpus_path, model_stub, tmp_path, capsys
+):
+    pytest.importorskip("faiss")
+    from scripts.build_index import main
+
+    index = tmp_path / "index"
+    main(
+        [
+            "--corpus",
+            str(dense_corpus_path),
+            "--index",
+            str(index),
+            "--model",
+            "BAAI/bge-m3",
+            "--revision",
+            "a" * 40,
+        ]
+    )
+    report = json.loads(capsys.readouterr().out)
+    assert report["documents"] == 3
+    metadata = json.loads((index / "metadata.json").read_text(encoding="utf-8"))
+    assert metadata["embedding_config"]["revision"] == "a" * 40
 
 
 def test_backend_dependencies_are_independent(
@@ -123,7 +177,16 @@ def test_build_prints_new_shell_safe_search_command(
     index = tmp_path / "index with spaces '$(echo unsafe)'"
     main(["--corpus", str(dense_corpus_path), "--index", str(index)])
     captured = capsys.readouterr()
-    assert json.loads(captured.out) == {"index": str(index), "documents": 3}
+    report = json.loads(captured.out)
+    assert set(report) == {"index", "documents", "timings"}
+    assert report["index"] == str(index)
+    assert report["documents"] == 3
+    assert report["timings"]["embedding_seconds"] >= 0
+    assert report["timings"]["faiss_build_seconds"] >= 0
+    assert (
+        report["timings"]["total_preparation_seconds"]
+        >= report["timings"]["build_seconds"]
+    )
     command = next(
         line.strip()
         for line in captured.err.splitlines()
@@ -187,7 +250,7 @@ def test_empty_query_cli_returns_json_list(
     from retrievers.dense import DenseConfig, DenseRetriever
     from scripts.search import main
 
-    # 빈 질의는 모델이 없어도 저장된 인덱스를 복원한 뒤 빈 결과를 반환해야 한다.
+    # 빈 질의의 검색은 모델 파일 없이도 동작해야 한다.
     retriever = DenseRetriever.build(
         dense_documents, DenseConfig(model_name=str(tmp_path / "missing-model"))
     )
@@ -208,7 +271,7 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
     monkeypatch.setenv("HF_HUB_OFFLINE", "1")
     monkeypatch.setenv("TRANSFORMERS_OFFLINE", "1")
     model_path = tmp_path / "model"
-    # 로컬 BoW 모델로 가중치 다운로드 없이 실제 Sentence Transformers API를 검증한다.
+    # 로컬 BoW 모델로 다운로드 없이 실제 임베딩 API를 검증한다.
     model = st.SentenceTransformer(
         modules=[BoW(["고양이", "야옹", "강아지", "멍멍", "문서", "검색"])],
         device="cpu",
@@ -245,8 +308,17 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
         check=True,
         timeout=45,
     )
-    assert json.loads(build.stdout) == {"index": str(index), "documents": 3}
-    # 원본 corpus를 삭제해 재시작한 검색이 저장된 문서 매핑만으로 동작하는지 확인한다.
+    report = json.loads(build.stdout)
+    assert set(report) == {"index", "documents", "timings"}
+    assert report["index"] == str(index)
+    assert report["documents"] == 3
+    assert report["timings"]["embedding_seconds"] >= 0
+    assert report["timings"]["faiss_build_seconds"] >= 0
+    assert (
+        report["timings"]["total_preparation_seconds"]
+        >= report["timings"]["build_seconds"]
+    )
+    # corpus 없이 재시작해 저장된 문서 매핑만 사용하는지 확인한다.
     corpus.unlink()
     search = subprocess.run(
         [*search_command, *common_args, *query_args],
@@ -306,7 +378,6 @@ def test_dense_cli_build_and_restart(dense_corpus_path, tmp_path, monkeypatch):
     assert "Traceback" not in missing_model.stderr
     assert missing_model.stdout == ""
 
-    # 인덱스 손상에는 재빌드를 안내해야 하며 모델 로딩 실패와 구분해야 한다.
     (index / "metadata.json").write_text("{broken", encoding="utf-8")
     corrupt = subprocess.run(
         [*search_command, *common_args, *query_args],

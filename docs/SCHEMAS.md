@@ -1,6 +1,6 @@
-# 공통 데이터 스키마 초안
+# 공통 데이터 스키마
 
-상태: 문서·인덱싱·query/qrels 필드 합의 반영, 파일 구성 및 중복 처리 정책 구현안 반영
+문서·인덱싱·query/qrels 필드와 준비 스크립트의 파일 구성·검증 규칙입니다.
 관련 Issue: #4
 담당: @bangahee
 
@@ -72,7 +72,7 @@
 ## 관련성 판정 (Qrel)
 
 아래 qrels 필드는 팀 합의를 반영한 공통 형식입니다.
-고정 revision의 원본 train/dev JSONL에서 라벨 0과 1을 확인했습니다. 아래 중복 처리 규칙은 준비 스크립트의 구현 정책이며 팀 리뷰에서 확인합니다.
+고정 revision의 원본 train/dev JSONL에서 라벨 0과 1을 확인했습니다.
 
 | 필드 | 자료형 | 필수 여부 | 의미 |
 | --- | --- | --- | --- |
@@ -123,7 +123,7 @@
 
 위 파일 구성을 준비 스크립트에 구현하고 실제 원본 corpus로 결과를 생성했습니다. 수량과 검증 결과는 [DATASET.md](DATASET.md)에 기록했습니다.
 `manifest.json`은 JSON 객체 하나로 저장하며, query/qrel 레코드에 별도의 `split` 필드는 추가하지 않습니다.
-원본의 train/dev 소속을 유지하며, dev 데이터를 이후 평가용으로 분리하여 보관합니다.
+원본의 train/dev 소속을 유지하며, dev 데이터를 최종 평가용으로 분리하여 보관합니다.
 목표 subset 규모와 선택 방식은 [DATASET.md](DATASET.md)의 설정표를 참조합니다.
 
 원본 `_id` 형식은 `data.loader.load_documents`, 준비된 `document_id` 형식은 `data.loader.load_prepared_documents`로 읽습니다.
@@ -152,11 +152,5 @@ RRF는 원시 점수를 직접 비교하지 않고 순위를 결합합니다.
 
 - [@shannonlee-dev의 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011200128): `document_id`, `text`, 선택적인 `title` 구성, 원본 passage ID 유지, `title + "\n" + text` 및 제목이 없거나 비어 있을 때의 `text` 단독 사용에 동의했습니다.
 - [@VectorSophie의 의견](https://github.com/shannonlee-dev/hybrid-document-search/issues/4#issuecomment-6011160460): 준비된 JSONL에서 없는 제목을 `null`로 일관되게 표현하도록 요청했으며, 기존 `Retriever` / `SearchResult` 계약을 유지하는 데 동의했습니다.
-
-## 팀 리뷰에서 확인할 구현 정책
-
-- 중복·충돌 판정의 처리 규칙.
-- 원문 보존 및 유효하지 않은 레코드에서 오류로 중단하는 방식.
-- JSONL 파일 구성과 split 표현 방식.
 
 준비 스크립트 실행과 검증 범위는 [DATA_PREPARATION.md](DATA_PREPARATION.md)를 참조합니다.

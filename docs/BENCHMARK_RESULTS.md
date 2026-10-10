@@ -1,82 +1,71 @@
-# Sparse Benchmark 결과 (2026-10-07)
+# 검색 방식 Dev 비교
 
-관련 Issue: #12 · 브랜치: `feat/bm25-evaluation`
+2026-10-08 프로젝트 기본 모델을 BGE-M3로 변경하고 네 검색 방식을 다시 측정했다.
+기존 Ko-MIRACL corpus와 검증된 BGE-M3 인덱스를 재사용했다.
+3모델 Train/Dev 비교와 인덱스 구축·복원 기록은 최초 전체 실험의 측정값을 유지한다.
 
-## 실행 조건
+| 모델 / 방식 | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| TF-IDF | 0.576667 | 0.722667 | 0.495238 | 0.525324 | 17.720120 | 28.155618 |
+| BM25 | 0.587667 | 0.750667 | 0.597913 | 0.593881 | 1.704552 | 2.129968 |
+| Dense (BGE-M3) | 0.813667 | 0.958333 | 0.861024 | 0.854857 | 21.594187 | 30.962093 |
+| Hybrid (BM25 + BGE-M3) | 0.765333 | 0.927667 | 0.790571 | 0.784433 | 23.784875 | 33.535504 |
 
-- 공통 Ko-MIRACL 준비 corpus 10,000 passages / train 100 queries / dev 50 queries / seed 42.
-- Dataset revision: `5c7690518e481375551916f24241048cf7b017d0`.
-- Manifest SHA-256: `1d199e8f6d2e1f446110625b03c5c26e1dff5fed280e3a43672294b9f551520a`.
-- 검색 깊이 10, 공통 지표 Recall@5 / Recall@10 / MRR@10 / nDCG@10.
-- 전체 query warm-up 1회 후 측정 5회. train은 방식별 500, dev는 방식별 250 요청 샘플.
-- 파라미터 조정 없이 기존 TF-IDF와 BM25 기본값을 고정하여 train 실행 후 dev 실행.
-- TF-IDF: char_wb 2–4 n-gram / L2. BM25: 같은 분석기 / Lucene / k1=1.5 / b=0.75.
-- 동일 로컬 환경에서 방식별 순차 실행. query-time latency는 search 호출만 포함.
-- Python 3.12.15 / macOS-26.6.2-arm64-arm-64bit / CPU 논리 코어 10.
-- 패키지: scikit-learn 1.9.1, bm25s 0.3.12, numpy 2.5.3, scipy 1.18.1.
-- Dense 의존성과 실제 공통 FAISS 인덱스가 없어 이번 실행은 TF-IDF/BM25만 비교.
-- Recall@100은 참고용이며 이 공통 결과표에는 포함하지 않음.
+Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / WSL2 / NVIDIA RTX 4060, embedding `cuda:0`, CPU FAISS. FP32, L2 정규화, batch size 1, Top-K 10, 전체 질의 warm-up 1회, 측정 5회. PyTorch intra/inter-op·FAISS·OMP/MKL/OpenBLAS 2 threads, tokenizer 병렬화 비활성화, TF32 비활성화.
 
-## Dev 결과
+방식별 50개 질의와 latency 샘플 250개를 사용했다. Hybrid는 BM25 + BGE-M3,
+RRF=60, 구성 검색기별 후보 Top-10이다. 준비 시간과 warm-up은 query latency에서 제외한다.
+Dense 3모델 Train/Dev 비교는 [DENSE_RETRIEVAL.md](DENSE_RETRIEVAL.md)에 모았다.
 
-| Method | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
-| --- | --- | --- | --- | --- | --- | --- |
-| tfidf | 0.576667 | 0.722667 | 0.495238 | 0.525324 | 5.542394 | 6.291021 |
-| bm25 | 0.587667 | 0.750667 | 0.597913 | 0.593881 | 0.919895 | 1.062710 |
-| Dense | 미측정 | 미측정 | 미측정 | 미측정 | 미측정 | 미측정 |
-| Hybrid (BM25 + Dense / RRF) | 미측정 | 미측정 | 미측정 | 미측정 | 미측정 | 미측정 |
+## 결과 해석
 
-현재 dev subset에서는 BM25가 TF-IDF보다 네 지표 모두 높았으며, 측정된 평균/P95 latency도 낮았습니다.
-이 결과는 현재 문자 n-gram baseline과 10k 평가 subset에 한정됩니다. 전체 MIRACL 공식 benchmark 성능이나
-모든 문서 도메인에서의 우열을 의미하지 않습니다. Latency는 실행 환경과 시스템 부하에 따라 달라집니다.
+Dev nDCG@10 최고 방식은 Dense (BGE-M3)이다.
+Dense 단독과 Hybrid의 차이를 실제 측정 그대로 보고하며 Hybrid 개선을 전제하지 않는다.
+기본 모델은 `config/dense_models.toml`의 `default_model = "bge"`로 지정하고
+Train/Dev 점수로 자동 선택하지 않는다. 검색 알고리즘과 평가 조건은 유지했다.
 
-## Train 확인 결과
+## 원문·qrels 대조 사례
 
-| Method | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
-| --- | --- | --- | --- | --- | --- | --- |
-| tfidf | 0.555944 | 0.689778 | 0.547524 | 0.539715 | 5.502145 | 6.376935 |
-| bm25 | 0.565167 | 0.698722 | 0.566567 | 0.559138 | 0.931118 | 1.055085 |
+Dense와 Hybrid의 질의별 nDCG 차이가 가장 큰 양쪽 사례를 사후에 골랐다.
+대표성을 통계적으로 보장하는 표본이 아니며 개별 검색 동작을 설명하기 위한 사례다.
 
-Train 값은 개발 확인용입니다. Dense 모델 및 파라미터 선택은 train을 사용하며,
-dev 결과를 보고 반복 튜닝하지 않습니다. Dense 모델 선정에서는 Recall@10 / MRR@10 / nDCG@10을 우선하고
-Recall@100은 순수 참고용으로 별도 기록합니다.
+### 1391: 발해는 언제 건국되나요?
 
-## 준비 시간
+- Dense (BGE-M3): 관련 문서 순위 1; 1위 `122372#0`, 제목 ‘발해’.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 6; 1위 `122372#12`, 제목 ‘발해’.
 
-| Split | Method | Setup seconds | Warm-up seconds |
-| --- | --- | --- | --- |
-| train | tfidf | 2.289527 | 0.551795 |
-| train | bm25 | 2.210030 | 0.093616 |
-| dev | tfidf | 2.238267 | 0.295036 |
-| dev | bm25 | 2.043683 | 0.047082 |
+### 606: 조선에서 가장 어린 왕은 누구인가?
 
-Setup은 메모리 인덱싱과 첫 readiness 검색입니다. 위 비교표의 latency에 포함하지 않았습니다.
-Dense의 문서 embedding/인덱스 최초 생성 시간은 Dense 담당자가 별도로 측정해야 합니다.
+- Dense (BGE-M3): 관련 문서 순위 4; 1위 `11027#0`, 제목 ‘조선 현종’.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 1; 1위 `867281#3`, 제목 ‘빈 (지위)’.
 
-## 저장 위치 및 재현
+각 결과의 문서 ID를 corpus 및 qrels와 대조했다.
 
-실제 생성 파일은 Git에서 제외되는 다음 경로에 저장했습니다.
+## 출처와 재현
 
-- `artifacts/benchmarks/sparse-train-20261007/`
-- `artifacts/benchmarks/sparse-dev-20261007/`
+위 표는 2026-10-08 측정 기록이다. 당시 네 방식 재평가의 원본 경로는
+`artifacts/ko-miracl-bge-default/retrieval/`이며, 기존 데이터·인덱스·3모델 측정 코드의
+commit은 `5a6a60024d602b23312eafdb3b3c371d282ddcc9`이다.
 
-각 경로에 `results.json`, `summary.csv`, `queries.csv`, `latencies.csv`, `comparison.md`가 있습니다.
-JSON에는 전체 query와 검색 결과, 원시 timing, 환경, 검색기 설정 및 입력/코드 체크섬을 기록했습니다.
-실행 당시 Git HEAD는 `9d90df530e04a697de3151e23bae12147ffcc654`였으며 Step 4 구현이 미커밋 상태여서
-`working_tree_dirty=true`입니다. 실제 실행 코드 버전은 JSON의 파일별 SHA-256으로 확인합니다.
-
-새 output-dir을 지정하여 재현합니다.
+현재 코드의 전체 실험은 다음 명령으로 실행·재개한다.
 
 ```bash
-uv run --locked --extra sparse python -m scripts.evaluate \
-  --split dev --methods tfidf bm25 --warmup 1 --repeats 5 \
-  --output-dir artifacts/benchmarks/sparse-dev-rerun
+uv run --locked --extra sparse --extra dense python -m scripts.run_experiment
 ```
 
-## 남은 공통 검증
+새 실행의 네 방식 Dev 결과는 `artifacts/ko-miracl-full/retrieval/evaluation/`에 생성된다.
 
-- Dense 담당자의 고정 기본 모델 및 동일 corpus FAISS 인덱스 준비.
-- 네 방식을 같은 환경에서 한 번에 실행하고 공통 최종 비교표 갱신.
-- 실제 Dense/Hybrid 결과 기반 통합 검증과 팀원 리뷰.
+- `results.json`: 질의별 검색 결과·지표·latency 샘플, 측정 조건·환경·코드 출처
+- `summary.csv`: 방식별 품질 지표와 latency 집계
+- `queries.csv`: 질의별 지표
+- `latencies.csv`: 질의별 반복 측정 샘플
+- `comparison.md`: 방식별 비교표
 
-Benchmark 실행 옵션과 지표 계산 정의는 [EVALUATION.md](EVALUATION.md)를 참조합니다.
+실행 명령은 `artifacts/ko-miracl-full/retrieval/command.json`, 사전 점검 환경은
+`artifacts/ko-miracl-full/preflight.json`, 단계 상태·입출력 해시는
+`artifacts/ko-miracl-full/checkpoint.json`에 기록한다.
+판정값은 `artifacts/ko-miracl-full/data/prepared/qrels_dev.jsonl`에서 확인한다.
+실험 결과, 모델 인덱스, 로그, checkpoint는 로컬 `artifacts/`에 생성하며 Git에 포함하지 않는다.
+
+10k subset의 순차 실행 결과로, 전체 MIRACL 성능이나 API 응답 시간을 뜻하지 않는다.
+독립적인 전체 실험 반복은 수행하지 않았다. 측정 범위와 한계는 [EVALUATION.md](EVALUATION.md)를 참조한다.

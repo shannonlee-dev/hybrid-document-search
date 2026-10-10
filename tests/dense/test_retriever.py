@@ -1,4 +1,4 @@
-"""Dense Top-K 검색, 공통 검색 계약과 문서 매핑을 확인한다."""
+"""Verify Dense Top-K search, shared result contracts and document mappings."""
 
 import numpy as np
 import pytest
@@ -38,7 +38,8 @@ def test_empty_query_still_requires_positive_top_k(top_k, dense_documents, model
 def test_build_embeds_shared_indexing_text(dense_documents, model_stub):
     pytest.importorskip("faiss")
     retriever = dense.DenseRetriever.build(
-        dense_documents, dense.DenseConfig(device="cpu")
+        dense_documents,
+        dense.DenseConfig(model_name="intfloat/multilingual-e5-base", device="cpu"),
     )
     assert retriever.embedder.model.inputs == [
         "passage: 고양이\n고양이 울음소리는 야옹 입니다.",

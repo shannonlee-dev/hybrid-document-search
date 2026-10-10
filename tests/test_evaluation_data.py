@@ -1,4 +1,4 @@
-"""준비된 평가 파일의 schema, split, corpus 참조와 manifest를 검증합니다."""
+"""Verify prepared evaluation schemas, splits, corpus references and manifests."""
 
 import json
 from pathlib import Path
@@ -175,3 +175,42 @@ def test_empty_qrels_preserve_all_queries(evaluation_directory):
 def test_invalid_split(evaluation_directory):
     with pytest.raises(ValueError, match="split"):
         load_evaluation_dataset(evaluation_directory, "test")
+
+
+@pytest.mark.parametrize("mutation", [None, "revision", "settings", "source", "counts"])
+def test_experiment_dataset_validation(
+    evaluation_directory, tmp_path, monkeypatch, mutation
+):
+    from data.preparation import PINNED_REVISION
+    from evaluation import data
+
+    settings = {"corpus_size": 4, "train_queries": 1, "dev_queries": 2, "seed": 42}
+    monkeypatch.setattr(data, "DATASET_SETTINGS", settings)
+    raw = tmp_path / "raw"
+    source = raw / PINNED_REVISION / "corpus.jsonl"
+    source.parent.mkdir(parents=True)
+    source.write_text("source fixture")
+    path = evaluation_directory / "manifest.json"
+    manifest = json.loads(path.read_text())
+    manifest.update(
+        dataset_revision=PINNED_REVISION,
+        settings=dict(settings),
+        source_sha256={"corpus.jsonl": file_sha256(source)},
+    )
+    if mutation == "revision":
+        manifest["dataset_revision"] = "0" * 40
+    elif mutation == "settings":
+        manifest["settings"]["seed"] = 1
+    elif mutation == "source":
+        source.write_text("tampered")
+    elif mutation == "counts":
+        monkeypatch.setattr(data, "DATASET_SETTINGS", {**settings, "corpus_size": 5})
+        manifest["settings"]["corpus_size"] = 5
+    path.write_text(json.dumps(manifest))
+    if mutation:
+        with pytest.raises(ValueError, match=f"{mutation}.*mismatch"):
+            data.validate_dataset(evaluation_directory, raw)
+    else:
+        datasets = data.validate_dataset(evaluation_directory, raw)
+        assert set(datasets) == {"train", "dev"}
+        assert len(datasets["train"].documents) == 4

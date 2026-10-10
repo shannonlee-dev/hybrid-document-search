@@ -1,7 +1,4 @@
-"""Search request/response contract for the later FastAPI integration.
-
-Not wired into any route yet. ``SearchHit`` mirrors ``SearchResult`` fields.
-"""
+"""FastAPI search contracts; SearchHit mirrors SearchResult fields."""
 
 from enum import StrEnum
 

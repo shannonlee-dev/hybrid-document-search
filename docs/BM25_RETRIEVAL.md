@@ -1,6 +1,6 @@
 # BM25 Sparse Retrieval
 
-관련 Issue: #12 · 담당: @bangahee · 브랜치: `feat/bm25-evaluation`
+관련 Issue: #12 · 담당: @bangahee
 
 ## 구현과 공통 계약
 
@@ -37,7 +37,7 @@ score(token, document) = idf * tf / (tf + k1 * (1 - b + b * length / avg_length)
 점수 크기가 다를 수 있습니다. TF-IDF 또는 Dense 점수와 직접 비교하거나 더하지 않습니다.
 Hybrid는 기존 RRF가 순위를 결합하도록 합니다.
 
-초기 설정은 baseline이며 실제 품질 검증이나 파라미터 선택 결과가 아닙니다.
+기본 설정을 baseline으로 평가했으며, 파라미터를 추가 튜닝하지 않았습니다.
 설정 변경은 train 데이터에서 검토하고 dev 평가 전에 고정합니다.
 
 ## Python 실행
@@ -80,14 +80,14 @@ BM25 검색기는 `bm25` subcommand가 선택된 경우에만 불러옵니다. �
 CLI를 실행할 때마다 corpus를 읽고 메모리 인덱스를 생성합니다.
 인덱스 파일 저장·로드는 제공하지 않습니다. 공통 benchmark에서는 검색기를 한 번 준비해 재사용합니다.
 평가 지표, 실제 데이터 benchmark 실행과 JSON/CSV 저장 방법은 [EVALUATION.md](EVALUATION.md)에 정리했습니다.
-현재 Sparse 비교 결과는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)를 참조하세요.
+네 방식의 Dev 비교 결과는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)를 참조하세요.
 
-## 2차 공통 평가 합의
+## 공통 평가 기준
 
 - 공통 지표: Recall@5 / Recall@10 / MRR@10 / nDCG@10. 공통 검색 깊이는 Top-10입니다.
 - Query-time latency: warm-up 이후 반복 측정한 평균과 P95. 모델·인덱스 최초 준비 시간은 별도 기록.
-- 실제 서비스는 Top-10 기준이므로 Dense 모델 선정은 Recall@10 / MRR@10 / nDCG@10을 우선합니다.
-- Dense 모델 비교용 Recall@100은 순수 참고용 지표입니다. 공통 결과표의 필수 지표 또는 모델 선정의 주된 기준으로 사용하지 않습니다.
+- Dense 모델 선정은 Train nDCG@10을 우선하고, MRR@10·Recall@10과 latency·구축 비용을 함께 검토합니다.
+- Recall@100은 이번 공통 비교에 포함하지 않습니다.
 - 기존 평가 계획대로 모델·파라미터 선택은 train에서 진행하고, 고정된 dev query/qrels로 최종 성능을 비교합니다.
 - Metric cutoff와 Hybrid의 검색 후보 수는 별도 설정입니다. 후보 수와 측정 조건을 실행 결과에 기록합니다.
 
@@ -104,29 +104,12 @@ fixture로 한국어 부분 검색, 순위와 동점, 원본 metadata, 입력 �
 Sparse 의존성이 없는 기본 CI에서는 BM25 검색 테스트를 건너뛰므로 Sparse extra를 포함해 별도로 실행해야 합니다.
 fixture 및 smoke test는 실제 검색 품질 benchmark를 대신하지 않습니다.
 
-## 로컬 검증 결과
+## 초기 실데이터 검증
 
-2026-10-07, Python 3.12.15 / bm25s 0.3.12 환경에서 확인했습니다.
-
-### 검색기 구현 검증 (Step 1)
-
-- BM25 unit test: 40 passed.
-- 전체 테스트: 271 passed, 53 skipped. Dense 의존성 미설치로 FAISS 관련 테스트는 건너뛰었습니다.
-- 전체 Ruff lint / format 검사 및 `git diff --check` 통과.
-- 기존 준비 corpus 10,000개로 인덱싱 후 `제주` Top-3 검색 및 반복 검색 일치 확인.
-  반환 ID는 `1987050#0`, `736025#1`, `1664892#1`이며 모두 공통 corpus에 존재합니다.
-  순위 연속성, 양의 유한 점수 및 점수 내림차순을 확인했습니다.
-
-Step 1에서는 실행 흐름을 검증했습니다. 이후 실제 평가 결과는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)에 기록합니다.
-
-### 검색 CLI 연결 검증 (Step 2)
-
-- Sparse CLI 테스트: TF-IDF / BM25 모두 포함하여 55 passed.
-- 전체 테스트: 297 passed, 53 skipped. Dense 의존성 관련 skip은 Step 1과 동일합니다.
-- 전체 Ruff lint / format 검사 및 `git diff --check` 통과.
-- 실제 `python -m scripts.search bm25 --query "제주" --top-k 3` 명령으로
-  10,000개 준비 corpus 검색 성공. JSON 파싱, 공통 ID / 원본 metadata, 순위 및 점수를 확인했습니다.
-- 검색 결과는 Step 1의 Python 검색 결과와 동일한 Top-3 문서입니다.
+2026-10-07, Python 3.12.15 / bm25s 0.3.12에서 10,000개 준비 corpus의 `제주` Top-3 검색과
+반복 검색 일치를 확인했습니다. 반환 ID는 `1987050#0`, `736025#1`, `1664892#1`이며,
+Python과 CLI 결과의 공통 ID·metadata·순위·점수를 대조했습니다.
+검색 품질과 latency는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)에 있습니다.
 
 ## 참고 자료
 

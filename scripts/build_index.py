@@ -1,15 +1,17 @@
-"""준비된 corpus로 Dense 인덱스를 생성하고 단계별 실패 원인을 안내한다."""
+"""Build a Dense index from prepared documents and report stage-specific failures."""
 
 import argparse
 import json
 import shlex
 import sys
 from pathlib import Path
+from time import perf_counter
 
 from scripts._cli import CliArgumentParser, _dependency_hint, _positive_int
 
 
-def main(argv: list[str] | None = None) -> None:
+def _build_index(argv: list[str] | None = None) -> None:
+    """Embed and save a corpus, reporting recovery guidance for failed stages."""
     parser = CliArgumentParser(
         prog="python -m scripts.build_index",
         description="준비된 corpus의 문서를 임베딩하고 Dense 인덱스를 저장합니다.",
@@ -34,7 +36,11 @@ def main(argv: list[str] | None = None) -> None:
     )
     parser.add_argument("--device", help="cpu, cuda 또는 cuda:0 (생략하면 자동 선택)")
     parser.add_argument(
-        "--model", help="모델 이름 또는 로컬 경로 (기본: 다국어 E5-base)"
+        "--model", help="모델 이름 또는 로컬 경로 (기본: dense_models.toml 설정)"
+    )
+    parser.add_argument(
+        "--revision",
+        help="모델의 고정 40자리 commit SHA (등록된 후보는 TOML의 SHA 사용)",
     )
     parser.add_argument(
         "--batch-size",
@@ -53,6 +59,7 @@ def main(argv: list[str] | None = None) -> None:
         "--passage-prefix", help="문서 앞에 붙일 문자열 (생략하면 모델별 기본값)"
     )
     args = parser.parse_args(argv)
+    started = perf_counter()
     stage = "corpus 읽기"
     hint = (
         "--corpus에 읽을 수 있는 UTF-8 JSONL 파일을 지정해 주세요.\n"
@@ -76,6 +83,7 @@ def main(argv: list[str] | None = None) -> None:
         defaults = DenseConfig()
         config = DenseConfig(
             model_name=args.model if args.model is not None else defaults.model_name,
+            revision=args.revision,
             device=args.device,
             batch_size=args.batch_size
             if args.batch_size is not None
@@ -94,7 +102,15 @@ def main(argv: list[str] | None = None) -> None:
         stage = "인덱스 저장"
         hint = "--index 경로에 쓸 수 있는지, 디스크 공간이 충분한지 확인해 주세요."
         retriever.save(args.index)
-        print(json.dumps({"index": str(args.index), "documents": len(documents)}))
+        summary = {
+            "index": str(args.index),
+            "documents": len(documents),
+            "timings": {
+                **retriever.build_timings,
+                "total_preparation_seconds": perf_counter() - started,
+            },
+        }
+        print(json.dumps(summary))
         search_command = shlex.join(
             [
                 "python",
@@ -122,5 +138,15 @@ def main(argv: list[str] | None = None) -> None:
         parser.error(f"{stage}에 실패했습니다.\n{hint}\n상세: {exc}")
 
 
+def main(argv: list[str] | None = None) -> int:
+    """Run the build CLI and report user cancellation without a traceback."""
+    try:
+        _build_index(argv)
+    except KeyboardInterrupt:
+        print("\nCancelled by user.", file=sys.stderr)
+        return 130
+    return 0
+
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

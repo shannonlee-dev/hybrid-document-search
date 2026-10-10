@@ -1,8 +1,4 @@
-"""Role 3: route search requests to configured retrievers.
-
-SearchService only selects a retriever and passes results through unchanged.
-Retrieval and fusion stay in their own modules.
-"""
+"""Initialize retrievers and route search requests by method."""
 
 import logging
 from collections.abc import Mapping
@@ -25,18 +21,16 @@ DENSE_BUILD_HINT = (
 
 
 class MethodState(StrEnum):
-    """Why a method can or cannot search. Each value maps to one failure stage."""
+    """Retrieval availability and the stage preventing a method from searching."""
 
     AVAILABLE = "available"
-    NOT_IMPLEMENTED = "not_implemented"  # the retriever module is still a placeholder
-    NOT_CONFIGURED = "not_configured"  # no setting points at this method's artifact
-    CORPUS_UNAVAILABLE = "corpus_unavailable"  # corpus missing or invalid
-    DEPENDENCY_MISSING = "dependency_missing"  # optional Python package not installed
-    INDEX_MISSING = "index_missing"  # configured index artifact not on disk
-    LOAD_FAILED = "load_failed"  # index or model failed to load or does not match
-    UPSTREAM_UNAVAILABLE = (
-        "upstream_unavailable"  # a component this method needs is down
-    )
+    NOT_IMPLEMENTED = "not_implemented"
+    NOT_CONFIGURED = "not_configured"
+    CORPUS_UNAVAILABLE = "corpus_unavailable"
+    DEPENDENCY_MISSING = "dependency_missing"
+    INDEX_MISSING = "index_missing"
+    LOAD_FAILED = "load_failed"
+    UPSTREAM_UNAVAILABLE = "upstream_unavailable"
 
 
 @dataclass(frozen=True)
@@ -53,7 +47,7 @@ AVAILABLE = MethodStatus(MethodState.AVAILABLE)
 
 
 class MethodUnavailableError(Exception):
-    """The requested retrieval method cannot search. Carries the reason."""
+    """Search failure carrying the requested method and its availability status."""
 
     def __init__(self, method: RetrievalMethod, status: MethodStatus) -> None:
         reason = status.reason or status.state.value
@@ -63,7 +57,7 @@ class MethodUnavailableError(Exception):
 
 
 class SearchService:
-    """Hold initialized retrievers and dispatch one search call to one of them."""
+    """Dispatch search requests to initialized retrievers."""
 
     def __init__(
         self,
@@ -102,8 +96,8 @@ def build_search_service(
 ) -> SearchService:
     """Load the corpus once and initialize every retriever that can run.
 
-    Failures do not raise. Each affected method gets a MethodStatus that says why,
-    so the API process stays up and reports the state. Paths are logged, not returned.
+    Expected initialization failures become method statuses. Internal paths stay
+    in server logs rather than availability messages.
     """
     try:
         documents = load_prepared_documents(corpus_path)
@@ -122,15 +116,15 @@ def build_search_service(
     retrievers: dict[RetrievalMethod, Retriever] = {}
     statuses: dict[RetrievalMethod, MethodStatus] = {}
 
-    def register(method: RetrievalMethod, outcome: Retriever | MethodStatus) -> None:
+    def _register(method: RetrievalMethod, outcome: Retriever | MethodStatus) -> None:
         if isinstance(outcome, MethodStatus):
             statuses[method] = outcome
         else:
             retrievers[method] = outcome
 
-    register(RetrievalMethod.TFIDF, _tfidf(documents))
-    register(RetrievalMethod.BM25, _bm25(documents))
-    register(
+    _register(RetrievalMethod.TFIDF, _tfidf(documents))
+    _register(RetrievalMethod.BM25, _bm25(documents))
+    _register(
         RetrievalMethod.DENSE,
         _dense(documents, dense_index_path, dense_device),
     )
@@ -138,7 +132,7 @@ def build_search_service(
     bm25 = retrievers.get(RetrievalMethod.BM25)
     dense = retrievers.get(RetrievalMethod.DENSE)
     if bm25 is not None and dense is not None:
-        # Hybrid is BM25 + Dense + RRF. There is no TF-IDF fallback.
+        # Hybrid는 BM25와 Dense가 모두 필요하며 TF-IDF로 대체할 수 없다.
         retrievers[RetrievalMethod.HYBRID] = HybridRetriever(bm25, dense)
     else:
         missing = [
@@ -163,7 +157,7 @@ def build_search_service(
 
 
 def _is_placeholder(cls: type) -> bool:
-    """Role-owned placeholders define no constructor; a merged implementation does."""
+    """Detect constructor-free retriever stubs used during integration."""
     return "__init__" not in vars(cls)
 
 
@@ -228,6 +222,12 @@ def _dense(
             MethodState.DEPENDENCY_MISSING,
             "dense dependencies are missing. Install them with: uv sync --extra dense",
         )
+    except (OSError, ValueError):
+        logger.exception("dense module could not be imported")
+        return MethodStatus(
+            MethodState.LOAD_FAILED,
+            "dense module could not be imported; see server logs.",
+        )
 
     if _is_placeholder(DenseRetriever):
         return MethodStatus(
@@ -248,7 +248,6 @@ def _dense(
             "dense dependencies are missing. Install them with: uv sync --extra dense",
         )
     except OSError as exc:
-        # NotADirectoryError, PermissionError, etc: the configured path is unusable.
         logger.error("dense index path is unusable: %s", exc)
         return MethodStatus(
             MethodState.LOAD_FAILED, "index path could not be read; see server logs."
@@ -265,11 +264,10 @@ def _dense(
             "index was built from a different corpus. Rebuild it from the current corpus.",
         )
     try:
-        # Run a real search now (not just encode_query), so "available" means the
-        # model and the FAISS index are actually dimension-compatible and can search.
+        # 사용 가능 상태를 알리기 전에 실제 검색으로 모델과 인덱스의 호환성을 확인한다.
         retriever.search("warm-up", 1)
     except Exception:
-        # The embedding stack raises library-specific errors; the detail is logged.
+        # 임베딩 라이브러리별 예외의 상세 원인은 서버 로그에 남긴다.
         logger.exception("dense model could not be loaded")
         return MethodStatus(
             MethodState.LOAD_FAILED,

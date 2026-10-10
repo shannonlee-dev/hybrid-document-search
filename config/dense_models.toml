@@ -1,0 +1,14 @@
+# Model aliases, pinned revisions, and the project default.
+default_model = "bge"
+
+[models.e5]
+model_name = "intfloat/multilingual-e5-base"
+revision = "d128750597153bb5987e10b1c3493a34e5a4502a"
+
+[models.bge]
+model_name = "BAAI/bge-m3"
+revision = "5617a9f61b028005a4858fdac845db406aefb181"
+
+[models.kure]
+model_name = "nlpai-lab/KURE-v1"
+revision = "8b418a58414668e75532ed045c22d9ca018ae2b2"

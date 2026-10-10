@@ -1,4 +1,4 @@
-"""공통 dataset의 검색 품질과 warm-up 이후 query-time latency를 비교합니다."""
+"""Compare retrieval quality and post-warm-up query latency on a shared dataset."""
 
 import csv
 import importlib.metadata
@@ -7,20 +7,26 @@ import os
 import platform
 import subprocess
 import tempfile
+from contextlib import nullcontext
 from dataclasses import asdict
 from datetime import datetime, timezone
-from math import ceil, fsum, isfinite
+from math import isfinite
 from numbers import Real
 from pathlib import Path
 from time import perf_counter
 
-from evaluation.data import EvaluationDataset, file_sha256, load_evaluation_dataset
-from evaluation.metrics import (
+from evaluation.constants import (
+    CUDA_DEVICE,
+    DEFAULT_REPEATS,
+    DEFAULT_WARMUP,
     EVALUATION_TOP_K,
     METRIC_NAMES,
-    evaluate_query,
-    evaluate_run,
+    THREAD_ENV,
 )
+from evaluation.data import EvaluationDataset, file_sha256, load_evaluation_dataset
+from evaluation.latency import latency_summary, measure_query_latency
+from evaluation.metrics import evaluate_query, evaluate_run
+from fusion.rrf import DEFAULT_RANK_CONSTANT
 from retrievers.base import Retriever, SearchResult
 
 METHODS = ("tfidf", "bm25", "dense", "hybrid")
@@ -34,40 +40,20 @@ SUMMARY_FIELDS = (
     "query_count",
     "sample_count",
 )
-
-
-def latency_summary(samples: list[float]) -> dict[str, float | int]:
-    """전체 요청 샘플의 평균과 선형 보간 P95를 계산합니다(단위 ms)."""
-    if not samples or any(
-        isinstance(value, bool)
-        or not isinstance(value, Real)
-        or not isfinite(value)
-        or value < 0
-        for value in samples
-    ):
-        raise ValueError(
-            "latency 샘플은 비어 있지 않은 유한한 음이 아닌 숫자 목록이어야 합니다."
-        )
-    ordered = sorted(samples)
-    position = (len(ordered) - 1) * 0.95
-    lower = int(position)
-    upper = ceil(position)
-    p95 = ordered[lower] + (ordered[upper] - ordered[lower]) * (position - lower)
-    return {
-        "mean_ms": fsum(samples) / len(samples),
-        "p95_ms": p95,
-        "sample_count": len(samples),
-    }
+_DENSE_INDEX_FILENAMES = ("metadata.json", "index.faiss")
 
 
 def benchmark_retriever(
     retriever: Retriever,
     dataset: EvaluationDataset,
     *,
-    warmup: int = 1,
-    repeats: int = 5,
+    warmup: int = DEFAULT_WARMUP,
+    repeats: int = DEFAULT_REPEATS,
 ) -> dict:
-    """검색기를 재사용하고 각 pass에서 동일한 순서로 모든 query를 검색합니다."""
+    """Measure retrieval quality and post-warm-up latency in a fixed query order.
+
+    Quality uses the first measured results; request latency excludes result validation.
+    """
     _positive(warmup, "warmup")
     _positive(repeats, "repeats")
     if not dataset.queries:
@@ -76,24 +62,20 @@ def benchmark_retriever(
     if len(set(query_ids)) != len(query_ids) or set(query_ids) != set(dataset.qrels):
         raise ValueError("queries와 qrels의 query_id 집합이 일치해야 합니다.")
     corpus_ids = {document.document_id for document in dataset.documents}
-    started = perf_counter()
-    for _ in range(warmup):
-        for query in dataset.queries:
-            results = retriever.search(query.text, EVALUATION_TOP_K)
-            _check_results(results, dataset.qrels[query.query_id], corpus_ids)
-    warmup_seconds = perf_counter() - started
 
-    run = {}
-    samples = {query_id: [] for query_id in query_ids}
-    for repetition in range(repeats):
-        for query in dataset.queries:
-            started = perf_counter()
-            results = retriever.search(query.text, EVALUATION_TOP_K)
-            elapsed_ms = (perf_counter() - started) * 1000
-            _check_results(results, dataset.qrels[query.query_id], corpus_ids)
-            samples[query.query_id].append(elapsed_ms)
-            if repetition == 0:
-                run[query.query_id] = results
+    def _validate_results(position, results):
+        _check_results(results, dataset.qrels[query_ids[position]], corpus_ids)
+
+    measurement = measure_query_latency(
+        retriever,
+        [query.text for query in dataset.queries],
+        top_k=EVALUATION_TOP_K,
+        warmup=warmup,
+        repeats=repeats,
+        validate_results=_validate_results,
+    )
+    run = dict(zip(query_ids, measurement.first_results, strict=True))
+    samples = dict(zip(query_ids, measurement.samples_ms, strict=True))
 
     queries = []
     for query in dataset.queries:
@@ -110,10 +92,8 @@ def benchmark_retriever(
         )
     return {
         "metrics": evaluate_run(run, dataset.qrels),
-        "latency": latency_summary(
-            [sample for values in samples.values() for sample in values]
-        ),
-        "warmup_seconds": warmup_seconds,
+        "latency": measurement.latency,
+        "warmup_seconds": measurement.warmup_seconds,
         "query_count": len(queries),
         "queries": queries,
     }
@@ -126,11 +106,15 @@ def run_benchmark(
     methods: tuple[str, ...] = ("tfidf", "bm25"),
     dense_index: str | Path | None = None,
     device: str | None = None,
-    warmup: int = 1,
-    repeats: int = 5,
+    warmup: int = DEFAULT_WARMUP,
+    repeats: int = DEFAULT_REPEATS,
     progress=None,
+    strict_runtime: bool = False,
 ) -> dict:
-    """같은 corpus와 query/qrels로 요청한 모든 방법을 평가하며 실패를 숨기지 않습니다."""
+    """Evaluate retrieval methods on shared prepared data and propagate failures.
+
+    strict_runtime verifies Dense model revisions, FP32 precision and CUDA execution.
+    """
     _validate_methods(methods, dense_index)
     _positive(warmup, "warmup")
     _positive(repeats, "repeats")
@@ -162,15 +146,38 @@ def run_benchmark(
     setup = {}
     configs = {}
 
-    def prepare(name):
+    def _prepare(name):
         if name in retrievers:
             return retrievers[name]
         if progress:
             progress(f"검색기 준비: {name}")
         started = perf_counter()
         retriever, config = _build_retriever(name, dataset, dense_index, device)
-        # Dense 모델은 lazy load이므로 첫 실제 검색도 준비 시간에 포함합니다.
-        results = retriever.search(dataset.queries[0].text, EVALUATION_TOP_K)
+        # 첫 검색에서 Dense 모델을 로드하므로 이 시간은 준비 시간에 포함합니다.
+        if name == "dense" and strict_runtime:
+            from evaluation.dense_runtime import (
+                _checkpoint_revisions,
+                _verify_loaded_revision,
+            )
+
+            capture = _checkpoint_revisions()
+        else:
+            capture = nullcontext([])
+        with capture as observed:
+            results = retriever.search(dataset.queries[0].text, EVALUATION_TOP_K)
+        if name == "dense" and strict_runtime:
+            config["loaded_model_revision"] = _verify_loaded_revision(
+                retriever, retriever.config.revision, observed
+            )
+            config["runtime_dtype"] = str(
+                next(retriever.embedder.model.parameters()).dtype
+            )
+            config["max_seq_length"] = retriever.embedder.model.max_seq_length
+            if (
+                config["runtime_dtype"] != "torch.float32"
+                or str(retriever.embedder.model.device) != CUDA_DEVICE
+            ):
+                raise ValueError("strict experiment requires FP32 on cuda:0")
         _check_results(
             results,
             dataset.qrels[dataset.queries[0].query_id],
@@ -189,18 +196,21 @@ def run_benchmark(
         if method == "hybrid":
             from fusion.hybrid import HybridRetriever
 
-            sparse, dense = prepare("bm25"), prepare("dense")
+            sparse = _prepare("bm25")
+            dense = _prepare("dense")
             started = perf_counter()
-            retriever = HybridRetriever(sparse, dense, rank_constant=60)
+            retriever = HybridRetriever(
+                sparse, dense, rank_constant=DEFAULT_RANK_CONSTANT
+            )
             setup[method] = setup["bm25"] + setup["dense"] + perf_counter() - started
             config = {
                 "sparse": "bm25",
                 "dense": configs["dense"],
-                "rank_constant": 60,
+                "rank_constant": DEFAULT_RANK_CONSTANT,
                 "candidate_top_k_per_component": EVALUATION_TOP_K,
             }
         else:
-            retriever = prepare(method)
+            retriever = _prepare(method)
             config = configs[method]
         if progress:
             progress(
@@ -214,55 +224,18 @@ def run_benchmark(
     return report
 
 
-def _build_retriever(name, dataset, dense_index, device):
-    if name == "tfidf":
-        from retrievers.tfidf import TfidfRetriever
-
-        return TfidfRetriever(dataset.documents), {
-            "analyzer": "char_wb",
-            "ngram_range": [2, 4],
-            "norm": "l2",
-        }
-    if name == "bm25":
-        from retrievers.bm25 import BM25Retriever
-
-        return BM25Retriever(dataset.documents), {
-            "analyzer": "char_wb",
-            "ngram_range": [2, 4],
-            "method": "lucene",
-            "idf_method": "lucene",
-            "k1": 1.5,
-            "b": 0.75,
-        }
-    if name == "dense":
-        index = Path(dense_index)
-        for filename in ("metadata.json", "index.faiss"):
-            if not (index / filename).is_file():
-                raise ValueError(f"Dense 인덱스 파일이 없습니다: {index / filename}")
-        from retrievers.dense import DenseRetriever
-
-        retriever = DenseRetriever.load(index, device=device)
-        if tuple(retriever.documents) != dataset.documents:
-            raise ValueError(
-                "Dense 인덱스의 문서 ID / 순서 / 원문이 공통 corpus와 다릅니다."
-            )
-        return retriever, {
-            "index": str(index),
-            "metadata_sha256": file_sha256(index / "metadata.json"),
-            "index_sha256": file_sha256(index / "index.faiss"),
-            "embedding": asdict(retriever.config),
-        }
-    raise ValueError(f"지원하지 않는 검색 방식: {name}")
-
-
 def check_output_directory(directory: str | Path) -> None:
+    """Allow only new paths or empty directories to preserve existing results."""
     directory = Path(directory)
     if directory.exists() and (not directory.is_dir() or any(directory.iterdir())):
         raise ValueError("output-dir은 새 경로 또는 비어 있는 디렉터리여야 합니다.")
 
 
 def write_report(report: dict, directory: str | Path) -> None:
-    """JSON, 요약/질의/원시 latency CSV와 비교표를 UTF-8로 저장합니다."""
+    """Write UTF-8 JSON, CSV and comparison reports to a new or empty directory.
+
+    Prepare all files in a temporary directory, then move each file to the output path.
+    """
     directory = Path(directory)
     check_output_directory(directory)
     payload = json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
@@ -298,15 +271,15 @@ def write_report(report: dict, directory: str | Path) -> None:
                         "result_count": len(query["results"]),
                     }
                 )
-                samples.extend(
-                    {
-                        "method": method,
-                        "query_id": query["query_id"],
-                        "repetition": number,
-                        "latency_ms": value,
-                    }
-                    for number, value in enumerate(query["latency_samples_ms"], start=1)
-                )
+                for number, value in enumerate(query["latency_samples_ms"], start=1):
+                    samples.append(
+                        {
+                            "method": method,
+                            "query_id": query["query_id"],
+                            "repetition": number,
+                            "latency_ms": value,
+                        }
+                    )
         _write_csv(stage / "summary.csv", SUMMARY_FIELDS, summary)
         _write_csv(
             stage / "queries.csv",
@@ -338,16 +311,10 @@ def write_report(report: dict, directory: str | Path) -> None:
             "| --- | --- | --- | --- | --- | --- | --- |",
         ]
         for row in summary:
-            table.append(
-                "| "
-                + row["method"]
-                + " | "
-                + " | ".join(
-                    f"{row[name]:.6f}"
-                    for name in (*METRIC_NAMES, "latency_mean_ms", "latency_p95_ms")
-                )
-                + " |"
-            )
+            cells = [row["method"]]
+            for name in (*METRIC_NAMES, "latency_mean_ms", "latency_p95_ms"):
+                cells.append(f"{row[name]:.6f}")
+            table.append("| " + " | ".join(cells) + " |")
         table.extend(
             [
                 "",
@@ -363,9 +330,50 @@ def write_report(report: dict, directory: str | Path) -> None:
             path.replace(directory / path.name)
 
 
+def _build_retriever(name, dataset, dense_index, device):
+    if name == "tfidf":
+        from retrievers.tfidf import TfidfRetriever
+
+        return TfidfRetriever(dataset.documents), {
+            "analyzer": "char_wb",
+            "ngram_range": [2, 4],
+            "norm": "l2",
+        }
+    if name == "bm25":
+        from retrievers.bm25 import BM25Retriever
+
+        return BM25Retriever(dataset.documents), {
+            "analyzer": "char_wb",
+            "ngram_range": [2, 4],
+            "method": "lucene",
+            "idf_method": "lucene",
+            "k1": 1.5,
+            "b": 0.75,
+        }
+    if name == "dense":
+        index = Path(dense_index)
+        for filename in _DENSE_INDEX_FILENAMES:
+            if not (index / filename).is_file():
+                raise ValueError(f"Dense 인덱스 파일이 없습니다: {index / filename}")
+        from retrievers.dense import DenseRetriever
+
+        retriever = DenseRetriever.load(index, device=device)
+        if tuple(retriever.documents) != dataset.documents:
+            raise ValueError(
+                "Dense 인덱스의 문서 ID / 순서 / 원문이 공통 corpus와 다릅니다."
+            )
+        return retriever, {
+            "index": str(index),
+            "metadata_sha256": file_sha256(index / "metadata.json"),
+            "index_sha256": file_sha256(index / "index.faiss"),
+            "embedding": asdict(retriever.config),
+        }
+    raise ValueError(f"지원하지 않는 검색 방식: {name}")
+
+
 def _write_csv(path, fields, rows):
     with path.open("w", encoding="utf-8", newline="") as target:
-        writer = csv.DictWriter(target, fieldnames=fields)
+        writer = csv.DictWriter(target, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -428,12 +436,7 @@ def _environment():
         "packages": packages,
         "thread_environment": {
             name: os.environ.get(name)
-            for name in (
-                "OMP_NUM_THREADS",
-                "MKL_NUM_THREADS",
-                "OPENBLAS_NUM_THREADS",
-                "TOKENIZERS_PARALLELISM",
-            )
+            for name in (*THREAD_ENV, "TOKENIZERS_PARALLELISM")
         },
     }
 
@@ -441,13 +444,17 @@ def _environment():
 def _code_provenance():
     root = Path(__file__).resolve().parents[1]
     paths = (
+        "evaluation/constants.py",
         "evaluation/data.py",
         "evaluation/metrics.py",
+        "evaluation/latency.py",
         "evaluation/benchmark.py",
         "scripts/evaluate.py",
         "retrievers/tfidf.py",
         "retrievers/bm25.py",
         "retrievers/dense.py",
+        "retrievers/model_config.py",
+        "config/dense_models.toml",
         "indexing/faiss_index.py",
         "fusion/hybrid.py",
         "fusion/rrf.py",

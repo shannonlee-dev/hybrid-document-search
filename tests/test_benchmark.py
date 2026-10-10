@@ -1,4 +1,4 @@
-"""공통 검색기 재사용, timing 범위, 집계 및 파일 저장을 검증합니다."""
+"""Verify retriever reuse, timing scope, result aggregation and report files."""
 
 import csv
 import json
@@ -6,12 +6,12 @@ from dataclasses import replace
 
 import pytest
 
-from evaluation import benchmark
+from evaluation import benchmark, latency
 from evaluation.data import load_evaluation_dataset
 from retrievers.base import SearchResult
 
 
-class FixtureRetriever:
+class _FixtureRetriever:
     def __init__(self):
         self.calls = []
 
@@ -25,8 +25,8 @@ def test_warmup_and_repeated_calls_are_timed_separately(
 ):
     dataset = load_evaluation_dataset(evaluation_directory)
     clock = iter([0, 0.050, 0.100, 0.101, 0.200, 0.203, 0.300, 0.305, 0.400, 0.407])
-    monkeypatch.setattr(benchmark, "perf_counter", lambda: next(clock))
-    retriever = FixtureRetriever()
+    monkeypatch.setattr(latency, "perf_counter", lambda: next(clock))
+    retriever = _FixtureRetriever()
     result = benchmark.benchmark_retriever(retriever, dataset, warmup=1, repeats=2)
     assert retriever.calls == [("수도", 10), ("한글", 10)] * 3
     assert result["warmup_seconds"] == pytest.approx(0.05)
@@ -47,13 +47,13 @@ def test_warmup_and_repeated_calls_are_timed_separately(
     "samples, expected", [([1], 1), ([1, 2, 3, 4], 3.85), ([0, 10], 9.5)]
 )
 def test_p95_uses_linear_interpolation(samples, expected):
-    assert benchmark.latency_summary(samples)["p95_ms"] == pytest.approx(expected)
+    assert latency.latency_summary(samples)["p95_ms"] == pytest.approx(expected)
 
 
 @pytest.mark.parametrize("samples", [[], [True], [-1], [float("nan")], [float("inf")]])
 def test_invalid_latency_samples(samples):
     with pytest.raises(ValueError, match="latency"):
-        benchmark.latency_summary(samples)
+        latency.latency_summary(samples)
 
 
 @pytest.mark.parametrize(
@@ -62,7 +62,9 @@ def test_invalid_latency_samples(samples):
 def test_invalid_repetition_options(evaluation_directory, options):
     with pytest.raises(ValueError):
         benchmark.benchmark_retriever(
-            FixtureRetriever(), load_evaluation_dataset(evaluation_directory), **options
+            _FixtureRetriever(),
+            load_evaluation_dataset(evaluation_directory),
+            **options,
         )
 
 
@@ -89,7 +91,7 @@ def test_invalid_retriever_results_fail(evaluation_directory, results, message):
 def test_dataset_query_and_qrels_sets_must_match(evaluation_directory):
     dataset = load_evaluation_dataset(evaluation_directory)
     with pytest.raises(ValueError, match="집합"):
-        benchmark.benchmark_retriever(FixtureRetriever(), replace(dataset, qrels={}))
+        benchmark.benchmark_retriever(_FixtureRetriever(), replace(dataset, qrels={}))
 
 
 def test_all_methods_share_dataset_and_hybrid_reuses_components(
@@ -98,17 +100,17 @@ def test_all_methods_share_dataset_and_hybrid_reuses_components(
     built = {}
     seen_datasets = []
 
-    def build(name, dataset, index, device):
+    def _build(name, dataset, index, device):
         built[name] = built.get(name, 0) + 1
         seen_datasets.append(dataset)
-        retriever = FixtureRetriever()
+        retriever = _FixtureRetriever()
         if name == "dense":
             from types import SimpleNamespace
 
             retriever.embedder = SimpleNamespace(model=SimpleNamespace(device="cpu"))
         return retriever, {"model": "fixture"}
 
-    monkeypatch.setattr(benchmark, "_build_retriever", build)
+    monkeypatch.setattr(benchmark, "_build_retriever", _build)
     report = benchmark.run_benchmark(
         evaluation_directory,
         methods=("tfidf", "bm25", "dense", "hybrid"),
@@ -132,7 +134,7 @@ def test_report_json_csv_and_markdown_are_consistent(
     evaluation_directory, monkeypatch, tmp_path
 ):
     monkeypatch.setattr(
-        benchmark, "_build_retriever", lambda *args: (FixtureRetriever(), {})
+        benchmark, "_build_retriever", lambda *args: (_FixtureRetriever(), {})
     )
     report = benchmark.run_benchmark(
         evaluation_directory, methods=("tfidf",), repeats=2
@@ -202,3 +204,34 @@ def test_dense_index_document_mismatch_is_rejected(
     )
     with pytest.raises(ValueError, match="공통 corpus"):
         benchmark._build_retriever("dense", dataset, index, "cpu")
+
+
+def test_local_report_metrics_and_latency_are_recomputable(
+    evaluation_directory, tmp_path
+):
+    from evaluation.metrics import evaluate_query, evaluate_run
+
+    dataset = load_evaluation_dataset(evaluation_directory)
+    result = benchmark.benchmark_retriever(_FixtureRetriever(), dataset)
+    directory = tmp_path / "artifacts/evaluation"
+    benchmark.write_report(
+        {
+            "dataset": {"split": dataset.split, **dataset.provenance},
+            "methods": {"tfidf": {"setup_seconds": 0.0, **result}},
+        },
+        directory,
+    )
+    saved = json.loads((directory / "results.json").read_text())["methods"]["tfidf"]
+    run, samples = {}, []
+    for actual, query in zip(saved["queries"], dataset.queries, strict=True):
+        hits = [SearchResult(**hit) for hit in actual["results"]]
+        assert actual["query_id"] == query.query_id
+        assert actual["text"] == query.text
+        assert actual["metrics"] == evaluate_query(hits, dataset.qrels[query.query_id])
+        assert actual["latency"] == latency.latency_summary(
+            actual["latency_samples_ms"]
+        )
+        run[query.query_id] = hits
+        samples.extend(actual["latency_samples_ms"])
+    assert saved["metrics"] == evaluate_run(run, dataset.qrels)
+    assert saved["latency"] == latency.latency_summary(samples)

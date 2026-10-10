@@ -1,16 +1,18 @@
-"""문서 매핑과 임베딩 설정을 포함한 Dense 인덱스 저장·복원을 확인한다."""
+"""Verify Dense index persistence, document mappings and embedding settings."""
 
 import json
 
 import pytest
 
 from retrievers import dense
+from retrievers.model_config import MODELS
 
 
 def test_top_k_and_persistence(dense_documents, model_stub, tmp_path):
     pytest.importorskip("faiss")
     retriever = dense.DenseRetriever.build(
-        tuple(dense_documents), dense.DenseConfig(device="cpu")
+        tuple(dense_documents),
+        dense.DenseConfig(model_name="intfloat/multilingual-e5-base", device="cpu"),
     )
     hits = retriever.search("고양이 강아지", top_k=2)
     assert [hit.document_id for hit in hits] == ["dog", "cat"]
@@ -34,6 +36,62 @@ def test_top_k_and_persistence(dense_documents, model_stub, tmp_path):
     assert [restored.get_document(doc.document_id) for doc in dense_documents] == (
         dense_documents
     )
+
+
+@pytest.mark.parametrize("model_name", MODELS)
+def test_saved_revision_survives_default_change(
+    model_name, dense_documents, model_stub, tmp_path, monkeypatch
+):
+    pytest.importorskip("faiss")
+    config = dense.DenseConfig(model_name=model_name, revision="a" * 40)
+    retriever = dense.DenseRetriever.build(dense_documents, config)
+    retriever.save(tmp_path)
+    metadata = json.loads((tmp_path / "metadata.json").read_text(encoding="utf-8"))
+    assert metadata["embedding_config"]["revision"] == "a" * 40
+    monkeypatch.setitem(MODELS, model_name, "b" * 40)
+    restored = dense.DenseRetriever.load(tmp_path)
+    restored.search("고양이", 1)
+    assert restored.config.revision == "a" * 40
+    assert restored.embedder.model.revision == "a" * 40
+
+
+@pytest.mark.parametrize("missing", [True, False])
+@pytest.mark.parametrize("model_name", MODELS)
+def test_unpinned_registered_index_requires_rebuild(
+    model_name, missing, dense_documents, model_stub, tmp_path
+):
+    pytest.importorskip("faiss")
+    retriever = dense.DenseRetriever.build(
+        dense_documents, dense.DenseConfig(model_name=model_name)
+    )
+    retriever.save(tmp_path)
+    path = tmp_path / "metadata.json"
+    metadata = json.loads(path.read_text(encoding="utf-8"))
+    if missing:
+        metadata["embedding_config"].pop("revision", None)
+    else:
+        metadata["embedding_config"]["revision"] = None
+    path.write_text(json.dumps(metadata), encoding="utf-8")
+    with pytest.raises(ValueError, match="revision.*rebuild"):
+        dense.DenseRetriever.load(tmp_path)
+
+
+@pytest.mark.parametrize("model_name", ["other/unregistered-model", "/local/model"])
+def test_legacy_other_model_index_still_loads(
+    model_name, dense_documents, model_stub, tmp_path
+):
+    pytest.importorskip("faiss")
+    config = dense.DenseConfig(model_name=model_name)
+    retriever = dense.DenseRetriever.build(dense_documents, config)
+    retriever.save(tmp_path)
+    path = tmp_path / "metadata.json"
+    metadata = json.loads(path.read_text(encoding="utf-8"))
+    metadata["embedding_config"].pop("revision", None)
+    path.write_text(json.dumps(metadata), encoding="utf-8")
+    restored = dense.DenseRetriever.load(tmp_path)
+    restored.search("고양이", 1)
+    assert restored.config.revision is None
+    assert restored.embedder.model.revision is None
 
 
 @pytest.mark.parametrize("legacy_device", [None, "cuda:0"])
@@ -60,7 +118,7 @@ def test_load_uses_runtime_device(
     assert restored.embedder.model.device == device
 
 
-@pytest.mark.parametrize("corruption", ["mapping", "config", "version"])
+@pytest.mark.parametrize("corruption", ["mapping", "mapping_type", "config", "version"])
 def test_corrupt_metadata_rejected(corruption, dense_documents, model_stub, tmp_path):
     pytest.importorskip("faiss")
     retriever = dense.DenseRetriever.build(dense_documents)
@@ -69,6 +127,8 @@ def test_corrupt_metadata_rejected(corruption, dense_documents, model_stub, tmp_
     metadata = json.loads(path.read_text(encoding="utf-8"))
     if corruption == "mapping":
         metadata["documents"].pop()
+    elif corruption == "mapping_type":
+        metadata["documents"] = None
     elif corruption == "config":
         metadata["embedding_config"] = {}
     else:

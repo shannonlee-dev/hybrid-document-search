@@ -1,101 +1,108 @@
-# Dense Retrieval MVP
+# Dense Retrieval
 
-Sentence Transformers 임베딩을 FAISS `IndexFlatIP`로 검색한다.
-문서와 인덱싱 규칙은 [공통 스키마](SCHEMAS.md)를 따르며, 결과는 `SearchResult`로 반환한다.
+Sentence Transformers로 임베딩하고 CPU FAISS `IndexFlatIP`로 검색한다.
+모델 후보와 revision, 기본 모델은 [`config/dense_models.toml`](../config/dense_models.toml)에서 관리한다.
+`default_model = "bge"`로 **`BAAI/bge-m3`**를 지정하며 선정 정책은 **`config_default`**이다.
+기본값은 프로젝트 설정으로 지정하고 Train/Dev 점수로 자동 변경하지 않는다.
+Train nDCG@10을 우선하고 MRR@10·Recall@10·latency·구축 비용을 함께 검토해 BGE-M3를 선정했다.
+`[models.<alias>]`에 모델명과 고정 revision을 추가하면 통합 실행기의 후보 목록에 반영된다.
 
-## 모델 선택과 메모리 예산
+## 고정 모델과 측정 조건
 
-기본 모델은 **intfloat/multilingual-e5-base**다. 첫 baseline에서는 검색 경로를
-구축하고 반복 실행할 수 있도록 모델 크기와 인덱스 메모리 사용량을 우선 고려했다.
-E5-base는 다국어 검색용으로 학습된 12-layer 모델이며, 768차원 임베딩을 사용한다.
-한국어 검색 품질은 후속 평가에서 BGE-M3, KURE-v1과 비교한다.
-
-아래는 2026-10-06에 확인한 모델 카드 기준의 사양과 선택 근거다.
-동일한 데이터로 측정한 검색 품질, 처리 시간, 추론 메모리는 후속 평가 항목이다.
-
-| 후보 | 한국어 검색 관련 근거 | 임베딩 차원 / 최대 입력 길이 | 도입 시 고려사항 |
-| --- | --- | --- | --- |
-| [intfloat/multilingual-e5-base](https://huggingface.co/intfloat/multilingual-e5-base) | 다국어 검색 학습, 한국어 Mr. TyDi 평가 결과 공개 | 768 / 512 tokens | Sentence Transformers로 사용 가능. 질의와 문서에 각각 prefix 필요 |
-| [BAAI/bge-m3](https://huggingface.co/BAAI/bge-m3) | 100개 이상 언어와 MIRACL 평가 지원 | 1024 / 8192 tokens | 모델 크기와 긴 입력에 따른 실행 비용 고려. Sentence Transformers로 dense 벡터 생성 가능. Sparse·multi-vector 기능은 별도 통합 필요 |
-| [nlpai-lab/KURE-v1](https://huggingface.co/nlpai-lab/KURE-v1) | BGE-M3를 한국어 검색 데이터로 추가 학습 | 1024 / 8192 tokens | 한국어 특화 비교 후보. Sentence Transformers 예제 제공. BGE-M3 계열의 메모리 사용량 고려 |
-
-전체 corpus를 인덱싱할 때는 벡터 저장 공간과 빌드 중 메모리를 구분해야 한다.
-[MIRACL corpus](https://huggingface.co/datasets/miracl/miracl-corpus)의 한국어 passage
-1,486,752개를 float32 Flat 인덱스에 저장하면, 벡터 저장 공간은 다음과 같다.
-
-| 임베딩 차원 | 벡터 저장 공간 (`문서 수 × 차원 × 4 bytes`) |
+| 모델 | Revision |
 | --- | --- |
-| 768 | 약 4.25 GiB |
-| 1024 | 약 5.67 GiB |
+| `intfloat/multilingual-e5-base` | `d128750597153bb5987e10b1c3493a34e5a4502a` |
+| `BAAI/bge-m3` | `5617a9f61b028005a4858fdac845db406aefb181` |
+| `nlpai-lab/KURE-v1` | `8b418a58414668e75532ed045c22d9ca018ae2b2` |
 
-이 계산에는 모델, 원문, Python 객체, 임베딩 생성 중 임시 버퍼가 포함되지 않는다.
-현재 빌드는 전체 임베딩 행렬과 FAISS에 복사된 벡터를 동시에 메모리에 둔다.
-따라서 전체 corpus를 처리하기 전에 streaming build와 원문 저장소 분리를 검토해야 한다.
-실제 처리 시간과 추론 메모리는 입력 길이, batch size, CPU/GPU 조건에 따라 달라진다.
-공통 MVP의 목표인 10,000개 passage에서는 768차원 float32 벡터 저장 공간이
-약 29.3 MiB다. 모델과 원문, 빌드 중 임시 버퍼의 메모리는 별도로 필요하다.
+Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / WSL2 / NVIDIA RTX 4060, embedding `cuda:0`, CPU FAISS. FP32, L2 정규화, batch size 1, Top-K 10, 전체 질의 warm-up 1회, 측정 5회. PyTorch intra/inter-op·FAISS·OMP/MKL/OpenBLAS 2 threads, tokenizer 병렬화 비활성화, TF32 비활성화.
 
-## 실행
+E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix를 사용한다.
+모델별 tokenizer와 원래 최대 입력 길이를 유지한다. 길이를 넘는 입력은 모델에서 잘리며
+별도 chunking은 하지 않는다. 제목과 본문을 합치는 규칙은 [DATASET.md](DATASET.md)에 있다.
 
-저장소 루트에서 실행한다. 실제 corpus 준비는 [DATA_PREPARATION.md](DATA_PREPARATION.md)를 참고한다.
-아래 fixture는 실행 검증용이며 검색 품질 평가에는 사용하지 않는다.
+## Train 3모델 비교
+
+| 모델 / 방식 | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| E5-base | 0.777889 | 0.898944 | 0.728369 | 0.746289 | 13.379543 | 19.719356 |
+| BGE-M3 | 0.871889 | 0.967611 | 0.808429 | 0.823154 | 20.427421 | 28.874457 |
+| KURE-v1 | 0.878222 | 0.968444 | 0.797373 | 0.814188 | 21.013247 | 31.478979 |
+
+모델별 100개 질의, latency 샘플 500개다. Train nDCG@10 최고 모델은 BGE-M3이다.
+수치 순위와 기본 모델 정책은 별도로 기록한다.
+
+## Dev 3모델 비교
+
+| 모델 / 방식 | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| E5-base | 0.763333 | 0.912333 | 0.853167 | 0.819452 | 13.215067 | 19.678457 |
+| BGE-M3 | 0.813667 | 0.958333 | 0.861024 | 0.854857 | 21.091188 | 29.918226 |
+| KURE-v1 | 0.836000 | 0.961000 | 0.849000 | 0.845513 | 20.818919 | 28.696750 |
+
+모델별 50개 질의, latency 샘플 250개다. 위 측정에서 Dev nDCG@10 최고 모델은 BGE-M3이다.
+Dev 결과로 모델이나 설정을 튜닝하지 않았다.
+이 표는 최초 전체 실험의 3모델 비교다. 기본 모델 변경 후 네 방식의 재평가와 latency는
+[검색 방식 비교](BENCHMARK_RESULTS.md)에 별도로 기록했다.
+
+현재 실행의 모델별 평가 결과는 `artifacts/ko-miracl-full/dev-<alias>/evaluation/`에 생성된다.
+`<alias>`는 `e5`, `bge`, `kure`이며, 각 디렉터리의 `results.json`에는 질의별 검색 결과·지표·
+latency 샘플이, `summary.csv`에는 집계값이 저장된다.
+
+## 인덱스 구축과 복원
+
+| 모델 | Embedding s | FAISS build s | Save s | 준비 합계 s | Peak GPU MiB | 최대 tokens |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| E5-base | 93.975 | 0.016 | 0.095 | 96.151 | 1088.875 | 512 |
+| BGE-M3 | 193.561 | 0.039 | 0.103 | 196.027 | 2273.052 | 8192 |
+| KURE-v1 | 193.291 | 0.066 | 0.096 | 195.896 | 2273.052 | 8192 |
+
+모델 snapshot 다운로드는 빌드 전 별도 단계다.
+Embedding 시간에는 lazy 모델 로딩과 문서 임베딩이 포함된다. 준비 합계는 입력 확인·빌드·저장 등을
+포함하며 별도 프로세스의 복원 평가 시간은 제외한다. Peak는 PyTorch 텐서 최대 할당량이다.
+
+세 인덱스 모두 별도 subprocess에서 복원해 문서 10,000개와 전체 ID·행 순서·원문,
+모델명·revision, 저장 전후 Top-K와 score (`rtol=1e-5`, `atol=1e-6`)를 검증했다.
+문서 재임베딩을 금지한 상태에서 복원 검색을 수행했고 저장 벡터의 FP32·L2 정규화를 확인했다.
+
+## 사용과 저장 형식
 
 ```bash
-uv sync --locked --extra dense
-export HF_HOME="$PWD/models/huggingface"
 uv run --locked --extra dense python -m scripts.build_index \
   --corpus tests/dense/fixtures/dense_corpus.jsonl \
-  --index indexes/dense-sample --device cpu
+  --index indexes/dense-sample --device cpu --batch-size 1
 uv run --locked --extra dense python -m scripts.search dense \
-  --index indexes/dense-sample --device cpu \
-  --query "고양이는 어떤 소리로 우나요?" --top-k 3
+  --index indexes/dense-sample --device cpu --query '고양이는 어떤 소리로 우나요?' --top-k 3
 ```
 
-실제 문서에는 `--corpus data/processed/corpus.jsonl`을 사용한다.
-stdout은 빌드 요약 또는 검색 결과 JSON, stderr는 진행 안내와 오류이며 입력·실행 오류의 종료 코드는 2다.
-전체 옵션과 예시는 각 명령의 `--help`로 확인한다.
+빌드 결과 JSON에는 `index`, `documents`, `timings`가 항상 포함된다.
+`timings`는 기존 빌드 단계별 시간과 `total_preparation_seconds`를 제공한다.
 
-## 입력·검색 계약
-
-- 입력은 UTF-8 JSONL이다. `document_id`는 고유한 비어 있지 않은 문자열, `text`는 비어 있지 않은 문자열이며 `title`은 문자열 또는 `null`이다.
-- 문서는 `build_index_text()`로 제목과 본문을 결합해 임베딩하고 원문은 보존한다. 모델 입력 길이를 넘는 텍스트는 잘리며 별도 chunking은 없다.
-- `DenseConfig` 기본값은 batch size 32, L2 정규화다. 정규화된 벡터의 내적은 cosine similarity이며 `--no-normalize`는 원시 내적을 사용한다.
-- E5 모델 이름에는 `query: ` / `passage: `를 자동 적용한다. 로컬 E5 모델은 빌드 시 `--query-prefix 'query: '` / `--passage-prefix 'passage: '`를 명시한다.
-- `--device`는 임베딩 실행 장치이며 생략하면 자동 선택한다. FAISS 검색은 CPU에서 수행한다.
-- 결과는 `document_id`, `rank`, `score`, `title`, `snippet`을 가진 JSON 배열이다. 순위는 1부터 시작하며 snippet은 원문 앞 200자다.
-- `top_k`는 bool을 제외한 양의 정수이며 결과 수는 문서 수를 넘지 않는다. 빈 질의는 모델을 로드하지 않고 `[]`를 반환한다. 비문자열 질의는 `TypeError`, 잘못된 `top_k`는 `ValueError`다.
-
-## 저장·복원
-
-| 파일 | 내용 |
-| --- | --- |
-| `index.faiss` | 문서 벡터와 FAISS 인덱스 |
-| `metadata.json` | 형식 버전, 차원, SHA-256 체크섬, 임베딩 설정, 행 순서대로 저장한 문서 ID·제목·원문 |
-
-로드 시 체크섬·인덱스 타입·차원·문서 수·ID 중복을 검증한다. 검색은 저장된 문서 벡터를 재사용하고 질의만 임베딩한다.
-모델 가중치는 저장하지 않으므로 빌드에 사용한 모델 경로나 캐시가 필요하다. `device`는 저장하지 않고 복원 시 지정한다.
-두 파일은 순차 저장하므로 빌드 중인 디렉터리를 검색에 사용하지 않는다. 파일 손상·불일치가 발생하면 재빌드한다.
-
-```python
-from retrievers.dense import DenseRetriever
-
-retriever = DenseRetriever.load("indexes/dense-sample", device="cpu")
-hits = retriever.search("고양이 울음소리", top_k=3)
-original = retriever.get_document(hits[0].document_id).text
-```
-
-## 검증
+Dense Runtime 벤치마크는 `--data-dir`(기본 `data/processed`) 아래의
+`corpus.jsonl`, `queries_train.jsonl`, `manifest.json`을 사용한다.
+보고서의 문서 수는 실제 로드한 corpus 크기이며, 입력 파일의 manifest 해시 검증과
+저장된 인덱스의 복원·문서 매핑 검증을 수행한다.
 
 ```bash
-uv run --locked --extra dense ruff check .
-uv run --locked --extra dense ruff format --check .
-HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 uv run --locked --extra dense pytest tests/dense
+uv run --locked --extra dense python -m scripts.benchmark_dense_runtime \
+  --data-dir data/processed --index-root indexes/dense-runtime \
+  --output artifacts/dense-runtime.json
 ```
 
-fixture와 로컬 BoW 모델로 임베딩 설정, FAISS 검색, 저장·복원, CLI 오류 안내를 검증한다.
-Dense 담당 테스트와 전용 fixture는 `tests/dense/`에 모아 관리한다.
-`test_embedding.py`는 임베딩 파이프라인, `test_faiss_index.py`는 벡터 인덱스,
-`test_retriever.py`는 검색 계약, `test_persistence.py`는 문서·설정 저장과 복원을 검증한다.
-`test_cli.py`와 `test_cli_messages.py`는 Dense 빌드·검색 CLI를 검증하며,
-공통 fixture와 모델 대역은 이 디렉터리의 `conftest.py`에만 정의한다.
-CI의 `dense-tests` job도 모델·데이터 다운로드 없이 실행한다. 모델별 검색 품질과 전체 corpus 성능은 아직 평가하지 않았다.
+개별 빌드 CLI의 기본 batch size는 32이고 통합 실험에서는 1로 고정한다. 개별 인덱스 빌드에서
+`--model`로 등록된 후보를 지정하면 `--revision` 생략 시 TOML의 고정 SHA를 자동 적용한다.
+`--revision <40자리 SHA>`를 명시하면 해당 값이 우선하며, 미등록 모델이나 로컬 경로는
+revision을 생략할 수 있다. Dense Runtime CLI도 `--model` 순서에 맞춰
+`--revision`을 반복 지정할 수 있다. 전체 재실행 방법은 [EVALUATION.md](EVALUATION.md)에 있다.
+
+`index.faiss`는 문서 벡터, `metadata.json`은 인덱스 해시·차원·임베딩 설정·문서 매핑을 저장한다.
+로드 시 체크섬·타입·차원·문서 매핑을 검사하고 첫 검색에서 지정 revision의 모델을 로드한다.
+revision 없는 등록 후보 모델 인덱스는 거부하므로 다시 빌드해야 한다.
+저장 장치는 재사용하지 않고 로드 시 지정한다.
+문서 벡터는 재사용하고 질의만 임베딩한다. 두 파일 저장은 순차적이므로 완성된 인덱스만 사용한다.
+
+Float32 벡터 자체는 10,000개 기준 768차원 약 29.3 MiB, 1024차원 약 39.1 MiB다.
+모델·원문·Python 객체와 임시 행렬은 별도 메모리가 필요하다.
+
+10k subset의 순차 실행 결과로, 전체 MIRACL 성능이나 API 응답 시간을 뜻하지 않는다.
+독립적인 전체 실험 반복은 수행하지 않았다. 측정 범위와 한계는 [EVALUATION.md](EVALUATION.md)를 참조한다.
