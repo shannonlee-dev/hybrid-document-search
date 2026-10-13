@@ -122,7 +122,7 @@ uv run --extra dense python -m scripts.build_index \
 }
 ```
 
-- `query`: 필수. 공백만 있으면 안 됩니다.
+- `query`: 필수. 공백만 있으면 안 되며 최대 1,000자입니다.
 - `method`: `tfidf`, `bm25`, `dense`, `hybrid` 중 하나. 기본값 `hybrid`.
 - `top_k`: 양의 정수. 기본값 10. 문자열이나 bool은 허용하지 않습니다.
 
@@ -150,7 +150,7 @@ uv run --extra dense python -m scripts.build_index \
 
 | 상태 | 조건 | 본문 |
 | --- | --- | --- |
-| `422` | 빈 query, 잘못된 method, `top_k` 0 이하 또는 정수가 아님 | FastAPI 검증 오류 |
+| `422` | 빈 query, 1,000자 초과 query, 잘못된 method, `top_k` 0 이하 또는 정수가 아님 | FastAPI 검증 오류 |
 | `503` | 요청한 방식이 설정되지 않았거나 서비스가 초기화되지 않음 | `{"detail": "<method> search is unavailable: <이유>"}` |
 | `500` | 예상하지 못한 내부 오류 | 일반 메시지. 스택과 파일 경로는 응답에 없고 서버 로그에만 남음 |
 

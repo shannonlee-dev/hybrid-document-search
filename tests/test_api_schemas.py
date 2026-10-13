@@ -74,3 +74,11 @@ def test_search_response_serializes_to_json_friendly_dict():
             }
         ],
     }
+
+
+def test_search_request_rejects_overlong_query():
+    from app.schemas import MAX_QUERY_LENGTH, SearchRequest
+
+    SearchRequest(query="가" * MAX_QUERY_LENGTH)
+    with pytest.raises(ValidationError):
+        SearchRequest(query="가" * (MAX_QUERY_LENGTH + 1))
