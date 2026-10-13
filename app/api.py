@@ -34,6 +34,7 @@ def create_app(service: SearchService | None = None) -> FastAPI:
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+        _configure_logging()
         if service is None:
             app.state.search_service = build_search_service(
                 Path(os.environ.get("SEARCH_CORPUS_PATH", DEFAULT_CORPUS_PATH)),
@@ -112,6 +113,18 @@ def create_app(service: SearchService | None = None) -> FastAPI:
         )
 
     return app
+
+
+def _configure_logging() -> None:
+    """Emit ``app.*`` INFO logs; uvicorn only configures its own loggers."""
+    app_logger = logging.getLogger("app")
+    if not app_logger.handlers:
+        handler = logging.StreamHandler()
+        handler.setFormatter(
+            logging.Formatter("%(levelname)s:     %(name)s: %(message)s")
+        )
+        app_logger.addHandler(handler)
+    app_logger.setLevel(logging.INFO)
 
 
 def _env_path(name: str) -> Path | None:

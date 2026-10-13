@@ -191,3 +191,11 @@ def test_importing_app_api_does_not_load_sparse_or_dense_stacks():
     )
 
     assert result.stdout.strip() == "[]"
+
+
+def test_lifespan_enables_app_info_logs(client):
+    import logging
+
+    app_logger = logging.getLogger("app")
+    assert app_logger.isEnabledFor(logging.INFO)
+    assert app_logger.handlers
