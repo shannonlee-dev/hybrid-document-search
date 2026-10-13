@@ -54,6 +54,9 @@ def search(base_url: str, query: str, method: str, top_k: int) -> list[Hit]:
 
 
 def _request(url: str, payload: dict | None = None) -> object:
+    # urllib also opens file:// and ftp://; only HTTP(S) is a search API.
+    if not url.startswith(("http://", "https://")):
+        raise ApiError("SEARCH_API_URL은 http:// 또는 https://로 시작해야 합니다.")
     body = None if payload is None else json.dumps(payload).encode("utf-8")
     request = urllib.request.Request(
         url, data=body, headers={"Content-Type": "application/json"}
