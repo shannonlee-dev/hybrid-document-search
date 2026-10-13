@@ -1,0 +1,6 @@
+[server]
+# The UI calls the API server-side, so keep it local unless you mean to share it.
+address = "127.0.0.1"
+
+[browser]
+gatherUsageStats = false

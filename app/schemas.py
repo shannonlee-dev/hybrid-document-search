@@ -12,8 +12,12 @@ class RetrievalMethod(StrEnum):
     HYBRID = "hybrid"
 
 
+MAX_QUERY_LENGTH = 1000
+
+
 class SearchRequest(BaseModel):
-    query: str
+    # Long queries tie up a worker: a 3.8MB query took 76s on Dense and 100s on Hybrid.
+    query: str = Field(max_length=MAX_QUERY_LENGTH)
     top_k: StrictInt = Field(default=10, gt=0)
     method: RetrievalMethod = RetrievalMethod.HYBRID
 

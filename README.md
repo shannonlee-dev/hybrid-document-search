@@ -35,7 +35,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | `evaluation/` | 평가 지표와 benchmark |
 | `indexing/` | FAISS index 생성·검색·저장·로드 |
 | `data/` | 데이터 로딩과 전처리 코드 |
-| `frontend/` | Streamlit 진입점 |
+| `frontend/` | Streamlit 검색·비교 UI와 API client |
 | `scripts/` | 데이터 준비, Dense index 생성, TF-IDF/BM25/Dense 검색 및 공통 평가 실행 진입점 |
 | `tests/` | 공통 계약, 데이터 준비, 검색·인덱스·CLI·API 및 서비스 통합 테스트 |
 | `.github/` | CI, Issue 및 PR 템플릿 |
@@ -91,11 +91,16 @@ uv run ruff check .
 # API (기본 corpus로 TF-IDF/BM25 검색)
 uv run --extra sparse uvicorn app.api:app --reload
 
-# UI placeholder
+# 검색 UI (API 실행 후 별도 터미널)
 uv run streamlit run frontend/app.py
 ```
 
 API 검색에는 준비된 corpus가 필요하며, 준비 상태는 `GET /search/methods`로 확인합니다.
+UI는 FastAPI endpoint만 호출하며 API 주소는 `SEARCH_API_URL`(기본 `http://127.0.0.1:8000`)로 바꿀 수 있습니다.
+사용할 수 있는 방식만 선택할 수 있고, "두 방식 비교"를 켜면 같은 query의 두 결과를 나란히 보여줍니다.
+비교는 순위와 공통 문서 기준이며, 방식별 score는 의미와 범위가 달라 서로 비교하지 않습니다.
+결과의 제목·snippet에서 검색어와 겹치는 단어를 강조하고, 화면 아래에 세션 검색 로그와 문서별 일치 단어를 표시합니다.
+`.streamlit/config.toml`에서 UI를 `127.0.0.1`에만 열어 둡니다. 다른 기기에서 접속하려면 `--server.address`로 바꾸세요.
 
 의존성 변경 시 `uv add` / `uv add --dev` / `uv add --optional dense` 등을 사용하고
 `pyproject.toml`과 `uv.lock`을 함께 커밋합니다. CI는 Python 3.12에서
@@ -213,5 +218,5 @@ Issue를 만들고 각자 브랜치에서 작업한 뒤 연결된 PR로 협업�
 이번 subset에서는 Dense(BGE-M3)가 Hybrid보다 우수했습니다.
 FastAPI는 `/health`, `/search/methods`, `POST /search`를 제공합니다.
 Dense/Hybrid는 공통 corpus와 일치하는 저장 인덱스 및 `DENSE_INDEX_PATH` 설정이 필요합니다.
-UI는 placeholder이며, UI 검색 연동·실제 10k 데이터의 Dense/Hybrid API smoke test,
-독립적인 전체 실험 반복과 Hybrid 개선은 후속 작업입니다.
+Streamlit UI는 API를 통해 단일 검색과 두 방식 비교를 제공합니다.
+실제 10k 데이터의 Dense/Hybrid API smoke test, 독립적인 전체 실험 반복과 Hybrid 개선은 후속 작업입니다.
