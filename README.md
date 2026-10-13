@@ -99,6 +99,8 @@ API 검색에는 준비된 corpus가 필요하며, 준비 상태는 `GET /search
 UI는 FastAPI endpoint만 호출하며 API 주소는 `SEARCH_API_URL`(기본 `http://127.0.0.1:8000`)로 바꿀 수 있습니다.
 사용할 수 있는 방식만 선택할 수 있고, "두 방식 비교"를 켜면 같은 query의 두 결과를 나란히 보여줍니다.
 비교는 순위와 공통 문서 기준이며, 방식별 score는 의미와 범위가 달라 서로 비교하지 않습니다.
+결과의 제목·snippet에서 검색어와 겹치는 단어를 강조하고, 화면 아래에 세션 검색 로그와 문서별 일치 단어를 표시합니다.
+`.streamlit/config.toml`에서 UI를 `127.0.0.1`에만 열어 둡니다. 다른 기기에서 접속하려면 `--server.address`로 바꾸세요.
 
 의존성 변경 시 `uv add` / `uv add --dev` / `uv add --optional dense` 등을 사용하고
 `pyproject.toml`과 `uv.lock`을 함께 커밋합니다. CI는 Python 3.12에서

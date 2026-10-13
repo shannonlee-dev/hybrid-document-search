@@ -199,3 +199,29 @@ def test_ui_reports_server_down(monkeypatch, closed_url):
 
     assert not at.exception
     assert "연결할 수 없습니다" in at.error[0].value
+
+
+def test_non_http_api_url_is_rejected():
+    with pytest.raises(ApiError, match="http://"):
+        fetch_methods("file:///etc")
+
+
+def test_overlong_query_is_rejected(api_url, retrievers):
+    with pytest.raises(ApiError, match="요청이 올바르지 않습니다"):
+        search(api_url, "가" * 1001, "tfidf", 5)
+    assert retrievers[RetrievalMethod.TFIDF].calls == []
+
+
+def test_ui_highlights_query_terms_and_logs_requests(monkeypatch, api_url):
+    at = _app(monkeypatch, api_url)
+    # "제목은" should still match "제목" in the fake titles.
+    at.text_input[0].input("제목은 doc")
+    at.button[0].click().run()
+
+    assert not at.exception
+    text = " ".join(md.value for md in at.markdown)
+    assert ":orange-background[제목]" in text
+    assert ":orange-background[doc]" in text
+    details, log = (df.value for df in at.dataframe)
+    assert list(details["일치한 검색어"])[0] == "제목, doc"
+    assert list(log["상태"]) == ["성공"]
