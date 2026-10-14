@@ -1,0 +1,41 @@
+{
+  "summary_sha256": "70d21528f9552cd9da0be531f53b949aa989bcab50b89be0585823cc7fd2c23c",
+  "datasets": {
+    "miracl-train": {
+      "ndcg_rankings_recomputed": 1600,
+      "identical_to_dense_top10": {
+        "top10_0": 100,
+        "top10_0.01": 100,
+        "full_0": 100,
+        "full_0.01": 100
+      },
+      "queries": 100,
+      "dense_top10_vs_full_prefix_differences": 0,
+      "unit_weight_score_and_ranking_checks": 200
+    },
+    "miracl-dev": {
+      "ndcg_rankings_recomputed": 200,
+      "identical_to_dense_top10": {
+        "top10_0": 50,
+        "top10_0.01": 50,
+        "full_0": 50,
+        "full_0.01": 50
+      },
+      "queries": 50,
+      "dense_top10_vs_full_prefix_differences": 0,
+      "unit_weight_score_and_ranking_checks": 100
+    },
+    "strategyqa": {
+      "ndcg_rankings_recomputed": 2368,
+      "identical_to_dense_top10": {
+        "top10_0": 592,
+        "top10_0.01": 592,
+        "full_0": 592,
+        "full_0.01": 592
+      },
+      "queries": 592,
+      "dense_top10_vs_full_prefix_differences": 0,
+      "unit_weight_score_and_ranking_checks": 1184
+    }
+  }
+}
