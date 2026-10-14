@@ -1,8 +1,12 @@
 """Search vectors by inner product and persist FAISS indexes."""
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from indexing.vectors import as_vectors
+
+if TYPE_CHECKING:
+    import numpy as np
 
 
 class FaissIndex:
@@ -24,6 +28,10 @@ class FaissIndex:
     @property
     def count(self) -> int:
         return self.index.ntotal
+
+    def snapshot_vectors(self) -> "np.ndarray":
+        """Copy IndexFlatIP vectors in row order, independent of later mutations."""
+        return as_vectors(self.index.reconstruct_n(0, self.count), self.dimension)
 
     @classmethod
     def build(cls, vectors) -> "FaissIndex":

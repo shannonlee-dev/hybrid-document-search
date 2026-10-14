@@ -6,6 +6,7 @@ from math import isfinite
 from numbers import Real
 
 import bm25s
+import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from data.loader import Document
@@ -63,19 +64,27 @@ class BM25Retriever:
         )
         self._index.index(tokens, show_progress=False)
 
+    @property
+    def documents(self) -> tuple[Document, ...]:
+        """Return the indexed documents in corpus order."""
+        return self._documents
+
+    def score_all(self, query: str) -> np.ndarray:
+        """Return raw BM25 scores in corpus order, including zero-score documents."""
+        if not isinstance(query, str):
+            raise TypeError("query는 문자열이어야 합니다.")
+        tokens = self._analyze(query) if query.strip() else []
+        if not tokens:
+            return np.zeros(len(self._documents), dtype=np.float32)
+        return self._index.get_scores(tokens)
+
     def search(self, query: str, top_k: int) -> list[SearchResult]:
         """Return at most top_k hits with positive BM25 scores."""
         if isinstance(top_k, bool) or not isinstance(top_k, int) or top_k <= 0:
             raise ValueError("top_k는 양의 정수여야 합니다.")
-        if not isinstance(query, str):
-            raise TypeError("query는 문자열이어야 합니다.")
-        if not query.strip():
+        if isinstance(query, str) and not query.strip():
             return []
-
-        tokens = self._analyze(query)
-        if not tokens:
-            return []
-        scores = self._index.get_scores(tokens)
+        scores = self.score_all(query)
         candidates = (
             (index, float(score)) for index, score in enumerate(scores) if score > 0
         )
