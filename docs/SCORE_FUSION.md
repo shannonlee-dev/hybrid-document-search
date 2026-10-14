@@ -148,10 +148,16 @@ python3 -m scripts.prepare_score_fusion_cache \
 `--cache-dir PATH`로 새 폴더에 다운로드해 검증합니다. 기존 pack 출력은 덮어쓰지 않으며,
 입력 변경 시 새 태그와 manifest를 사용합니다.
 
-고정 모델·데이터 revision과 인코딩 설정은
+고정 모델 revision과 인코딩 설정은
 [MIRACL](experiments/score-fusion/encoding/miracl10k.json),
 [StrategyQA](experiments/score-fusion/encoding/strategyqa.json)에,
 원본 출처·해시는 [history.json](experiments/score-fusion/history.json)에 보존했습니다.
+StrategyQA의 데이터셋은 `taeminlee/Ko-StrategyQA`, dev split이며, 원본과 내용이 일치하는
+revision은 `7cececfcc209fc836e08d6ab7584cba776847cfa`입니다.
+2026-10-15에 기존 `hybrid-document-search-old-2.0`의 `corpus.jsonl`, `queries.jsonl`,
+`qrels/dev.jsonl`을 캐시의 원본 SHA-256 및 해당 revision의 Git blob ID와 대조했습니다.
+당시 다운로드 revision을 소급 확인한 것은 아니며, 파일 내용의 일치로 재현 버전을 고정했습니다.
+[데이터셋 검증 기록](experiments/score-fusion/encoding/strategyqa-dataset.json)에 근거를 보존합니다.
 전처리는 `title + "\n" + text`, 접두사 없음, FP32·L2 정규화입니다.
 새 캐시의 바이트 단위 재현은 보장하지 않으며, 동일한 MIRACL 10k subset·Train100/Dev50에는
 기존 manifest 또는 원본 `data.json`이 필요합니다. 입력 변경 시 모델·데이터 revision,

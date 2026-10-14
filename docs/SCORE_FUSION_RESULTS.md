@@ -20,7 +20,9 @@ FastAPI·Streamlit은 기존 RRF를 사용하며, 서비스 통합은 이번 범
 - 지표: 양의 qrel을 관련 문서로 보는 binary nDCG@10·Recall@10의 쿼리별 평균.
 - MIRACL은 관련 문서를 포함해 만든 10k subset이며 공식 전체 corpus 성능이 아니다.
 
-모델·데이터 revision과 인코딩 설정은 [MIRACL](experiments/score-fusion/encoding/miracl10k.json)·[StrategyQA](experiments/score-fusion/encoding/strategyqa.json)에 있다.
+모델 revision과 인코딩 설정은 [MIRACL](experiments/score-fusion/encoding/miracl10k.json)·[StrategyQA](experiments/score-fusion/encoding/strategyqa.json)에 있다.
+StrategyQA 원본과 내용이 일치하는 데이터셋 revision은 `7cececfcc209fc836e08d6ab7584cba776847cfa`이며,
+원본 3개 파일의 해시 대조 근거는 [데이터셋 검증 기록](experiments/score-fusion/encoding/strategyqa-dataset.json)에 있다.
 
 ## 검색 품질
 
