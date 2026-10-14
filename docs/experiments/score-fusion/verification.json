@@ -18,5 +18,47 @@
   "git_diff_check": {
     "command": "git diff --check",
     "status": "passed"
+  },
+  "record_note": "Top-level results are historical working-tree evidence, not verification of the current PR HEAD. See ci_coverage_followup for the latest scoped verification.",
+  "ci_coverage_followup": {
+    "base_head": "5265963ff890141753a86a8608b1c09d4aa1c84f",
+    "date": "2026-10-15",
+    "scope": "Local working tree based on base_head, including the uncommitted Fusion CI job and SVG trailing-whitespace cleanup. Runtime and test sources are unchanged from base_head. This is not a verification of a final committed PR HEAD.",
+    "environment": {
+      "uv": "0.12.3 (CI pins 0.12.2)",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1",
+      "UV_CACHE_DIR": "/tmp/fusion-ci-CeKzNRdU"
+    },
+    "dependency_sync": {
+      "command": "uv sync --locked --extra sparse --extra dense",
+      "status": "passed"
+    },
+    "dependency_imports": {
+      "command": ".venv/bin/python -c \"import numpy, faiss, bm25s, sklearn\"",
+      "status": "passed"
+    },
+    "pytest": {
+      "command": "uv run --locked --extra sparse --extra dense pytest tests/fusion -q",
+      "passed": 87,
+      "skipped": 0,
+      "duration_seconds": 2.93
+    },
+    "ruff_check": {
+      "command": ".venv/bin/python -m ruff check .",
+      "status": "passed"
+    },
+    "ruff_format_check": {
+      "command": ".venv/bin/python -m ruff format --check .",
+      "status": "passed"
+    },
+    "git_diff_check": {
+      "command": "git diff --check",
+      "status": "passed"
+    },
+    "github_actions": {
+      "status": "not_run",
+      "note": "The fusion-tests job will verify the checked-out commit on pull_request and pushes to main. Consult the Actions run for final PR HEAD verification."
+    }
   }
 }
