@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from typing import Protocol
 
+SNIPPET_LENGTH = 200
+
 
 @dataclass(frozen=True)
 class SearchResult:
