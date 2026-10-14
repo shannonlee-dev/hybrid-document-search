@@ -1,0 +1,208 @@
+{
+  "created_at": "2026-10-14T05:21:01.631031+00:00",
+  "dataset": "miracl10k",
+  "split": "train",
+  "corpus_size": 10000,
+  "query_count": 100,
+  "quality": {
+    "dense": {
+      "recall@5": 0.8718888888888888,
+      "recall@10": 0.9676111111111111,
+      "mrr@10": 0.8084285714285714,
+      "ndcg@10": 0.8231544256183174
+    },
+    "rrf": {
+      "recall@5": 0.7291111111111112,
+      "recall@10": 0.9414444444444444,
+      "mrr@10": 0.7293849206349207,
+      "ndcg@10": 0.7462995428121508
+    },
+    "score_0": {
+      "recall@5": 0.8718888888888888,
+      "recall@10": 0.9676111111111111,
+      "mrr@10": 0.8084285714285714,
+      "ndcg@10": 0.8231544256183174
+    },
+    "score_0.025": {
+      "recall@5": 0.8793888888888888,
+      "recall@10": 0.9676111111111111,
+      "mrr@10": 0.8144404761904762,
+      "ndcg@10": 0.8219170926021003
+    },
+    "score_0.05": {
+      "recall@5": 0.8830555555555556,
+      "recall@10": 0.9717777777777777,
+      "mrr@10": 0.8341071428571429,
+      "ndcg@10": 0.8361848566301461
+    },
+    "score_0.1": {
+      "recall@5": 0.8627777777777778,
+      "recall@10": 0.9717777777777777,
+      "mrr@10": 0.8248611111111112,
+      "ndcg@10": 0.825464921699722
+    },
+    "corrected_score": {
+      "recall@5": 0.8644444444444445,
+      "recall@10": 0.970111111111111,
+      "mrr@10": 0.8404563492063493,
+      "ndcg@10": 0.8393129380577264
+    },
+    "rrf_full": {
+      "recall@5": 0.7237777777777779,
+      "recall@10": 0.8854444444444445,
+      "mrr@10": 0.7232738095238095,
+      "ndcg@10": 0.7321694113446003
+    }
+  },
+  "latency": {
+    "dense": {
+      "mean_ms": 3.7327940132915196,
+      "p95_ms": 4.684706299758545,
+      "sample_count": 75
+    },
+    "rrf": {
+      "mean_ms": 6.047152466665769,
+      "p95_ms": 7.800166299921328,
+      "sample_count": 75
+    },
+    "score_0": {
+      "mean_ms": 3.015271866685604,
+      "p95_ms": 3.6828501002673875,
+      "sample_count": 75
+    },
+    "score_0.025": {
+      "mean_ms": 2.913567146673207,
+      "p95_ms": 3.7484183998913063,
+      "sample_count": 75
+    },
+    "score_0.05": {
+      "mean_ms": 2.905077626661902,
+      "p95_ms": 3.709144500089678,
+      "sample_count": 75
+    },
+    "score_0.1": {
+      "mean_ms": 2.832391559992781,
+      "p95_ms": 3.4277269000085653,
+      "sample_count": 75
+    },
+    "corrected_score": {
+      "mean_ms": 3.103001306681108,
+      "p95_ms": 3.8125524000861333,
+      "sample_count": 75
+    }
+  },
+  "latency_excludes": [
+    "model_inference",
+    "initialization",
+    "HTTP"
+  ],
+  "timing": {
+    "seed": 20261014,
+    "warmup": 1,
+    "repeats": 3,
+    "queries": 25,
+    "order": "rotating methods per query/repetition"
+  },
+  "candidates": {
+    "rrf": "each source top 10",
+    "rrf_full": "full corpus",
+    "score": "full corpus",
+    "bm25_normalization": "corpus maximum"
+  },
+  "bm25": {
+    "analyzer": "char_wb",
+    "ngram_range": [
+      2,
+      4
+    ],
+    "k1": 1.5,
+    "b": 0.75,
+    "method": "lucene"
+  },
+  "correction": {
+    "center": true,
+    "components": 8,
+    "shrink": 0.25
+  },
+  "input_directory": "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/component-validation-20261014/miracl10k",
+  "input_sha256": {
+    "data.json": "1b7250d7abca202c84bb3748b0185c3ad0b4a658c5e5a7d2f8b6af09a7bdcf2b",
+    "document-vectors.npy": "3711567d2f1e8e5d6c1dad1e422249c94b24a6562aa455f7c0211cef4c5c68a4",
+    "query-vectors.npy": "18188c73a2fef399ea9f00c744944fe973ea7c88637aa51f1e9a2e70212be8a8"
+  },
+  "encoding_record": null,
+  "model_config": {
+    "model_name": "BAAI/bge-m3",
+    "device": null,
+    "batch_size": 32,
+    "normalize_embeddings": true,
+    "query_prefix": "",
+    "passage_prefix": "",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181"
+  },
+  "code_sha256": {
+    "/home/shannon/__dev/hybrid-document-search/scripts/benchmark_score_fusion.py": "1b5f58e90a83bde88f3f3c1ddf1015805e22d9e0e99160b6d6e4d110ef947300",
+    "fusion/score.py": "896982614d481fe07bd789c2ad8d5d48bf50413b414695d70258843d62f221db",
+    "fusion/rrf.py": "c36dada93bea725e313e781da756b2eb107db2e6c4da353a5b2333d65b6ce90b",
+    "retrievers/bm25.py": "f1ce78b8b680011e1756b5b21c81f5798ac35ff6a87c2a801d4c428086bc3f3a",
+    "retrievers/dense.py": "1c86565687e4628277a0d9cf440cf3715fd1557130ae34b628386da47b9a0db8",
+    "evaluation/metrics.py": "dca0e461ccf50905611b589bfdd1d667870622dfd7326be3aa3c4eaa13029720",
+    "evaluation/latency.py": "80718bfab14352e778c1a3b6add727411384874864e24c39ba6add7bff1e4232"
+  },
+  "environment": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.5.3",
+      "faiss-cpu": "1.15.1",
+      "bm25s": "0.3.12",
+      "scikit-learn": "1.9.1"
+    },
+    "threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libopenblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/faiss_cpu.libs/libopenblaso-r0-d77a1985.3.15.so",
+        "version": "0.3.15",
+        "threading_layer": "openmp",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 2,
+        "prefix": "libgomp",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/faiss_cpu.libs/libgomp-e985bcbb.so.1.0.0",
+        "version": null
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-f48b354e.so",
+        "version": "0.3.34.106.0",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-5f890258.so",
+        "version": "0.3.31.dev",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      }
+    ]
+  },
+  "artifact_sha256": {
+    "summary.json": "606dca8c3596a725d4335dd13e490bf32e4bf9b173e9153c2f51468119d9ac7c",
+    "per-query.json": "927dc5fdb1b4357db1ad194a8ceec7d0e74f8a03d303a41cc7ac5681f548bb71",
+    "runs.json": "2d7146795d4706d83e270d1c6c3fee00627df1383f4845f1f396beed1f767b88",
+    "timings.json": "07a3be91fd005156ba048ba28aa54add7bbedd522053a3b082f774ca14dbbcb3"
+  }
+}
