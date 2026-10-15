@@ -40,6 +40,21 @@ _EXPECTED_CORPUS_SIZE = 10000
 _EXPECTED_QUERY_COUNT = 50
 
 
+def _cpu_name():
+    try:
+        lines = Path("/proc/cpuinfo").read_text().splitlines()
+    except OSError:
+        return platform.processor()
+    return next(
+        (
+            line.split(":", 1)[1].strip()
+            for line in lines
+            if line.startswith("model name")
+        ),
+        platform.processor(),
+    )
+
+
 class _PreparedQuery:
     """Pass this request's freshly inferred vector into unchanged retrievers once."""
 
@@ -243,14 +258,7 @@ def _run(args):
         "environment": {
             "python": sys.version,
             "platform": platform.platform(),
-            "cpu": next(
-                (
-                    line.split(":", 1)[1].strip()
-                    for line in Path("/proc/cpuinfo").read_text().splitlines()
-                    if line.startswith("model name")
-                ),
-                platform.processor(),
-            ),
+            "cpu": _cpu_name(),
             "runtime": runtime,
             "threadpools_after_run": threadpool_info(),
             "packages": {
