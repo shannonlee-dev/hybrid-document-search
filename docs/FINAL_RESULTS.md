@@ -88,7 +88,7 @@ query embedding 시작부터 Top-10 반환까지, 방식별 warm-up 10회 후 De
 StrategyQA의 동일 GPU 추론 포함 시간은 이번 평가에서 새로 측정하지 않았다.
 CPU 캐시 비교와 위 GPU 표는 서로 다른 질의 반복·warm-up 조건이며 합치지 않는다.
 
-## 발표용 설명
+## 결과 요약
 
 > 기존 Dataset/Sparse/Evaluation 코드를 재사용해 최종 Dense·RRF·score fusion을 공통 지표로
 > 연결하고, MIRACL Dev50과 StrategyQA dev 592질의를 각각 재평가했습니다.
