@@ -1,0 +1,24 @@
+{
+  "dataset_id": "taeminlee/Ko-StrategyQA",
+  "dataset_revision": "7cececfcc209fc836e08d6ab7584cba776847cfa",
+  "split": "dev",
+  "verified_on": "2026-10-15",
+  "verification": "Original local source files match both the frozen benchmark cache input_sha256 and the Git blob IDs at this dataset revision. This establishes content equivalence; the original download revision was not recorded.",
+  "source_files": {
+    "corpus.jsonl": {
+      "sha256": "c02b601c6cb2541dd16f06a12f2e9ef6366531f2e8b8a8f9ac3009b3939969c3",
+      "git_blob_id": "985029afa7eafc17d1ab12229a9ad033f490ac01",
+      "size_bytes": 7260383
+    },
+    "qrels/dev.jsonl": {
+      "sha256": "52202165d353aa704ca815fa0559e16902c53058694ab34af30735da3602fe5d",
+      "git_blob_id": "04b79e8c6cea145d710ccd7eb22f45163419a491",
+      "size_bytes": 96138
+    },
+    "queries.jsonl": {
+      "sha256": "ec5d5336328c816dc186d4dbfc0088dbd0c630a2c4781fe17501f73a59a15c79",
+      "git_blob_id": "3ba31a2bc81422d79c16e2e88a0aed69dc9da130",
+      "size_bytes": 289974
+    }
+  }
+}

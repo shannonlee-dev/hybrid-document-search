@@ -1,0 +1,90 @@
+{
+  "model": {
+    "model_name": "BAAI/bge-m3",
+    "batch_size": 1,
+    "normalize_embeddings": true,
+    "query_prefix": "",
+    "passage_prefix": "",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+    "device": "cuda:0"
+  },
+  "max_seq_length": 8192,
+  "batch_size": 1,
+  "dtype": "torch.float32",
+  "runtime": {
+    "torch_num_threads": 2,
+    "torch_num_interop_threads": 2,
+    "faiss_omp_max_threads": 2,
+    "device": "cuda:0",
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "cuda": "13.0"
+  },
+  "preprocessing": {
+    "document": "title + \"\\n\" + text",
+    "query": "unchanged",
+    "query_batch_size": 1
+  },
+  "vector_sha256": {
+    "document": "3711567d2f1e8e5d6c1dad1e422249c94b24a6562aa455f7c0211cef4c5c68a4",
+    "query": "18188c73a2fef399ea9f00c744944fe973ea7c88637aa51f1e9a2e70212be8a8"
+  },
+  "input_sha256": {
+    "data.json": "1b7250d7abca202c84bb3748b0185c3ad0b4a658c5e5a7d2f8b6af09a7bdcf2b",
+    "document-vectors.npy": "3711567d2f1e8e5d6c1dad1e422249c94b24a6562aa455f7c0211cef4c5c68a4",
+    "query-vectors.npy": "18188c73a2fef399ea9f00c744944fe973ea7c88637aa51f1e9a2e70212be8a8"
+  },
+  "sources": {
+    "miracl-build-command.json": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old/artifacts/ko-miracl-full/build-bge/command.json",
+      "sha256": "8082262efaade6cd4daaf9271754b0592f7f51313eff2f560100f458204723c7"
+    },
+    "miracl-build-report.json": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old/artifacts/ko-miracl-full/build-bge/report.json",
+      "sha256": "d81823968d1ae77dafcb8b3a9140fbdf76da366ad6b426ef77d0c5651c6fb3ec"
+    },
+    "miracl-query-prepared.json": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old/artifacts/hybrid-combinations-20261011/prepared.json",
+      "sha256": "9063c9f5a46860cf6ff5138fe31fc1cff0509f8b437834fbae12a7182e9a405b"
+    },
+    "miracl-query-prepare.py": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old/artifacts/hybrid-combinations-20261011/prepare.py",
+      "sha256": "ea5ac710be6ff1ef9e3f4cb21d107deca41c213bd9cea2eda3a65b5fa8b67bfb"
+    },
+    "miracl-vector-research.py": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/math-fusion-20261013/vector_research.py",
+      "sha256": "aeded8ac7a6257d81260f41142bad714a9e7ab36d9881099bcd63a2933632e34"
+    },
+    "miracl-evaluate-frozen.py": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/math-fusion-20261013/evaluate_frozen.py",
+      "sha256": "4a2fbc32ae7ef914a0a3d3366457c61759b3bdaa4559962e413d05702490cb42"
+    },
+    "miracl-prepare-history.py": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/component-validation-20261014/prepare_history.py",
+      "sha256": "fdfa826dd037d4ded666b4db8bf6b940cb33772b363b90cf1f920496f3867bfb"
+    }
+  },
+  "original_metadata": {
+    "source": "/home/shannon/__dev/hybrid-document-search-old/artifacts/ko-miracl-full/build-bge/index/metadata.json",
+    "sha256": "c1b3f4b2366ad363c4d7c70b12eeaf2a73ad89d485aef161a289ec6fde11b52f",
+    "embedding_config": {
+      "model_name": "BAAI/bge-m3",
+      "batch_size": 1,
+      "normalize_embeddings": true,
+      "query_prefix": "",
+      "passage_prefix": "",
+      "revision": "5617a9f61b028005a4858fdac845db406aefb181"
+    },
+    "dimension": 1024,
+    "index_sha256": "fb59dfaa2aea5fbb0d75b148eedf638a19433490aa4d86982e3acccfd12fdd78"
+  },
+  "verification": {
+    "document_mapping_equal": true,
+    "document_vectors_equal_to_original_faiss": true,
+    "query_vectors_equal_by_query_id": true,
+    "query_text_equal_by_query_id": true,
+    "documents": 10000,
+    "queries": 150,
+    "original_query_vectors_sha256": "722bc29c042ee2f0d8067da60dfdcffcd3aced84f53d248fc02664c88068f7e2",
+    "original_query_order_sha256": "1adc99321252b11332a96216d579a8295d21a06884721a7fa1c7e5a0fd8c3f12"
+  }
+}
