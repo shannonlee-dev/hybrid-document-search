@@ -1,0 +1,25 @@
+name: Final evaluation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  final-evaluation-tests:
+    runs-on: ubuntu-latest
+    env:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: "0.12.2"
+          enable-cache: true
+      - run: uv python install
+      - run: uv sync --locked --extra sparse --extra dense
+      - run: uv run --no-sync pytest tests/test_final_evaluation.py tests/test_benchmark.py tests/test_evaluate_cli.py

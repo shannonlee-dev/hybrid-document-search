@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from evaluation.benchmark import (
-    METHODS,
+    EVALUATION_METHODS,
     check_output_directory,
     run_benchmark,
     write_report,
@@ -40,7 +40,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--methods",
         nargs="+",
-        choices=METHODS,
+        choices=EVALUATION_METHODS,
         default=["tfidf", "bm25"],
         help="평가할 방식 (기본 tfidf bm25)",
     )
@@ -72,7 +72,7 @@ def main(argv: list[str] | None = None) -> int:
     """Evaluate retrieval quality and latency and save reports to a new directory."""
     parser = _build_parser()
     args = parser.parse_args(argv)
-    uses_dense = "dense" in args.methods or "hybrid" in args.methods
+    uses_dense = bool(set(args.methods) & {"dense", "hybrid", "rrf", "score_fusion"})
     strict_runtime = (
         uses_dense and args.threads is not None and args.device == CUDA_DEVICE
     )
