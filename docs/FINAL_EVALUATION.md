@@ -8,7 +8,7 @@
 
 - 관련 Issue: #19. Score fusion의 구현·고정 입력·분석은 이상헌의 #17 / #18을 재사용한다.
 - 이 평가 변경은 main에서 분기한 feat/a-final-evaluation에만 작성한다.
-- #18이 먼저 병합되어야 최종 캐시 평가와 실제 score_fusion 검색이 실행된다.
+- score fusion 구현은 main에 병합되어 있어야 최종 캐시 평가와 실제 score_fusion 검색이 실행된다.
   없는 구현을 RRF 또는 Dense로 대체하지 않는다.
 - #18의 cache loader와 cached embedder를 어댑터로 사용하며, 계산은 기존
   evaluation.metrics / benchmark_retriever / write_report를 재사용한다.
@@ -54,7 +54,7 @@ Train/dev 중복, corpus 밖 qrel, 잘못된 관련성 값은 오류로 처리�
 
 ## 재현 명령
 
-#18 병합 후 저장소 루트에서 실행한다. Dense extra 설치는 모델 가중치 다운로드와 다르다.
+저장소 루트에서 실행한다. Dense extra 설치는 모델 가중치 다운로드와 다르다.
 
 ```bash
 uv sync --locked --extra sparse --extra dense

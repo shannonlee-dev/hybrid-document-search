@@ -89,7 +89,7 @@ Dense/Hybrid 평가의 `--threads 2 --device cuda:0`은 엄격한 revision·FP32
 
 ## 3차 최종 비교
 
-#18의 score fusion 구현을 연결한 최종 평가와 데이터셋별 결과는
+score fusion 구현을 연결한 최종 평가와 데이터셋별 결과는
 [FINAL_EVALUATION.md](FINAL_EVALUATION.md), [FINAL_RESULTS.md](FINAL_RESULTS.md)를 참고한다.
 기존 scripts.evaluate는 hybrid=RRF를 유지하며 명시적인 rrf / score_fusion 비교도 지원한다.
 scripts.evaluate_final은 고정 캐시의 MIRACL Dev50과 StrategyQA dev 592질의를 각각 평가한다.

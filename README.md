@@ -2,7 +2,7 @@
 
 3차 최종 검색 비교의 실행 절차는 [최종 평가](docs/FINAL_EVALUATION.md),
 데이터셋별 품질·latency 및 결과 해석은 [최종 결과](docs/FINAL_RESULTS.md)를 참고하세요.
-최종 평가의 score fusion 실행은 PR #18 구현을 필요로 하며 API/UI 연결은 별도 통합 작업입니다.
+최종 평가의 score fusion 실행은 sparse/dense extras가 필요하며 API/UI 연결은 별도 통합 작업입니다.
 
 ## Project Overview
 

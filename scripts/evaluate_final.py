@@ -60,7 +60,7 @@ def main(argv=None):
         for name, report in reports.items():
             write_report(report, args.output_dir / name)
     except ImportError as exc:
-        parser.error(f"#18 구현과 sparse/dense extras가 필요합니다: {exc}")
+        parser.error(f"score fusion 구현과 sparse/dense extras가 필요합니다: {exc}")
     except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
         parser.error(f"최종 평가 실패: {exc}")
     print(

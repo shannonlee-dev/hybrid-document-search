@@ -47,7 +47,9 @@ def load_final_dataset(directory, *, manifest=DEFAULT_MANIFEST):
     try:
         from scripts.benchmark_score_fusion import _load_cache
     except ImportError as exc:
-        raise ImportError("최종 평가는 #18의 score fusion 구현이 필요합니다.") from exc
+        raise ImportError(
+            "최종 평가는 sparse/dense extras(score fusion 구현)가 필요합니다."
+        ) from exc
     raw = read_json(directory / "data.json")
     split = "dev" if raw.get("splits") else None
     data, documents, vectors, queries, ids, hashes, encoding = _load_cache(
@@ -99,14 +101,14 @@ def load_final_dataset(directory, *, manifest=DEFAULT_MANIFEST):
 
 
 def _build_final_retrievers(dataset, data, vectors, query_vectors, methods):
-    """Reuse actual retrievers from #18; cached vectors never load a model."""
+    """Reuse the score fusion retrievers from main; cached vectors never load a model."""
     from fusion.hybrid import HybridRetriever
     from indexing.faiss_index import FaissIndex
     from retrievers.bm25 import BM25Retriever
     from retrievers.dense import DenseRetriever
     from retrievers.tfidf import TfidfRetriever
 
-    # #18은 별도 PR이므로 실행 시에만 해당 구현을 불러온다.
+    # sparse/dense extras가 없는 환경도 import 가능해야 하므로 실행 시에만 불러온다.
     score_module = import_module("fusion.score")
     cached_embedder = import_module("scripts.benchmark_score_fusion")._CachedEmbedder
 

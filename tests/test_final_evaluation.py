@@ -167,7 +167,7 @@ def test_cli_does_not_overwrite_or_repeat_datasets(tmp_path):
 
 @pytest.fixture
 def frozen_fixture(tmp_path):
-    pytest.importorskip("fusion.score")  # Implemented in dependency PR #18.
+    pytest.importorskip("fusion.score")  # Requires the dense extra.
     np = pytest.importorskip("numpy")
     directory = tmp_path / "fixture"
     directory.mkdir()
