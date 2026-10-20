@@ -1,5 +1,9 @@
 # Hybrid Retrieval (RRF)
 
+전체 corpus의 Dense + 정규화 BM25 점수 결합은 별도
+[Score fusion 구현·재현·인계 문서](SCORE_FUSION.md)를 참조하세요.
+이 문서의 RRF 검색기와 서비스 기본 경로는 그대로 유지됩니다.
+
 이 문서는 `fusion/rrf.py`와 `fusion/hybrid.py`의 Hybrid Retrieval 기반을 설명합니다.
 BM25 + BGE-M3를 연결한 10k corpus의 Dev 평가를 완료했습니다.
 이번 subset에서는 Dense 단독이 Hybrid보다 우수했으며, RRF 기본값은 튜닝하지 않았습니다.

@@ -1,4 +1,4 @@
-"""TF-IDF와 동일한 한국어 문자 n-gram을 사용하는 BM25 검색입니다."""
+"""Retrieve Korean text with BM25 using the shared character n-gram analyzer."""
 
 from collections.abc import Iterable
 from heapq import nsmallest
@@ -6,18 +6,27 @@ from math import isfinite
 from numbers import Real
 
 import bm25s
+import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 from data.loader import Document
 from data.preprocess import build_index_text
-from retrievers.base import SearchResult
+from retrievers.base import SNIPPET_LENGTH, SearchResult
+
+DEFAULT_K1 = 1.5
+DEFAULT_B = 0.75
+SCORING_METHOD = "lucene"
 
 
 class BM25Retriever:
-    """공통 문서로 BM25 인덱스를 만들고 원점수 순서로 검색합니다."""
+    """Index shared documents and rank hits by raw BM25 score."""
 
     def __init__(
-        self, documents: Iterable[Document], *, k1: float = 1.5, b: float = 0.75
+        self,
+        documents: Iterable[Document],
+        *,
+        k1: float = DEFAULT_K1,
+        b: float = DEFAULT_B,
     ) -> None:
         if (
             isinstance(k1, bool)
@@ -51,23 +60,31 @@ class BM25Retriever:
         ).build_analyzer()
         tokens = [self._analyze(text) for text in texts]
         self._index = bm25s.BM25(
-            k1=float(k1), b=float(b), method="lucene", idf_method="lucene"
+            k1=float(k1), b=float(b), method=SCORING_METHOD, idf_method=SCORING_METHOD
         )
         self._index.index(tokens, show_progress=False)
 
-    def search(self, query: str, top_k: int) -> list[SearchResult]:
-        """양의 BM25 점수를 가진 문서를 최대 top_k개 반환합니다."""
-        if isinstance(top_k, bool) or not isinstance(top_k, int) or top_k <= 0:
-            raise ValueError("top_k는 양의 정수여야 합니다.")
+    @property
+    def documents(self) -> tuple[Document, ...]:
+        """Return the indexed documents in corpus order."""
+        return self._documents
+
+    def score_all(self, query: str) -> np.ndarray:
+        """Return raw BM25 scores in corpus order, including zero-score documents."""
         if not isinstance(query, str):
             raise TypeError("query는 문자열이어야 합니다.")
-        if not query.strip():
-            return []
-
-        tokens = self._analyze(query)
+        tokens = self._analyze(query) if query.strip() else []
         if not tokens:
+            return np.zeros(len(self._documents), dtype=np.float32)
+        return self._index.get_scores(tokens)
+
+    def search(self, query: str, top_k: int) -> list[SearchResult]:
+        """Return at most top_k hits with positive BM25 scores."""
+        if isinstance(top_k, bool) or not isinstance(top_k, int) or top_k <= 0:
+            raise ValueError("top_k는 양의 정수여야 합니다.")
+        if isinstance(query, str) and not query.strip():
             return []
-        scores = self._index.get_scores(tokens)
+        scores = self.score_all(query)
         candidates = (
             (index, float(score)) for index, score in enumerate(scores) if score > 0
         )
@@ -82,7 +99,7 @@ class BM25Retriever:
                     rank=rank,
                     score=score,
                     title=document.title,
-                    snippet=document.text[:200],
+                    snippet=document.text[:SNIPPET_LENGTH],
                 )
             )
         return results

@@ -1,0 +1,24 @@
+{
+  "embedding_seconds": 193.09800319799996,
+  "faiss_build_seconds": 0.03235624199999165,
+  "build_seconds": 193.14455122800007,
+  "save_seconds": 0.09457060499994441,
+  "total_preparation_seconds": 195.406726467,
+  "document_count": 10000,
+  "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "loaded_model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "build_runtime_threads": {
+    "torch_num_threads": 2,
+    "torch_num_interop_threads": 2,
+    "faiss_omp_max_threads": 2
+  },
+  "runtime_device": "cuda:0",
+  "index_sha256": "fb59dfaa2aea5fbb0d75b148eedf638a19433490aa4d86982e3acccfd12fdd78",
+  "metadata_sha256": "c1b3f4b2366ad363c4d7c70b12eeaf2a73ad89d485aef161a289ec6fde11b52f",
+  "max_seq_length": 8192,
+  "dtype": "torch.float32",
+  "cached_model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "gpu_name": "NVIDIA GeForce RTX 4060",
+  "peak_gpu_allocated_bytes": 2383467520,
+  "cuda_version": "13.0"
+}

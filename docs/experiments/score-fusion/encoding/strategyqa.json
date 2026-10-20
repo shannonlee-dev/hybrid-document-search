@@ -1,0 +1,75 @@
+{
+  "runtime": {
+    "torch_num_threads": 2,
+    "torch_num_interop_threads": 2,
+    "faiss_omp_max_threads": 2,
+    "threadpools": [
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 2,
+        "prefix": "libgomp",
+        "filepath": "/home/shannon/__dev/hybrid-document-search-old/.venv/lib/python3.12/site-packages/torch/lib/libgomp.so.1",
+        "version": null
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 2,
+        "prefix": "libgomp",
+        "filepath": "/home/shannon/__dev/hybrid-document-search-old/.venv/lib/python3.12/site-packages/faiss_cpu.libs/libgomp-e985bcbb.so.1.0.0",
+        "version": null
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search-old/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-f48b354e.so",
+        "version": "0.3.34.106.0",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search-old/.venv/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-5f890258.so",
+        "version": "0.3.31.dev",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libopenblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search-old/.venv/lib/python3.12/site-packages/faiss_cpu.libs/libopenblaso-r0-d77a1985.3.15.so",
+        "version": "0.3.15",
+        "threading_layer": "openmp",
+        "architecture": "Haswell"
+      }
+    ],
+    "matmul_allow_tf32": false,
+    "cudnn_allow_tf32": false,
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "cuda": "13.0",
+    "device": "cuda:0"
+  },
+  "max_seq_length": 8192,
+  "batch_size": 8,
+  "model": {
+    "model_name": "BAAI/bge-m3",
+    "device": "cuda:0",
+    "batch_size": 8,
+    "normalize_embeddings": true,
+    "query_prefix": "",
+    "passage_prefix": "",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181"
+  },
+  "vector_sha256": {
+    "document": "535a377b2fd137275e6027e7a361e8c7580a438e7aec2bc884efc6c77e20f1df",
+    "query": "1ff3fd0cc30d97d674ca47751a5d79d933c16f2722ed9b6f4cf9af10d038e258"
+  }
+}

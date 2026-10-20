@@ -1,0 +1,189 @@
+{
+  "source_root": "/home/shannon/__dev/hybrid-document-search-old-2.0",
+  "purpose": "Historical Korean dataset selection and confirmation evidence; not newly executed results.",
+  "files": {
+    "artifacts/math-fusion-20261013/protocol.json": {
+      "sha256": "f67e362d2008c927f0c355897e21d94a023a80ddcd4dd12ef2ccaadf6172a326",
+      "record": {
+        "corpus": 10000,
+        "train": 100,
+        "dev": 50,
+        "training": "Only original train100 used for method/parameter selection. Query-group OOF and final dev evaluation after freeze.",
+        "architecture": "BM25 + dense score fusion only; no extra inference or reranker.",
+        "input_sha256": {
+          "/home/shannon/__dev/hybrid-document-search-old/artifacts/ko-miracl-full/data/prepared/manifest.json": "1d199e8f6d2e1f446110625b03c5c26e1dff5fed280e3a43672294b9f551520a",
+          "/home/shannon/__dev/hybrid-document-search-old/artifacts/ko-miracl-full/build-bge/index/index.faiss": "fb59dfaa2aea5fbb0d75b148eedf638a19433490aa4d86982e3acccfd12fdd78",
+          "/home/shannon/__dev/hybrid-document-search-old/artifacts/fusion-repair-train100-dev50-20261012/dense-scores.npy": "87b1d9e4689c4684ee967f68d5bdde2158a392b7503941928ef8d142860fbd5e",
+          "/home/shannon/__dev/hybrid-document-search-old/artifacts/fusion-repair-train100-dev50-20261012/bm25-scores.npy": "bb27bba06d57bf4aa8033034330fdbc070264b207e65a69d1e4fc5c653335ff4"
+        }
+      }
+    },
+    "artifacts/math-fusion-20261013/final-frozen.json": {
+      "sha256": "81b0d1999586ca7a8cf5ad3bb474d727417bb8998dbefa55ec4d2411afc52e5e",
+      "record": {
+        "primary": "standardized_linear",
+        "reason": "Highest grouped outer-fold score among completed selection procedures; avoid extra encoders and unstable feedback.",
+        "quality_target": 0.89,
+        "latency_target_ms": 50,
+        "latency_max_ms": 100,
+        "configs": {
+          "standardized_linear": {
+            "dense_norm": "std",
+            "bm25_norm": "std",
+            "alpha": 0.025
+          },
+          "scalar": {
+            "weight": 0.040789073835474754
+          },
+          "isotropy": {
+            "kind": "isotropy",
+            "center": 1.0,
+            "components": 8,
+            "shrink": 0.25,
+            "bm25_weight": 0.05
+          },
+          "diagonal": {
+            "kind": "diagonal",
+            "C": 100.0,
+            "temperature": 0.1,
+            "bm25_weight": 0.05,
+            "oof": 0.836693764233494
+          },
+          "feedback": {
+            "feedback_top": 20,
+            "scheme": "discount",
+            "strength": -0.1,
+            "bm25_weight": 0.05
+          }
+        },
+        "policy": "All candidates frozen from train before this run. Other methods are diagnostic comparisons, not dev-selected deployment."
+      }
+    },
+    "artifacts/math-fusion-20261013/vector-train.json": {
+      "sha256": "01f3a4361ab74df19d8c8ba4100ef9e6609a2c1b76d2d25857f25134cc51be37"
+    }
+  },
+  "historical_selected_vector_config": {
+    "config": {
+      "kind": "isotropy",
+      "center": 1.0,
+      "components": 8,
+      "shrink": 0.25,
+      "bm25_weight": 0.05
+    },
+    "ndcg": 0.8393129380577264
+  },
+  "common_miracl_manifest": {
+    "path": "/home/shannon/__dev/hybrid-document-search-old/artifacts/ko-miracl-full/data/prepared/manifest.json",
+    "sha256": "1d199e8f6d2e1f446110625b03c5c26e1dff5fed280e3a43672294b9f551520a",
+    "matching_corpus_order_and_splits": true,
+    "dataset_id": "taeminlee/Ko-miracl",
+    "dataset_revision": "5c7690518e481375551916f24241048cf7b017d0",
+    "settings": {
+      "corpus_size": 10000,
+      "train_queries": 100,
+      "dev_queries": 50,
+      "seed": 42
+    },
+    "selection": {
+      "queries": "split별 정렬한 ID 목록에서 random.Random(seed).sample",
+      "background": "SHA256(seed + NUL + document_id) 우선순위의 최소값",
+      "effective_corpus_size": 10000,
+      "required_documents": 2079,
+      "background_documents": 7921,
+      "corpus_size_adjusted": false,
+      "adjustment_reason": null
+    },
+    "source_sha256": {
+      "corpus.jsonl": "2eae6616899f8855be170c0dcf42d28de3a6651fb565b82375e152e0fea439e3",
+      "queries.jsonl": "0a98ad898767a15c30681963da1e746495ad37e5e2da86cb42d8290309b2c5f8",
+      "qrels/train.jsonl": "9ab82131f50a1131924336a7ba8f6a3d6e5404bb4b550a8c17a96348a3376fa1",
+      "qrels/dev.jsonl": "2659de016b15db4382f58b6f05116d3279d9efe7385f7f58bbbf0c5116c24dbd"
+    }
+  },
+  "external_rrf_comparison": {
+    "strategyqa": {
+      "documents": 9251,
+      "queries": 592,
+      "metrics": {
+        "RRF": {
+          "recall@5": 0.7707810489060489,
+          "recall@10": 0.8400659588159588,
+          "rr@10": 0.7393292846417846,
+          "ndcg@10": 0.7331519380656257,
+          "graded_ndcg@10": 0.7331519380656257
+        },
+        "Score": {
+          "recall@5": 0.8133204633204633,
+          "recall@10": 0.8586470398970398,
+          "rr@10": 0.8165580759330759,
+          "ndcg@10": 0.8000796704836824,
+          "graded_ndcg@10": 0.8000796704836824
+        }
+      },
+      "score_minus_rrf": {
+        "delta": 0.06692773241805672,
+        "improved": 216,
+        "worsened": 34,
+        "unchanged": 342,
+        "gain_sum": 43.98871435184941,
+        "loss_sum": 4.367496760359825,
+        "mean_improvement_when_improved": 0.20365145533263615,
+        "mean_loss_when_worsened": 0.1284557870694066,
+        "loss_at_least_0.1": 15,
+        "groups": 353,
+        "max_group_size": 9,
+        "ci95": [
+          0.05564417240176444,
+          0.07855272264035668
+        ],
+        "cluster_signflip_two_sided_p": 4.999750012499375e-05,
+        "trim_one_best_delta": 0.06600350321273116,
+        "familywise_ci_3": [
+          0.053315523355347075,
+          0.0812570453931847
+        ],
+        "relative_percent": 9.12876703219816
+      }
+    }
+  },
+  "historical_correction": {
+    "strategyqa": {
+      "source": "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/component-validation-20261014/strategyqa/summary.json",
+      "sha256": "7c32ebe4313357fc62020624157a9e724dd9fe70dce7dd7c77eeb01cedfcb415",
+      "metrics": {
+        "D": {
+          "recall@5": 0.8134612290862291,
+          "recall@10": 0.8520310489060489,
+          "rr@10": 0.8111593736593736,
+          "ndcg@10": 0.7940549183290013,
+          "graded_ndcg@10": 0.7940549183290013
+        },
+        "DB": {
+          "recall@5": 0.8133204633204633,
+          "recall@10": 0.8586470398970398,
+          "rr@10": 0.8165580759330759,
+          "ndcg@10": 0.8000796704836824,
+          "graded_ndcg@10": 0.8000796704836824
+        },
+        "DCB": {
+          "recall@5": 0.8137427606177606,
+          "recall@10": 0.8544240669240668,
+          "rr@10": 0.8133901758901759,
+          "ndcg@10": 0.7971410917989861,
+          "graded_ndcg@10": 0.7971410917989861
+        }
+      }
+    }
+  },
+  "encoding_records": {
+    "miracl10k": {
+      "path": "encoding/miracl10k.json",
+      "sha256": "a01fc34637214a6139aced22c722b0980c0059c5ee203c4b0221877f32842240"
+    },
+    "strategyqa": {
+      "path": "encoding/strategyqa.json",
+      "sha256": "ab8d506eee20c945feeb99123d1428b922047e680f421a1cc717958c7c8536ef"
+    }
+  }
+}

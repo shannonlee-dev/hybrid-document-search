@@ -1,0 +1,16 @@
+{
+  "repository": "shannonlee-dev/hybrid-document-search",
+  "tag": "benchmark-inputs-v1",
+  "asset": "score-fusion-cache-v1.tar.gz",
+  "files": {
+    "miracl10k/data.json": "1b7250d7abca202c84bb3748b0185c3ad0b4a658c5e5a7d2f8b6af09a7bdcf2b",
+    "miracl10k/document-vectors.npy": "3711567d2f1e8e5d6c1dad1e422249c94b24a6562aa455f7c0211cef4c5c68a4",
+    "miracl10k/query-vectors.npy": "18188c73a2fef399ea9f00c744944fe973ea7c88637aa51f1e9a2e70212be8a8",
+    "miracl10k/encoding.json": "a01fc34637214a6139aced22c722b0980c0059c5ee203c4b0221877f32842240",
+    "strategyqa/data.json": "32c31b69626eaebcdd9b164892fe06c32235bf206568442fda4186fd775ddbb3",
+    "strategyqa/document-vectors.npy": "535a377b2fd137275e6027e7a361e8c7580a438e7aec2bc884efc6c77e20f1df",
+    "strategyqa/query-vectors.npy": "1ff3fd0cc30d97d674ca47751a5d79d933c16f2722ed9b6f4cf9af10d038e258",
+    "strategyqa/encoding.json": "ab8d506eee20c945feeb99123d1428b922047e680f421a1cc717958c7c8536ef"
+  },
+  "archive_sha256": "e392969c6a84612678577208053eb0ae45c4f291a9e009eb88215643db14ba5e"
+}

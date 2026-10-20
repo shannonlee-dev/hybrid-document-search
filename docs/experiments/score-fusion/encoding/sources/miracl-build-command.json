@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/home/shannon/__dev/hybrid-document-search/.venv/bin/python3",
+    "-m",
+    "scripts.benchmark_dense_runtime",
+    "--worker",
+    "build",
+    "--model",
+    "BAAI/bge-m3",
+    "--revision",
+    "5617a9f61b028005a4858fdac845db406aefb181",
+    "--index-root",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/build-bge/index",
+    "--corpus",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/data/prepared/corpus.jsonl",
+    "--queries",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/data/prepared/queries_train.jsonl",
+    "--manifest",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/ko-miracl-full/data/prepared/manifest.json",
+    "--threads",
+    "2"
+  ],
+  "exit_code": 0
+}
