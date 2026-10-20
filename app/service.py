@@ -8,7 +8,7 @@ from pathlib import Path
 
 from app.schemas import RetrievalMethod
 from data.loader import Document, load_prepared_documents
-from fusion.hybrid import HybridRetriever
+from fusion.score import DEFAULT_BM25_WEIGHT, ScoreFusionRetriever
 from retrievers.base import Retriever, SearchResult
 
 logger = logging.getLogger(__name__)
@@ -133,7 +133,9 @@ def build_search_service(
     dense = retrievers.get(RetrievalMethod.DENSE)
     if bm25 is not None and dense is not None:
         # Hybrid는 BM25와 Dense가 모두 필요하며 TF-IDF로 대체할 수 없다.
-        retrievers[RetrievalMethod.HYBRID] = HybridRetriever(bm25, dense)
+        retrievers[RetrievalMethod.HYBRID] = ScoreFusionRetriever(
+            bm25, dense, bm25_weight=DEFAULT_BM25_WEIGHT
+        )
     else:
         missing = [
             name
