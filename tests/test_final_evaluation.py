@@ -167,8 +167,9 @@ def test_cli_does_not_overwrite_or_repeat_datasets(tmp_path):
 
 @pytest.fixture
 def frozen_fixture(tmp_path):
-    pytest.importorskip("fusion.score")  # Requires the dense extra.
     np = pytest.importorskip("numpy")
+    # scripts.benchmark_score_fusion needs the dense extra.
+    pytest.importorskip("faiss")
     directory = tmp_path / "fixture"
     directory.mkdir()
     documents = [
