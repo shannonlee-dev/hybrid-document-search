@@ -23,7 +23,7 @@ Top-K보다 결과가 적어도 분모와 IDCG를 줄이지 않는다. Recall@10
 그 뒤 `retriever.search(query, 10)`만 측정한다. 질의 처리·embedding·결과 생성은 포함하고
 지표 계산·검증·저장은 제외한다. 품질은 첫 측정 pass의 결과다.
 Mean/P95는 전체 질의 × 5회 샘플이며 P95는 정렬 샘플의 `(N - 1) * 0.95`를 선형 보간한다.
-Hybrid 준비 시간은 BM25/Dense 준비 시간과 결합 비용의 합이다.
+RRF·score fusion 준비 시간은 BM25/Dense 준비 시간과 결합 비용의 합이다.
 
 ## 단일 명령과 자동 재개
 
@@ -47,7 +47,7 @@ Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / 
 Train/Dev 순위는 비교용으로만 기록한다. TOML 변경도 단계 입력 해시에 포함한다.
 
 실행 순서는 환경·revision 사전 점검 → 데이터 준비 → 모델별 다운로드·build·별도 subprocess 복원 →
-Train 3모델 → Dev 3모델 → 기본 모델(BGE-M3) 기반 Dev 4방식이다.
+Train 3모델 → Dev 3모델 → 기본 모델(BGE-M3) 기반 Dev 4방식(TF-IDF/BM25/Dense/RRF)이다.
 다운로드 실패는 최대 3회 시도하고, 다른 단계 실패는 실패 상태와 오류를 기록한 뒤 종료한다.
 
 `artifacts/ko-miracl-full/checkpoint.json`에는 단계 상태·설정·코드 해시·의존 단계의 출력 경로 및 SHA·

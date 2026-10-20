@@ -1,4 +1,4 @@
-# 검색 방식 Dev 비교
+# 검색 방식 Dev 비교 (RRF baseline)
 
 2026-10-08 프로젝트 기본 모델을 BGE-M3로 변경하고 네 검색 방식을 다시 측정했다.
 기존 Ko-MIRACL corpus와 검증된 BGE-M3 인덱스를 재사용했다.
@@ -9,13 +9,14 @@
 | TF-IDF | 0.576667 | 0.722667 | 0.495238 | 0.525324 | 17.720120 | 28.155618 |
 | BM25 | 0.587667 | 0.750667 | 0.597913 | 0.593881 | 1.704552 | 2.129968 |
 | Dense (BGE-M3) | 0.813667 | 0.958333 | 0.861024 | 0.854857 | 21.594187 | 30.962093 |
-| Hybrid (BM25 + BGE-M3) | 0.765333 | 0.927667 | 0.790571 | 0.784433 | 23.784875 | 33.535504 |
+| RRF (BM25 + BGE-M3) | 0.765333 | 0.927667 | 0.790571 | 0.784433 | 23.784875 | 33.535504 |
 
 Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / WSL2 / NVIDIA RTX 4060, embedding `cuda:0`, CPU FAISS. FP32, L2 정규화, batch size 1, Top-K 10, 전체 질의 warm-up 1회, 측정 5회. PyTorch intra/inter-op·FAISS·OMP/MKL/OpenBLAS 2 threads, tokenizer 병렬화 비활성화, TF32 비활성화.
 
-방식별 50개 질의와 latency 샘플 250개를 사용했다. Hybrid는 BM25 + BGE-M3,
+방식별 50개 질의와 latency 샘플 250개를 사용했다. 이 문서의 Hybrid는 BM25 + BGE-M3,
 RRF=60, 구성 검색기별 후보 Top-10이다. 준비 시간과 warm-up은 query latency에서 제외한다.
-Dense 3모델 Train/Dev 비교는 [DENSE_RETRIEVAL.md](DENSE_RETRIEVAL.md)에 모았다.
+Dense 3모델 비교는 [DENSE_RETRIEVAL.md](DENSE_RETRIEVAL.md),
+score fusion을 포함한 최종 비교는 [FINAL_RESULTS.md](FINAL_RESULTS.md)에 있다.
 
 ## 결과 해석
 

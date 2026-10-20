@@ -93,9 +93,5 @@ Dev는 재사용한 50개 질의이며 독립 테스트 표본이 부족하다.
 따라서 이 결과는 이번 프로젝트의 채택 판단이며 Gemma의 보편적 열세를 입증하지 않는다.
 Gemma의 BF16·큰 batch 효과는 측정하지 않았다.
 
-상세 근거: [최종 보고서](../artifacts/gemma-final-evaluation/report.ko.md),
-[비교 설정](../artifacts/gemma-final-evaluation/protocol.json),
-[Train 차원 실험](../artifacts/gemma-final-evaluation/dimension-train-sweep/report.ko.md),
-[KURE-v2 Train100 결과](../artifacts/kure-v2-train100/report.ko.md),
-[KURE-v2 비교 설정](../artifacts/kure-v2-train100/protocol.json).
-`artifacts/`는 Git에서 제외되어 근거 링크는 로컬 산출물이 있는 환경에서 열 수 있다.
+원시 보고서·설정의 보관 경로는 `artifacts/gemma-final-evaluation/`,
+`artifacts/kure-v2-train100/`이다. Git에는 포함하지 않는다.

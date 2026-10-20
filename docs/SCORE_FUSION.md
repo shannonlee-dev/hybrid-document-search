@@ -3,7 +3,7 @@
 `ScoreFusionRetriever`의 사용·재현 안내입니다. `fusion/score.py`는 전체 corpus의
 Dense·BM25 점수를 결합하며, 공통 `Retriever.search(query, top_k)`와 `SearchResult`
 계약을 유지합니다. 기본값은 **α=0.05, 벡터 보정 없음**입니다.
-현재 API/UI의 Hybrid 검색은 RRF를 사용합니다. Score fusion의 실험 결과와 채택 근거는
+API/UI의 Hybrid 검색에 사용합니다. 실험 결과와 채택 근거는
 [SCORE_FUSION_RESULTS.md](SCORE_FUSION_RESULTS.md)에 정리했습니다.
 
 ## 사용

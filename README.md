@@ -2,7 +2,6 @@
 
 3차 최종 검색 비교의 실행 절차는 [최종 평가](docs/FINAL_EVALUATION.md),
 데이터셋별 품질·latency 및 결과 해석은 [최종 결과](docs/FINAL_RESULTS.md)를 참고하세요.
-최종 평가의 score fusion 실행은 sparse/dense extras가 필요하며 API/UI 연결은 별도 통합 작업입니다.
 
 ## Project Overview
 
@@ -22,10 +21,10 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | Python / 환경 | Python >=3.12, uv (기본 개발 버전 3.12) |
 | Sparse | scikit-learn, bm25s |
 | Dense | sentence-transformers, faiss-cpu |
-| Hybrid / 평가 | 자체 RRF 및 표준 라이브러리 기반 지표 구현, ranx 평가 extra |
+| Hybrid / 평가 | Score fusion, RRF baseline, 자체 평가 지표, ranx 평가 extra |
 | Backend | FastAPI, Pydantic, Uvicorn |
 | Frontend | Streamlit |
-| 저장 | JSONL ([문서·질의·qrels 스키마](docs/SCHEMAS.md)); SQLite는 도입 검토 단계 |
+| 저장 | JSONL ([문서·질의·qrels 스키마](docs/SCHEMAS.md)), FAISS 인덱스 |
 | 개발 | pytest, Ruff, GitHub Actions |
 
 ## Project Structure
@@ -35,7 +34,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 | `app/` | FastAPI 엔드포인트 및 검색 서비스 초기화·라우팅 |
 | `retrievers/base.py` | 공통 `Retriever` 계약과 `SearchResult` |
 | `retrievers/{tfidf,bm25,dense}.py` | 각 검색 방식의 독립 구현 영역 |
-| `fusion/` | RRF와 Hybrid Retrieval |
+| `fusion/` | Score fusion과 RRF baseline |
 | `evaluation/` | 평가 지표와 benchmark |
 | `indexing/` | FAISS index 생성·검색·저장·로드 |
 | `data/` | 데이터 로딩과 전처리 코드 |
@@ -52,7 +51,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 선택적인 `title` / `snippet`을 담습니다. 호출자는 양수 `top_k`를 전달하며,
 결과는 좋은 순서로 최대 `top_k`개를 반환합니다. 서로 다른 검색 방식의 원점수는
 직접 비교하지 않습니다. Hybrid는 두 검색기를 주입받아 score fusion으로 결과를 결합합니다
-([상세](docs/HYBRID_RETRIEVAL.md)). RRF 구현은 evaluation baseline으로 유지합니다.
+([상세](docs/SCORE_FUSION.md)). RRF 구현은 evaluation baseline으로 유지합니다.
 BM25는 공통 corpus를 TF-IDF와 동일한 문자 n-gram 전처리로 인덱싱하며
 원점수 순으로 Top-K 결과를 반환합니다.
 
@@ -68,7 +67,6 @@ uv sync
 
 `uv sync`는 서비스와 개발 도구를 설치합니다. 검색 라이브러리는 무거운 의존성을
 기본 환경과 기본 CI job에서 제외하기 위해 역할별 extras로 정의했습니다.
-별도 `dense-tests` CI job은 Dense 의존성을 설치합니다.
 
 ```bash
 # Role 1: Sparse / Evaluation
@@ -97,7 +95,7 @@ uv run ruff check .
 uv run --extra sparse uvicorn app.api:app --reload
 
 # 검색 UI (API 실행 후 별도 터미널)
-uv run streamlit run frontend/app.py
+uv run --no-sync streamlit run frontend/app.py
 ```
 
 API 검색에는 준비된 corpus가 필요하며, 준비 상태는 `GET /search/methods`로 확인합니다.
@@ -109,10 +107,9 @@ UI는 FastAPI endpoint만 호출하며 API 주소는 `SEARCH_API_URL`(기본 `ht
 
 의존성 변경 시 `uv add` / `uv add --dev` / `uv add --optional dense` 등을 사용하고
 `pyproject.toml`과 `uv.lock`을 함께 커밋합니다. CI는 Python 3.12에서
-기본 lint·format·pytest 검사와 별도 `dense-tests` job을 실행합니다.
-Dense job은 `uv sync --locked --extra dense` 후 오프라인 테스트를 실행하며,
-외부 데이터셋이나 사전 학습 모델을 다운로드하지 않습니다.
-테스트에서는 fixture와 임시 로컬 BoW Sentence Transformer·FAISS 인덱스를 사용합니다.
+기본 lint·format·pytest 검사, Dense 테스트, Sparse/Dense 의존성을 포함한
+fusion·최종 평가 테스트를 실행합니다. 모델 다운로드 없이 fixture와
+로컬 임베딩·FAISS 인덱스를 사용합니다.
 검색 기능을 로컬에서 검증하려면 해당 extras를 포함해 실행합니다.
 
 ```bash
@@ -162,8 +159,9 @@ uv run --locked --extra sparse python -m scripts.evaluate \
 
 `results.json`, `summary.csv`, `queries.csv`, `latencies.csv`, `comparison.md`를 생성합니다.
 동일 환경에서 측정한 네 방식의 Dev 결과는 [BENCHMARK_RESULTS.md](docs/BENCHMARK_RESULTS.md)에 있습니다.
-동일 corpus의 저장된 Dense 인덱스가 있으면 `--methods tfidf bm25 dense hybrid --index <경로>`로
-공통 네 방식 비교를 실행할 수 있습니다. 이때 `uv run`에도 `--extra sparse --extra dense`를 지정합니다.
+동일 corpus의 저장된 Dense 인덱스가 있으면
+`--methods tfidf bm25 dense rrf score_fusion --index <경로>`로 비교할 수 있습니다.
+이때 `uv run`에도 `--extra sparse --extra dense`를 지정합니다.
 
 ## Dense MVP 실행
 
@@ -215,13 +213,3 @@ Issue를 만들고 각자 브랜치에서 작업한 뒤 연결된 PR로 협업�
 공통 계약 변경은 팀원과 먼저 맞추고, 각 검색 구현은 `retrievers/base.py`의 계약을 따릅니다.
 
 협업 규칙은 [CONTRIBUTING.md](CONTRIBUTING.md)를 참고하세요.
-
-## Status
-
-데이터 준비, TF-IDF/BM25/Dense 검색, Hybrid RRF, FAISS 저장·복원과 공통 평가를 제공합니다.
-10k corpus의 Dense 3모델 Train/Dev 비교와 네 방식 Dev 평가를 완료했습니다.
-이번 subset에서는 Dense(BGE-M3)가 Hybrid보다 우수했습니다.
-FastAPI는 `/health`, `/search/methods`, `POST /search`를 제공합니다.
-Dense/Hybrid는 공통 corpus와 일치하는 저장 인덱스 및 `DENSE_INDEX_PATH` 설정이 필요합니다.
-Streamlit UI는 API를 통해 단일 검색과 두 방식 비교를 제공합니다.
-실제 10k 데이터의 Dense/Hybrid API smoke test, 독립적인 전체 실험 반복과 Hybrid 개선은 후속 작업입니다.

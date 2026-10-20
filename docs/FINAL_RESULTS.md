@@ -21,7 +21,7 @@ query embedding·모델 초기화·HTTP를 포함한 시간으로 해석하지 �
 - 저장된 3,210개 방법별 질의 결과의 지표와 16,050개 latency 샘플의 mean/P95를
   표준 라이브러리로 독립 재계산하고 CSV와 대조했다. 모든 실행 소스 해시도 확인했다.
 - Dense/RRF/score fusion의 품질 지표는 #18의 두 데이터셋 보존 결과와 허용오차 1e-12 이내다.
-- 의존 구현을 포함한 전체 오프라인 테스트 769 passed; 기본 feature branch는
+- 당시 의존 구현을 포함한 전체 오프라인 테스트 769 passed; 기본 feature branch는
   678 passed / 4 skipped (#18이 필요한 실제 캐시·fusion fixture 테스트).
 - 두 소스 구성의 Ruff lint·format을 확인했다. 모델 가중치를 다운로드하거나 GPU 추론을 재실행하지 않았다.
 
@@ -98,6 +98,6 @@ CPU 캐시 비교와 위 GPU 표는 서로 다른 질의 반복·warm-up 조건�
 
 MIRACL 결과는 관련 문서를 포함한 10k subset의 성능이며 전체 공식 MIRACL 성능이 아니다.
 과거 실험에 노출된 dev 데이터의 확인 평가이므로 신규 독립 검증·일반화·통계적 우월성을 주장하지 않는다.
-실제 모델을 통한 Dense/최종 Hybrid HTTP·UI E2E는 서비스 통합 담당자의 별도 검증이다.
+서비스의 검증 범위는 [SEARCH_SERVICE.md](SEARCH_SERVICE.md)를 참조한다.
 
-재현 명령, 지표 규칙, 병합 순서와 로컬 산출물 형식은 [FINAL_EVALUATION.md](FINAL_EVALUATION.md)를 따른다.
+재현 명령, 지표 규칙과 로컬 산출물 형식은 [FINAL_EVALUATION.md](FINAL_EVALUATION.md)를 따른다.

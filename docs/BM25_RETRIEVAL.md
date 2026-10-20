@@ -35,7 +35,7 @@ score(token, document) = idf * tf / (tf + k1 * (1 - b + b * length / avg_length)
 질의에 등장하는 토큰의 점수를 합산합니다. 같은 질의 토큰이 반복되면 반복 횟수만큼 합산됩니다.
 라이브러리 원점수를 그대로 반환하므로 `(k1 + 1)` 상수를 곱하는 다른 BM25 구현과
 점수 크기가 다를 수 있습니다. TF-IDF 또는 Dense 점수와 직접 비교하거나 더하지 않습니다.
-Hybrid는 기존 RRF가 순위를 결합하도록 합니다.
+서비스 Hybrid의 결합 규칙은 [SCORE_FUSION.md](SCORE_FUSION.md)를 참조하세요.
 
 기본 설정을 baseline으로 평가했으며, 파라미터를 추가 튜닝하지 않았습니다.
 설정 변경은 train 데이터에서 검토하고 dev 평가 전에 고정합니다.
@@ -89,7 +89,7 @@ CLI를 실행할 때마다 corpus를 읽고 메모리 인덱스를 생성합니�
 - Dense 모델 선정은 Train nDCG@10을 우선하고, MRR@10·Recall@10과 latency·구축 비용을 함께 검토합니다.
 - Recall@100은 이번 공통 비교에 포함하지 않습니다.
 - 기존 평가 계획대로 모델·파라미터 선택은 train에서 진행하고, 고정된 dev query/qrels로 최종 성능을 비교합니다.
-- Metric cutoff와 Hybrid의 검색 후보 수는 별도 설정입니다. 후보 수와 측정 조건을 실행 결과에 기록합니다.
+- RRF는 각 검색기의 Top-10, score fusion은 전체 corpus를 후보로 사용합니다.
 
 ## 검증
 

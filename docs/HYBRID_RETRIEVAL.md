@@ -8,11 +8,6 @@
 이 문서의 RRF 검색기(`fusion/rrf.py`, `fusion/hybrid.py`)는 코드와 테스트 모두 그대로 유지되며,
 공통 평가(`scripts.evaluate`/`scripts.evaluate_final`)에서 `rrf` 방식으로 계속 비교됩니다.
 
-이 문서는 `fusion/rrf.py`와 `fusion/hybrid.py`의 Hybrid Retrieval 기반을 설명합니다.
-BM25 + BGE-M3를 연결한 10k corpus의 Dev 평가를 완료했습니다.
-이번 subset에서는 Dense 단독이 Hybrid보다 우수했으며, RRF 기본값은 튜닝하지 않았습니다.
-측정값과 조건은 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)를 참조하세요.
-
 ## 왜 RRF인가
 
 Sparse(TF-IDF, BM25)와 Dense(cosine/IP)의 원점수는 서로 범위와 분포가 다릅니다.
@@ -123,26 +118,7 @@ uv run --locked pytest tests/test_rrf.py tests/test_hybrid.py tests/test_api_sch
 이 테스트는 RRF 공식, 중복 처리, 정렬, 검증, Hybrid 호출 흐름, schema 계약을 확인합니다.
 검색 품질은 측정하지 않습니다.
 
-## API schema와 서비스
-
-`app/schemas.py`의 요청/응답 모델을 FastAPI `POST /search`에서 사용합니다.
-
-- `RetrievalMethod`: `tfidf`, `bm25`, `dense`, `hybrid`
-- `SearchRequest`: `query`(공백만 있으면 거부), `top_k`(양의 정수, 기본 10), `method`(기본 `hybrid`)
-- `SearchHit`: `document_id`, `rank`, `score`, 선택 `title`/`snippet`. `SearchResult`와 같은 필드입니다.
-- `SearchResponse`: `query`, `method`, `results`
-
-`app/service.py`는 검색 방식을 선택하며, Hybrid는 BM25와 Dense가 모두 준비된 경우에만 사용합니다.
-서비스가 실제로 생성하는 것은 위 `HybridRetriever`(RRF)가 아니라 `ScoreFusionRetriever`입니다.
-설정과 엔드포인트는 [SEARCH_SERVICE.md](SEARCH_SERVICE.md)를 참조하세요.
-
-## 후속 작업
-
-- 실제 10k corpus와 BGE-M3 인덱스를 연결한 Dense/Hybrid API smoke test
-- Streamlit UI 검색 연동
-- 필요하면 가중치, 후보 수 보정(oversampling), 점수 정규화를 별도 실험으로 검토
-
-### 공통 인덱싱 텍스트
+## 공통 인덱싱 텍스트
 
 Sparse와 Dense는 `data/preprocess.py`의 `build_index_text`와 공통 `Document`를 사용합니다.
 제목이 있으면 `title + "\n" + text`, 없으면 `text`를 인덱싱합니다.
