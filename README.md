@@ -21,6 +21,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 - [아키텍처](docs/ARCHITECTURE.md): 구성 요소와 데이터·검색 흐름
 - [운영 흐름](docs/SEARCH_SERVICE.md#운영-흐름): 데이터 준비부터 서비스 실행·상태 확인까지
 - [검증 기록](docs/validation/2026-10-20/REPORT.md): 테스트·전체 평가·데모 실행 로그와 CI 결과
+- [팀원별 기여](docs/CONTRIBUTIONS.md): 담당 작업, 대표 커밋, Git 집계 증빙
 
 ## Retrieval Methods
 
