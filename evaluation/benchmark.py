@@ -30,6 +30,7 @@ from fusion.rrf import DEFAULT_RANK_CONSTANT
 from retrievers.base import Retriever, SearchResult
 
 METHODS = ("tfidf", "bm25", "dense", "hybrid")
+EVALUATION_METHODS = (*METHODS, "rrf", "score_fusion")
 SUMMARY_FIELDS = (
     "method",
     *METRIC_NAMES,
@@ -193,15 +194,20 @@ def run_benchmark(
         return retriever
 
     for method in methods:
-        if method == "hybrid":
+        if method in {"hybrid", "rrf", "score_fusion"}:
             from fusion.hybrid import HybridRetriever
 
             sparse = _prepare("bm25")
             dense = _prepare("dense")
             started = perf_counter()
-            retriever = HybridRetriever(
-                sparse, dense, rank_constant=DEFAULT_RANK_CONSTANT
-            )
+            if method == "score_fusion":
+                from fusion.score import DEFAULT_BM25_WEIGHT, ScoreFusionRetriever
+
+                retriever = ScoreFusionRetriever(sparse, dense)
+            else:
+                retriever = HybridRetriever(
+                    sparse, dense, rank_constant=DEFAULT_RANK_CONSTANT
+                )
             setup[method] = setup["bm25"] + setup["dense"] + perf_counter() - started
             config = {
                 "sparse": "bm25",
@@ -209,6 +215,15 @@ def run_benchmark(
                 "rank_constant": DEFAULT_RANK_CONSTANT,
                 "candidate_top_k_per_component": EVALUATION_TOP_K,
             }
+            if method == "score_fusion":
+                config = {
+                    "sparse": "bm25",
+                    "dense": configs["dense"],
+                    "bm25_weight": DEFAULT_BM25_WEIGHT,
+                    "normalization": "per-query corpus maximum",
+                    "candidate_scope": "full corpus",
+                    "vector_correction": False,
+                }
         else:
             retriever = _prepare(method)
             config = configs[method]
@@ -305,6 +320,8 @@ def write_report(report: dict, directory: str | Path) -> None:
         table = [
             "# Retrieval Benchmark",
             "",
+            f"Dataset: {report['dataset'].get('dataset_id', 'unspecified')}",
+            "",
             f"Split: {report['dataset']['split']} · corpus: {report['dataset']['corpus_size']} · queries: {report['dataset']['query_count']} · Top-K: 10",
             "",
             "| Method | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |",
@@ -318,9 +335,13 @@ def write_report(report: dict, directory: str | Path) -> None:
         table.extend(
             [
                 "",
-                "Query-time latency만 비교합니다. 준비 시간과 warm-up은 포함하지 않습니다.",
+                "측정 범위: "
+                + report.get("conditions", {}).get(
+                    "latency_scope", "원본 측정 조건 참고"
+                ),
+                "준비 시간과 warm-up은 latency에 포함하지 않습니다.",
                 "Recall@100은 참고용이며 이 공통 Top-10 결과표에 포함하지 않습니다.",
-                "10k subset은 전체 MIRACL 공식 benchmark가 아닙니다.",
+                "데이터셋별 고정 corpus의 결과입니다. MIRACL 10k subset은 전체 MIRACL 공식 benchmark가 아닙니다.",
                 "",
             ]
         )
@@ -402,12 +423,15 @@ def _validate_methods(methods, dense_index):
     if (
         not methods
         or len(set(methods)) != len(methods)
-        or any(method not in METHODS for method in methods)
+        or any(method not in EVALUATION_METHODS for method in methods)
     ):
         raise ValueError(
-            "methods는 중복 없는 tfidf / bm25 / dense / hybrid 목록이어야 합니다."
+            "methods는 중복 없는 tfidf / bm25 / dense / hybrid / rrf / score_fusion 목록이어야 합니다."
         )
-    if set(methods) & {"dense", "hybrid"} and dense_index is None:
+    if (
+        set(methods) & {"dense", "hybrid", "rrf", "score_fusion"}
+        and dense_index is None
+    ):
         raise ValueError(
             "Dense 또는 Hybrid 평가에는 --index로 공통 corpus의 저장된 Dense 인덱스를 지정해야 합니다."
         )
@@ -458,6 +482,7 @@ def _code_provenance():
         "indexing/faiss_index.py",
         "fusion/hybrid.py",
         "fusion/rrf.py",
+        "fusion/score.py",
         "data/loader.py",
         "data/preprocess.py",
     )

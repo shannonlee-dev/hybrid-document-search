@@ -86,3 +86,11 @@ Dense/Hybrid 평가의 `--threads 2 --device cuda:0`은 엄격한 revision·FP32
 측정하지 않았다. GPU·OS·시스템 부하가 다른 latency와 구축 시간은 같은 조건의 수치로 비교할 수 없다.
 
 [데이터](DATASET.md) · [Dense 비교](DENSE_RETRIEVAL.md) · [네 방식 결과](BENCHMARK_RESULTS.md)
+
+## 3차 최종 비교
+
+score fusion 구현을 연결한 최종 평가와 데이터셋별 결과는
+[FINAL_EVALUATION.md](FINAL_EVALUATION.md), [FINAL_RESULTS.md](FINAL_RESULTS.md)를 참고한다.
+기존 scripts.evaluate는 hybrid=RRF를 유지하며 명시적인 rrf / score_fusion 비교도 지원한다.
+scripts.evaluate_final은 고정 캐시의 MIRACL Dev50과 StrategyQA dev 592질의를 각각 평가한다.
+캐시 벡터 CPU 시간과 query embedding 포함 시간은 서로 다른 측정 범위로 분리한다.
