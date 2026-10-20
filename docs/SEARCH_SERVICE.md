@@ -1,5 +1,18 @@
 # 검색 서비스와 FastAPI 연동
 
+## 운영 흐름
+
+1. **환경 준비**: [실행](#실행)의 명령으로 Sparse·Dense 의존성을 설치합니다.
+2. **데이터 준비**: [데이터 준비 절차](DATA_PREPARATION.md)에 따라 공통 corpus를 만듭니다.
+3. **인덱스 생성**: Dense·Hybrid를 쓰려면 [필요한 artifact](#필요한-artifact)의 명령으로 인덱스를 만듭니다.
+4. **API 실행**: corpus·인덱스 경로를 [설정](#설정)하고 서버를 시작합니다.
+5. **준비 상태 확인**: `GET /search/methods`에서 사용할 방식의 `available` 값을 확인합니다.
+6. **UI 실행**: 별도 터미널에서 `uv run --no-sync streamlit run frontend/app.py`를 실행합니다.
+
+UI의 API 주소는 `SEARCH_API_URL`로 설정하며 기본값은 `http://127.0.0.1:8000`입니다.
+검색이 불가능하면 [시작 실패 정책](#시작-실패-정책)에 따라 원인을 해결한 뒤 서버를 재시작합니다.
+`GET /health`는 프로세스 생존만 확인합니다. 평가 재현은 [최종 평가](FINAL_EVALUATION.md)를 참고하세요.
+
 ## 구조
 
 ```text
@@ -195,7 +208,10 @@ HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 uv run --locked --extra sparse --extra d
 
 ## 실제 데이터 스모크 테스트
 
-실제 데이터와 모델로 확인하는 절차입니다. 실행 결과는 아직 보고하지 않았습니다.
+실제 데이터와 모델로 확인하는 절차입니다.
+MIRACL 1만 문서·저장 벡터와 실제 BGE-M3 질의 임베딩으로 확인한 API/UI 실행 결과는
+[2026-10-20 검증 기록](validation/2026-10-20/REPORT.md#데모)에 있습니다.
+해당 실행은 검증된 문서 벡터를 재사용했으며, 아래 문서 임베딩 생성 과정은 재실행하지 않았습니다.
 
 ```bash
 uv run --extra sparse --extra dense python -m scripts.prepare_dataset --download
@@ -208,5 +224,5 @@ curl -X POST localhost:8000/search -H "Content-Type: application/json" \
 
 ## 남은 제한
 
-- 실제 10,000 passage Ko-MIRACL과 BGE-M3를 사용하는 API/UI 스모크 테스트 결과는 없습니다. 준비된 데이터와 인덱스는 Git에 포함하지 않습니다.
+- UI 검증은 실제 API에 연결한 AppTest 기준이며 브라우저 수동 검증은 포함하지 않습니다. 준비된 데이터와 인덱스는 Git에 포함하지 않습니다.
 - 인증, 요청 제한, 캐시는 없습니다. 이번 단계의 범위가 아닙니다.

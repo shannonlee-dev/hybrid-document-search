@@ -1,0 +1,49 @@
+
+UTC: 2026-10-20T11:45:53.202086+00:00
+$ gh run list --commit eca59c63a30d8479da268a797cf599cd46824bf4 --json databaseId,headSha,name,status,conclusion,url
+[]
+
+Exit code: 0
+
+UTC: 2026-10-20T11:45:53.616556+00:00
+$ gh run view 39402744638 --json headSha,status,conclusion,jobs,url
+{"conclusion":"success","headSha":"9bfb4057a8503b6df9079fa78bbdbe15db650ae0","jobs":[{"completedAt":"2026-10-20T09:43:42Z","conclusion":"success","databaseId":118561202018,"name":"checks","startedAt":"2026-10-20T09:43:19Z","status":"completed","steps":[{"conclusion":"success","name":"Set up job","number":1,"status":"completed"},{"conclusion":"success","name":"Run actions/checkout@v7.0.1","number":2,"status":"completed"},{"conclusion":"success","name":"Run astral-sh/setup-uv@v10.2.0","number":3,"status":"completed"},{"conclusion":"success","name":"Run uv python install","number":4,"status":"completed"},{"conclusion":"success","name":"Run uv sync --locked","number":5,"status":"completed"},{"conclusion":"success","name":"Run uv run --locked ruff check .","number":6,"status":"completed"},{"conclusion":"success","name":"Run uv run --locked ruff format --check .","number":7,"status":"completed"},{"conclusion":"success","name":"Run uv run --locked pytest","number":8,"status":"completed"},{"conclusion":"success","name":"Post Run astral-sh/setup-uv@v10.2.0","number":15,"status":"completed"},{"conclusion":"success","name":"Post Run actions/checkout@v7.0.1","number":16,"status":"completed"},{"conclusion":"success","name":"Complete job","number":17,"status":"completed"}],"url":"https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39402744638/job/118561202018"},{"completedAt":"2026-10-20T09:44:37Z","conclusion":"success","databaseId":118561202499,"name":"dense-tests","startedAt":"2026-10-20T09:43:20Z","status":"completed","steps":[{"conclusion":"success","name":"Set up job","number":1,"status":"completed"},{"conclusion":"success","name":"Run actions/checkout@v7.0.1","number":2,"status":"completed"},{"conclusion":"success","name":"Run astral-sh/setup-uv@v10.2.0","number":3,"status":"completed"},{"conclusion":"success","name":"Run uv python install","number":4,"status":"completed"},{"conclusion":"success","name":"Run uv sync --locked --extra dense","number":5,"status":"completed"},{"conclusion":"success","name":"Run uv run --locked --extra dense pytest tests/dense","number":6,"status":"completed"},{"conclusion":"success","name":"Post Run astral-sh/setup-uv@v10.2.0","number":11,"status":"completed"},{"conclusion":"success","name":"Post Run actions/checkout@v7.0.1","number":12,"status":"completed"},{"conclusion":"success","name":"Complete job","number":13,"status":"completed"}],"url":"https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39402744638/job/118561202499"},{"completedAt":"2026-10-20T09:43:53Z","conclusion":"success","databaseId":118561202660,"name":"fusion-tests","startedAt":"2026-10-20T09:43:19Z","status":"completed","steps":[{"conclusion":"success","name":"Set up job","number":1,"status":"completed"},{"conclusion":"success","name":"Run actions/checkout@v7.0.1","number":2,"status":"completed"},{"conclusion":"success","name":"Run astral-sh/setup-uv@v10.2.0","number":3,"status":"completed"},{"conclusion":"success","name":"Run uv python install","number":4,"status":"completed"},{"conclusion":"success","name":"Run uv sync --locked --extra sparse --extra dense","number":5,"status":"completed"},{"conclusion":"success","name":"Run uv run --locked --extra sparse --extra dense python -c \"import numpy, faiss, bm25s, sklearn\"","number":6,"status":"completed"},{"conclusion":"success","name":"Run uv run --locked --extra sparse --extra dense pytest tests/fusion -q","number":7,"status":"completed"},{"conclusion":"success","name":"Post Run astral-sh/setup-uv@v10.2.0","number":13,"status":"completed"},{"conclusion":"success","name":"Post Run actions/checkout@v7.0.1","number":14,"status":"completed"},{"conclusion":"success","name":"Complete job","number":15,"status":"completed"}],"url":"https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39402744638/job/118561202660"}],"status":"completed","url":"https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39402744638"}
+
+Exit code: 0
+
+UTC: 2026-10-20T11:45:55.003696+00:00
+$ gh run view 39402744657 --json headSha,status,conclusion,jobs,url
+{"conclusion":"success","headSha":"9bfb4057a8503b6df9079fa78bbdbe15db650ae0","jobs":[{"completedAt":"2026-10-20T09:43:54Z","conclusion":"success","databaseId":118561202189,"name":"final-evaluation-tests","startedAt":"2026-10-20T09:43:19Z","status":"completed","steps":[{"conclusion":"success","name":"Set up job","number":1,"status":"completed"},{"conclusion":"success","name":"Run actions/checkout@v7.0.1","number":2,"status":"completed"},{"conclusion":"success","name":"Run astral-sh/setup-uv@v10.2.0","number":3,"status":"completed"},{"conclusion":"success","name":"Run uv python install","number":4,"status":"completed"},{"conclusion":"success","name":"Run uv sync --locked --extra sparse --extra dense","number":5,"status":"completed"},{"conclusion":"success","name":"Run uv run --no-sync pytest tests/test_final_evaluation.py tests/test_benchmark.py tests/test_evaluate_cli.py","number":6,"status":"completed"},{"conclusion":"success","name":"Post Run astral-sh/setup-uv@v10.2.0","number":11,"status":"completed"},{"conclusion":"success","name":"Post Run actions/checkout@v7.0.1","number":12,"status":"completed"},{"conclusion":"success","name":"Complete job","number":13,"status":"completed"}],"url":"https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39402744657/job/118561202189"}],"status":"completed","url":"https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39402744657"}
+
+Exit code: 0
+
+UTC: 2026-10-20T11:45:56.335041+00:00
+$ git diff --stat 9bfb4057a8503b6df9079fa78bbdbe15db650ae0 HEAD
+ README.md                                  |  40 +++----
+ docs/BENCHMARK_RESULTS.md                  | 182 ++++++++++++++++++-----------
+ docs/BM25_RETRIEVAL.md                     |   8 +-
+ docs/DATA_PREPARATION.md                   |   2 +-
+ docs/DENSE_RETRIEVAL.md                    |  50 +++++++-
+ docs/EMBEDDING_BONUS.md                    | 101 ----------------
+ docs/EVALUATION.md                         |   8 +-
+ docs/FINAL_EVALUATION.md                   |  25 ++--
+ docs/FINAL_RESULTS.md                      | 103 ----------------
+ docs/HYBRID_RETRIEVAL.md                   |  26 +----
+ docs/SCORE_FUSION.md                       | 146 ++---------------------
+ docs/SCORE_FUSION_RESULTS.md               | 125 ++++++++++++++++++--
+ docs/SEARCH_SERVICE.md                     |  34 +++---
+ docs/SPARSE_MVP.md                         |   2 +-
+ docs/benchmarks/2026-10-08-rrf-baseline.md |  76 ++++++++++++
+ 15 files changed, 416 insertions(+), 512 deletions(-)
+
+Exit code: 0
+
+UTC: 2026-10-20T11:45:56.345037+00:00
+$ gh run view 39402744638 --log
+
+Exit code: 0
+
+UTC: 2026-10-20T11:45:59.140619+00:00
+$ gh run view 39402744657 --log
+
+Exit code: 0

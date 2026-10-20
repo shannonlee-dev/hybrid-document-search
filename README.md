@@ -8,6 +8,13 @@
 Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로 통합하는
 3인 NLP 문서 검색 프로젝트입니다. Recall@5/10, MRR@10, nDCG@10과 query latency로 검색 방식을 비교합니다.
 
+## Documentation
+
+- [요구사항](docs/REQUIREMENTS.md): 기능, 확인 기준, 프로젝트 범위
+- [아키텍처](docs/ARCHITECTURE.md): 구성 요소와 데이터·검색 흐름
+- [운영 흐름](docs/SEARCH_SERVICE.md#운영-흐름): 데이터 준비부터 서비스 실행·상태 확인까지
+- [검증 기록](docs/validation/2026-10-20/REPORT.md): 테스트·전체 평가·데모 실행 로그와 CI 결과
+
 ## Retrieval Methods
 
 - TF-IDF / BM25: 문자 n-gram 기반 Sparse 검색
