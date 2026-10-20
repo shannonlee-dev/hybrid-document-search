@@ -203,7 +203,7 @@ def test_real_hybrid_combines_real_bm25_and_real_dense_through_http(
     monkeypatch, real_dense
 ):
     # Both Role A's BM25 (PR #13) and Role B's Dense (PR #10) are merged, so Hybrid
-    # should now wire real components together through the existing RRF, with no
+    # should now wire real components together through score fusion, with no
     # TF-IDF fallback and no synthetic placeholder results.
     monkeypatch.setenv("SEARCH_CORPUS_PATH", str(FIXTURE_CORPUS))
     monkeypatch.setenv("DENSE_INDEX_PATH", str(real_dense))
