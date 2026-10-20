@@ -80,7 +80,7 @@ BM25 검색기는 `bm25` subcommand가 선택된 경우에만 불러옵니다. �
 CLI를 실행할 때마다 corpus를 읽고 메모리 인덱스를 생성합니다.
 인덱스 파일 저장·로드는 제공하지 않습니다. 공통 benchmark에서는 검색기를 한 번 준비해 재사용합니다.
 평가 지표, 실제 데이터 benchmark 실행과 JSON/CSV 저장 방법은 [EVALUATION.md](EVALUATION.md)에 정리했습니다.
-네 방식의 Dev 비교 결과는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)를 참조하세요.
+네 방식의 Dev 비교 결과는 [2026-10-08 과거 비교](benchmarks/2026-10-08-rrf-baseline.md)를 참조하세요.
 
 ## 공통 평가 기준
 
@@ -109,7 +109,7 @@ fixture 및 smoke test는 실제 검색 품질 benchmark를 대신하지 않습�
 2026-10-07, Python 3.12.15 / bm25s 0.3.12에서 10,000개 준비 corpus의 `제주` Top-3 검색과
 반복 검색 일치를 확인했습니다. 반환 ID는 `1987050#0`, `736025#1`, `1664892#1`이며,
 Python과 CLI 결과의 공통 ID·metadata·순위·점수를 대조했습니다.
-검색 품질과 latency는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)에 있습니다.
+검색 품질과 latency는 [2026-10-08 과거 비교](benchmarks/2026-10-08-rrf-baseline.md)에 있습니다.
 
 ## 참고 자료
 

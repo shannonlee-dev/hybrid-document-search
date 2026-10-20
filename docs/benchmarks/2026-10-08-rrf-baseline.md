@@ -1,0 +1,76 @@
+# 2026-10-08 검색 방식 Dev 비교 기록 (RRF baseline)
+
+> 이 문서는 2026-10-08 실험의 보존 기록입니다. 현재 프로젝트의 최종 비교는
+> [최신 평가 결과](../BENCHMARK_RESULTS.md)를 참고하세요.
+> 두 실험은 시간 측정 범위와 환경이 달라 latency를 직접 비교할 수 없습니다.
+
+2026-10-08 프로젝트 기본 모델을 BGE-M3로 변경하고 네 검색 방식을 다시 측정했다.
+기존 Ko-MIRACL corpus와 검증된 BGE-M3 인덱스를 재사용했다.
+3모델 Train/Dev 비교와 인덱스 구축·복원 기록은 최초 전체 실험의 측정값을 유지한다.
+
+| 모델 / 방식 | Recall@5 | Recall@10 | MRR@10 | nDCG@10 | Mean ms | P95 ms |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| TF-IDF | 0.576667 | 0.722667 | 0.495238 | 0.525324 | 17.720120 | 28.155618 |
+| BM25 | 0.587667 | 0.750667 | 0.597913 | 0.593881 | 1.704552 | 2.129968 |
+| Dense (BGE-M3) | 0.813667 | 0.958333 | 0.861024 | 0.854857 | 21.594187 | 30.962093 |
+| RRF (BM25 + BGE-M3) | 0.765333 | 0.927667 | 0.790571 | 0.784433 | 23.784875 | 33.535504 |
+
+Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / WSL2 / NVIDIA RTX 4060, embedding `cuda:0`, CPU FAISS. FP32, L2 정규화, batch size 1, Top-K 10, 전체 질의 warm-up 1회, 측정 5회. PyTorch intra/inter-op·FAISS·OMP/MKL/OpenBLAS 2 threads, tokenizer 병렬화 비활성화, TF32 비활성화.
+
+방식별 50개 질의와 latency 샘플 250개를 사용했다. 이 문서의 Hybrid는 BM25 + BGE-M3,
+RRF=60, 구성 검색기별 후보 Top-10이다. 준비 시간과 warm-up은 query latency에서 제외한다.
+Dense 3모델 비교는 [DENSE_RETRIEVAL.md](../DENSE_RETRIEVAL.md),
+score fusion을 포함한 최종 비교는 [최신 평가 결과](../BENCHMARK_RESULTS.md)에 있다.
+
+## 결과 해석
+
+Dev nDCG@10 최고 방식은 Dense (BGE-M3)이다.
+Dense 단독과 Hybrid의 차이를 실제 측정 그대로 보고하며 Hybrid 개선을 전제하지 않는다.
+기본 모델은 `config/dense_models.toml`의 `default_model = "bge"`로 지정하고
+Train/Dev 점수로 자동 선택하지 않는다. 검색 알고리즘과 평가 조건은 유지했다.
+
+## 원문·qrels 대조 사례
+
+Dense와 Hybrid의 질의별 nDCG 차이가 가장 큰 양쪽 사례를 사후에 골랐다.
+대표성을 통계적으로 보장하는 표본이 아니며 개별 검색 동작을 설명하기 위한 사례다.
+
+### 1391: 발해는 언제 건국되나요?
+
+- Dense (BGE-M3): 관련 문서 순위 1; 1위 `122372#0`, 제목 ‘발해’.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 6; 1위 `122372#12`, 제목 ‘발해’.
+
+### 606: 조선에서 가장 어린 왕은 누구인가?
+
+- Dense (BGE-M3): 관련 문서 순위 4; 1위 `11027#0`, 제목 ‘조선 현종’.
+- Hybrid (BM25 + BGE-M3): 관련 문서 순위 1; 1위 `867281#3`, 제목 ‘빈 (지위)’.
+
+각 결과의 문서 ID를 corpus 및 qrels와 대조했다.
+
+## 출처와 재현
+
+위 표는 2026-10-08 측정 기록이다. 당시 네 방식 재평가의 원본 경로는
+`artifacts/ko-miracl-bge-default/retrieval/`이며, 기존 데이터·인덱스·3모델 측정 코드의
+commit은 `5a6a60024d602b23312eafdb3b3c371d282ddcc9`이다.
+
+현재 코드의 전체 실험은 다음 명령으로 실행·재개한다.
+
+```bash
+uv run --locked --extra sparse --extra dense python -m scripts.run_experiment
+```
+
+새 실행의 네 방식 Dev 결과는 `artifacts/ko-miracl-full/retrieval/evaluation/`에 생성된다.
+
+- `results.json`: 질의별 검색 결과·지표·latency 샘플, 측정 조건·환경·코드 출처
+- `summary.csv`: 방식별 품질 지표와 latency 집계
+- `queries.csv`: 질의별 지표
+- `latencies.csv`: 질의별 반복 측정 샘플
+- `comparison.md`: 방식별 비교표
+
+실행 명령은 `artifacts/ko-miracl-full/retrieval/command.json`, 사전 점검 환경은
+`artifacts/ko-miracl-full/preflight.json`, 단계 상태·입출력 해시는
+`artifacts/ko-miracl-full/checkpoint.json`에 기록한다.
+판정값은 `artifacts/ko-miracl-full/data/prepared/qrels_dev.jsonl`에서 확인한다.
+실험 결과, 모델 인덱스, 로그, checkpoint는 로컬 `artifacts/`에 생성하며 Git에 포함하지 않는다.
+
+10k subset의 순차 실행 결과로, 전체 MIRACL 성능이나 API 응답 시간을 뜻하지 않는다.
+독립적인 전체 실험 반복은 수행하지 않았다. 측정 범위와 한계는 [EVALUATION.md](../EVALUATION.md)를 참조한다.

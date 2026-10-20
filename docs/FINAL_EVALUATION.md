@@ -108,4 +108,4 @@ git diff --check
 ```
 
 최종 수치·실행 환경·기존 결과와의 대조 및 결과 해석은
-[FINAL_RESULTS.md](FINAL_RESULTS.md)에 정리한다.
+[최신 평가 결과](BENCHMARK_RESULTS.md)에 정리한다.

@@ -83,7 +83,7 @@ uv run --extra sparse ruff format --check .
 원본·출력 체크섬, 실제 데이터 수, 질의 선택과 모든 선택 질의의 판정 보존, 참조 및 원문 보존을 검증했습니다.
 수량과 구성은 [DATASET.md](DATASET.md)의 실데이터 검증 결과를 참조합니다.
 데이터 준비 검증과 검색 품질 평가는 별개입니다. subset 검색 결과는
-[BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)를 참조하세요.
+[2026-10-08 과거 비교](benchmarks/2026-10-08-rrf-baseline.md)를 참조하세요.
 
 `load_documents`는 원본 `_id` 형식을, `load_prepared_documents`는 준비 결과의 `document_id` 형식을 읽습니다.
 준비된 corpus는 [SPARSE_MVP.md](SPARSE_MVP.md)의 TF-IDF 검색 CLI에서 사용할 수 있습니다.

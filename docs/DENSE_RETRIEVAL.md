@@ -43,7 +43,7 @@ E5에는 `query: ` / `passage: ` prefix를 적용하고 BGE/KURE는 빈 prefix�
 모델별 50개 질의, latency 샘플 250개다. 위 측정에서 Dev nDCG@10 최고 모델은 BGE-M3이다.
 Dev 결과로 모델이나 설정을 튜닝하지 않았다.
 이 표는 최초 전체 실험의 3모델 비교다. 기본 모델 변경 후 네 방식의 재평가와 latency는
-[검색 방식 비교](BENCHMARK_RESULTS.md)에 별도로 기록했다.
+[2026-10-08 검색 방식 비교 기록](benchmarks/2026-10-08-rrf-baseline.md)에 별도로 기록했다.
 
 현재 실행의 모델별 평가 결과는 `artifacts/ko-miracl-full/dev-<alias>/evaluation/`에 생성된다.
 `<alias>`는 `e5`, `bge`, `kure`이며, 각 디렉터리의 `results.json`에는 질의별 검색 결과·지표·

@@ -1,7 +1,7 @@
 # Hybrid Document Search
 
 3차 최종 검색 비교의 실행 절차는 [최종 평가](docs/FINAL_EVALUATION.md),
-데이터셋별 품질·latency 및 결과 해석은 [최종 결과](docs/FINAL_RESULTS.md)를 참고하세요.
+데이터셋별 품질·latency 및 결과 해석은 [최신 평가 결과](docs/BENCHMARK_RESULTS.md)를 참고하세요.
 
 ## Project Overview
 
@@ -158,7 +158,9 @@ uv run --locked --extra sparse python -m scripts.evaluate \
 ```
 
 `results.json`, `summary.csv`, `queries.csv`, `latencies.csv`, `comparison.md`를 생성합니다.
-동일 환경에서 측정한 네 방식의 Dev 결과는 [BENCHMARK_RESULTS.md](docs/BENCHMARK_RESULTS.md)에 있습니다.
+두 데이터셋의 다섯 방식 비교는 [최신 평가 결과](docs/BENCHMARK_RESULTS.md)를 참조하세요.
+기존 네 방식의 query embedding 포함 측정은 [2026-10-08 과거 비교](docs/benchmarks/2026-10-08-rrf-baseline.md)에 보존했습니다.
+최신 결과의 주 표는 캐시 벡터 기반 CPU 시간이므로 과거 측정 시간과 직접 비교하지 않습니다.
 동일 corpus의 저장된 Dense 인덱스가 있으면
 `--methods tfidf bm25 dense rrf score_fusion --index <경로>`로 비교할 수 있습니다.
 이때 `uv run`에도 `--extra sparse --extra dense`를 지정합니다.
