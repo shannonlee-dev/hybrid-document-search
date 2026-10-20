@@ -17,7 +17,7 @@ SearchService (app/service.py)
       +-- tfidf  -> TfidfRetriever      (sparse extra 필요)
       +-- bm25   -> BM25Retriever       (sparse extra 필요)
       +-- dense  -> DenseRetriever      (dense extra + 저장된 FAISS 인덱스 필요)
-      +-- hybrid -> HybridRetriever     (BM25 + Dense + RRF, 둘 다 있어야 함)
+      +-- hybrid -> ScoreFusionRetriever (BM25 + Dense score fusion, 둘 다 있어야 함)
       |
       v
 SearchResult -> SearchHit -> SearchResponse
@@ -25,14 +25,21 @@ SearchResult -> SearchHit -> SearchResponse
 
 TF-IDF, BM25, Dense 모두 실제 구현이 `main`에 있습니다 (PR #6, #13, #10). `tfidf`/`bm25`는 corpus만 있으면 바로 쓸 수 있고, `dense`/`hybrid`는 추가로 저장된 FAISS 인덱스가 필요합니다.
 
-서비스는 검색 알고리즘이나 RRF를 구현하지 않습니다. 요청을 선택된 retriever로 보내고 결과를 그대로 반환합니다.
+`hybrid`의 내부 구현은 PR #18에서 merge된 `fusion.score.ScoreFusionRetriever`
+(Dense score에 query별 corpus 최대로 정규화한 BM25 score를 `DEFAULT_BM25_WEIGHT=0.05`만큼
+더하는 방식)입니다. 기존 RRF(`fusion.hybrid.HybridRetriever`)는 evaluation baseline으로
+남아 있으며 서비스 경로에서는 더 이상 쓰지 않습니다([상세](HYBRID_RETRIEVAL.md)).
+
+서비스는 검색 알고리즘 자체를 구현하지 않습니다. 요청을 선택된 retriever로 보내고 결과를 그대로 반환합니다.
 
 ## 초기화 순서
 
 1. `import app.api`는 corpus, index, 모델을 읽지 않습니다. 테스트와 문서 생성 도구가 가볍게 import할 수 있습니다.
 2. 서버가 시작되면 lifespan에서 `build_search_service(corpus_path)`를 한 번 호출합니다.
-3. corpus를 한 번 읽고, 사용할 수 있는 retriever만 메모리에서 만듭니다.
-4. 요청마다 인덱스를 다시 만들지 않습니다. Dense 임베딩도 요청 시점에 실행하지 않습니다.
+3. corpus를 한 번 읽고, 사용할 수 있는 retriever만 메모리에서 만듭니다. BM25와 Dense가 모두
+   있으면 `ScoreFusionRetriever`도 이때 한 번만 초기화합니다(document vector snapshot 포함).
+4. 요청마다 인덱스를 다시 만들지 않습니다. document embedding도 요청 시점에 실행하지 않고
+   저장된 index/vector를 재사용합니다. query embedding은 Dense/Hybrid 요청마다 수행합니다.
 
 테스트에서는 `create_app(service=...)`로 미리 만든 서비스를 주입하여 이 단계를 건너뜁니다.
 
@@ -63,9 +70,9 @@ Dense/Hybrid 없이 TF-IDF와 BM25만 쓰려면 `--extra sparse`만 설치하고
 | `tfidf` | 사용 가능 | `corpus.jsonl`이 있고 sparse extra 설치 |
 | `bm25` | 사용 가능 | `corpus.jsonl`이 있고 sparse extra 설치 (`bm25s`) |
 | `dense` | `DENSE_INDEX_PATH` 설정 시 사용 가능 | dense extra 설치 + 저장된 FAISS 인덱스가 현재 corpus와 일치해야 함 |
-| `hybrid` | `bm25`와 `dense`가 모두 사용 가능할 때 사용 가능 | BM25 + Dense + RRF. TF-IDF 대체 경로 없음 |
+| `hybrid` | `bm25`와 `dense`가 모두 사용 가능할 때 사용 가능 | BM25 + Dense score fusion. TF-IDF 대체 경로 없음 |
 
-Hybrid 기준선은 BM25 + Dense + RRF입니다. BM25나 Dense가 없을 때 TF-IDF로 조용히 바꾸지 않습니다. 각 방식의 정확한 상태는 `state` 값(아래 `GET /search/methods`)으로 구분합니다: `available`, `not_implemented`, `not_configured`, `corpus_unavailable`, `dependency_missing`, `index_missing`, `load_failed`, `upstream_unavailable`.
+Hybrid는 BM25 + Dense score fusion입니다. BM25나 Dense가 없을 때 TF-IDF로 조용히 바꾸지 않습니다. 각 방식의 정확한 상태는 `state` 값(아래 `GET /search/methods`)으로 구분합니다: `available`, `not_implemented`, `not_configured`, `corpus_unavailable`, `dependency_missing`, `index_missing`, `load_failed`, `upstream_unavailable`.
 
 ## 필요한 artifact
 
@@ -144,7 +151,7 @@ uv run --extra dense python -m scripts.build_index \
 }
 ```
 
-`score`는 방식마다 의미가 다릅니다. TF-IDF는 코사인 유사도, Hybrid는 RRF 순위 점수입니다. 서로 비교하지 마세요.
+`score`는 방식마다 의미가 다릅니다. TF-IDF는 코사인 유사도, Hybrid는 Dense + 정규화된 BM25의 fused score입니다. 서로 비교하지 마세요.
 
 ## 오류 응답
 
@@ -183,9 +190,9 @@ uv run --extra dense python -m scripts.build_index \
 uv run --locked pytest
 ```
 
-- `tests/test_service.py`, `tests/test_service_build.py`: fake retriever와 초기화 상태(test double)로 라우팅, top_k, 순위, 메타데이터, RRF 연결, 각 `MethodState`를 검증합니다.
+- `tests/test_service.py`, `tests/test_service_build.py`: fake retriever와 초기화 상태(test double)로 라우팅, top_k, 순위, 메타데이터, score fusion 연결, 각 `MethodState`를 검증합니다.
 - `tests/test_search_api.py`: 주입한 fake 서비스로 FastAPI 계약, 422/503, 한국어 질의를 검증합니다.
-- `tests/test_integration.py`: 실제 TF-IDF/BM25와 `tests/fixtures/ko_miracl_prepared_corpus.jsonl`로 lifespan 전체 경로를 검증합니다. 실제 Dense와 Hybrid(BM25+Dense+RRF)도 로컬 결정적 임베딩 함수로 FAISS 인덱스를 만들어 HTTP까지 검증합니다 (모델 다운로드 없음). sklearn이나 faiss가 없으면 해당 테스트는 건너뜁니다.
+- `tests/test_integration.py`: 실제 TF-IDF/BM25와 `tests/fixtures/ko_miracl_prepared_corpus.jsonl`로 lifespan 전체 경로를 검증합니다. 실제 Dense와 Hybrid(BM25+Dense score fusion)도 로컬 결정적 임베딩 함수로 FAISS 인덱스를 만들어 HTTP까지 검증합니다 (모델 다운로드 없음). sklearn이나 faiss가 없으면 해당 테스트는 건너뜁니다.
 
 ## 실제 데이터 스모크 테스트
 
@@ -202,6 +209,6 @@ curl -X POST localhost:8000/search -H "Content-Type: application/json" \
 
 ## 남은 제한
 
-- 실제 10,000 passage Ko-MIRACL 데이터와 Dense 모델(`multilingual-e5-base`)로 돌린 스모크 테스트는 아직 실행하지 않았습니다. `data/processed/`와 Dense 인덱스가 저장소에 없습니다.
+- 실제 10,000 passage Ko-MIRACL 데이터와 기본 Dense 모델(`BAAI/bge-m3`)로 돌린 스모크 테스트는 아직 실행하지 않았습니다. `data/processed/`와 Dense 인덱스가 저장소에 없습니다.
 - 검색 품질(Recall/MRR/nDCG)과 latency 비교는 평가 pipeline(`evaluation/`, Role A)의 결과를 참고합니다. 이 서비스 자체는 벤치마크를 만들지 않습니다.
 - 인증, 요청 제한, 캐시는 없습니다. 이번 단계의 범위가 아닙니다.

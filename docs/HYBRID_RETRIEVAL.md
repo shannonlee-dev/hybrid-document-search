@@ -2,7 +2,11 @@
 
 전체 corpus의 Dense + 정규화 BM25 점수 결합은 별도
 [Score fusion 구현·재현·인계 문서](SCORE_FUSION.md)를 참조하세요.
-이 문서의 RRF 검색기와 서비스 기본 경로는 그대로 유지됩니다.
+
+**RRF는 evaluation baseline입니다.** 서비스의 `hybrid` 기본 경로는 score fusion
+(`fusion.score.ScoreFusionRetriever`)을 사용합니다([SEARCH_SERVICE.md](SEARCH_SERVICE.md)).
+이 문서의 RRF 검색기(`fusion/rrf.py`, `fusion/hybrid.py`)는 코드와 테스트 모두 그대로 유지되며,
+공통 평가(`scripts.evaluate`/`scripts.evaluate_final`)에서 `rrf` 방식으로 계속 비교됩니다.
 
 이 문서는 `fusion/rrf.py`와 `fusion/hybrid.py`의 Hybrid Retrieval 기반을 설명합니다.
 BM25 + BGE-M3를 연결한 10k corpus의 Dev 평가를 완료했습니다.
@@ -129,6 +133,7 @@ uv run --locked pytest tests/test_rrf.py tests/test_hybrid.py tests/test_api_sch
 - `SearchResponse`: `query`, `method`, `results`
 
 `app/service.py`는 검색 방식을 선택하며, Hybrid는 BM25와 Dense가 모두 준비된 경우에만 사용합니다.
+서비스가 실제로 생성하는 것은 위 `HybridRetriever`(RRF)가 아니라 `ScoreFusionRetriever`입니다.
 설정과 엔드포인트는 [SEARCH_SERVICE.md](SEARCH_SERVICE.md)를 참조하세요.
 
 ## 후속 작업

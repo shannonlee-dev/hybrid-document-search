@@ -13,7 +13,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 
 - TF-IDF / BM25: 문자 n-gram 기반 Sparse 검색
 - Dense: BGE-M3 기본 모델, Sentence Transformers + CPU FAISS
-- Hybrid: BM25 + Dense 결과를 RRF로 결합
+- Hybrid: 전체 corpus에서 정규화한 BM25 score를 Dense score에 더하는 score fusion. RRF는 evaluation baseline으로 보존
 
 ## Tech Stack
 
@@ -51,7 +51,8 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 `SearchResult`는 안정적인 문자열 `document_id`, 1부터 시작하는 `rank`, `score`,
 선택적인 `title` / `snippet`을 담습니다. 호출자는 양수 `top_k`를 전달하며,
 결과는 좋은 순서로 최대 `top_k`개를 반환합니다. 서로 다른 검색 방식의 원점수는
-직접 비교하지 않습니다. Hybrid는 두 검색기를 주입받아 RRF로 결과를 결합합니다.
+직접 비교하지 않습니다. Hybrid는 두 검색기를 주입받아 score fusion으로 결과를 결합합니다
+([상세](docs/HYBRID_RETRIEVAL.md)). RRF 구현은 evaluation baseline으로 유지합니다.
 BM25는 공통 corpus를 TF-IDF와 동일한 문자 n-gram 전처리로 인덱싱하며
 원점수 순으로 Top-K 결과를 반환합니다.
 
