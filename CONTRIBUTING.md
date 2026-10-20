@@ -62,3 +62,32 @@ uv run --locked pytest
 - **AI assistance**: 사용한 모델과 사용 범위. 검토 확인 문구는 직접 검토하고 이해한 경우에만 작성합니다.
   AI를 사용하지 않았다면 생략합니다.
 - **Checklist**: 테스트·lint·format 통과 여부, 공통 계약 준수 여부, 변경 내용 이해 여부.
+
+## 릴리스
+
+PR 병합 → main 검증 → 버전 태그 push → 자동 검사 → GitHub Release 생성 순서입니다.
+첫 릴리스는 `pyproject.toml`의 `0.1.0`과 [릴리스 설명](docs/releases/v0.1.0.md)을 사용합니다.
+현재 변경을 main에 반영한 뒤 아래 명령을 실행하면 됩니다.
+
+```bash
+git switch main
+git pull --ff-only origin main
+git tag -a v0.1.0 -m "Release v0.1.0"
+git push origin v0.1.0
+```
+
+[Release 워크플로우](.github/workflows/release.yml)는 `v*` 태그 push에 반응합니다.
+정식 `v숫자.숫자.숫자` 형식과 프로젝트 버전 일치, main에 포함된 커밋,
+`docs/releases/<태그>.md` 존재를 확인한 뒤 Ruff lint·format·전체 pytest를 실행합니다.
+Sparse·Dense 의존성을 설치하며 테스트 중 모델·데이터 다운로드는 비활성화합니다.
+모두 통과하면 설명과 검사 로그, `release.txt`를 첨부한 Release를 자동 생성합니다.
+별도 개인 토큰 없이 GitHub Actions의 기본 토큰을 사용합니다.
+
+증거 파일은 실행 중 `docs/validation/<한국 시간 실행일>/release.txt`에 생성되어 Release에 첨부됩니다.
+저장소에 자동 커밋하지 않으며 제출 시 첨부 파일을 내려받으면 됩니다.
+워크플로우 최종 성공 여부는 `release.txt`의 실행 주소에서 확인합니다.
+검사 실패 시 Release를 생성하지 않습니다. 일시적인 게시 실패는 같은 실행을 재실행할 수 있고,
+이미 공개된 Release는 덮어쓰지 않습니다.
+
+다음 릴리스는 프로젝트 버전과 lockfile, 해당 버전의 설명 파일을 PR에서 함께 갱신합니다.
+`benchmark-inputs-v1`은 평가 데이터 배포용으로, 서비스 버전 태그와 별도로 유지합니다.

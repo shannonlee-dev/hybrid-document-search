@@ -19,8 +19,10 @@ jobs:
           enable-cache: true
       - run: uv python install
       - run: uv sync --locked
-      - run: uv run --locked ruff check .
-      - run: uv run --locked ruff format --check .
+      - name: Ruff lint
+        run: uv run --locked ruff check .
+      - name: Ruff format check
+        run: uv run --locked ruff format --check .
       - run: uv run --locked pytest
 
   dense-tests:
