@@ -122,14 +122,6 @@ MIRACL에서는 개선됐지만 StrategyQA nDCG@10은 **0.800080 → 0.797141**�
 Intel i3-12100F, Linux/WSL2, CPU 2스레드. 데이터별 25쿼리 × 3회, warm-up 1회,
 방법 순서 교대, 방법당 75표본이다. **쿼리 벡터는 캐시를 사용하며 모델 추론·초기화·HTTP는 제외한다.**
 
-| 구성 | Dev50 평균 ms | Dev50 P95 ms | Ko-StrategyQA 평균 ms | Ko-StrategyQA P95 ms |
-|---|---:|---:|---:|---:|
-| Dense | 4.391 | 6.519 | 2.268 | 3.544 |
-| 기존 RRF | 7.493 | 12.042 | 4.615 | 6.312 |
-| Score fusion | 3.604 | 5.301 | 3.248 | 4.199 |
-| Score fusion + 보정 | 3.433 | 5.262 | 3.424 | 4.751 |
-
-
 Dense는 FAISS, score fusion은 NumPy 전체 내적을 사용하므로 검색 구현 차이도 포함된다.
 쿼리 보정은 측정에 포함하며, 보정 후 시간이 줄어든 경우는 측정 변동으로 해석한다.
 전체 후보 RRF는 품질만 측정했다.
@@ -160,8 +152,121 @@ Score fusion의 평균이 가장 낮았으며, 세 방법 모두 임베딩이 �
 
 ## 재현 및 검증
 
-캐시 준비·기본 품질 평가 명령은 [SCORE_FUSION.md](SCORE_FUSION.md)를 따른다.
+검색기 사용법과 입력 계약은 [SCORE_FUSION.md](SCORE_FUSION.md)를 참고한다.
 아래 명령은 저장소 루트에서 실행하며, 벤치마크 재실행 시 새 `--output` 경로를 지정한다.
+
+### 캐시 준비와 기본 품질 평가
+
+Train100에서 α를 선정하고 Dev50·StrategyQA dev에서는 0.05로 고정합니다.
+벤치마크는 train/dev ID 중복을 거부합니다.
+
+```bash
+uv sync --locked --extra sparse --extra dense
+
+# 고정 GitHub Release에서 다운로드·해시 검증·압축 해제
+python3 -m scripts.prepare_score_fusion_cache
+SCORE_CACHE=artifacts/score-fusion-cache
+
+# 선정 이력 확인: 원래 Train100에서 제한된 가중치 민감도 비교
+uv run --locked --extra sparse --extra dense python -m scripts.benchmark_score_fusion \
+  --cache-dir "$SCORE_CACHE/miracl10k" --split train \
+  --expected-summary docs/experiments/score-fusion/miracl-train.json \
+  --weights 0 0.025 0.05 0.1 --correction --repeats 3 \
+  --output artifacts/score-fusion-final/miracl-train
+
+# 확인 평가: 가중치는 0.05로 고정
+uv run --locked --extra sparse --extra dense python -m scripts.benchmark_score_fusion \
+  --cache-dir "$SCORE_CACHE/miracl10k" --split dev \
+  --expected-summary docs/experiments/score-fusion/miracl-dev.json --correction --repeats 3 \
+  --output artifacts/score-fusion-final/miracl-dev
+
+uv run --locked --extra sparse --extra dense python -m scripts.benchmark_score_fusion \
+  --cache-dir "$SCORE_CACHE/strategyqa" \
+  --expected-summary docs/experiments/score-fusion/strategyqa.json --correction --repeats 3 \
+  --output artifacts/score-fusion-final/strategyqa
+```
+
+벤치마크는 기존 출력 폴더를 덮어쓰지 않으므로 재실행 시 새 경로를 사용합니다.
+기본 측정은 CPU/BLAS/FAISS 2스레드, warm-up 1회, 무작위 25질의(seed 20261014),
+5회 반복이며 위 명령은 3회로 지정합니다. 실행 순서는 질의·반복마다 순환합니다.
+
+### 캐시와 출처
+
+캐시는 같은 저장소의 `benchmark-inputs-v1` Release에 `score-fusion-cache-v1.tar.gz`로
+배포합니다. 버전과 압축파일·8개 입력 파일의 SHA-256은
+[cache-release.json](experiments/score-fusion/cache-release.json)에 고정되어 있습니다.
+준비 스크립트는 Python 3.12 이상에서 추가 패키지 없이 실행됩니다.
+
+각 데이터셋 캐시는 다음 네 파일로 구성됩니다. 모델 다운로드·문서 재인코딩 없이
+BM25와 FAISS를 재구축해 평가합니다.
+
+| 파일 | 내용 |
+|---|---|
+| `data.json` | 데이터셋 이름, Document 배열, 벡터 행 순서의 `query_ids`, 질의·qrels 매핑, 선택적 split |
+| `document-vectors.npy` | 문서 배열 순서의 정규화된 float32 BGE-M3 벡터 |
+| `query-vectors.npy` | `query_ids` 순서의 정규화된 float32 BGE-M3 벡터 |
+| `encoding.json` | 벡터 SHA-256과 원래 인코딩 설정 |
+
+준비 스크립트는 압축파일과 개별 입력 해시를 검증합니다. 정상 캐시는 재사용하고,
+불완전하거나 다른 캐시는 오류로 거부합니다. 새 위치는 `--cache-dir PATH`로 지정합니다.
+Release가 없거나 접근할 수 없으면 종료하며, 직접 받은 압축파일은 `--archive`로 지정합니다.
+`--expected-summary`는 실행 전 세 데이터·벡터 파일의 해시를 검사하고,
+결과의 품질 지표를 비교합니다(`rtol=1e-9`, `atol=1e-12`, 같은 방법·지표 구성이 필요).
+질의별 순위까지 확인하려면 `--expected-runs PATH`로 기준 `runs.json`을 추가합니다.
+이 옵션은 방법·질의별 문서 ID 순서를 비교하며 점수 자체는 비교하지 않습니다.
+latency는 현재 환경에서 다시 측정합니다. 수행한 검증은 summary의
+`verified_against_reference`에, 기준 runs 파일 해시는 `expected_runs_sha256`에 기록합니다.
+
+```bash
+# 다운로드 없이 현재 캐시의 8개 파일 검증
+python3 -m scripts.prepare_score_fusion_cache --verify-only
+
+# 직접 받은 압축파일로 준비
+python3 -m scripts.prepare_score_fusion_cache \
+  --archive artifacts/releases/score-fusion-cache-v1.tar.gz
+```
+
+캐시를 게시할 때는 `python3 -m scripts.prepare_score_fusion_cache --pack PATH`로
+압축파일을 만들고 manifest의 SHA-256과 대조합니다. 코드·manifest가 반영된 커밋의
+`benchmark-inputs-v1` Release에 `score-fusion-cache-v1.tar.gz`로 첨부한 뒤,
+`--cache-dir PATH`로 새 폴더에 다운로드해 검증합니다. 기존 pack 출력은 덮어쓰지 않으며,
+입력 변경 시 새 태그와 manifest를 사용합니다.
+
+고정 모델 revision과 인코딩 설정은
+[MIRACL](experiments/score-fusion/encoding/miracl10k.json),
+[StrategyQA](experiments/score-fusion/encoding/strategyqa.json)에,
+원본 출처·해시는 [history.json](experiments/score-fusion/history.json)에 보존했습니다.
+StrategyQA의 데이터셋은 `taeminlee/Ko-StrategyQA`, dev split이며, 원본과 내용이 일치하는
+revision은 `7cececfcc209fc836e08d6ab7584cba776847cfa`입니다.
+2026-10-15에 기존 `hybrid-document-search-old-2.0`의 `corpus.jsonl`, `queries.jsonl`,
+`qrels/dev.jsonl`을 캐시의 원본 SHA-256 및 해당 revision의 Git blob ID와 대조했습니다.
+당시 다운로드 revision을 소급 확인한 것은 아니며, 파일 내용의 일치로 재현 버전을 고정했습니다.
+[데이터셋 검증 기록](experiments/score-fusion/encoding/strategyqa-dataset.json)에 근거를 보존합니다.
+전처리는 `title + "\n" + text`, 접두사 없음, FP32·L2 정규화입니다.
+새 캐시의 바이트 단위 재현은 보장하지 않으며, 동일한 MIRACL 10k subset·Train100/Dev50에는
+기존 manifest 또는 원본 `data.json`이 필요합니다. 입력 변경 시 모델·데이터 revision,
+전처리·split seed, 인코딩 환경도 함께 기록합니다.
+
+### 산출물과 측정 범위
+
+| 파일 | 내용 |
+|---|---|
+| `summary.json` | 집계, 가중치·Top-K·측정 범위, 입력·코드 해시, 환경 |
+| `runs.json` | 문서별 점수·순위 |
+| `per-query.json` | 질의별 평가 지표 |
+| `timings.json` | 원시 지연시간 |
+
+`summary.json`은 나머지 세 산출물의 SHA-256과 실행 코드 해시를 포함합니다.
+과거 보존 실행의 기록은 수정하지 않습니다.
+
+품질은 기존 `evaluation.metrics`의 binary nDCG@10·Recall@10 등을 사용합니다.
+`relevance > 0`을 관련 문서로 보고 질의별 지표를 산술 평균합니다.
+인코딩 자료가 없으면 `model_config=null`, `provenance_status=unverified`로 기록하며,
+과거 기본 설정을 실제 설정으로 소급 인증하지 않습니다.
+
+기본 latency는 **모델 추론·초기화·HTTP를 제외한 CPU 검색·결합 시간**입니다.
+보정 비교의 문서 PCA는 초기화에서, query 보정은 측정 안에서 수행합니다.
+측정 중 검색 결과는 품질 평가 순위와 대조합니다.
 
 ### GPU 추론 포함 측정
 
@@ -189,5 +294,6 @@ uv run --locked --extra sparse --extra dense python -m scripts.benchmark_score_f
 ```
 
 테스트·정적 검사 기록은 [verification.json](experiments/score-fusion/verification.json)에 있다.
+질의별 개선·악화 사례는 [cases.json](experiments/score-fusion/cases.json)에 있다.
 기록된 커밋·날짜 기준의 결과이며, 현재 작업 트리의 검증을 보장하지 않는다.
 원시 순위·시간은 `artifacts/score-fusion-final/`과 `artifacts/score-fusion-e2e/miracl-dev/`에 로컬 보존한다.
