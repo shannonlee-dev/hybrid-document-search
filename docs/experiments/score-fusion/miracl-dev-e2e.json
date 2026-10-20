@@ -1,0 +1,324 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-14T10:33:59.862885+00:00",
+  "dataset": "miracl10k",
+  "split": "dev",
+  "corpus_size": 10000,
+  "query_count": 50,
+  "query_ids": [
+    "1009",
+    "1021",
+    "1033",
+    "1044",
+    "1094",
+    "1108",
+    "1129",
+    "1139",
+    "1154",
+    "1206",
+    "1248",
+    "1249",
+    "1304",
+    "1354",
+    "1357",
+    "1368",
+    "1391",
+    "1402",
+    "1467",
+    "1476",
+    "159",
+    "163",
+    "166",
+    "199",
+    "215",
+    "269",
+    "276",
+    "303",
+    "373",
+    "426",
+    "450",
+    "496",
+    "504",
+    "552",
+    "606",
+    "613",
+    "691",
+    "720",
+    "731",
+    "769",
+    "829",
+    "834",
+    "838",
+    "881",
+    "883",
+    "906",
+    "919",
+    "931",
+    "947",
+    "948"
+  ],
+  "top_k": 10,
+  "bm25_weight": 0.05,
+  "latency_scope": "live query embedding start through final Top-10 return",
+  "latency_excludes": [
+    "model/index initialization",
+    "HTTP",
+    "serialization"
+  ],
+  "latency": {
+    "dense": {
+      "mean_ms": 22.003559828073776,
+      "p95_ms": 31.190117250662293,
+      "sample_count": 500,
+      "median_ms": 20.429922500625253
+    },
+    "rrf": {
+      "mean_ms": 24.117194147926057,
+      "p95_ms": 35.03292330024124,
+      "sample_count": 500,
+      "median_ms": 22.574958500626963
+    },
+    "score_0.05": {
+      "mean_ms": 21.191078553973057,
+      "p95_ms": 30.746549398463678,
+      "sample_count": 500,
+      "median_ms": 19.73593549882935
+    }
+  },
+  "stages": {
+    "dense": {
+      "embedding_ms": {
+        "mean_ms": 18.165536957982113,
+        "p95_ms": 27.07572824838279,
+        "sample_count": 500,
+        "median_ms": 16.714163501092116
+      },
+      "retrieval_fusion_ms": {
+        "mean_ms": 3.838022870091663,
+        "p95_ms": 4.9866389032104035,
+        "sample_count": 500,
+        "median_ms": 3.66266350101796
+      }
+    },
+    "rrf": {
+      "embedding_ms": {
+        "mean_ms": 18.1000641220744,
+        "p95_ms": 28.154130947041264,
+        "sample_count": 500,
+        "median_ms": 16.636785499940743
+      },
+      "retrieval_fusion_ms": {
+        "mean_ms": 6.017130025851657,
+        "p95_ms": 8.116368648370553,
+        "sample_count": 500,
+        "median_ms": 5.653428501318558
+      }
+    },
+    "score_0.05": {
+      "embedding_ms": {
+        "mean_ms": 18.35002376207558,
+        "p95_ms": 27.722519801318406,
+        "sample_count": 500,
+        "median_ms": 16.975034499409958
+      },
+      "retrieval_fusion_ms": {
+        "mean_ms": 2.841054791897477,
+        "p95_ms": 3.560835051757749,
+        "sample_count": 500,
+        "median_ms": 2.7312314996379428
+      }
+    }
+  },
+  "timing": {
+    "warmup_requests_per_method": 10,
+    "repeats_per_query": 10,
+    "queries": 50,
+    "order": "rotating methods by (query index + repetition) modulo 3",
+    "warmup_order": "rotating methods; cycle through fixed query order",
+    "aggregation": "pooled request samples; linearly interpolated P95",
+    "cuda_synchronization": "before start and after embedding",
+    "embedding": "fresh per method/request; tokenization, inference, normalization, CPU transfer",
+    "retrieval_fusion": "prepared-vector handoff, CPU search/fusion/sort and SearchResult construction",
+    "rrf_order": "embedding first, then BM25 and Dense Top-10, k=60 RRF",
+    "score_path": "NumPy full-corpus inner product + BM25, corpus-max normalization",
+    "dense_path": "FAISS CPU IndexFlatIP"
+  },
+  "quality": {
+    "dense": {
+      "recall@5": 0.8136666666666666,
+      "recall@10": 0.9583333333333333,
+      "mrr@10": 0.8610238095238095,
+      "ndcg@10": 0.854857000175861
+    },
+    "rrf": {
+      "recall@5": 0.7653333333333333,
+      "recall@10": 0.9276666666666666,
+      "mrr@10": 0.7905714285714285,
+      "ndcg@10": 0.7844328272034149
+    },
+    "score_0.05": {
+      "recall@5": 0.8153333333333334,
+      "recall@10": 0.9683333333333333,
+      "mrr@10": 0.8811904761904762,
+      "ndcg@10": 0.8649030809637153
+    }
+  },
+  "input_sha256": {
+    "data.json": "1b7250d7abca202c84bb3748b0185c3ad0b4a658c5e5a7d2f8b6af09a7bdcf2b",
+    "document-vectors.npy": "3711567d2f1e8e5d6c1dad1e422249c94b24a6562aa455f7c0211cef4c5c68a4",
+    "query-vectors.npy": "18188c73a2fef399ea9f00c744944fe973ea7c88637aa51f1e9a2e70212be8a8"
+  },
+  "reference_summary_sha256": "e0546f6d986b5f295d97bb1831488494d47bb75db200b98f07d261665ac6721f",
+  "encoding_sha256": "a01fc34637214a6139aced22c722b0980c0059c5ee203c4b0221877f32842240",
+  "model_config": {
+    "model_name": "BAAI/bge-m3",
+    "device": "cuda:0",
+    "batch_size": 1,
+    "normalize_embeddings": true,
+    "query_prefix": "",
+    "passage_prefix": "",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181"
+  },
+  "loaded_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+  "dtype": "torch.float32",
+  "max_seq_length": 8192,
+  "environment": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "cpu": "12th Gen Intel(R) Core(TM) i3-12100F",
+    "runtime": {
+      "torch_num_threads": 2,
+      "torch_num_interop_threads": 2,
+      "faiss_omp_max_threads": 2,
+      "threadpools": [
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 2,
+          "prefix": "libopenblas",
+          "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/faiss_cpu.libs/libopenblaso-r0-d77a1985.3.15.so",
+          "version": "0.3.15",
+          "threading_layer": "openmp",
+          "architecture": "Haswell"
+        },
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 2,
+          "prefix": "libscipy_openblas",
+          "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-5f890258.so",
+          "version": "0.3.31.dev",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scikit_learn.libs/libgomp-e985bcbb.so.1.0.0",
+          "version": null
+        },
+        {
+          "user_api": "blas",
+          "internal_api": "openblas",
+          "num_threads": 2,
+          "prefix": "libscipy_openblas",
+          "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-f48b354e.so",
+          "version": "0.3.34.106.0",
+          "threading_layer": "pthreads",
+          "architecture": "Haswell"
+        },
+        {
+          "user_api": "openmp",
+          "internal_api": "openmp",
+          "num_threads": 2,
+          "prefix": "libgomp",
+          "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/torch/lib/libgomp.so.1",
+          "version": null
+        }
+      ],
+      "matmul_allow_tf32": false,
+      "cudnn_allow_tf32": false,
+      "gpu": "NVIDIA GeForce RTX 4060",
+      "cuda": "13.0",
+      "device": "cuda:0"
+    },
+    "threadpools_after_run": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libopenblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/faiss_cpu.libs/libopenblaso-r0-d77a1985.3.15.so",
+        "version": "0.3.15",
+        "threading_layer": "openmp",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-5f890258.so",
+        "version": "0.3.31.dev",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 2,
+        "prefix": "libgomp",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scikit_learn.libs/libgomp-e985bcbb.so.1.0.0",
+        "version": null
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-f48b354e.so",
+        "version": "0.3.34.106.0",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 2,
+        "prefix": "libgomp",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/torch/lib/libgomp.so.1",
+        "version": null
+      }
+    ],
+    "packages": {
+      "torch": "2.14.1",
+      "sentence-transformers": "6.1.0",
+      "transformers": "5.18.0",
+      "numpy": "2.5.3",
+      "faiss-cpu": "1.15.1",
+      "bm25s": "0.3.12",
+      "scikit-learn": "1.9.1"
+    }
+  },
+  "code_sha256": {
+    "scripts/benchmark_score_fusion_e2e.py": "b4983c931605d562d9ba50da859c8ebd530232dc315f1d6953055a133630151f",
+    "scripts/benchmark_score_fusion.py": "a09773014473c78c93186971748f3c91a9387e441176fa26f3f4303ca87cbfc9",
+    "retrievers/dense.py": "89086bb08f71769008d4cf7a12e17f571a4f623980ddd80762b63d54fabb3794",
+    "retrievers/bm25.py": "e322879b4bf38e09d4a65932d587771fe88012414a9c1048c2554de948bb3e0d",
+    "fusion/hybrid.py": "052cd3514e64e89dff1f4a60761731c441281228ce19352f631941e1fc514412",
+    "fusion/rrf.py": "c36dada93bea725e313e781da756b2eb107db2e6c4da353a5b2333d65b6ce90b",
+    "fusion/score.py": "fdac5d91b36e3f9e26869f7899c74c5b126ed99c6be7b4d8d92cecd06850bf53",
+    "indexing/faiss_index.py": "7eec2849107757e06ee9586393d9a6bd2eb4bf270c1275b2b193821d1c8d3549",
+    "indexing/vectors.py": "97029028fc6f59f3443f6c5fe2e738752a751f584ee5393a258c2ae1c12f5d7a",
+    "evaluation/runtime_config.py": "1ff1ef8a364169e3c360399d54b245c444808f6e3c8d79573812c2458de061e2",
+    "evaluation/latency.py": "80718bfab14352e778c1a3b6add727411384874864e24c39ba6add7bff1e4232",
+    "evaluation/dense_runtime.py": "e43d3e296b1964015c7880717fa696947d484ad81f62d745162c38515aaf0070",
+    "evaluation/metrics.py": "dca0e461ccf50905611b589bfdd1d667870622dfd7326be3aa3c4eaa13029720"
+  },
+  "artifact_sha256": {
+    "timings.json": "19d1c95fb55feea7ce2ca871e6b27f700da75901812b23449dfc06176a6f2066",
+    "runs.json": "c47021088e5f7c9a15c09d2b073c201f92c441d8942bba340dd429c50bc5cbfc"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "summary_sha256": "a2d17b5f342868e9d45d8cbaebe7de0fcb22caf9c8720606fde85f2f5dc9ea31",
+  "command": ".venv/bin/python -m scripts.benchmark_score_fusion_e2e --cache-dir artifacts/score-fusion-cache/miracl10k --device cuda:0 --threads 2 --warmup 10 --repeats 10 --output artifacts/score-fusion-e2e/miracl-dev",
+  "execution": "outside sandbox; exit 0",
+  "raw_directory": "artifacts/score-fusion-e2e/miracl-dev",
+  "samples_checked": 1500,
+  "checks": [
+    "input, code and artifact SHA-256 match",
+    "50 dev queries x 10 repetitions per method",
+    "rotating execution positions",
+    "stage sum equals total per request",
+    "independent mean/median/NumPy P95 recomputation",
+    "150 Top-10 lists have 10 results",
+    "recomputed quality matches saved E2E and previous cached-vector Dev50 quality",
+    "post-run threadpools all use 2 threads"
+  ],
+  "scope": "No tests or other benchmark jobs launched by this agent during measurement; unrelated external host load not monitored."
+}

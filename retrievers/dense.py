@@ -13,10 +13,10 @@ from data.loader import Document
 from data.preprocess import build_index_text
 from indexing.faiss_index import (
     FaissIndex,
-    _as_vectors,
     _validate_top_k,
 )
-from retrievers.base import SearchResult
+from indexing.vectors import as_vectors
+from retrievers.base import SNIPPET_LENGTH, SearchResult
 from retrievers.model_config import COMMIT_SHA_PATTERN, MODELS
 from retrievers.model_config import DEFAULT_MODEL as DEFAULT_MODEL
 from retrievers.model_config import DEFAULT_MODEL_REVISION as DEFAULT_MODEL_REVISION
@@ -28,7 +28,6 @@ DEFAULT_BATCH_SIZE = 32
 INDEX_FILENAME = "index.faiss"
 METADATA_FILENAME = "metadata.json"
 _METADATA_VERSION = 1
-_SNIPPET_LENGTH = 200
 _E5_MODEL_PREFIXES = ("intfloat/e5-", "intfloat/multilingual-e5-")
 _E5_INPUT_PREFIXES = (("query_prefix", "query: "), ("passage_prefix", "passage: "))
 
@@ -114,7 +113,7 @@ class DenseEmbedder:
             # 접두사를 직접 붙였으므로 모델의 기본 프롬프트가 중복 적용되지 않게 한다.
             prompt="",
         )
-        vectors = _as_vectors(vectors)
+        vectors = as_vectors(vectors)
         if len(vectors) != len(texts):
             raise ValueError("model returned an unexpected embedding count")
         return vectors
@@ -246,12 +245,13 @@ class DenseRetriever:
                     rank=rank,
                     score=score,
                     title=doc.title,
-                    snippet=doc.text[:_SNIPPET_LENGTH],
+                    snippet=doc.text[:SNIPPET_LENGTH],
                 )
             )
         return results
 
     def get_document(self, document_id: str) -> Document:
+        """Return the indexed document, raising KeyError for an unknown ID."""
         return self._documents_by_id[document_id]
 
     def save(self, directory: str | Path) -> None:

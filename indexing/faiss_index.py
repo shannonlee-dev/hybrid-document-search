@@ -1,14 +1,16 @@
-"""벡터의 내적 검색과 FAISS 파일 저장을 담당한다."""
+"""Search vectors by inner product and persist FAISS indexes."""
 
 from pathlib import Path
 from typing import TYPE_CHECKING
+
+from indexing.vectors import as_vectors
 
 if TYPE_CHECKING:
     import numpy as np
 
 
 class FaissIndex:
-    """IndexFlatIP를 사용하며 정규화와 행별 문서 매핑은 호출자가 책임진다."""
+    """Wrap IndexFlatIP; callers manage normalization and row-to-document mappings."""
 
     def __init__(self, index):
         import faiss
@@ -27,18 +29,22 @@ class FaissIndex:
     def count(self) -> int:
         return self.index.ntotal
 
+    def snapshot_vectors(self) -> "np.ndarray":
+        """Copy IndexFlatIP vectors in row order, independent of later mutations."""
+        return as_vectors(self.index.reconstruct_n(0, self.count), self.dimension)
+
     @classmethod
     def build(cls, vectors) -> "FaissIndex":
         import faiss
 
-        vectors = _as_vectors(vectors)
+        vectors = as_vectors(vectors)
         index = faiss.IndexFlatIP(vectors.shape[1])
         index.add(vectors)
         return cls(index)
 
     @classmethod
     def load(cls, path: str | Path) -> "FaissIndex":
-        """벡터 인덱스만 복원한다. 문서 매핑과 임베딩 설정은 호출자가 검증한다."""
+        """Restore vectors; callers validate document mappings and embedding settings."""
         import faiss
 
         try:
@@ -49,7 +55,7 @@ class FaissIndex:
 
     def search(self, query_vector, top_k: int) -> list[tuple[int, float]]:
         _validate_top_k(top_k)
-        query_vector = _as_vectors(query_vector, self.dimension)
+        query_vector = as_vectors(query_vector, self.dimension)
         if len(query_vector) != 1:
             raise ValueError("search requires exactly one query vector")
         scores, rows = self.index.search(query_vector, min(top_k, self.count))
@@ -64,20 +70,6 @@ class FaissIndex:
         path = Path(path)
         path.parent.mkdir(parents=True, exist_ok=True)
         faiss.write_index(self.index, str(path))
-
-
-def _as_vectors(vectors, dimension: int | None = None) -> "np.ndarray":
-    """유한한 비영벡터를 검증하고 FAISS 입력에 필요한 연속 float32 배열로 변환한다."""
-    import numpy as np
-
-    array = np.asarray(vectors, dtype=np.float32)
-    if array.ndim != 2 or not all(array.shape):
-        raise ValueError("vectors must be a non-empty 2D matrix")
-    if dimension is not None and array.shape[1] != dimension:
-        raise ValueError("embedding dimension does not match the index")
-    if not np.isfinite(array).all() or (np.linalg.norm(array, axis=1) == 0).any():
-        raise ValueError("vectors must be finite and nonzero")
-    return np.ascontiguousarray(array)
 
 
 def _validate_top_k(top_k: int) -> None:

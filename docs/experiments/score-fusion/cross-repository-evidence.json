@@ -1,0 +1,172 @@
+{
+  "scope": "Historical cross-repository evidence, rechecked from saved rankings; not new unseen evaluations",
+  "source_sha256": {
+    "/home/shannon/__dev/hybrid-document-search-old/fusion/rrf.py": "c36dada93bea725e313e781da756b2eb107db2e6c4da353a5b2333d65b6ce90b",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/fusion/rrf.py": "c36dada93bea725e313e781da756b2eb107db2e6c4da353a5b2333d65b6ce90b",
+    "/home/shannon/__dev/hybrid-document-search/fusion/rrf.py": "c36dada93bea725e313e781da756b2eb107db2e6c4da353a5b2333d65b6ce90b",
+    "/home/shannon/__dev/hybrid-document-search-old/fusion/hybrid.py": "052cd3514e64e89dff1f4a60761731c441281228ce19352f631941e1fc514412",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/fusion/hybrid.py": "052cd3514e64e89dff1f4a60761731c441281228ce19352f631941e1fc514412",
+    "/home/shannon/__dev/hybrid-document-search/fusion/hybrid.py": "052cd3514e64e89dff1f4a60761731c441281228ce19352f631941e1fc514412",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/component-validation-20261014/strategyqa/data.json": "32c31b69626eaebcdd9b164892fe06c32235bf206568442fda4186fd775ddbb3",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/rrf-vs-score-20261014/strategyqa-runs.json": "3c2e67fc0f5bd1ec252f3e7908db79ff2b7c53f0c50238741ca83a40998259cc",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/component-validation-20261014/scifact/data.json": "3085f2652e9289fb3e02629c74968620aa167b47b3d6d88ae54928082217279f",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/rrf-vs-score-20261014/scifact-runs.json": "a5ea13f38855499485715481263e8e2feca4f4c20329718b6a3b7e4317858fce",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/component-validation-20261014/nfcorpus/data.json": "d01f14147400c6b5db93ccb4b10b57e25d60370371a519b275293777477251e3",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/rrf-vs-score-20261014/nfcorpus-runs.json": "39aeeb01fb8a36132447e87c6214a13036e19683d164eb9b535c18aa7d8b66e7",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/rrf-vs-score-20261014/results.json": "286a6732ef43a4fedd968e3fefa2b5c52d8c6170c18e329c04d5f4dcc8558d2f",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/rrf-vs-score-20261014/protocol.json": "a1d2999214f646914f5711113ead0df6aa086b64411e57598046ca894294eb55",
+    "/home/shannon/__dev/hybrid-document-search-old/docs/BENCHMARK_RESULTS.md": "e2dee46bb8833a8e1b020a283ba233cd46c71f16944cfa31639575068e9f8b01",
+    "/home/shannon/__dev/hybrid-document-search-old/artifacts/fusion-diagnosis-20261012/summary.json": "a85daa3d3d01a6b3530438c80b99575ade1bc18d437e73328800fc6e55180e6b",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/docs/COMPONENT_GENERALIZATION_RESULTS.md": "133cc428d9b1484b535de8888aa29ee5cab13d059a48d252ea3fd1389e92a31d",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/math-fusion-20261013/final-frozen.json": "81b0d1999586ca7a8cf5ad3bb474d727417bb8998dbefa55ec4d2411afc52e5e",
+    "/home/shannon/__dev/hybrid-document-search-old-2.0/artifacts/fair-10k-20261014/report.ko.md": "27d87c2d58296e03ec24be9e15b3a536b46abe94d5856135e8736eb0ea58a87d"
+  },
+  "verified_rankings": 2430,
+  "datasets": {
+    "strategyqa": {
+      "metrics": {
+        "RRF": {
+          "recall@5": 0.7707810489060489,
+          "recall@10": 0.8400659588159588,
+          "rr@10": 0.7393292846417846,
+          "ndcg@10": 0.7331519380656257,
+          "graded_ndcg@10": 0.7331519380656257
+        },
+        "Score": {
+          "recall@5": 0.8133204633204633,
+          "recall@10": 0.8586470398970398,
+          "rr@10": 0.8165580759330759,
+          "ndcg@10": 0.8000796704836824,
+          "graded_ndcg@10": 0.8000796704836824
+        }
+      },
+      "score_minus_rrf": {
+        "delta": 0.06692773241805672,
+        "improved": 216,
+        "worsened": 34,
+        "unchanged": 342,
+        "gain_sum": 43.98871435184941,
+        "loss_sum": 4.367496760359825,
+        "mean_improvement_when_improved": 0.20365145533263615,
+        "mean_loss_when_worsened": 0.1284557870694066,
+        "loss_at_least_0.1": 15,
+        "groups": 353,
+        "max_group_size": 9,
+        "ci95": [
+          0.05564417240176444,
+          0.07855272264035668
+        ],
+        "cluster_signflip_two_sided_p": 4.999750012499375e-05,
+        "trim_one_best_delta": 0.06600350321273116,
+        "familywise_ci_3": [
+          0.053315523355347075,
+          0.0812570453931847
+        ],
+        "relative_percent": 9.12876703219816
+      }
+    },
+    "scifact": {
+      "metrics": {
+        "RRF": {
+          "recall@5": 0.7735000000000001,
+          "recall@10": 0.8371111111111111,
+          "rr@10": 0.6689880952380953,
+          "ndcg@10": 0.7041036748109997,
+          "graded_ndcg@10": 0.7041036748109997
+        },
+        "Score": {
+          "recall@5": 0.7543333333333334,
+          "recall@10": 0.8167777777777778,
+          "rr@10": 0.6569695767195768,
+          "ndcg@10": 0.6880823070791973,
+          "graded_ndcg@10": 0.6880823070791973
+        }
+      },
+      "score_minus_rrf": {
+        "delta": -0.016021367731802395,
+        "improved": 39,
+        "worsened": 53,
+        "unchanged": 208,
+        "gain_sum": 9.603990479331161,
+        "loss_sum": 14.410400798871882,
+        "mean_improvement_when_improved": 0.24625616613669643,
+        "mean_loss_when_worsened": 0.2718943546956959,
+        "loss_at_least_0.1": 41,
+        "groups": 247,
+        "max_group_size": 4,
+        "ci95": [
+          -0.041738199024353696,
+          0.007848859058343555
+        ],
+        "cluster_signflip_two_sided_p": 0.23178841057947103,
+        "trim_one_best_delta": -0.018228104121848485,
+        "familywise_ci_3": [
+          -0.04850154809883434,
+          0.01276738871818171
+        ],
+        "relative_percent": -2.2754273702808
+      }
+    },
+    "nfcorpus": {
+      "metrics": {
+        "RRF": {
+          "recall@5": 0.12937623967174638,
+          "recall@10": 0.16181890477919447,
+          "rr@10": 0.5454887218045112,
+          "ndcg@10": 0.3343437369012801,
+          "graded_ndcg@10": 0.3349950073992797
+        },
+        "Score": {
+          "recall@5": 0.12659912749049596,
+          "recall@10": 0.15769188857081967,
+          "rr@10": 0.5502174554032139,
+          "ndcg@10": 0.33646933742702356,
+          "graded_ndcg@10": 0.33663918719420566
+        }
+      },
+      "score_minus_rrf": {
+        "delta": 0.0021256005257434076,
+        "improved": 90,
+        "worsened": 89,
+        "unchanged": 144,
+        "gain_sum": 7.3834141484603535,
+        "loss_sum": 6.696845178645233,
+        "mean_improvement_when_improved": 0.08203793498289282,
+        "mean_loss_when_worsened": 0.07524545144545206,
+        "loss_at_least_0.1": 22,
+        "groups": 6,
+        "max_group_size": 318,
+        "ci95": null,
+        "cluster_signflip_two_sided_p": null,
+        "trim_one_best_delta": 0.0009860208800825411,
+        "familywise_ci_3": null,
+        "relative_percent": 0.6357530562539201
+      }
+    }
+  },
+  "baseline_files_equal": {
+    "fusion/rrf.py": true,
+    "fusion/hybrid.py": true
+  },
+  "strategyqa_current_historical_rankings_equal": true,
+  "protocol": {
+    "started_utc": "2026-10-14T03:02:55.843842+00:00",
+    "origin_main": "7f3333627fc2ba947f768ba5e63253ac1fa84837",
+    "comparison": "origin RRF k60 top10 each vs Dense+.05 max-normalized BM25 over complete corpus; no correction/proximity",
+    "datasets": [
+      "strategyqa",
+      "scifact",
+      "nfcorpus"
+    ],
+    "quality": "All 1215 existing external queries; previously exposed. Fixed configurations; not a new unseen test.",
+    "timing": "CPU retrieval only; cached query embeddings, no model inference, no HTTP/startup. 100 seeded queries/dataset, 1 warmup+5 measured passes, alternating order; CPU2 threads. GPU unavailable.",
+    "uncertainty": "Positive-document/parent-query cluster bootstrap20000 seed20261014; 95% and Bonferroni98.3333% for three comparisons. NFCorpus CI omitted (<10 clusters).",
+    "python": "3.12.3",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "cpu": "12th Gen Intel(R) Core(TM) i3-12100F",
+    "sha256": {
+      "run.py": "4f4055fad88b642060fd0db6c0f9f78a60b316aeb8cd8efd272f802e39f4954b",
+      "origin_bm25": "a9106605f0ff88de73eb218b10643a414d546ee24026baf99922ade572f72563"
+    }
+  }
+}
