@@ -4,10 +4,13 @@ import builtins
 import sys
 import tomllib
 import types
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 
+from app.api import create_app
 from app.schemas import RetrievalMethod
 from app.service import MethodState, _is_placeholder, build_search_service
 from data.loader import Document, load_prepared_documents
@@ -319,6 +322,49 @@ def test_hybrid_does_not_substitute_tfidf_for_missing_bm25(
     assert status.state is MethodState.UPSTREAM_UNAVAILABLE
     assert "BM25" in status.reason
     assert "TF-IDF" not in status.reason
+
+
+@pytest.mark.parametrize("failure", ["normalization_disabled", "non_unit_vectors"])
+def test_hybrid_validation_failure_preserves_other_api_methods(
+    monkeypatch, tmp_path, caplog, failure
+):
+    pytest.importorskip("faiss")
+    pytest.importorskip("bm25s")
+    pytest.importorskip("sklearn")
+    from indexing.faiss_index import FaissIndex
+
+    _, dense = _real_fusion_sources(_corpus_documents())
+    if failure == "normalization_disabled":
+        dense.config = replace(dense.config, normalize_embeddings=False)
+        dense.embedder.config = dense.config
+    else:
+        dense.index = FaissIndex.build(dense.index.snapshot_vectors() * 2)
+    _install_real_dense(monkeypatch, dense)
+    monkeypatch.setenv("SEARCH_CORPUS_PATH", str(FIXTURE_CORPUS))
+    monkeypatch.setenv("DENSE_INDEX_PATH", str(tmp_path))
+
+    with TestClient(create_app()) as client:
+        assert client.get("/health").status_code == 200
+        methods = {
+            row["method"]: row
+            for row in client.get("/search/methods").json()["methods"]
+        }
+        assert methods["hybrid"]["state"] == MethodState.LOAD_FAILED
+        assert methods["hybrid"]["available"] is False
+        for method in ("tfidf", "bm25", "dense"):
+            assert methods[method]["available"] is True
+            response = client.post(
+                "/search", json={"query": "서울", "method": method, "top_k": 2}
+            )
+            assert response.status_code == 200
+            assert response.json()["results"]
+        unavailable = client.post(
+            "/search", json={"query": "서울", "method": "hybrid", "top_k": 2}
+        )
+        assert unavailable.status_code == 503
+        assert str(tmp_path) not in unavailable.text
+        assert "normalized" not in unavailable.text
+    assert "Hybrid could not be initialized" in caplog.text
 
 
 def test_corpus_loaded_once_and_no_index_built_per_request(monkeypatch, tmp_path):

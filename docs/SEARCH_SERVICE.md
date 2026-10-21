@@ -183,6 +183,7 @@ uv run --extra dense python -m scripts.build_index \
 | `DENSE_INDEX_PATH` 미설정 | Dense는 `not_configured`, Hybrid는 `upstream_unavailable`로 503입니다. |
 | Dense 인덱스 경로 없음/손상/의존성 없음 | Dense는 `index_missing`/`load_failed`/`dependency_missing`, Hybrid는 `upstream_unavailable`로 503입니다. |
 | Dense 인덱스가 현재 corpus와 다름 | Dense는 `load_failed`, Hybrid는 `upstream_unavailable`로 503입니다. 인덱스를 임의로 다시 빌드하지 않습니다. |
+| Dense는 정상이나 score fusion의 정규화 검증 실패 | Hybrid만 `load_failed`로 503입니다. TF-IDF·BM25·Dense와 health는 유지하며 검증 오류의 세부 내용은 서버 로그에 남깁니다. |
 
 선택 기능이 없다고 프로세스가 종료되지는 않습니다. 대신 상태 엔드포인트와 503 이유로 드러납니다.
 

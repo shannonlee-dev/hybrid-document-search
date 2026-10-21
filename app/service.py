@@ -133,9 +133,16 @@ def build_search_service(
     dense = retrievers.get(RetrievalMethod.DENSE)
     if bm25 is not None and dense is not None:
         # Hybrid는 BM25와 Dense가 모두 필요하며 TF-IDF로 대체할 수 없다.
-        retrievers[RetrievalMethod.HYBRID] = ScoreFusionRetriever(
-            bm25, dense, bm25_weight=DEFAULT_BM25_WEIGHT
-        )
+        try:
+            retrievers[RetrievalMethod.HYBRID] = ScoreFusionRetriever(
+                bm25, dense, bm25_weight=DEFAULT_BM25_WEIGHT
+            )
+        except ValueError:
+            logger.exception("Hybrid could not be initialized")
+            statuses[RetrievalMethod.HYBRID] = MethodStatus(
+                MethodState.LOAD_FAILED,
+                "score fusion could not be initialized; see server logs.",
+            )
     else:
         missing = [
             name
