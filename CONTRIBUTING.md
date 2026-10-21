@@ -66,14 +66,18 @@ uv run --locked pytest
 ## 릴리스
 
 PR 병합 → main 검증 → 버전 태그 push → 자동 검사 → GitHub Release 생성 순서입니다.
-첫 릴리스는 `pyproject.toml`의 `0.1.0`과 [릴리스 설명](docs/releases/v0.1.0.md)을 사용합니다.
-현재 변경을 main에 반영한 뒤 아래 명령을 실행하면 됩니다.
+첫 서비스 릴리스 [v0.1.0](https://github.com/shannonlee-dev/hybrid-document-search/releases/tag/v0.1.0)은
+2026-10-21에 최종 머지 커밋 `cb917ea`에서 공개되었습니다([릴리스 설명](docs/releases/v0.1.0.md)).
+다음 릴리스는 프로젝트 버전과 lockfile, 해당 버전의 설명 파일을 PR에서 함께 갱신합니다.
+PR을 main에 병합하고 검증한 뒤, 아래 명령으로 새 버전 태그를 생성합니다.
+이미 공개한 `v0.1.0` 태그는 유지합니다.
 
 ```bash
 git switch main
 git pull --ff-only origin main
-git tag -a v0.1.0 -m "Release v0.1.0"
-git push origin v0.1.0
+version=$(python3 -c 'import pathlib, tomllib; print(tomllib.loads(pathlib.Path("pyproject.toml").read_text())["project"]["version"])')
+git tag -a "v${version}" -m "Release v${version}"
+git push origin "v${version}"
 ```
 
 [Release 워크플로우](.github/workflows/release.yml)는 `v*` 태그 push에 반응합니다.
@@ -89,5 +93,4 @@ Sparse·Dense 의존성을 설치하며 테스트 중 모델·데이터 다운�
 검사 실패 시 Release를 생성하지 않습니다. 일시적인 게시 실패는 같은 실행을 재실행할 수 있고,
 이미 공개된 Release는 덮어쓰지 않습니다.
 
-다음 릴리스는 프로젝트 버전과 lockfile, 해당 버전의 설명 파일을 PR에서 함께 갱신합니다.
 `benchmark-inputs-v1`은 평가 데이터 배포용으로, 서비스 버전 태그와 별도로 유지합니다.

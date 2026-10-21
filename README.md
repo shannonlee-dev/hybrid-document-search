@@ -3,9 +3,11 @@
 [![CI](https://github.com/shannonlee-dev/hybrid-document-search/actions/workflows/ci.yml/badge.svg)](https://github.com/shannonlee-dev/hybrid-document-search/actions/workflows/ci.yml)
 [![Release](https://github.com/shannonlee-dev/hybrid-document-search/actions/workflows/release.yml/badge.svg)](https://github.com/shannonlee-dev/hybrid-document-search/actions/workflows/release.yml)
 
-서비스 릴리스: [v0.1.0 설명](docs/releases/v0.1.0.md) · [v0.1.0 Release](https://github.com/shannonlee-dev/hybrid-document-search/releases/tag/v0.1.0) (태그 push 후 생성)
+서비스 릴리스: [v0.1.0 설명](docs/releases/v0.1.0.md) · [v0.1.0 Release](https://github.com/shannonlee-dev/hybrid-document-search/releases/tag/v0.1.0) (2026-10-21 공개)
 
-Ruff lint·format 자동 검사: [CI 설정](.github/workflows/ci.yml) · [기존 CI 실행 증거](docs/validation/2026-10-20/ci.txt)
+최종 머지 커밋 `cb917ea` 검증: [CI 성공](https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39557021514) · [최종 평가 성공](https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39557021527) · [릴리스 검증·게시 성공](https://github.com/shannonlee-dev/hybrid-document-search/actions/runs/39564576599)
+
+Ruff lint·format 자동 검사: [CI 설정](.github/workflows/ci.yml) · [2026-10-20 CI 실행 증거](docs/validation/2026-10-20/ci.txt)
 
 3차 최종 검색 비교의 실행 절차는 [최종 평가](docs/FINAL_EVALUATION.md),
 데이터셋별 품질·latency 및 결과 해석은 [최신 평가 결과](docs/BENCHMARK_RESULTS.md)를 참고하세요.
