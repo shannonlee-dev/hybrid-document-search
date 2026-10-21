@@ -1,0 +1,53 @@
+
+UTC: 2026-10-20T11:46:23.632720+00:00
+$ .venv/bin/python -m pytest -ra
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.1.1, pluggy-1.6.0
+rootdir: /home/shannon/__dev/hybrid-document-search
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.15.1
+collected 769 items
+
+tests/dense/test_cli.py ......................                           [  2%]
+tests/dense/test_cli_messages.py ..................                      [  5%]
+tests/dense/test_embedding.py .............................              [  8%]
+tests/dense/test_faiss_index.py .............                            [ 10%]
+tests/dense/test_model_config.py ....                                    [ 11%]
+tests/dense/test_persistence.py ........................                 [ 14%]
+tests/dense/test_retriever.py .................................          [ 18%]
+tests/dense/test_runtime_benchmark.py ................................   [ 22%]
+tests/fusion/test_prepare_score_fusion_cache.py ..........               [ 24%]
+tests/fusion/test_score_fusion.py ..........................             [ 27%]
+tests/fusion/test_score_fusion_benchmark.py ............                 [ 28%]
+tests/fusion/test_score_fusion_e2e.py ...........                        [ 30%]
+tests/fusion/test_score_fusion_retriever.py ............................ [ 34%]
+                                                                         [ 34%]
+tests/test_api_schemas.py ................                               [ 36%]
+tests/test_benchmark.py ............................                     [ 39%]
+tests/test_bm25.py ........................................              [ 44%]
+tests/test_data.py ..............................................        [ 50%]
+tests/test_evaluate_cli.py ....................                          [ 53%]
+tests/test_evaluation_data.py .............................              [ 57%]
+tests/test_experiment.py ...........                                     [ 58%]
+tests/test_final_evaluation.py .................                         [ 60%]
+tests/test_frontend.py ..............                                    [ 62%]
+tests/test_hybrid.py .............                                       [ 64%]
+tests/test_integration.py .........                                      [ 65%]
+tests/test_latency.py .                                                  [ 65%]
+tests/test_metrics.py .................................................. [ 72%]
+......                                                                   [ 73%]
+tests/test_prepare_dataset.py ...............................            [ 77%]
+tests/test_rrf.py ............................                           [ 80%]
+tests/test_run_experiment.py ............                                [ 82%]
+tests/test_scaffold.py ...                                               [ 82%]
+tests/test_search_api.py .....................                           [ 85%]
+tests/test_search_cli.py ............................................... [ 91%]
+........                                                                 [ 92%]
+tests/test_service.py ..........                                         [ 93%]
+tests/test_service_build.py .....................                        [ 96%]
+tests/test_tfidf.py ..........................                           [100%]
+
+============================= 769 passed in 43.35s =============================
+
+Exit code: 0

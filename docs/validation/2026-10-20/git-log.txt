@@ -1,0 +1,98 @@
+eca59c63a30d8479da268a797cf599cd46824bf4 | 2026-10-20T20:30:54+09:00 | shannonlee-dev | docs(benchmarks): consolidate latest results and archive baseline
+c2a3e49fb8cb65ca746a76ed5c63a3d6ee1d69ab | 2026-10-20T20:23:18+09:00 | shannonlee-dev | docs(fusion): separate usage and experiment documentation
+9fb0f8c61e7f601e2af02d736ab44b7ce2d46673 | 2026-10-20T20:23:08+09:00 | shannonlee-dev | docs(dense): consolidate additional model comparisons
+b2ecf8e3138250b9cb012bbd075524202ddd7010 | 2026-10-20T20:01:18+09:00 | shannonlee-dev | docs: sync documentation with current retrieval implementation
+9bfb4057a8503b6df9079fa78bbdbe15db650ae0 | 2026-10-20T18:42:39+09:00 | VectorSophie | docs: document final hybrid integration
+805607669d6d1ece70531e0fc08f69bd7ec176bc | 2026-10-20T18:42:34+09:00 | VectorSophie | test(integration): verify final hybrid service path
+59f58683cb6c6029c86637797f8ec60d705248e1 | 2026-10-20T18:42:30+09:00 | VectorSophie | feat(service): use score fusion for hybrid search
+26d2c79329bfc7d55dea19e968c66924514cafdf | 2026-10-20T18:21:58+09:00 | VectorSophie | fix(test): skip final-evaluation fixture on missing faiss, not fusion.score
+1cdb1f45076e4804884addbf8f2c1b3289f3a7c5 | 2026-10-20T18:08:18+09:00 | VectorSophie | chore(evaluation): sync final evaluation docs with merged score fusion
+ef8778c17f5d2288be7d2370d1645a6870abfe3a | 2026-10-16T08:19:08+09:00 | shannonlee-dev | fix(benchmark): handle unavailable proc cpu metadata
+00f0f11dde24b8f795131adff7097e070c1f9760 | 2026-10-16T02:26:13+09:00 | 반가희 | docs: clarify final evaluation result wording
+1ce44df668de1714e6036a9d93836a2277504baf | 2026-10-16T02:00:53+09:00 | 반가희 | docs: report verified final retrieval benchmarks
+3f85a76a0871ed3c4e9b2fd1cf7f5eddcde50464 | 2026-10-16T02:00:26+09:00 | 반가희 | feat: add dataset-separated final retrieval evaluation
+081c7abb031153da80db71c4362938be6e22a5f1 | 2026-10-15T02:07:28+09:00 | shannonlee-dev | style(fusion): remove trailing whitespace from experiment figures
+0bb4919018bf09bff3ea19c4ac791e372c80cc85 | 2026-10-15T02:07:03+09:00 | shannonlee-dev | ci(fusion): run score fusion tests with sparse and dense dependencies
+5265963ff890141753a86a8608b1c09d4aa1c84f | 2026-10-15T01:09:20+09:00 | shannonlee-dev | docs(fusion): summarize evaluation metrics and warm-up conditions
+e9c22d6d6f80d1933c2d67d42dc11f987f3999c4 | 2026-10-15T00:52:21+09:00 | shannonlee-dev | docs(fusion): pin StrategyQA dataset revision with verification evidence
+3262a7ca056bb3c21a416e506704d36f2c90ebf9 | 2026-10-15T00:35:44+09:00 | shannonlee-dev | docs(fusion): report score fusion results and RRF analysis
+e2edb8e99ba9ee14d0898a45a026310c8129688d | 2026-10-15T00:30:36+09:00 | shannonlee-dev | feat(benchmark): add reproducible score fusion evaluation
+8e08cc7133a82cb8ae869c84025fb3276352034a | 2026-10-15T00:29:40+09:00 | shannonlee-dev | feat(fusion): combine dense and normalized BM25 corpus scores
+8e998cf0cf55140594834fa42643beee52747f0f | 2026-10-15T00:28:52+09:00 | shannonlee-dev | refactor(retrievers): share vector validation and retrieval constants
+03472b7f9499352bf5577f560c10a012d4c69ffa | 2026-10-13T13:28:06+09:00 | VectorSophie | feat(frontend): highlight query terms and show search log
+7f455c4188878ccac424fde9499df8a42ef9ffc2 | 2026-10-13T13:28:06+09:00 | VectorSophie | fix(frontend): bind UI to localhost and accept only http(s) API URLs
+5db56528cb7a7eadef19b040531a9b813a21775c | 2026-10-13T13:28:06+09:00 | VectorSophie | fix(api): limit query length to 1000 characters
+2d51c62dfa3ed4b8956353968871bc4ec7fc762e | 2026-10-13T13:28:06+09:00 | VectorSophie | fix(api): emit app INFO logs under uvicorn
+31e5c81833c81b1f37335155597c6fc94ea6d4ff | 2026-10-13T12:51:00+09:00 | VectorSophie | feat: add Streamlit search comparison UI
+f5f12b812bfa7d2238378a51016579cb99b4f049 | 2026-10-10T13:32:14+09:00 | shannonlee-dev | refactor: simplify dense benchmark code and clarify intent
+22fcdc973116a3310561c30a13b3d7ac1c4e1622 | 2026-10-10T10:27:51+09:00 | shannonlee-dev | refactor(cli)!: streamline dense benchmark options
+a7403a88e7084ed8ee97673fbae330ab6e5dd358 | 2026-10-10T10:08:34+09:00 | shannonlee-dev | revert(cli): undo dense command option simplification
+33c43b27cd642a6e4711e84209fe8da4c37440da | 2026-10-10T09:58:47+09:00 | shannonlee-dev | refactor(cli)!: simplify dense command options
+396b882275e1359113f3ac6b64cb9e7f1d4a3a33 | 2026-10-10T09:53:46+09:00 | shannonlee-dev | fix(cli): exit cleanly on user cancellation
+5959db89e262da2c75b7066a243d2c40950bdd8e | 2026-10-09T10:47:50+09:00 | shannonlee-dev | fix(experiment): remove stale failure record after success
+a4459b7b85ddfcfe1ddb18c43ab57c797478d2cf | 2026-10-09T10:47:41+09:00 | shannonlee-dev | fix(experiment): redownload missing model cache files
+93681738b2b294b092bce25dce9afb265aab9311 | 2026-10-09T02:42:37+09:00 | shannonlee-dev | refactor: keep experiment outputs in local artifacts
+14ae14ccadca5e1907eaae9c734da751f4bdb75e | 2026-10-09T01:16:57+09:00 | shannonlee-dev | refactor: organize dense retrieval and service helpers
+368b3df2ddfbea27250ff0bd5e9181b09c218e69 | 2026-10-09T01:16:25+09:00 | shannonlee-dev | refactor: organize evaluation modules and benchmark helpers
+a7313b7e0c25225dc28fa56ff2bafec754101f85 | 2026-10-09T01:02:24+09:00 | shannonlee-dev | chore: mark result JSON as generated
+b5bab43d6f0e0654c18246a1c7a740daa48c4c55 | 2026-10-09T01:02:20+09:00 | shannonlee-dev | refactor: share result package paths with verification
+d0c2058e44d4e829fed57f7edb4b781e8db554c7 | 2026-10-09T01:01:58+09:00 | shannonlee-dev | refactor: compact dense runtime result exports
+06e35e0dd617c7f0bda0b3a8f015175f01926624 | 2026-10-09T01:01:28+09:00 | shannonlee-dev | chore: remove redundant benchmark result files
+329c757dc8729cc80b4fd5a6f67274c8760a7930 | 2026-10-09T00:27:56+09:00 | shannonlee-dev | chore: curate benchmark result exports
+4d1f87abefd8cf28bde34293fd1a4f7307dd6f6a | 2026-10-09T00:12:04+09:00 | shannonlee-dev | fix: keep API startup running when dense config import fails
+7b92445f3df9407810243a94d5d87884704c5834 | 2026-10-09T00:09:28+09:00 | shannonlee-dev | fix: allow experiment module imports on Windows
+cfce9b34793e0f781b80efa0012fc2967edea942 | 2026-10-08T22:32:29+09:00 | shannonlee-dev | docs: summarize embedding bonus experiments
+4b89c89734d16294bcf489d8bcc7c191f166275f | 2026-10-08T18:15:31+09:00 | shannonlee-dev | fix: apply pinned revisions to all registered dense models
+5307a3116649935c49bdb91e6bc6b87c3fe81a83 | 2026-10-08T17:55:29+09:00 | shannonlee-dev | docs: update retrieval and benchmark documentation
+92ae7cec38b1ca1977e3797fea677d3b8ce65ca9 | 2026-10-08T17:38:01+09:00 | shannonlee-dev | fix: avoid dense dependencies for sparse evaluation threads
+86cbe90f6bdad25890c1c1646c3b68eb50179d14 | 2026-10-08T17:37:54+09:00 | shannonlee-dev | fix: require CUDA without restricting experiment hardware
+ac76cd73a76b41b38943c63c710444bb20618867 | 2026-10-08T17:15:53+09:00 | shannonlee-dev | docs: revert README changes from benchmark results commit
+29a1ff202fc866922e5ed44d81bda6f77bc8e52d | 2026-10-08T15:58:45+09:00 | shannonlee-dev | docs: record Ko-MIRACL dense and hybrid benchmark results
+9117748b57d7ade9033801c88b231c9f6aba40f5 | 2026-10-08T15:57:45+09:00 | shannonlee-dev | feat: add resumable Ko-MIRACL experiments and validated result publishing
+0b0996a5205135f7e5623316209c8ae91ff6bc4a | 2026-10-08T15:56:09+09:00 | shannonlee-dev | feat: benchmark dense runtime and share query latency measurement
+0aa9022e813ebfc4c6ecb026c29001d6c94357cc | 2026-10-08T15:54:51+09:00 | shannonlee-dev | feat: configure pinned dense models and preserve revisions
+c20b0d8a9fc3a4bfdee2ec71efe87922504e4b31 | 2026-10-08T11:29:12+09:00 | VectorSophie | fix: stub retrievers.bm25 instead of importing it in tests
+e7238da1fefc65f54e817c83d31df44a87e954dc | 2026-10-08T11:25:37+09:00 | VectorSophie | docs: reflect real BM25 and Dense in the search service docs
+ef494e1252095e92c69d31835d39a8e0891830b1 | 2026-10-08T11:24:21+09:00 | VectorSophie | test: verify BM25 and Hybrid against their real merged implementations
+ef11e0c817278fb595101abd99b863d4ea045d85 | 2026-10-08T11:24:21+09:00 | VectorSophie | fix: read evaluation fixtures as UTF-8 on Windows
+085b84fae9037b2580718adcc0f31594f0f943c7 | 2026-10-08T11:12:53+09:00 | VectorSophie | fix: handle non-FileNotFoundError OSError and verify Dense can search
+e6251aa22ffe139ee47cc89f30533be12130a971 | 2026-10-07T20:34:20+09:00 | 반가희 | feat: add shared retrieval benchmark pipeline
+9d90df530e04a697de3151e23bae12147ffcc654 | 2026-10-07T18:53:42+09:00 | 반가희 | feat: implement retrieval evaluation metrics
+f21143cefc52c8f74044e37004b1e2eccdc6dd72 | 2026-10-07T18:40:08+09:00 | 반가희 | feat: add BM25 search CLI
+9b0aef7dca7c352c445a4c2f81f59d99cf57799c | 2026-10-07T18:25:31+09:00 | 반가희 | feat: implement BM25 retrieval with fixture tests
+8a8a43a97090c9c8fcb86387792d848333f6b0d3 | 2026-10-07T14:57:33+09:00 | shannonlee-dev | fix: make dense CLI hints and persistence tests Windows-compatible
+3b46eca4d795cf35716b979bf4dbc51effa3e1d4 | 2026-10-07T14:40:46+09:00 | shannonlee-dev | docs: document dense retrieval and current project status
+a9e51cbd90460aa9de830df8de41e863deb96fa8 | 2026-10-07T14:40:46+09:00 | shannonlee-dev | ci: validate dense retrieval without model downloads
+f59f4df81ace1dbd49d60cd183841bc8b80e5917 | 2026-10-07T14:40:46+09:00 | shannonlee-dev | feat!: add dense build CLI and retriever search subcommands
+41808027360bad489515595c504361885685d971 | 2026-10-07T14:40:46+09:00 | shannonlee-dev | feat: implement dense retrieval and validated persistence
+ef36c58fe2eb3ff57e838b48f4bbd6d8e7565303 | 2026-10-07T14:40:46+09:00 | shannonlee-dev | feat: add configurable dense embedding pipeline
+30f0b4fb2ec8fc7b07cd88dbbedbc47bb45df183 | 2026-10-07T14:40:46+09:00 | shannonlee-dev | feat: implement FAISS vector index lifecycle
+38e17f45dfcd1b9a477a92e8b5bb96dc7fc84155 | 2026-10-07T14:33:33+09:00 | VectorSophie | test: cover retriever initialization and availability states
+f6abc918351d022632413e60f7fd0f18ff52d201 | 2026-10-07T14:33:32+09:00 | VectorSophie | feat: initialize dense and bm25 retrievers at startup
+de0075749aa2a54b0c4d6f442cde272c1a3838e0 | 2026-10-07T14:29:10+09:00 | VectorSophie | test: read invalid-JSON fixture as UTF-8
+c8d08ca8aa79a3a3fc8836102c03b2671b0529e8 | 2026-10-07T14:16:46+09:00 | VectorSophie | docs: document retrieval service setup
+d61cbce349250bc6e683d63ea74408f5bb1984fd | 2026-10-07T14:16:46+09:00 | VectorSophie | test: cover search service and API integration
+7f7631c2e43d2ba2bff84eadb91cc88c2c9f7aa4 | 2026-10-07T14:16:46+09:00 | VectorSophie | feat: add FastAPI search endpoint
+b10fba0792c0b820c83777fcee117d6c5457b93c | 2026-10-07T14:16:45+09:00 | VectorSophie | feat: implement retrieval search service
+1439aed095064162cb9286261250c4e5aa20987c | 2026-10-07T09:54:12+09:00 | VectorSophie | docs: document RRF hybrid retrieval
+3d00f9d72fc58e033d05a384ace02c582092ac9f | 2026-10-07T09:54:12+09:00 | VectorSophie | feat: add search API schemas
+a161fe30d12ddede3aa707af1924ee16c7e1b70d | 2026-10-07T09:54:11+09:00 | VectorSophie | feat: add hybrid retriever
+4d738d5d5a11190611919129b8c9d75048b4c9c2 | 2026-10-07T09:54:11+09:00 | VectorSophie | feat: implement reciprocal rank fusion
+f7d171de869f08ab791b7a83517c833cbdb0edd3 | 2026-10-06T18:32:33+09:00 | 반가희 | docs: reflect implemented JSONL schemas in README
+cb0fa98bc11ffdb732228f7cc16fbf258e6c9537 | 2026-10-06T18:12:15+09:00 | 반가희 | docs: tidy sparse MVP metadata formatting
+ae635daf61e8005ed057d15831be1af4c5be0f40 | 2026-10-06T18:00:31+09:00 | 반가희 | feat: add prepared-corpus TF-IDF search CLI
+ded6046770e2ae112a1f53cc185956d393d663d5 | 2026-10-06T17:48:38+09:00 | 반가희 | feat: prepare reproducible Ko-miracl subset
+1fffdae7b4a70e7b2276dff644f943514a4052ca | 2026-10-06T17:24:43+09:00 | 반가희 | docs: record agreed dataset preparation settings
+59f21412f60ce250e77e96db1c5da5d332ebb6f3 | 2026-10-06T17:13:28+09:00 | 반가희 | feat: add TF-IDF sparse retrieval
+00a6b319f6038871a78f400f9813939ed012ad60 | 2026-10-06T17:04:29+09:00 | 반가희 | feat: add validated document loading and preprocessing
+5a1fc8994dcf64c0a0cc009fd053645e11203449 | 2026-10-06T16:34:14+09:00 | 반가희 | test: add Korean corpus fixture
+09c089bed4d1233d464c677ed8a9d20467672caa | 2026-10-06T16:21:16+09:00 | bangahee | docs: record agreed dataset preparation rules
+b5364e551111883fb841371fb333c76ffb8017bd | 2026-10-06T16:21:06+09:00 | bangahee | docs: translate schemas and incorporate team feedback
+c31f5da67bba394c4908599353cdd26b3361efd1 | 2026-10-06T16:18:45+09:00 | bangahee | docs: translate dataset draft into Korean
+15ce22a7149cabf63949ed94f7bac1aff56020c0 | 2026-10-06T15:51:20+09:00 | bangahee | docs: draft document query and qrels schemas
+9ed614f460a949eab8b67bd83b74d4ee61eb7dac | 2026-10-06T15:49:57+09:00 | bangahee | docs: draft Ko-miracl dataset preparation plan
+e287b5f5404277e8498645e441d4ed4db3d67a2d | 2026-10-06T10:53:07+09:00 | shannonlee-dev | docs: add project overview and development guide
+031d5f1a8057b8b25c7899e780de81d18b72e45b | 2026-10-06T10:53:07+09:00 | shannonlee-dev | chore: configure CI and collaboration workflow
+946148bd210ec282622d36b5a8abe6fe6424f485 | 2026-10-06T10:53:07+09:00 | shannonlee-dev | chore: initialize project scaffold with smoke tests
+184e0ad419ae995e1cb43f8a09a54c622194cbd1 | 2026-10-04T19:59:24+09:00 | shannonlee-dev | chore: initialize repository
+191bcf651e33b13754fa7bbbf9bf35fe35f2a9e0 | 2026-10-04T19:59:24+09:00 | shannonlee-dev | chore: configure uv and dependencies

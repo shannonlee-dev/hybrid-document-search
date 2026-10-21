@@ -1,0 +1,2 @@
+# Preserve the original archived CSV bytes and accept its CRLF line endings.
+docs/validation/2026-10-20/soak-20261020T222450+0900-e94f37/resources.csv -text whitespace=cr-at-eol

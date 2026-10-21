@@ -23,7 +23,7 @@ Top-K보다 결과가 적어도 분모와 IDCG를 줄이지 않는다. Recall@10
 그 뒤 `retriever.search(query, 10)`만 측정한다. 질의 처리·embedding·결과 생성은 포함하고
 지표 계산·검증·저장은 제외한다. 품질은 첫 측정 pass의 결과다.
 Mean/P95는 전체 질의 × 5회 샘플이며 P95는 정렬 샘플의 `(N - 1) * 0.95`를 선형 보간한다.
-Hybrid 준비 시간은 BM25/Dense 준비 시간과 결합 비용의 합이다.
+RRF·score fusion 준비 시간은 BM25/Dense 준비 시간과 결합 비용의 합이다.
 
 ## 단일 명령과 자동 재개
 
@@ -47,7 +47,7 @@ Ko-MIRACL 10,000 passages, Train 100 / Dev 50 queries, seed 42. Python 3.12.3 / 
 Train/Dev 순위는 비교용으로만 기록한다. TOML 변경도 단계 입력 해시에 포함한다.
 
 실행 순서는 환경·revision 사전 점검 → 데이터 준비 → 모델별 다운로드·build·별도 subprocess 복원 →
-Train 3모델 → Dev 3모델 → 기본 모델(BGE-M3) 기반 Dev 4방식이다.
+Train 3모델 → Dev 3모델 → 기본 모델(BGE-M3) 기반 Dev 4방식(TF-IDF/BM25/Dense/RRF)이다.
 다운로드 실패는 최대 3회 시도하고, 다른 단계 실패는 실패 상태와 오류를 기록한 뒤 종료한다.
 
 `artifacts/ko-miracl-full/checkpoint.json`에는 단계 상태·설정·코드 해시·의존 단계의 출력 경로 및 SHA·
@@ -85,12 +85,12 @@ Dense/Hybrid 평가의 `--threads 2 --device cuda:0`은 엄격한 revision·FP32
 질의별 5회 측정으로 신뢰구간을 제공하지 않는다. 전체 MIRACL 성능·동시 요청 처리량·API 응답 시간은
 측정하지 않았다. GPU·OS·시스템 부하가 다른 latency와 구축 시간은 같은 조건의 수치로 비교할 수 없다.
 
-[데이터](DATASET.md) · [Dense 비교](DENSE_RETRIEVAL.md) · [네 방식 결과](BENCHMARK_RESULTS.md)
+[데이터](DATASET.md) · [Dense 비교](DENSE_RETRIEVAL.md) · [2026-10-08 네 방식 비교 기록](benchmarks/2026-10-08-rrf-baseline.md)
 
 ## 3차 최종 비교
 
 score fusion 구현을 연결한 최종 평가와 데이터셋별 결과는
-[FINAL_EVALUATION.md](FINAL_EVALUATION.md), [FINAL_RESULTS.md](FINAL_RESULTS.md)를 참고한다.
+[FINAL_EVALUATION.md](FINAL_EVALUATION.md), [최신 평가 결과](BENCHMARK_RESULTS.md)를 참고한다.
 기존 scripts.evaluate는 hybrid=RRF를 유지하며 명시적인 rrf / score_fusion 비교도 지원한다.
 scripts.evaluate_final은 고정 캐시의 MIRACL Dev50과 StrategyQA dev 592질의를 각각 평가한다.
 캐시 벡터 CPU 시간과 query embedding 포함 시간은 서로 다른 측정 범위로 분리한다.

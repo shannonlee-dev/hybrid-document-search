@@ -21,7 +21,7 @@ scikit-learn의 `TfidfVectorizer`를 사용합니다.
 한국어의 조사 및 어미 때문에 단어가 정확히 일치하지 않는 경우를 고려하여,
 추가 형태소 분석기 없이 부분 문자열을 비교할 수 있는 문자 n-gram을 baseline으로 선택했습니다.
 예를 들어 fixture의 `제주도는`에 대해 `제주`로 검색할 수 있습니다.
-10k subset의 검색 품질과 latency는 [BENCHMARK_RESULTS.md](BENCHMARK_RESULTS.md)에 있습니다.
+10k subset의 검색 품질과 latency는 [2026-10-08 과거 비교](benchmarks/2026-10-08-rrf-baseline.md)에 있습니다.
 
 문서에서 TF-IDF vocabulary와 IDF를 학습하고, 질의에는 동일한 vectorizer의
 `transform`만 적용합니다. L2 정규화된 벡터의 내적으로 코사인 유사도를 계산합니다.

@@ -1,19 +1,12 @@
 # 최종 검색 평가 및 결과 보고
 
-반가희의 3차 범위는 기존 지표·검색기를 연결한 공통 평가와 결과 보고다.
-검색 알고리즘·지표·파라미터 탐색은 추가하지 않는다.
-서비스의 최종 Hybrid 적용과 API/UI E2E는 통합 담당자의 별도 작업이다.
+고정 입력으로 TF-IDF·BM25·Dense·RRF·score fusion의 품질과 검색 시간을 비교한다.
+서비스 실행과 검증 범위는 [SEARCH_SERVICE.md](SEARCH_SERVICE.md)를 참조한다.
 
-## 구현 의존성과 병합 순서
+## 구현
 
-- 관련 Issue: #19. Score fusion의 구현·고정 입력·분석은 이상헌의 #17 / #18을 재사용한다.
-- 이 평가 변경은 main에서 분기한 feat/a-final-evaluation에만 작성한다.
-- score fusion 구현은 main에 병합되어 있어야 최종 캐시 평가와 실제 score_fusion 검색이 실행된다.
-  없는 구현을 RRF 또는 Dense로 대체하지 않는다.
-- #18의 cache loader와 cached embedder를 어댑터로 사용하며, 계산은 기존
-  evaluation.metrics / benchmark_retriever / write_report를 재사용한다.
-  upstream 내부 helper 변경 시 최종 평가 테스트도 함께 확인한다.
-- 기존 Retriever / SearchResult와 API schema, 의존성 설정은 유지한다.
+`scripts/benchmark_score_fusion.py`의 cache loader와 cached embedder,
+공통 `evaluation.metrics`·`benchmark_retriever`·`write_report`를 재사용한다.
 
 ## 비교 조건
 
@@ -34,6 +27,24 @@
 Dev 결과를 보고 가중치나 보정 조건을 변경하지 않는다.
 미판정 문서를 실제 비관련이라고 단정하지 않으며 두 데이터셋의 평균을 합치지 않는다.
 
+## 평가 완료 및 판단 기준
+
+### 평가 완료 조건
+
+- 두 데이터셋에서 다섯 검색 방식을 동일한 입력·조건으로 평가한다.
+- Recall@5/10, MRR@10, nDCG@10과 검색 시간의 평균·P95를 기록한다.
+- 실행 환경·설정·입력 해시와 결과 파일을 보존한다.
+
+### 품질 판단 기준
+
+- Hybrid(score fusion)의 nDCG@10을 중심으로 BM25·Dense·RRF와 비교한다.
+- Recall과 MRR을 함께 확인하고, 하락한 지표도 명시한다.
+- 검색 시간은 같은 환경과 측정 범위에서 비교한다.
+- 결과는 데이터셋별로 판단하며, 모든 지표의 개선을 전제하지 않는다.
+
+위 기준은 평가 완료와 결과 해석을 위한 기준이다.
+사전에 정한 수치 목표나 통계적 유의성 검정에 따른 합격 기준은 아니다.
+
 ## 데이터셋과 입력 보존
 
 | 데이터셋 | Corpus | 최종 평가 질의 | revision |
@@ -48,7 +59,7 @@ StrategyQA revision은 원본 파일 내용의 일치로 고정한 버전이며 
 revision을 소급 확인한 것으로 해석하지 않는다.
 
 캐시의 data.json, document-vectors.npy, query-vectors.npy, encoding.json 모두를
-#18의 cache-release.json SHA-256과 대조한다. 모델 revision·전처리·벡터 해시,
+`docs/experiments/score-fusion/cache-release.json`의 SHA-256과 대조한다. 모델 revision·전처리·벡터 해시,
 입력 manifest 해시와 실행 소스 해시를 results.json에 보존한다.
 Train/dev 중복, corpus 밖 qrel, 잘못된 관련성 값은 오류로 처리한다.
 
@@ -101,8 +112,8 @@ uv run --no-sync python -m scripts.evaluate \
 ```
 
 위 명령의 corpus와 인덱스는 ID·순서·본문·제목이 정확히 같아야 한다.
-기존 hybrid 이름은 RRF를 유지한다. 새 보고서는 rrf / score_fusion으로 구분하므로
-API 내부 구현 교체 후에도 과거 benchmark의 의미가 바뀌지 않는다.
+`scripts.evaluate`의 `hybrid`는 RRF의 별칭이다. API의 `hybrid`는 score fusion이며,
+평가에서는 `rrf` / `score_fusion`으로 구분한다.
 
 ## 검증과 보고
 
@@ -115,4 +126,4 @@ git diff --check
 ```
 
 최종 수치·실행 환경·기존 결과와의 대조 및 결과 해석은
-[FINAL_RESULTS.md](FINAL_RESULTS.md)에 정리한다.
+[최신 평가 결과](BENCHMARK_RESULTS.md)에 정리한다.

@@ -4,10 +4,13 @@ import builtins
 import sys
 import tomllib
 import types
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from fastapi.testclient import TestClient
 
+from app.api import create_app
 from app.schemas import RetrievalMethod
 from app.service import MethodState, _is_placeholder, build_search_service
 from data.loader import Document, load_prepared_documents
@@ -287,20 +290,24 @@ def test_dense_loads_once_with_configured_device_and_warms_model(
     assert service.availability()[RetrievalMethod.DENSE].available
 
 
-def test_hybrid_is_bm25_plus_dense_with_rrf_when_both_available(
-    monkeypatch, fake_tfidf_module, fake_bm25, tmp_path
-):
-    _install_dense(monkeypatch, _fake_dense_class())
+def test_hybrid_is_real_score_fusion_when_both_available(monkeypatch, tmp_path):
+    pytest.importorskip("faiss")
+    pytest.importorskip("bm25s")
+    pytest.importorskip("sklearn")
+    from fusion.score import ScoreFusionRetriever
+
+    documents = _corpus_documents()
+    bm25, dense = _real_fusion_sources(documents)
+    _install_real_dense(monkeypatch, dense)
 
     service = build_search_service(FIXTURE_CORPUS, dense_index_path=tmp_path)
 
     assert service.availability()[RetrievalMethod.HYBRID].available
-    hybrid = service.search("q", RetrievalMethod.HYBRID, 4)
-    # 두 검색기의 순위가 같으므로 RRF 이후에도 corpus 순서를 유지한다.
-    expected_ids = [doc.document_id for doc in _corpus_documents()]
-    assert [hit.document_id for hit in hybrid] == expected_ids
-    assert [hit.rank for hit in hybrid] == [1, 2, 3, 4]
-    assert hybrid[0].title == "서울"
+    hybrid = service.search("서울", RetrievalMethod.HYBRID, 4)
+    # 독립적으로 만든 ScoreFusionRetriever와 같은 결과를 내야 한다.
+    reference = ScoreFusionRetriever(bm25, dense).search("서울", 4)
+    assert hybrid == reference
+    assert hybrid[0].document_id == "fixture-001#0"
 
 
 def test_hybrid_does_not_substitute_tfidf_for_missing_bm25(
@@ -317,10 +324,55 @@ def test_hybrid_does_not_substitute_tfidf_for_missing_bm25(
     assert "TF-IDF" not in status.reason
 
 
-def test_corpus_loaded_once_and_no_index_built_per_request(
-    monkeypatch, fake_tfidf_module, fake_bm25, tmp_path
+@pytest.mark.parametrize("failure", ["normalization_disabled", "non_unit_vectors"])
+def test_hybrid_validation_failure_preserves_other_api_methods(
+    monkeypatch, tmp_path, caplog, failure
 ):
+    pytest.importorskip("faiss")
+    pytest.importorskip("bm25s")
+    pytest.importorskip("sklearn")
+    from indexing.faiss_index import FaissIndex
+
+    _, dense = _real_fusion_sources(_corpus_documents())
+    if failure == "normalization_disabled":
+        dense.config = replace(dense.config, normalize_embeddings=False)
+        dense.embedder.config = dense.config
+    else:
+        dense.index = FaissIndex.build(dense.index.snapshot_vectors() * 2)
+    _install_real_dense(monkeypatch, dense)
+    monkeypatch.setenv("SEARCH_CORPUS_PATH", str(FIXTURE_CORPUS))
+    monkeypatch.setenv("DENSE_INDEX_PATH", str(tmp_path))
+
+    with TestClient(create_app()) as client:
+        assert client.get("/health").status_code == 200
+        methods = {
+            row["method"]: row
+            for row in client.get("/search/methods").json()["methods"]
+        }
+        assert methods["hybrid"]["state"] == MethodState.LOAD_FAILED
+        assert methods["hybrid"]["available"] is False
+        for method in ("tfidf", "bm25", "dense"):
+            assert methods[method]["available"] is True
+            response = client.post(
+                "/search", json={"query": "서울", "method": method, "top_k": 2}
+            )
+            assert response.status_code == 200
+            assert response.json()["results"]
+        unavailable = client.post(
+            "/search", json={"query": "서울", "method": "hybrid", "top_k": 2}
+        )
+        assert unavailable.status_code == 503
+        assert str(tmp_path) not in unavailable.text
+        assert "normalized" not in unavailable.text
+    assert "Hybrid could not be initialized" in caplog.text
+
+
+def test_corpus_loaded_once_and_no_index_built_per_request(monkeypatch, tmp_path):
+    pytest.importorskip("faiss")
+    pytest.importorskip("bm25s")
+    pytest.importorskip("sklearn")
     import data.loader as loader
+    from retrievers.bm25 import BM25Retriever
 
     calls = {"corpus": 0}
     real_load = loader.load_prepared_documents
@@ -330,25 +382,53 @@ def test_corpus_loaded_once_and_no_index_built_per_request(
         return real_load(path)
 
     monkeypatch.setattr("app.service.load_prepared_documents", _counting_load)
-    dense = _install_dense(monkeypatch, _fake_dense_class())
+
+    bm25_builds = []
+
+    class _TrackingBM25(BM25Retriever):
+        def __init__(self, documents):
+            super().__init__(documents)
+            bm25_builds.append(len(self.documents))
+
+    monkeypatch.setattr("retrievers.bm25.BM25Retriever", _TrackingBM25)
+
+    _, dense = _real_fusion_sources(_corpus_documents())
+    loads = []
+    _install_real_dense(monkeypatch, dense, loads=loads)
+
     service = build_search_service(FIXTURE_CORPUS, dense_index_path=tmp_path)
-    builds_after_startup = len(fake_bm25.built_from)
-    loads_after_startup = len(dense.loads)
+    builds_after_startup = len(bm25_builds)
+    loads_after_startup = len(loads)
 
     for _ in range(3):
         service.search("서울", RetrievalMethod.HYBRID, 2)
         service.search("서울", RetrievalMethod.DENSE, 2)
 
     assert calls["corpus"] == 1
-    assert len(dense.loads) == loads_after_startup
-    assert len(fake_bm25.built_from) == builds_after_startup
+    assert len(loads) == loads_after_startup
+    assert len(bm25_builds) == builds_after_startup
     # 시작 시 예열 한 번과 질의 임베딩 여섯 번만 수행하고 corpus는 재임베딩하지 않는다.
-    assert dense.encode_queries[0] == "warm-up"
-    assert len(dense.encode_queries) == 1 + 6
+    assert dense.embedder.calls[0] == "warm-up"
+    assert len(dense.embedder.calls) == 1 + 6
 
 
 def _fake_dense_class(*, load_error=None, warm_error=None, documents_override=None):
-    """Build a DenseRetriever double with the attributes the service reads."""
+    """Build a DenseRetriever double with the attributes the service reads.
+
+    Includes the ``config``/``index`` shape ScoreFusionRetriever needs so that
+    whichever real BM25Retriever the service also builds can be fused with it.
+    """
+    import numpy as np
+
+    class _FakeConfig:
+        normalize_embeddings = True
+
+    class _FakeIndex:
+        def __init__(self, count):
+            self._vectors = np.eye(max(count, 1), dtype=np.float32)[:count]
+
+        def snapshot_vectors(self):
+            return self._vectors
 
     class _FakeDense:
         loads = []
@@ -357,6 +437,8 @@ def _fake_dense_class(*, load_error=None, warm_error=None, documents_override=No
         def __init__(self, documents):
             self.documents = tuple(documents)
             self.embedder = self
+            self.config = _FakeConfig()
+            self.index = _FakeIndex(len(self.documents))
 
         def encode_query(self, text):
             if warm_error is not None:
@@ -407,3 +489,50 @@ def _install_placeholder_bm25(monkeypatch):
     module = types.ModuleType("retrievers.bm25")
     module.BM25Retriever = _PlaceholderBM25
     monkeypatch.setitem(sys.modules, "retrievers.bm25", module)
+
+
+def _real_fusion_sources(documents):
+    """Build a real BM25Retriever + DenseRetriever pair ScoreFusionRetriever accepts."""
+    import numpy as np
+
+    from indexing.faiss_index import FaissIndex
+    from retrievers.bm25 import BM25Retriever
+    from retrievers.dense import DenseConfig, DenseRetriever
+
+    dim = len(documents)
+
+    class _FixedEmbedder:
+        config = DenseConfig(model_name="fixture")
+
+        def __init__(self):
+            self.calls = []
+
+        def encode_query(self, query):
+            self.calls.append(query)
+            vector = np.zeros((1, dim), dtype=np.float32)
+            vector[0, 0] = 1.0
+            return vector
+
+    dense = DenseRetriever(
+        index=FaissIndex.build(np.eye(dim, dtype=np.float32)),
+        documents=documents,
+        embedder=_FixedEmbedder(),
+    )
+    return BM25Retriever(documents), dense
+
+
+def _install_real_dense(monkeypatch, instance, *, loads=None):
+    """Make ``retrievers.dense.DenseRetriever.load`` return a prebuilt real instance."""
+    import retrievers.dense as dense_module
+
+    class _PrebuiltDense:
+        def __init__(self, *args, **kwargs):
+            raise AssertionError("constructed directly instead of via load()")
+
+        @classmethod
+        def load(cls, directory, *, device=None):
+            if loads is not None:
+                loads.append((Path(directory), device))
+            return instance
+
+    monkeypatch.setattr(dense_module, "DenseRetriever", _PrebuiltDense)

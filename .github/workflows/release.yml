@@ -1,0 +1,133 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      commit: ${{ steps.version.outputs.commit }}
+    env:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Validate version, release notes and main ancestry
+        id: version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          import subprocess
+          import tomllib
+          from pathlib import Path
+
+          tag = os.environ["RELEASE_TAG"]
+          version = tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"]
+          if not re.fullmatch(r"v\d+\.\d+\.\d+", tag) or tag != f"v{version}":
+              raise SystemExit(f"Tag must match the project version: v{version}")
+          notes = Path("docs/releases") / f"{tag}.md"
+          if not notes.is_file() or not notes.read_text().strip():
+              raise SystemExit(f"Release notes missing: {notes}")
+          subprocess.run(["git", "merge-base", "--is-ancestor", "HEAD", "origin/main"], check=True)
+          commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          with Path(os.environ["GITHUB_OUTPUT"]).open("a") as output:
+              output.write(f"commit={commit}\n")
+          PY
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          version: "0.12.2"
+          enable-cache: true
+      - run: uv python install
+      - run: uv sync --locked --extra sparse --extra dense
+      - name: Prepare check logs
+        run: mkdir -p "$RUNNER_TEMP/release-checks"
+      - name: Ruff lint
+        run: uv run --no-sync ruff check . 2>&1 | tee "$RUNNER_TEMP/release-checks/ruff.txt"
+      - name: Ruff format check
+        run: uv run --no-sync ruff format --check . 2>&1 | tee "$RUNNER_TEMP/release-checks/format.txt"
+      - name: Full pytest with Sparse and Dense
+        run: uv run --no-sync pytest -ra 2>&1 | tee "$RUNNER_TEMP/release-checks/pytest.txt"
+      - name: Preserve check logs
+        if: always()
+        uses: actions/upload-artifact@v7.0.2
+        with:
+          name: release-checks
+          path: ${{ runner.temp }}/release-checks/
+          overwrite: true
+
+  publish:
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ needs.verify.outputs.commit }}
+          persist-credentials: false
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: release-checks
+          path: ${{ runner.temp }}/release-checks/
+      - name: Publish release notes, check logs and evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          RELEASE_COMMIT: ${{ needs.verify.outputs.commit }}
+        run: |
+          remote_commit="$(gh api "repos/$GH_REPO/commits/$RELEASE_TAG" --jq .sha)"
+          test "$remote_commit" = "$RELEASE_COMMIT"
+          for log in ruff format pytest; do
+            test -s "$RUNNER_TEMP/release-checks/$log.txt"
+          done
+
+          evidence_dir="docs/validation/$(TZ=Asia/Seoul date +%F)"
+          mkdir -p "$evidence_dir"
+          {
+            echo "Repository: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+            echo "Commit: $RELEASE_COMMIT"
+            echo "Tag: $RELEASE_TAG"
+            echo "Release: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/tag/$RELEASE_TAG"
+            echo "Workflow: $GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID"
+            echo "Run attempt: $GITHUB_RUN_ATTEMPT"
+            echo "Verified at UTC: $(date -u +%FT%TZ)"
+            echo "Checks: Ruff lint, Ruff format, full pytest (Sparse + Dense) passed"
+            echo "Final workflow conclusion is available at the Workflow URL above."
+          } > "$evidence_dir/release.txt"
+
+          notes="docs/releases/$RELEASE_TAG.md"
+          assets=("$evidence_dir/release.txt" "$RUNNER_TEMP/release-checks/"*.txt)
+          if gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft > "$RUNNER_TEMP/release-draft.txt"; then
+            if [[ "$(cat "$RUNNER_TEMP/release-draft.txt")" == "false" ]]; then
+              echo "Release $RELEASE_TAG is already published; preserving it." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            gh release upload "$RELEASE_TAG" "${assets[@]}" --clobber
+            gh release edit "$RELEASE_TAG" --verify-tag --title "$RELEASE_TAG" --notes-file "$notes" --draft=false --latest
+          else
+            gh release create "$RELEASE_TAG" "${assets[@]}" --verify-tag --title "$RELEASE_TAG" --notes-file "$notes" --latest
+          fi
+          gh release view "$RELEASE_TAG" --json url,tagName,isDraft
+          cat "$evidence_dir/release.txt" >> "$GITHUB_STEP_SUMMARY"

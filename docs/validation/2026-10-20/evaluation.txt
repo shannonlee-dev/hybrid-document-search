@@ -1,0 +1,87 @@
+
+UTC: 2026-10-20T11:47:28.014748+00:00
+$ .venv/bin/python -m scripts.prepare_score_fusion_cache --verify-only
+Cache verified: /home/shannon/__dev/hybrid-document-search/artifacts/score-fusion-cache
+
+Exit code: 0
+
+UTC: 2026-10-20T11:47:28.164927+00:00
+$ .venv/bin/python -m scripts.evaluate_final --cache-dir artifacts/score-fusion-cache --threads 2 --warmup 1 --repeats 5 --output-dir artifacts/final-evaluation/validation-2026-10-20
+miracl10k: tfidf / 50 queries / 5 repeats
+miracl10k: bm25 / 50 queries / 5 repeats
+miracl10k: dense / 50 queries / 5 repeats
+miracl10k: rrf / 50 queries / 5 repeats
+miracl10k: score_fusion / 50 queries / 5 repeats
+strategyqa: tfidf / 592 queries / 5 repeats
+strategyqa: bm25 / 592 queries / 5 repeats
+strategyqa: dense / 592 queries / 5 repeats
+strategyqa: rrf / 592 queries / 5 repeats
+strategyqa: score_fusion / 592 queries / 5 repeats
+{
+  "miracl10k": {
+    "tfidf": {
+      "recall@5": 0.5766666666666667,
+      "recall@10": 0.7226666666666667,
+      "mrr@10": 0.49523809523809526,
+      "ndcg@10": 0.525324008661677
+    },
+    "bm25": {
+      "recall@5": 0.5876666666666667,
+      "recall@10": 0.7506666666666666,
+      "mrr@10": 0.5979126984126985,
+      "ndcg@10": 0.5938810621215993
+    },
+    "dense": {
+      "recall@5": 0.8136666666666666,
+      "recall@10": 0.9583333333333333,
+      "mrr@10": 0.8610238095238095,
+      "ndcg@10": 0.854857000175861
+    },
+    "rrf": {
+      "recall@5": 0.7653333333333333,
+      "recall@10": 0.9276666666666666,
+      "mrr@10": 0.7905714285714285,
+      "ndcg@10": 0.7844328272034149
+    },
+    "score_fusion": {
+      "recall@5": 0.8153333333333334,
+      "recall@10": 0.9683333333333333,
+      "mrr@10": 0.8811904761904762,
+      "ndcg@10": 0.8649030809637153
+    }
+  },
+  "strategyqa": {
+    "tfidf": {
+      "recall@5": 0.605152027027027,
+      "recall@10": 0.6824605855855855,
+      "mrr@10": 0.5753009706134706,
+      "ndcg@10": 0.5597942020076703
+    },
+    "bm25": {
+      "recall@5": 0.5978322072072072,
+      "recall@10": 0.66682351994852,
+      "mrr@10": 0.5831436347061347,
+      "ndcg@10": 0.562242200473678
+    },
+    "dense": {
+      "recall@5": 0.8134612290862291,
+      "recall@10": 0.8520310489060489,
+      "mrr@10": 0.8111593736593736,
+      "ndcg@10": 0.7940549183290013
+    },
+    "rrf": {
+      "recall@5": 0.7707810489060488,
+      "recall@10": 0.8400659588159588,
+      "mrr@10": 0.7393292846417847,
+      "ndcg@10": 0.7331519380656257
+    },
+    "score_fusion": {
+      "recall@5": 0.8133204633204633,
+      "recall@10": 0.8586470398970399,
+      "mrr@10": 0.8165580759330759,
+      "ndcg@10": 0.8000796704836824
+    }
+  }
+}
+
+Exit code: 0
