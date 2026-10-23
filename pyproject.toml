@@ -9,6 +9,9 @@ dependencies = ["fastapi", "pydantic", "uvicorn", "streamlit"]
 sparse = ["scikit-learn", "bm25s"]
 dense = ["sentence-transformers", "faiss-cpu", "numpy"]
 evaluation = ["ranx"]
+# Exploratory downstream RAG evaluation only; not needed by the API or UI.
+# langchain-community 0.4.2 removed a module that ragas 0.4.3 imports.
+rag = ["ragas==0.4.3", "openai", "langchain-community<0.4.2"]
 
 [dependency-groups]
 dev = [
