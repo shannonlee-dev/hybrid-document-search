@@ -36,14 +36,26 @@ def file_sha256(path: Path) -> str:
 def load_evaluation_dataset(
     directory: str | Path, split: str = "dev"
 ) -> EvaluationDataset:
-    """Load and validate the manifest's prepared files without resampling."""
-    if split not in {"train", "dev"}:
-        raise ValueError("split은 train 또는 dev여야 합니다.")
+    """Load and validate the manifest's prepared files without resampling.
+
+    Splits default to train/dev; a manifest may list its own, e.g. BC Card's
+    train/validation/test.
+    """
     directory = Path(directory)
     manifest_path = directory / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     if not isinstance(manifest, dict) or manifest.get("schema_version") != "1":
         raise ValueError("지원하지 않는 manifest schema_version입니다.")
+    splits = manifest.get("splits", ["train", "dev"])
+    if (
+        not isinstance(splits, list)
+        or not splits
+        or len(set(splits)) != len(splits)
+        or any(not isinstance(part, str) or not part.strip() for part in splits)
+    ):
+        raise ValueError("manifest splits는 중복 없는 split 이름 목록이어야 합니다.")
+    if split not in splits:
+        raise ValueError(f"split은 {', '.join(splits)} 중 하나여야 합니다.")
     revision = manifest.get("dataset_revision")
     if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}", revision):
         raise ValueError("manifest dataset_revision은 고정된 40자리 SHA여야 합니다.")
@@ -57,7 +69,7 @@ def load_evaluation_dataset(
 
     # 한 split만 평가해도 전체 준비 데이터가 같은 manifest에 속하는지 확인한다.
     names = ["corpus.jsonl"]
-    for part in ("train", "dev"):
+    for part in splits:
         for kind in ("queries", "qrels"):
             names.append(f"{kind}_{part}.jsonl")
     hashes = {}
@@ -78,7 +90,7 @@ def load_evaluation_dataset(
     corpus_ids = {document.document_id for document in documents}
     all_queries = {}
     all_qrels = {}
-    for part in ("train", "dev"):
+    for part in splits:
         query_path = directory / f"queries_{part}.jsonl"
         queries = load_queries(query_path)
         _check_count(manifest, query_path.name, len(queries))
@@ -92,10 +104,12 @@ def load_evaluation_dataset(
         _check_count(manifest, qrel_path.name, row_count)
         all_queries[part] = queries
         all_qrels[part] = judgments
-    if {query.query_id for query in all_queries["train"]} & {
-        query.query_id for query in all_queries["dev"]
-    }:
-        raise ValueError("train과 dev에 같은 query_id가 있습니다.")
+    for index, left in enumerate(splits):
+        for right in splits[index + 1 :]:
+            if {query.query_id for query in all_queries[left]} & {
+                query.query_id for query in all_queries[right]
+            }:
+                raise ValueError(f"{left}과 {right}에 같은 query_id가 있습니다.")
 
     provenance = {
         "dataset_id": manifest.get("dataset_id"),

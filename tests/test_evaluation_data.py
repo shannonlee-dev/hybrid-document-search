@@ -214,3 +214,20 @@ def test_experiment_dataset_validation(
         datasets = data.validate_dataset(evaluation_directory, raw)
         assert set(datasets) == {"train", "dev"}
         assert len(datasets["train"].documents) == 4
+
+
+def test_manifest_can_declare_its_splits(evaluation_directory):
+    for kind in ("queries", "qrels"):
+        (evaluation_directory / f"{kind}_dev.jsonl").rename(
+            evaluation_directory / f"{kind}_test.jsonl"
+        )
+    refresh_manifest(evaluation_directory)
+    path = evaluation_directory / "manifest.json"
+    manifest = json.loads(path.read_text(encoding="utf-8"))
+    path.write_text(json.dumps({**manifest, "splits": ["train", "test"]}))
+    assert load_evaluation_dataset(evaluation_directory, "test").split == "test"
+    with pytest.raises(ValueError, match="train, test"):
+        load_evaluation_dataset(evaluation_directory, "dev")
+    path.write_text(json.dumps({**manifest, "splits": ["train", "train"]}))
+    with pytest.raises(ValueError, match="splits"):
+        load_evaluation_dataset(evaluation_directory, "train")
