@@ -1,0 +1,45 @@
+{
+  "model": {
+    "model_name": "BAAI/bge-m3",
+    "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+    "normalize_embeddings": true,
+    "query_prefix": "",
+    "passage_prefix": "",
+    "batch_size": 1,
+    "device": "cuda:0"
+  },
+  "max_seq_length": 8192,
+  "dtype": "torch.float32",
+  "preprocessing": {
+    "document": "Pair positive text only",
+    "query": "unchanged"
+  },
+  "dataset_manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+  "document_ids_sha256": "2da38f56e7bd154a86907cbb8e9ccd7620152c47790b2e59d222a9e3566396d6",
+  "document_encoding_seconds": 384.5802238381002,
+  "splits": {
+    "validation": {
+      "query_encoding_latency": {
+        "mean_ms": 9.467580530792475,
+        "p95_ms": 9.674532513599843,
+        "sample_count": 1000
+      },
+      "query_count": 1000,
+      "query_ids_sha256": "73cf86834a460c7ac018659f8f07a5cd431a664a47475b4956c94cc995b8a5ce"
+    },
+    "test": {
+      "query_encoding_latency": {
+        "mean_ms": 9.460907447617501,
+        "p95_ms": 9.68249534489587,
+        "sample_count": 1000
+      },
+      "query_count": 1000,
+      "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5"
+    }
+  },
+  "vector_sha256": {
+    "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+    "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+    "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+  }
+}

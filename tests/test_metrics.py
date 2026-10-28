@@ -11,7 +11,9 @@ from evaluation.metrics import (
     METRIC_NAMES,
     evaluate_query,
     evaluate_run,
+    graded_ndcg_at_k,
     ndcg_at_k,
+    precision_at_k,
     recall_at_k,
     reciprocal_rank_at_k,
 )
@@ -220,3 +222,28 @@ def test_invalid_query_id(query_id):
 def test_invalid_run_mapping(run, qrels):
     with pytest.raises(TypeError, match="mapping"):
         evaluate_run(run, qrels)
+
+
+def _hits(*document_ids):
+    return [
+        SearchResult(document_id=document_id, rank=rank, score=1.0)
+        for rank, document_id in enumerate(document_ids, start=1)
+    ]
+
+
+def test_precision_at_k_counts_missing_positions_as_non_relevant():
+    qrels = {"a": 3, "b": 1, "c": 0}
+    assert precision_at_k(_hits("a", "c"), qrels, 1) == 1
+    assert precision_at_k(_hits("c", "a"), qrels, 1) == 0
+    assert precision_at_k(_hits("a"), qrels, 2) == 0.5
+    assert precision_at_k([], qrels, 1) == 0
+
+
+def test_graded_ndcg_uses_relevance_grades_as_gains():
+    qrels = {"a": 3, "b": 1}
+    assert graded_ndcg_at_k(_hits("a", "b"), qrels, 10) == 1
+    expected = (1 + 3 / log2(3)) / (3 + 1 / log2(3))
+    assert graded_ndcg_at_k(_hits("b", "a"), qrels, 10) == pytest.approx(expected)
+    # 이진 nDCG는 등급을 구분하지 않으므로 두 순서를 같은 값으로 본다.
+    assert ndcg_at_k(_hits("b", "a"), qrels, 10) == 1
+    assert graded_ndcg_at_k(_hits("x"), {"x": 0}, 10) == 0

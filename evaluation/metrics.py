@@ -33,6 +33,36 @@ def ndcg_at_k(
     return _ndcg(document_ids, relevant, k)
 
 
+def precision_at_k(
+    results: Iterable[SearchResult], qrels: Mapping[str, float], k: int
+) -> float:
+    """Return the fraction of the top k positions holding a positively judged document.
+
+    Missing positions count as non-relevant, so P@1 is 1 only for a relevant top hit.
+    """
+    document_ids, relevant = _validate_inputs(results, qrels, k)
+    return sum(document_id in relevant for document_id in document_ids[:k]) / k
+
+
+def graded_ndcg_at_k(
+    results: Iterable[SearchResult], qrels: Mapping[str, float], k: int
+) -> float:
+    """Compute nDCG@K with linear gains equal to the positive relevance grades."""
+    document_ids, relevant = _validate_inputs(results, qrels, k)
+    if not relevant:
+        return 0.0
+    dcg = fsum(
+        qrels[document_id] / log2(rank + 1)
+        for rank, document_id in enumerate(document_ids[:k], start=1)
+        if document_id in relevant
+    )
+    gains = sorted((qrels[document_id] for document_id in relevant), reverse=True)
+    ideal_dcg = fsum(
+        gain / log2(rank + 1) for rank, gain in enumerate(gains[:k], start=1)
+    )
+    return dcg / ideal_dcg
+
+
 def evaluate_query(
     results: Iterable[SearchResult], qrels: Mapping[str, float]
 ) -> dict[str, float]:
