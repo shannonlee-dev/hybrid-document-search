@@ -24,6 +24,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 - [운영 흐름](docs/SEARCH_SERVICE.md#운영-흐름): 데이터 준비부터 서비스 실행·상태 확인까지
 - [검증 기록](docs/validation/2026-10-20/REPORT.md): 테스트·전체 평가·데모·1시간 지속 부하 및 모니터링 로그와 CI 결과
 - [팀원별 기여](docs/CONTRIBUTIONS.md): 담당 작업, 대표 커밋, Git 집계 증빙
+- [4차 계획](docs/PHASE4_PLAN.md): 기업 특화 데이터 기반 Adaptive Hybrid 검증과 상용 RAG 외부 비교 분담
 
 ## Retrieval Methods
 
