@@ -11,6 +11,7 @@ import csv
 import json
 import os
 import sys
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from statistics import fmean
@@ -28,6 +29,7 @@ from evaluation.rag_downstream import (
     context_records,
     context_text,
     finite_mean,
+    finite_or_none,
     id_context_metrics,
     is_abstention,
     paired_bootstrap,
@@ -56,6 +58,7 @@ GENERATION_PARAMS = {
 RAGAS_METRICS = ("context_precision", "faithfulness", "response_relevancy")
 IR_METRICS = ("recall@5", "rr@10", "ndcg@10")
 ID_METRICS = ("id_context_precision", "id_context_recall")
+NON_FINITE = "non_finite_value"
 
 
 def _read_jsonl(path):
@@ -67,12 +70,20 @@ def _read_jsonl(path):
 
 def _append_jsonl(path, row):
     with path.open("a", encoding="utf-8") as output:
-        output.write(json.dumps(row, ensure_ascii=False, allow_nan=True) + "\n")
+        # NaN/무한대는 표준 JSON이 아니므로 기록 전에 정규화하고, 남아 있으면 실패한다.
+        output.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n")
         output.flush()
 
 
 def _key(row):
     return row["method"], row["query_id"]
+
+
+def _metric_value(value, error):
+    """Non-finite judge scores become undefined with an explicit reason."""
+    if value is not None and finite_or_none(value) is None:
+        return None, error or NON_FINITE
+    return value, error
 
 
 def _retrieve(args):
@@ -110,7 +121,7 @@ def _retrieve(args):
                 "question": texts[query_id],
                 "relevant": sorted(d for d, label in qrels.items() if label > 0),
             }
-            output.write(json.dumps(row, ensure_ascii=False) + "\n")
+            output.write(json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n")
     with (args.output_dir / "retrieval.jsonl").open("w", encoding="utf-8") as output:
         for position, query_id in enumerate(order):
             qrels = dataset.qrels[query_id]
@@ -132,7 +143,9 @@ def _retrieve(args):
                     "ir": evaluate_query(hits, qrels),
                     **id_context_metrics(contexts, qrels),
                 }
-                output.write(json.dumps(row, ensure_ascii=False) + "\n")
+                output.write(
+                    json.dumps(row, ensure_ascii=False, allow_nan=False) + "\n"
+                )
     write_json(
         args.output_dir / "config.json",
         {
@@ -298,7 +311,7 @@ async def _judge_rows(args, rows, contexts, questions):
             async with gate:
                 try:
                     value = (await metric.ascore(**needed)).value
-                    result[name], result[f"{name}_error"] = value, None
+                    result[name], result[f"{name}_error"] = _metric_value(value, None)
                 except Exception as exc:
                     result[name] = None
                     result[f"{name}_error"] = f"{type(exc).__name__}: {exc}"[:500]
@@ -348,16 +361,91 @@ def _judge(args):
     asyncio.run(_judge_rows(args, rows, contexts, questions))
 
 
+def _frozen_query_ids(output_dir, limit):
+    """The requested prefix of queries.jsonl, which every method must follow."""
+    manifest = _read_jsonl(output_dir / "queries.jsonl")
+    if [row["position"] for row in manifest] != list(range(len(manifest))):
+        raise ValueError("queries.jsonl의 position이 0부터 연속되지 않습니다.")
+    expected = [row["query_id"] for row in manifest[:limit]]
+    if len(expected) < limit:
+        raise ValueError(
+            f"queries.jsonl에 요청한 {limit}개 질의가 없습니다: {len(expected)}개"
+        )
+    duplicated = sorted(q for q, n in Counter(expected).items() if n > 1)
+    if duplicated:
+        raise ValueError(f"queries.jsonl에 중복 query_id가 있습니다: {duplicated}")
+    return expected
+
+
+def _indexed(name, rows, known=None):
+    """Index rows by (method, query_id), rejecting duplicates and unknown keys."""
+    counts = Counter(_key(row) for row in rows)
+    duplicated = sorted(k for k, n in counts.items() if n > 1)
+    if duplicated:
+        raise ValueError(f"{name}에 중복 (method, query_id)가 있습니다: {duplicated}")
+    unexpected = sorted(set(counts) - known) if known is not None else []
+    if unexpected:
+        raise ValueError(f"{name}에 retrieval.jsonl에 없는 행이 있습니다: {unexpected}")
+    return {_key(row): row for row in rows}
+
+
+def _check_alignment(retrieval, expected):
+    """Every method must cover exactly the frozen prefix, once, at its position.
+
+    Row counts alone are not enough: a method with a substituted query would
+    otherwise be summarized as if it answered the same questions.
+    """
+    positions = {query_id: position for position, query_id in enumerate(expected)}
+    problems = []
+    unknown = sorted({row["method"] for row in retrieval} - set(RAG_METHODS))
+    if unknown:
+        problems.append(f"알 수 없는 method {unknown}")
+    for method in RAG_METHODS:
+        rows = [row for row in retrieval if row["method"] == method]
+        counts = Counter(row["query_id"] for row in rows)
+        found = {
+            "missing": [q for q in expected if q not in counts],
+            "unexpected": sorted(set(counts) - set(positions)),
+            "duplicated": sorted(q for q, n in counts.items() if n > 1),
+            "position_mismatch": sorted(
+                f"{row['query_id']}@{row['position']}!={positions[row['query_id']]}"
+                for row in rows
+                if row["query_id"] in positions
+                and row["position"] != positions[row["query_id"]]
+            ),
+        }
+        if any(found.values()):
+            details = ", ".join(f"{k}={v}" for k, v in found.items() if v)
+            problems.append(f"{method}: {details}")
+    if problems:
+        raise ValueError(
+            "method별 질의가 고정 queries.jsonl prefix와 일치하지 않습니다 — "
+            + "; ".join(problems)
+        )
+
+
 def _joined(output_dir, limit):
-    retrieval = _select(_read_jsonl(output_dir / "retrieval.jsonl"), limit)
-    generations = {_key(r): r for r in _read_jsonl(output_dir / "generations.jsonl")}
-    judged = {_key(r): r for r in _read_jsonl(output_dir / "ragas-results.jsonl")}
+    expected = _frozen_query_ids(output_dir, limit)
+    everything = _read_jsonl(output_dir / "retrieval.jsonl")
+    known = set(_indexed("retrieval.jsonl", everything))
+    retrieval = _select(everything, limit)
+    _check_alignment(retrieval, expected)
+    generations = _indexed(
+        "generations.jsonl", _read_jsonl(output_dir / "generations.jsonl"), known
+    )
+    judged = _indexed(
+        "ragas-results.jsonl", _read_jsonl(output_dir / "ragas-results.jsonl"), known
+    )
     rows = []
     for row in retrieval:
         key = _key(row)
         if key not in generations or key not in judged:
             raise ValueError(f"생성/평가가 끝나지 않은 행이 있습니다: {key}")
         generation, judge = generations[key], judged[key]
+        # 이전 실행이 남긴 NaN/무한대도 집계·비교·직렬화 전에 undefined로 바꾼다.
+        scores = {
+            k: _metric_value(judge[k], judge[f"{k}_error"]) for k in RAGAS_METRICS
+        }
         rows.append(
             {
                 "position": row["position"],
@@ -366,21 +454,21 @@ def _joined(output_dir, limit):
                 "method": row["method"],
                 "question": row["question"],
                 "context_ids": [c["document_id"] for c in row["contexts"]],
-                **row["ir"],
-                **{k: row[k] for k in ID_METRICS},
+                **{k: finite_or_none(v) for k, v in row["ir"].items()},
+                **{k: finite_or_none(row[k]) for k in ID_METRICS},
                 "response": generation["response"],
                 "generation_error": generation["error"],
                 "finish_reason": generation.get("finish_reason"),
                 "abstained": is_abstention(generation["response"]),
-                **{k: judge[k] for k in RAGAS_METRICS},
-                **{f"{k}_error": judge[f"{k}_error"] for k in RAGAS_METRICS},
+                **{k: value for k, (value, _) in scores.items()},
+                **{f"{k}_error": error for k, (_, error) in scores.items()},
             }
         )
-    return rows
+    return rows, expected
 
 
 def _value(row, metric):
-    value = row[metric]
+    value = finite_or_none(row[metric])
     return None if value is None else float(value)
 
 
@@ -438,11 +526,8 @@ def _compare(index, query_ids, a, b, seed):
 
 
 def _summarize(args):
-    rows = _joined(args.output_dir, args.queries)
+    rows, query_ids = _joined(args.output_dir, args.queries)
     by_method = {m: [r for r in rows if r["method"] == m] for m in RAG_METHODS}
-    counts = {len(v) for v in by_method.values()}
-    if len(counts) != 1:
-        raise ValueError("method마다 질의 수가 다릅니다.")
     values = (*IR_METRICS, *ID_METRICS, *RAGAS_METRICS)
     table = {}
     for method, method_rows in by_method.items():
@@ -459,7 +544,6 @@ def _summarize(args):
             bool(r["generation_error"]) for r in method_rows
         )
     index = {(r["method"], r["query_id"]): r for r in rows}
-    query_ids = [r["query_id"] for r in by_method[RAG_METHODS[0]]]
     truncated = [
         {"method": r["method"], "query_id": r["query_id"], "position": r["position"]}
         for r in rows
@@ -495,7 +579,12 @@ def _summarize(args):
         for row in rows:
             writer.writerow({**row, "context_ids": " | ".join(row["context_ids"])})
     print(
-        json.dumps({"methods": table, "paired": paired}, ensure_ascii=False, indent=2)
+        json.dumps(
+            {"methods": table, "paired": paired},
+            ensure_ascii=False,
+            indent=2,
+            allow_nan=False,
+        )
     )
 
 

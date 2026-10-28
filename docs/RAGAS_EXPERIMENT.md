@@ -234,6 +234,12 @@ uv run --no-sync python -m scripts.evaluate_rag_downstream judge --queries 100 .
 uv run --no-sync python -m scripts.evaluate_rag_downstream summarize --queries 100
 ```
 
+`summarize`는 집계 전에 모든 method가 고정 `queries.jsonl`의 요청 prefix와 같은 query_id를 같은 position에
+한 번씩 갖는지 확인하고, 누락·초과·중복·position 불일치가 있으면 요약을 만들지 않고 실패한다.
+NaN/무한대 metric은 0이 아니라 undefined(`None`, judge metric은 `non_finite_value` 사유)로 처리해
+평균·paired 비교·noise 추정에서 제외하며, JSONL과 `summary.json`은 표준 JSON으로만 기록한다.
+이 검증을 추가한 집계기로 아래 원시 산출물을 다시 요약해도 `summary.json`은 같은 SHA-256으로 재현된다.
+
 원시 산출물(`config.json`, `queries.jsonl`, `retrieval.jsonl`, `generations.jsonl`, `ragas-results.jsonl/.csv`,
 `summary.json`, 서버 로그)은 gitignore된 `artifacts/ragas-eval/`에 보관한다.
 요약 수치는 [summary-strategyqa-100.json](experiments/ragas/summary-strategyqa-100.json)에 있다. 질의별 텍스트는 제외했다.

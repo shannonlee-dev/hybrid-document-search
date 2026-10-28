@@ -1,7 +1,7 @@
 """Verify downstream RAG helpers: fixed subsets, prompts, context metrics, stats."""
 
 import json
-from math import nan
+from math import inf, nan
 
 import pytest
 
@@ -79,9 +79,9 @@ def _write_jsonl(path, rows):
     path.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
 
 
-def test_summarize_pairs_methods_on_identical_queries(tmp_path):
+def _fixture_rows(query_ids=("p1_0", "p2_0")):
     retrieval, generations, judged = [], [], []
-    for position, query_id in enumerate(("p1_0", "p2_0")):
+    for position, query_id in enumerate(query_ids):
         for method in rag.RAG_METHODS:
             ids = ["a", "b"] if method != "score_fusion" or position else ["b", "a"]
             retrieval.append(
@@ -117,15 +117,34 @@ def test_summarize_pairs_methods_on_identical_queries(tmp_path):
                     **{f"{name}_error": None for name in cli.RAGAS_METRICS},
                 }
             )
-    _write_jsonl(tmp_path / "retrieval.jsonl", retrieval)
-    _write_jsonl(tmp_path / "generations.jsonl", generations)
-    _write_jsonl(tmp_path / "ragas-results.jsonl", judged)
+    return {
+        "queries": [
+            {"position": position, "query_id": query_id}
+            for position, query_id in enumerate(query_ids)
+        ],
+        "retrieval": retrieval,
+        "generations": generations,
+        "ragas-results": judged,
+    }
+
+
+def _write_fixture(path, rows):
+    for name, values in rows.items():
+        # 기존 실행이 남긴 NaN/무한대를 재현하기 위해 json 기본값(allow_nan)으로 쓴다.
+        _write_jsonl(path / f"{name}.jsonl", values)
     for name in ("config", "generation-config", "judge-config"):
-        (tmp_path / f"{name}.json").write_text("{}", encoding="utf-8")
+        (path / f"{name}.json").write_text("{}", encoding="utf-8")
 
-    cli.main(["summarize", "--output-dir", str(tmp_path), "--queries", "2"])
 
-    summary = json.loads((tmp_path / "summary.json").read_text(encoding="utf-8"))
+def _summarize(path, queries=2):
+    cli.main(["summarize", "--output-dir", str(path), "--queries", str(queries)])
+    return json.loads((path / "summary.json").read_text(encoding="utf-8"))
+
+
+def test_summarize_pairs_methods_on_identical_queries(tmp_path):
+    _write_fixture(tmp_path, _fixture_rows())
+
+    summary = _summarize(tmp_path)
     assert summary["queries"] == 2
     fusion = summary["paired"]["score_fusion-dense"]
     assert fusion["identical_top5_queries"] == 1
@@ -156,3 +175,136 @@ def test_summarize_rejects_unfinished_rows(tmp_path):
     )
     with pytest.raises(SystemExit):
         cli.main(["summarize", "--output-dir", str(tmp_path), "--queries", "1"])
+
+
+def _row(rows, name, method, query_id):
+    return next(
+        r for r in rows[name] if (r["method"], r["query_id"]) == (method, query_id)
+    )
+
+
+def _rejected(path, capsys, queries=2):
+    with pytest.raises(SystemExit):
+        cli.main(["summarize", "--output-dir", str(path), "--queries", str(queries)])
+    assert not (path / "summary.json").exists()
+    return capsys.readouterr().err
+
+
+def test_summarize_rejects_substituted_query_with_equal_row_counts(tmp_path, capsys):
+    # 리뷰 재현: 행 수는 같지만 BM25의 두 번째 질의만 다른 ID다.
+    rows = _fixture_rows()
+    for name in ("retrieval", "generations", "ragas-results"):
+        _row(rows, name, "bm25", "p2_0")["query_id"] = "p3_0"
+    _write_fixture(tmp_path, rows)
+    error = _rejected(tmp_path, capsys)
+    assert "bm25: missing=['p2_0'], unexpected=['p3_0']" in error
+    assert "dense:" not in error
+
+
+@pytest.mark.parametrize("name", ["retrieval", "generations", "ragas-results"])
+def test_summarize_rejects_duplicate_method_query_rows(tmp_path, capsys, name):
+    rows = _fixture_rows()
+    rows[name].append(dict(_row(rows, name, "dense", "p1_0")))
+    _write_fixture(tmp_path, rows)
+    error = _rejected(tmp_path, capsys)
+    assert f"{name}.jsonl에 중복 (method, query_id)" in error
+    assert "('dense', 'p1_0')" in error
+
+
+def test_summarize_rejects_missing_query_and_position_mismatch(tmp_path, capsys):
+    rows = _fixture_rows()
+    rows["retrieval"].remove(_row(rows, "retrieval", "tfidf", "p2_0"))
+    _row(rows, "retrieval", "dense", "p1_0")["position"] = 1
+    _row(rows, "retrieval", "dense", "p2_0")["position"] = 0
+    _write_fixture(tmp_path, rows)
+    error = _rejected(tmp_path, capsys)
+    assert "tfidf: missing=['p2_0']" in error
+    assert "dense: position_mismatch=['p1_0@1!=0', 'p2_0@0!=1']" in error
+
+
+def test_summarize_rejects_unknown_generation_rows(tmp_path, capsys):
+    rows = _fixture_rows()
+    _row(rows, "generations", "rrf", "p1_0")["query_id"] = "p9_0"
+    _write_fixture(tmp_path, rows)
+    assert "generations.jsonl에 retrieval.jsonl에 없는 행" in _rejected(
+        tmp_path, capsys
+    )
+
+
+def test_summarize_requires_the_frozen_query_prefix(tmp_path, capsys):
+    _write_fixture(tmp_path, _fixture_rows())
+    assert "요청한 3개 질의가 없습니다: 2개" in _rejected(tmp_path, capsys, queries=3)
+    (tmp_path / "queries.jsonl").unlink()
+    assert "요청한 2개 질의가 없습니다: 0개" in _rejected(tmp_path, capsys)
+
+
+def test_summarize_accepts_a_prefix_of_finished_rows(tmp_path):
+    _write_fixture(tmp_path, _fixture_rows())
+    summary = _summarize(tmp_path, queries=1)
+    assert summary["queries"] == 1
+    assert summary["methods"]["dense"]["faithfulness"]["n"] == 1
+
+
+def _strict_json(text):
+    def reject(constant):
+        raise AssertionError(f"non-standard JSON constant: {constant}")
+
+    return json.loads(text, parse_constant=reject)
+
+
+@pytest.mark.parametrize("bad", [nan, inf, -inf])
+def test_summarize_treats_non_finite_metrics_as_undefined(tmp_path, capsys, bad):
+    rows = _fixture_rows()
+    # score_fusion·dense는 p2_0에서 같은 context이므로 noise 추정에서도 빠져야 한다.
+    _row(rows, "ragas-results", "score_fusion", "p2_0")["faithfulness"] = bad
+    # rrf p2_0은 dense와 다른 context가 되어 differing_queries의 delta를 거친다.
+    _row(rows, "retrieval", "rrf", "p2_0")["contexts"] = [{"document_id": "c"}]
+    _row(rows, "ragas-results", "rrf", "p2_0")["faithfulness"] = bad
+    _row(rows, "retrieval", "bm25", "p1_0")["ir"]["ndcg@10"] = bad
+    _write_fixture(tmp_path, rows)
+
+    summary = _summarize(tmp_path)
+    text = (tmp_path / "summary.json").read_text(encoding="utf-8")
+    assert _strict_json(text) == summary
+    _strict_json(capsys.readouterr().out)
+
+    fusion = summary["methods"]["score_fusion"]
+    assert fusion["faithfulness"] == {"mean": 1.0, "n": 1, "undefined": 1}
+    assert fusion["judge_errors"]["faithfulness"] == 1
+    assert fusion["context_precision"] == {"mean": 1.0, "n": 2, "undefined": 0}
+    assert summary["methods"]["bm25"]["ndcg@10"] == {
+        "mean": 1.0,
+        "n": 1,
+        "undefined": 1,
+    }
+    assert summary["methods"]["dense"]["faithfulness"]["n"] == 2
+
+    paired = summary["paired"]["score_fusion-dense"]["metrics"]
+    assert paired["faithfulness"]["n"] == 1
+    assert paired["faithfulness"]["mean_delta"] == pytest.approx(0.5)
+    assert paired["faithfulness"]["ci"] == [pytest.approx(0.5)] * 2
+    assert paired["faithfulness"]["identical_context_mean_abs_delta"] is None
+    assert paired["context_precision"]["n"] == 2
+    assert paired["context_precision"]["identical_context_mean_abs_delta"] == 0.5
+
+    rrf = summary["paired"]["rrf-dense"]
+    assert rrf["metrics"]["faithfulness"]["n"] == 1
+    (differing,) = rrf["differing_queries"]
+    assert differing["query_id"] == "p2_0"
+    assert differing["deltas"]["faithfulness"] is None
+    assert differing["deltas"]["context_precision"] == 0.0
+
+    csv_text = (tmp_path / "ragas-results.csv").read_text(encoding="utf-8")
+    assert cli.NON_FINITE in csv_text
+    assert "nan" not in csv_text.lower() and "inf" not in csv_text.lower()
+
+
+def test_non_finite_metric_values_become_undefined_with_a_reason(tmp_path):
+    for bad in (nan, inf, -inf, None):
+        assert rag.finite_or_none(bad) is None
+    assert rag.finite_or_none(0.0) == 0.0
+    assert cli._metric_value(nan, None) == (None, cli.NON_FINITE)
+    assert cli._metric_value(-inf, "TimeoutError: x") == (None, "TimeoutError: x")
+    assert cli._metric_value(0.25, None) == (0.25, None)
+    with pytest.raises(ValueError):
+        cli._append_jsonl(tmp_path / "rows.jsonl", {"faithfulness": nan})

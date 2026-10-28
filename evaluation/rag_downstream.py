@@ -86,6 +86,11 @@ def is_abstention(response):
     return bool(_ABSTENTION.search(response or ""))
 
 
+def finite_or_none(value):
+    """NaN and ±infinity are undefined metrics, never zero and never serialized."""
+    return value if value is not None and isfinite(value) else None
+
+
 def finite_mean(values):
     """Mean over defined values plus how many were undefined (NaN/None)."""
     defined = [v for v in values if v is not None and isfinite(v)]
