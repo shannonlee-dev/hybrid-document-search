@@ -1,0 +1,157 @@
+{
+  "weight_sets": [
+    [
+      0.1,
+      0.05,
+      0
+    ],
+    [
+      0.2,
+      0.05,
+      0
+    ],
+    [
+      0.4,
+      0.05,
+      0
+    ],
+    [
+      0.8,
+      0.05,
+      0
+    ],
+    [
+      0.2,
+      0.1,
+      0
+    ],
+    [
+      0.4,
+      0.1,
+      0
+    ],
+    [
+      0.8,
+      0.1,
+      0
+    ],
+    [
+      0.4,
+      0.2,
+      0
+    ],
+    [
+      0.8,
+      0.2,
+      0
+    ],
+    [
+      0.8,
+      0.4,
+      0
+    ],
+    [
+      0.2,
+      0.1,
+      0.05
+    ],
+    [
+      0.4,
+      0.1,
+      0.05
+    ],
+    [
+      0.8,
+      0.1,
+      0.05
+    ],
+    [
+      0.4,
+      0.2,
+      0.05
+    ],
+    [
+      0.8,
+      0.2,
+      0.05
+    ],
+    [
+      0.8,
+      0.4,
+      0.05
+    ],
+    [
+      0.4,
+      0.2,
+      0.1
+    ],
+    [
+      0.8,
+      0.2,
+      0.1
+    ],
+    [
+      0.8,
+      0.4,
+      0.1
+    ],
+    [
+      0.8,
+      0.4,
+      0.2
+    ]
+  ],
+  "fixed_baseline_weight": 0.05,
+  "reporting": "retain all outcomes including no improvement; no test-based retuning",
+  "classifiers": [
+    "logistic",
+    "mlp",
+    "tree"
+  ],
+  "seed": 42,
+  "objective": "binary nDCG@10",
+  "label_ties": "balanced, keyword-heavy, semantic-heavy; atol=1e-12",
+  "selection": "non_synthetic validation mean nDCG@10; ties keep first candidate",
+  "candidate_order": "weight sets in listed order; logistic, mlp, tree",
+  "mlp": {
+    "hidden_layer_sizes": [
+      16
+    ],
+    "activation": "relu",
+    "solver": "lbfgs",
+    "alpha": 0.0001,
+    "max_iter": 500
+  },
+  "train_sampling": "all official train queries in manifest order",
+  "code_sha256": {
+    "evaluation/constants.py": "71fc8da69caa5a783f265589262fa4f11948003b812fee72db99763ae761a754",
+    "evaluation/data.py": "716056b9b898155ffb80ccbd5f51909afe51114ee6ad05b52057a49470bbf516",
+    "evaluation/metrics.py": "af4de41d9ccf9cd64186da1f973faf4d5604f00f559239ccf8adea992cee7722",
+    "evaluation/latency.py": "80718bfab14352e778c1a3b6add727411384874864e24c39ba6add7bff1e4232",
+    "evaluation/benchmark.py": "7a44e75ccfe6318a7c58483c95a8444519ee8575e016a39833d0e339f42a3179",
+    "scripts/evaluate.py": "1e3659c553efb40ce18d4549114e2bc4f0600b1ecd95b9035c9c692ad37a7ad0",
+    "retrievers/tfidf.py": "20d8da00a10965495ee0470ba6b8320ee64cb4297b404ac6927c29a92a40f386",
+    "retrievers/bm25.py": "623bfbb261a93037e1b3ac6bf1ff4aff0f35afa5e333f67cdb667549cd14d7a3",
+    "retrievers/dense.py": "29665f845190866ea43f8dc116d0fd912abc90e68229cb0dfd26c0a077f5c65e",
+    "retrievers/model_config.py": "4b634e1311a0019d4b2f7512be283e272490ae043ac0ff4a3463a5ef6faeeb0b",
+    "config/dense_models.toml": "ae04a554936281654e719db68f451e5330d1575dde6ea1aabcea48e0abe646a3",
+    "indexing/faiss_index.py": "b40d64f94fa703fe310063c17fd69f720977730086d074bf9787e49d8b392609",
+    "fusion/hybrid.py": "052cd3514e64e89dff1f4a60761731c441281228ce19352f631941e1fc514412",
+    "fusion/rrf.py": "c36dada93bea725e313e781da756b2eb107db2e6c4da353a5b2333d65b6ce90b",
+    "fusion/score.py": "dec2738b5f38071b48b0621f279796cad6a3a154e0aa7a6cc29c7699076916d0",
+    "data/loader.py": "850e381db854635c551fcf572adb3ed16762a71032cff2c3ddda5013f148edf0",
+    "data/preprocess.py": "d938f0084012b22615b7296dff2fbda61b3d184d878404ef2744cef10018f57c",
+    "fusion/adaptive.py": "49c9bb8685b2de23e515da80e349e02ae8a08436ee2bdb600182d7a972f0ab92",
+    "evaluation/adaptive.py": "b71f7612ff43c2048ce359dd8b43065bc8714ab5bc4d1f15dc8abd048a7361e2",
+    "scripts/evaluate_adaptive.py": "6b451e929f511183200c0324369e24ec4b91e43187223d63631375b2079657a5",
+    "evaluation/enterprise.py": "5fc9ad13add10ad0c8a43087c018c4ab1a2aea4d3a5d803d4ab6d6c17aa52bb1",
+    "data/bccard.py": "00200adc7081a464d6d44d8fc9637ae32422ea3d3ee305c11e6801150b22eecf",
+    "indexing/vectors.py": "97029028fc6f59f3443f6c5fe2e738752a751f584ee5393a258c2ae1c12f5d7a",
+    "scripts/benchmark_score_fusion.py": "b8ffea04ce82874395fc59471d7531e6a145c83b70262733a202a5a55fdd7946",
+    "evaluation/json_io.py": "61042ab2db4e0c90d5d9d8542669c6af43469b6a29582b558655564f035e285c",
+    "evaluation/runtime_config.py": "1ff1ef8a364169e3c360399d54b245c444808f6e3c8d79573812c2458de061e2"
+  },
+  "dataset_manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+  "encoding_sha256": "99584e378d55b1413732181f3ee8de84be4b066d7e20c59e5c5672843517bd78",
+  "test_exposure": "official test was inspected in prior baseline/exploratory work; not fresh independent confirmation"
+}
