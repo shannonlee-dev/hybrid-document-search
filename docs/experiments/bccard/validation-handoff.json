@@ -1,0 +1,547 @@
+{
+  "split": "validation",
+  "metric": "ndcg@10",
+  "material_margin": 0.2,
+  "wins": {
+    "bm25_gt_dense": {
+      "count": 137,
+      "fraction": 0.137
+    },
+    "dense_gt_bm25": {
+      "count": 418,
+      "fraction": 0.418
+    },
+    "bm25_eq_dense": {
+      "count": 445,
+      "fraction": 0.445
+    },
+    "fusion_gt_dense": {
+      "count": 163,
+      "fraction": 0.163
+    },
+    "fusion_lt_dense": {
+      "count": 68,
+      "fraction": 0.068
+    },
+    "fusion_eq_dense": {
+      "count": 769,
+      "fraction": 0.769
+    },
+    "all_three_tied": {
+      "count": 435,
+      "fraction": 0.435
+    },
+    "bm25_uniquely_best": {
+      "count": 94,
+      "fraction": 0.094
+    },
+    "bm25_best_or_tied": {
+      "count": 566,
+      "fraction": 0.566
+    },
+    "dense_uniquely_best": {
+      "count": 67,
+      "fraction": 0.067
+    },
+    "dense_best_or_tied": {
+      "count": 780,
+      "fraction": 0.78
+    },
+    "score_fusion_uniquely_best": {
+      "count": 90,
+      "fraction": 0.09
+    },
+    "score_fusion_best_or_tied": {
+      "count": 838,
+      "fraction": 0.838
+    }
+  },
+  "oracle": {
+    "selection_metric": "ndcg@10",
+    "choice_counts": {
+      "bm25": 94,
+      "score_fusion": 838,
+      "dense": 68
+    },
+    "metrics": {
+      "p@1": 0.659,
+      "recall@10": 0.7511148989898989,
+      "mrr@10": 0.7382603174603174,
+      "ndcg@10": 0.6909746718930982,
+      "graded_ndcg@10": 0.7073896243441065
+    },
+    "gain_over_dense": {
+      "p@1": 0.07800000000000007,
+      "recall@10": 0.020482070707070643,
+      "mrr@10": 0.06522896825396818,
+      "ndcg@10": 0.0448086160838167,
+      "graded_ndcg@10": 0.04624529010101919
+    },
+    "gain_over_score_fusion": {
+      "p@1": 0.06300000000000006,
+      "recall@10": 0.009267424242424216,
+      "mrr@10": 0.0487738095238095,
+      "ndcg@10": 0.030993980770950613,
+      "graded_ndcg@10": 0.03185459648774591
+    },
+    "share_of_dense_to_oracle_gap_closed_by_fusion": 0.3083031015067535
+  },
+  "lexical_profiles": {
+    "bm25_material_win": {
+      "query_count": 71,
+      "has_digit": 0.08450704225352113,
+      "has_latin": 0.29577464788732394,
+      "has_uppercase_abbreviation": 0.29577464788732394,
+      "mean_length_chars": 33.29577464788732,
+      "mean_bigram_overlap_with_positive": 0.5368091652104339,
+      "provenance": {
+        "faq_direct": 4,
+        "base": 48,
+        "synthetic_base": 8,
+        "synthetic_crawl": 11
+      },
+      "page_type": {
+        "faq": 4,
+        "(none)": 56,
+        "service": 9,
+        "notice": 2
+      }
+    },
+    "dense_material_win": {
+      "query_count": 317,
+      "has_digit": 0.06309148264984227,
+      "has_latin": 0.22712933753943218,
+      "has_uppercase_abbreviation": 0.19558359621451105,
+      "mean_length_chars": 29.73186119873817,
+      "mean_bigram_overlap_with_positive": 0.44777067379069496,
+      "provenance": {
+        "faq_direct": 16,
+        "base": 258,
+        "synthetic_crawl": 35,
+        "synthetic_base": 8
+      },
+      "page_type": {
+        "faq": 16,
+        "(none)": 266,
+        "guide": 6,
+        "service": 21,
+        "notice": 8
+      }
+    },
+    "bm25_dense_tied": {
+      "query_count": 445,
+      "has_digit": 0.08764044943820225,
+      "has_latin": 0.21797752808988763,
+      "has_uppercase_abbreviation": 0.19550561797752808,
+      "mean_length_chars": 31.85168539325843,
+      "mean_bigram_overlap_with_positive": 0.5304997818322015,
+      "provenance": {
+        "faq_direct": 26,
+        "base": 344,
+        "synthetic_crawl": 69,
+        "synthetic_base": 6
+      },
+      "page_type": {
+        "faq": 26,
+        "(none)": 350,
+        "guide": 4,
+        "service": 60,
+        "notice": 5
+      }
+    }
+  },
+  "examples": [
+    {
+      "group": "bm25_clearly_better",
+      "query_id": "base_bcai_003852_000",
+      "text": "해외 직구 사이트가 폐쇄된 경우 환불받는 방법은 무엇인가요?",
+      "provenance": "base",
+      "relevant": {
+        "base_bcai_003852_000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 1.0,
+        "dense": 0.0,
+        "score_fusion": 0.31546487678572877
+      },
+      "top3": {
+        "bm25": [
+          "base_bcai_003852_000",
+          "base_bcai_008153_000",
+          "crawl_bc-merchant_customer-center_faq_41000"
+        ],
+        "dense": [
+          "base_bcai_017519_000",
+          "base_bcai_017569_000",
+          "base_bcai_017472_000"
+        ],
+        "score_fusion": [
+          "base_bcai_017519_000",
+          "base_bcai_017569_000",
+          "base_bcai_017472_000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 33,
+        "bigram_overlap_with_positive": 0.32
+      }
+    },
+    {
+      "group": "bm25_clearly_better",
+      "query_id": "base_bcai_022921_000",
+      "text": "기준금리가 1.25%에서 1%로 인하되면 법인의 설비투자 대출 금리는 어떤 영향을 받나요?",
+      "provenance": "base",
+      "relevant": {
+        "base_bcai_022921_000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 1.0,
+        "dense": 0.2890648263178879,
+        "score_fusion": 0.2890648263178879
+      },
+      "top3": {
+        "bm25": [
+          "base_bcai_022921_000",
+          "base_bcai_022913_000",
+          "base_bcai_022948_000"
+        ],
+        "dense": [
+          "base_bcai_022956_000",
+          "base_bcai_022968_000",
+          "base_bcai_022948_000"
+        ],
+        "score_fusion": [
+          "base_bcai_022956_000",
+          "base_bcai_022948_000",
+          "base_bcai_022968_000"
+        ]
+      },
+      "properties": {
+        "has_digit": true,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 50,
+        "bigram_overlap_with_positive": 0.5263157894736842
+      }
+    },
+    {
+      "group": "bm25_clearly_better",
+      "query_id": "synth_base_bcai_024189_001_q1",
+      "text": "PG사를 이용하면 결제 관련 고객 지원은 누가 담당하나요?",
+      "provenance": "synthetic_base",
+      "relevant": {
+        "base_bcai_024189_001": 3,
+        "base_bcai_024189_000": 2,
+        "base_bcai_024189_002": 2
+      },
+      "relevant_count": 3,
+      "ndcg@10": {
+        "bm25": 0.7039180890341347,
+        "dense": 0.0,
+        "score_fusion": 0.0
+      },
+      "top3": {
+        "bm25": [
+          "base_bcai_024189_001",
+          "base_bcai_019207_000",
+          "base_bcai_024189_002"
+        ],
+        "dense": [
+          "base_bcai_019220_000",
+          "base_bcai_019166_000",
+          "base_bcai_023739_000"
+        ],
+        "score_fusion": [
+          "base_bcai_019220_000",
+          "base_bcai_019166_000",
+          "base_bcai_019237_000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": true,
+        "has_uppercase_abbreviation": true,
+        "length_chars": 32,
+        "bigram_overlap_with_positive": 0.5833333333333334
+      }
+    },
+    {
+      "group": "dense_clearly_better",
+      "query_id": "crawl_bc-personal_customer-center_faq_422000",
+      "text": "플래티늄카드의 \"구매품 보상\"이 무엇인가요?",
+      "provenance": "faq_direct",
+      "relevant": {
+        "crawl_bc-personal_customer-center_faq_422000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 0.0,
+        "dense": 1.0,
+        "score_fusion": 0.6309297535714575
+      },
+      "top3": {
+        "bm25": [
+          "crawl_bc-merchant_customer-center_faq_41000",
+          "base_bcai_008153_000",
+          "base_bcai_002571_000"
+        ],
+        "dense": [
+          "crawl_bc-personal_customer-center_faq_422000",
+          "crawl_bc-personal_customer-center_faq_410000",
+          "base_bcai_005259_000"
+        ],
+        "score_fusion": [
+          "crawl_bc-personal_customer-center_faq_410000",
+          "crawl_bc-personal_customer-center_faq_422000",
+          "base_bcai_005259_000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 24,
+        "bigram_overlap_with_positive": 0.35
+      }
+    },
+    {
+      "group": "dense_clearly_better",
+      "query_id": "crawl_bc-personal_customer-center_faq_508000",
+      "text": "인터넷 옵션 설정은 어떻게 하나요?",
+      "provenance": "faq_direct",
+      "relevant": {
+        "crawl_bc-personal_customer-center_faq_508000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 0.0,
+        "dense": 1.0,
+        "score_fusion": 1.0
+      },
+      "top3": {
+        "bm25": [
+          "crawl_bc-merchant_customer-center_faq_61000",
+          "crawl_bc-merchant_customer-center_faq_76000",
+          "crawl_bc-merchant_customer-center_faq_47000"
+        ],
+        "dense": [
+          "crawl_bc-personal_customer-center_faq_508000",
+          "crawl_bc-personal_customer-center_faq_496000",
+          "crawl_bc-personal_customer-center_faq_505000"
+        ],
+        "score_fusion": [
+          "crawl_bc-personal_customer-center_faq_508000",
+          "crawl_bc-personal_customer-center_faq_496000",
+          "crawl_bc-personal_customer-center_faq_003"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 19,
+        "bigram_overlap_with_positive": 0.42857142857142855
+      }
+    },
+    {
+      "group": "dense_clearly_better",
+      "query_id": "crawl_bc-personal_customer-center_faq_482000",
+      "text": "이사를 가게 되었는데 우편물 수령지 변경은 어떻게 하나요?",
+      "provenance": "faq_direct",
+      "relevant": {
+        "crawl_bc-personal_customer-center_faq_482000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 0.0,
+        "dense": 1.0,
+        "score_fusion": 1.0
+      },
+      "top3": {
+        "bm25": [
+          "crawl_bc-merchant_customer-center_faq_5000",
+          "crawl_bc-merchant_customer-center_faq_61000",
+          "crawl_bc-merchant_customer-center_faq_65000"
+        ],
+        "dense": [
+          "crawl_bc-personal_customer-center_faq_482000",
+          "crawl_bc-personal_customer-center_faq_229000",
+          "base_bcai_017351_000"
+        ],
+        "score_fusion": [
+          "crawl_bc-personal_customer-center_faq_482000",
+          "crawl_bc-personal_customer-center_faq_229000",
+          "base_bcai_017351_000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 32,
+        "bigram_overlap_with_positive": 0.2916666666666667
+      }
+    },
+    {
+      "group": "fusion_clearly_better",
+      "query_id": "base_bcai_012047_000",
+      "text": "공매도는 어떤 경우에 유리한가요?",
+      "provenance": "base",
+      "relevant": {
+        "base_bcai_012047_000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 0.0,
+        "dense": 0.6309297535714575,
+        "score_fusion": 1.0
+      },
+      "top3": {
+        "bm25": [
+          "base_bcai_008391_000",
+          "base_bcai_008507_000",
+          "crawl_bc-corporation_customer-center_faq_001"
+        ],
+        "dense": [
+          "base_bcai_012056_000",
+          "base_bcai_012047_000",
+          "base_bcai_023524_000"
+        ],
+        "score_fusion": [
+          "base_bcai_012047_000",
+          "base_bcai_012056_000",
+          "base_bcai_012058_000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 18,
+        "bigram_overlap_with_positive": 0.35714285714285715
+      }
+    },
+    {
+      "group": "fusion_clearly_better",
+      "query_id": "base_bcai_008974_000",
+      "text": "카카오페이의 주요 성과는 무엇인가요?",
+      "provenance": "base",
+      "relevant": {
+        "base_bcai_008974_000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 0.0,
+        "dense": 0.6309297535714575,
+        "score_fusion": 1.0
+      },
+      "top3": {
+        "bm25": [
+          "base_bcai_008153_000",
+          "crawl_bc-merchant_customer-center_faq_41000",
+          "crawl_bc-personal_customer-center_faq_262000"
+        ],
+        "dense": [
+          "base_bcai_008972_000",
+          "base_bcai_008974_000",
+          "base_bcai_008986_000"
+        ],
+        "score_fusion": [
+          "base_bcai_008974_000",
+          "base_bcai_008972_000",
+          "base_bcai_008986_000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 20,
+        "bigram_overlap_with_positive": 0.375
+      }
+    },
+    {
+      "group": "all_tied",
+      "query_id": "crawl_bc-personal_customer-center_faq_69000",
+      "text": "모바일카드와 플라스틱카드의 카드번호와 유효기한은 동일한가요?",
+      "provenance": "faq_direct",
+      "relevant": {
+        "crawl_bc-personal_customer-center_faq_69000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 1.0,
+        "dense": 1.0,
+        "score_fusion": 1.0
+      },
+      "top3": {
+        "bm25": [
+          "crawl_bc-personal_customer-center_faq_69000",
+          "crawl_bc-personal_customer-center_faq_56000",
+          "crawl_bc-personal_customer-center_faq_71000"
+        ],
+        "dense": [
+          "crawl_bc-personal_customer-center_faq_69000",
+          "crawl_bc-personal_customer-center_faq_33000",
+          "crawl_bc-personal_customer-center_faq_71000"
+        ],
+        "score_fusion": [
+          "crawl_bc-personal_customer-center_faq_69000",
+          "crawl_bc-personal_customer-center_faq_33000",
+          "crawl_bc-personal_customer-center_faq_71000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 33,
+        "bigram_overlap_with_positive": 0.7307692307692307
+      }
+    },
+    {
+      "group": "all_tied",
+      "query_id": "crawl_bc-personal_customer-center_faq_379000",
+      "text": "카드 메뉴에서 관심카드등록을 했는데, 어디서 확인하나요?",
+      "provenance": "faq_direct",
+      "relevant": {
+        "crawl_bc-personal_customer-center_faq_379000": 3
+      },
+      "relevant_count": 1,
+      "ndcg@10": {
+        "bm25": 1.0,
+        "dense": 1.0,
+        "score_fusion": 1.0
+      },
+      "top3": {
+        "bm25": [
+          "crawl_bc-personal_customer-center_faq_379000",
+          "crawl_bc-personal_customer-center_faq_378000",
+          "crawl_bc-merchant_customer-center_faq_15000"
+        ],
+        "dense": [
+          "crawl_bc-personal_customer-center_faq_379000",
+          "crawl_bc-personal_customer-center_faq_378000",
+          "base_bcai_004683_000"
+        ],
+        "score_fusion": [
+          "crawl_bc-personal_customer-center_faq_379000",
+          "crawl_bc-personal_customer-center_faq_378000",
+          "crawl_bc-personal_customer-center_faq_380000"
+        ]
+      },
+      "properties": {
+        "has_digit": false,
+        "has_latin": false,
+        "has_uppercase_abbreviation": false,
+        "length_chars": 31,
+        "bigram_overlap_with_positive": 0.4583333333333333
+      }
+    }
+  ]
+}
