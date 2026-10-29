@@ -1,7 +1,7 @@
 # BC Card 기업 특화 검색 데이터셋
 
 4차(#25) 평가 데이터와 고정 protocol, 기존 방식(BM25 · Dense · Fixed Score Fusion)의 전이 결과를 정리한다.
-Adaptive Hybrid(#24)와 상용 서비스(#26) 결과는 아직 없으며, 같은 protocol로 이후에 추가한다.
+Adaptive Hybrid(#24)는 [ADAPTIVE_RESULTS.md](ADAPTIVE_RESULTS.md), 상용 서비스(#26)는 [COMMERCIAL_RAG_BENCHMARK.md](COMMERCIAL_RAG_BENCHMARK.md)에서 같은 protocol로 다룬다. 4차 최종 정리는 [PHASE4_FINAL_EVALUATION.md](PHASE4_FINAL_EVALUATION.md).
 
 ## Dataset source
 
