@@ -3,6 +3,9 @@
 2026-10-29 측정. Train으로 학습하고 validation에서 60개 후보 중 weight·router를 선택한 뒤, 설정을 동결하고 test를 한 번 평가했다.
 가중치 20조합과 Router 3종을 동일한 데이터·선택 규칙으로 비교했다.
 
+공식 test 1,000개는 이전 Adaptive 탐색에서도 이미 평가한 이력이 있다.
+‘test 1회’는 이번 실행에서 설정을 동결한 이후의 평가 횟수이며, 새로운 미사용 Test에 대한 독립 검증을 의미하지 않는다.
+
 ## Primary test — non_synthetic 721
 
 | 방식 | P@1 | Recall@10 | MRR@10 | nDCG@10 | 검색 mean ms | P95 ms |
