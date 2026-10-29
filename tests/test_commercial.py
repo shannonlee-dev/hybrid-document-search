@@ -6,11 +6,13 @@ import pytest
 
 from commercial.base import ProviderError, ProviderHit, ProviderResponse
 from commercial.naver import NaverRagClient, parse_conversation
+from data.loader import Document
 from evaluation.data import Query
 from evaluation.external import (
     RECORDS_FILE,
     NormalizationError,
     RunAborted,
+    index_documents,
     normalize_hits,
     read_jsonl,
     require_terms_review,
@@ -20,6 +22,7 @@ from evaluation.external import (
 ID_MAP = {"doc-a": "doc-a", "doc-b": "doc-b", "doc-c": "doc-c"}
 METADATA = {
     "provider": "fake",
+    "provider_settings": {"service_id": "svc", "base_url": "https://fake.invalid"},
     "split": "test",
     "top_k": 3,
     "dataset_manifest_sha256": "m",
@@ -289,6 +292,111 @@ def test_resume_refuses_changed_run_conditions(tmp_path):
             metadata=METADATA | {"top_k": 5},
             id_map=ID_MAP,
         )
+
+
+@pytest.mark.parametrize(
+    "changed_settings",
+    [
+        {"service_id": "other-svc", "base_url": "https://fake.invalid"},
+        {"service_id": "svc", "base_url": "https://changed.invalid"},
+        {"service_id": "svc", "base_url": "https://fake.invalid", "k": 50},
+    ],
+)
+def test_search_resume_refuses_changed_provider_settings(tmp_path, changed_settings):
+    provider = _Provider({"q1": [["doc-a"]], "q2": [["doc-a"]]})
+    run_external_queries(
+        provider, _queries("q1"), tmp_path, metadata=METADATA, id_map=ID_MAP
+    )
+    with pytest.raises(ValueError, match="provider_settings"):
+        run_external_queries(
+            provider,
+            _queries("q1", "q2"),
+            tmp_path,
+            metadata=METADATA | {"provider_settings": changed_settings},
+            id_map=ID_MAP,
+        )
+    # 거부는 provider.search() 호출 전에 일어난다: q1만 이미 호출됐어야 한다.
+    assert provider.calls == ["q1"]
+
+
+class _IndexClient:
+    name = "fake"
+
+    def __init__(self, settings=None):
+        self._settings = settings or {
+            "service_id": "svc",
+            "base_url": "https://fake.invalid",
+        }
+        self.calls = []
+
+    def describe(self):
+        return self._settings
+
+    def add_document(self, document_id, text):
+        self.calls.append(document_id)
+        return {}
+
+
+INDEX_IDENTITY = {
+    "provider": "fake",
+    "provider_settings": {"service_id": "svc", "base_url": "https://fake.invalid"},
+    "dataset_manifest_sha256": "m",
+    "corpus_sha256": "c",
+}
+
+
+def _documents(*ids):
+    return [Document(document_id=i, text=f"text-{i}", title="") for i in ids]
+
+
+def test_index_resume_with_same_identity_skips_completed_documents(tmp_path):
+    client = _IndexClient()
+    checkpoint = tmp_path / "indexed.jsonl"
+    index_documents(
+        client, _documents("d1", "d2", "d3"), checkpoint, run_identity=INDEX_IDENTITY
+    )
+    assert client.calls == ["d1", "d2", "d3"]
+    client.calls.clear()
+    # 같은 identity + 같은 document set으로 재개하면 이미 색인된 문서는 건너뛴다.
+    checkpoint.write_text(
+        "\n".join(checkpoint.read_text(encoding="utf-8").splitlines()[:2]) + "\n",
+        encoding="utf-8",
+    )
+    index_documents(
+        client, _documents("d1", "d2", "d3"), checkpoint, run_identity=INDEX_IDENTITY
+    )
+    assert client.calls == ["d3"]
+
+
+def test_index_resume_refuses_changed_service_setting(tmp_path):
+    client = _IndexClient()
+    checkpoint = tmp_path / "indexed.jsonl"
+    index_documents(client, _documents("d1"), checkpoint, run_identity=INDEX_IDENTITY)
+    other = _IndexClient(
+        {"service_id": "other-svc", "base_url": "https://fake.invalid"}
+    )
+    with pytest.raises(ValueError, match="provider_settings"):
+        index_documents(
+            other,
+            _documents("d1", "d2"),
+            checkpoint,
+            run_identity=INDEX_IDENTITY | {"provider_settings": other.describe()},
+        )
+    # 거부는 add_document() 호출 전에 일어난다.
+    assert other.calls == []
+
+
+def test_index_resume_refuses_changed_document_set(tmp_path):
+    client = _IndexClient()
+    checkpoint = tmp_path / "indexed.jsonl"
+    index_documents(
+        client, _documents("d1", "d2"), checkpoint, run_identity=INDEX_IDENTITY
+    )
+    with pytest.raises(ValueError, match="document_set_sha256"):
+        index_documents(
+            client, _documents("d1", "d3"), checkpoint, run_identity=INDEX_IDENTITY
+        )
+    assert client.calls == ["d1", "d2"]
 
 
 def test_terms_gate_requires_explicit_approval(tmp_path):

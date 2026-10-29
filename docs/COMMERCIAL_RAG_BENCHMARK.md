@@ -13,7 +13,7 @@ retrieval 비교만. 답변 생성 품질은 다루지 않습니다.
 | Upstage File Search | `EXCLUDED`. chunk 단위 원본 ID mapping 불가, 문서 수 제한. 실행 실패가 아니라 현재 protocol 밖 |
 | commercial result | none. 업로드 0건, provider 호출 0건, test 질의 0/1,000 |
 | 로컬 행 | PR #28 결과 그대로 |
-| Adaptive Hybrid | PR #30 병합 전까지 pending |
+| Adaptive Hybrid | PR #30이 main에 merge 완료. 결과는 `docs/ADAPTIVE_RESULTS.md` 참고(이 PR에서 재계산하지 않음) |
 
 NAVER 경로는 순수 retriever와 같지 않은 **commercial retrieval pipeline**입니다(query rewrite, 필수 답변 생성, provider chunking, 비공개 embedding · reranking).
 같은 qrels로 평가하지만 drop-in retriever 비교로 보지 않습니다. 상용 API latency는 로컬 캐시 vector CPU latency와 따로 보고합니다.
@@ -114,7 +114,8 @@ NAVER 가이드 페이지 일부는 `stale` 표시가 있습니다.
 - timeout · 네트워크 · 5xx · 429/50003: 최대 4회, 2 · 4 · 8초 backoff(최대 60초), `Retry-After` 우선.
 - 401/403 · 404(서비스 없음) · 50009 quota: 즉시 run 중단, 재시도 안 함.
 - 그 외 4xx · 응답 형식 오류: 해당 질의 실패로 기록.
-- 질의마다 JSONL checkpoint. 재실행 시 성공 질의는 건너뛰고 실패 질의만 다시 시도. 실행 조건(provider · split · top_k · manifest · query set · ID map hash)이 바뀌면 재개 거부.
+- 질의마다 JSONL checkpoint. 재실행 시 성공 질의는 건너뛰고 실패 질의만 다시 시도. 실행 조건(provider · `provider_settings`[service ID · base URL · retrieval parameter 포함] · split · top_k · manifest · query set · ID map hash)이 바뀌면 provider search 호출 전에 재개 거부.
+- 색인도 같은 방식: 첫 upload 전에 `<checkpoint>.identity.json`에 provider · `provider_settings` · corpus manifest · 실제 색인 대상 ID+텍스트 digest를 기록. `--limit`으로 선택 문서 집합이 달라지면 같은 corpus라도 재개를 거부하며, 거부는 `add_document()` 호출 전에 일어남. smoke 색인도 같은 helper를 써서 동일하게 보호됨.
 - 평가에서 실패 · 누락 질의는 빈 결과(0점)로 분모에 남기고 slice별 `failed` · `missing` 수를 같이 보고.
 
 ### 지표
@@ -133,7 +134,7 @@ held-out test. 로컬 행은 [#25 결과](BC_CARD_DATASET.md#baseline-results) �
 | BM25 | 0.4189 | 0.7406 | 0.5232 | 0.5755 | – |
 | Dense (BGE-M3) | 0.6560 | 0.8988 | 0.7460 | 0.7835 | – |
 | Fixed Score Fusion | 0.6852 | 0.8946 | 0.7615 | 0.7940 | – |
-| Adaptive Hybrid (#24) | 대기 | | | | PR #30 미병합 |
+| Adaptive Hybrid (#24) | – | | | | PR #30 merge 완료; 결과는 `docs/ADAPTIVE_RESULTS.md` 참고, 이 PR 범위 아님 |
 | NAVER Cloud RAG | 미실행 | | | | 약관 · credential 차단 |
 | Upstage File Search | 제외 | | | | chunk ID mapping 불가 |
 
@@ -144,7 +145,7 @@ held-out test. 로컬 행은 [#25 결과](BC_CARD_DATASET.md#baseline-results) �
 | BM25 | 0.4030 | 0.6044 | 0.5013 | 0.4887 | – |
 | Dense (BGE-M3) | 0.5800 | 0.7264 | 0.6699 | 0.6459 | – |
 | Fixed Score Fusion | 0.6100 | 0.7280 | 0.6881 | 0.6583 | – |
-| Adaptive Hybrid (#24) | 대기 | | | | PR #30 미병합 |
+| Adaptive Hybrid (#24) | – | | | | PR #30 merge 완료; 결과는 `docs/ADAPTIVE_RESULTS.md` 참고, 이 PR 범위 아님 |
 | NAVER Cloud RAG | 미실행 | | | | 약관 · credential 차단 |
 | Upstage File Search | 제외 | | | | chunk ID mapping 불가 |
 

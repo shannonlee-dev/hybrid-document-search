@@ -33,14 +33,23 @@ DEFAULT_MAX_ATTEMPTS = 4
 DEFAULT_BACKOFF_SECONDS = 2.0
 MAX_BACKOFF_SECONDS = 60.0
 RUN_FILE, RECORDS_FILE, RAW_FILE = "run.json", "run.jsonl", "raw-responses.jsonl"
+INDEX_IDENTITY_SUFFIX = ".identity.json"
 LOCAL_REPORT_SLICES = ("non_synthetic", "all")
 _RUN_IDENTITY = (
     "provider",
+    "provider_settings",
     "split",
     "top_k",
     "dataset_manifest_sha256",
     "query_set_sha256",
     "id_map_sha256",
+)
+_INDEX_IDENTITY = (
+    "provider",
+    "provider_settings",
+    "dataset_manifest_sha256",
+    "corpus_sha256",
+    "document_set_sha256",
 )
 
 
@@ -69,6 +78,21 @@ def id_map_digest(id_map):
 
 def query_set_digest(queries):
     return _digest(f"{query.query_id}\t{query.text}" for query in queries)
+
+
+def document_set_digest(documents):
+    """Digest of the actual indexed document set (ID + text), order-independent.
+
+    A full-corpus hash would miss a `--limit` selection change that keeps the
+    same corpus but indexes a different subset, so this hashes the documents
+    actually passed to `index_documents`, not the corpus they came from.
+    """
+    ordered = sorted(documents, key=lambda document: document.document_id)
+    return _digest(f"{document.document_id}\t{document.text}" for document in ordered)
+
+
+def _index_identity_path(checkpoint):
+    return Path(checkpoint).with_name(Path(checkpoint).name + INDEX_IDENTITY_SUFFIX)
 
 
 def require_terms_review(path, provider):
@@ -321,15 +345,32 @@ def index_documents(
     documents,
     checkpoint,
     *,
+    run_identity,
     max_attempts=DEFAULT_MAX_ATTEMPTS,
     backoff=DEFAULT_BACKOFF_SECONDS,
     sleeper=sleep,
     clock=perf_counter,
     progress=None,
 ):
-    """Upload documents one by one under their own IDs, resuming from checkpoint."""
+    """Upload documents one by one under their own IDs, resuming from checkpoint.
+
+    `run_identity` must carry provider/provider_settings and corpus identity
+    (no credentials); the actual selected document set is hashed here. Identity
+    is written before the first upload and checked before any resume, so a
+    changed provider, service, corpus or `--limit` selection is refused before
+    `client.add_document()` is ever called.
+    """
     checkpoint = Path(checkpoint)
     checkpoint.parent.mkdir(parents=True, exist_ok=True)
+    identity_path = _index_identity_path(checkpoint)
+    identity = {**run_identity, "document_set_sha256": document_set_digest(documents)}
+    if identity_path.exists():
+        saved = read_json(identity_path)
+        changed = [key for key in _INDEX_IDENTITY if saved.get(key) != identity[key]]
+        if changed:
+            raise ValueError(f"기존 색인 checkpoint와 실행 조건이 다릅니다: {changed}")
+    else:
+        write_json(identity_path, identity)
     _trim_partial_line(checkpoint)
     done = {row["document_id"] for row in read_jsonl(checkpoint)}
     pending = [doc for doc in documents if doc.document_id not in done]

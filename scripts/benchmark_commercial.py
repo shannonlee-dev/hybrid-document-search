@@ -84,9 +84,19 @@ def _index(args):
     dataset = load_evaluation_dataset(args.data_dir, args.split)
     documents = dataset.documents[: args.limit] if args.limit else dataset.documents
     client = _client(args)
+    run_identity = {
+        "provider": client.name,
+        "provider_settings": client.describe(),
+        "dataset_manifest_sha256": dataset.provenance["manifest_sha256"],
+        "corpus_sha256": dataset.provenance["input_sha256"]["corpus.jsonl"],
+    }
     started_at = datetime.now(UTC).isoformat()
     upload = index_documents(
-        client, documents, args.output_dir / "indexed.jsonl", progress=_progress
+        client,
+        documents,
+        args.output_dir / "indexed.jsonl",
+        run_identity=run_identity,
+        progress=_progress,
     )
     count, wait_seconds = _wait_for_count(client, len(documents), args.index_timeout)
     record = {
@@ -120,7 +130,18 @@ def _smoke(args):
         for q in queries
     ]
     client = _client(args)
-    index_documents(client, targets, args.output_dir / "smoke-indexed.jsonl")
+    run_identity = {
+        "provider": client.name,
+        "provider_settings": client.describe(),
+        "dataset_manifest_sha256": dataset.provenance["manifest_sha256"],
+        "corpus_sha256": dataset.provenance["input_sha256"]["corpus.jsonl"],
+    }
+    index_documents(
+        client,
+        targets,
+        args.output_dir / "smoke-indexed.jsonl",
+        run_identity=run_identity,
+    )
     deadline = perf_counter() + args.index_timeout
     while any(client.document_status(d.document_id) != "DONE" for d in targets):
         if perf_counter() > deadline:
