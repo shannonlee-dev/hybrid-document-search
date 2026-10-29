@@ -7,9 +7,16 @@ retrieval 비교만. 답변 생성 품질은 다루지 않습니다.
 
 `COMMERCIAL_RETRIEVAL_RESULT: NONE` (2026-10-29 기준)
 
-- NAVER Cloud RAG: adapter · 정규화 · 평가 구현 완료, **live 실행 차단**. 약관 미확인 + credential 없음.
-- Upstage File Search: **제외**. chunk 단위 원본 ID mapping 불가, 문서 수 제한.
-- 업로드 0건, provider 호출 0건. 아래 결과표의 상용 행은 비어 있습니다.
+| 대상 | 상태 |
+| --- | --- |
+| NAVER Cloud RAG | `READY / BLOCKED, NOT RUN`. adapter · 정규화 · 평가 구현 완료. 약관 미확인 · account/credential 없음 · 비용 unknown |
+| Upstage File Search | `EXCLUDED`. chunk 단위 원본 ID mapping 불가, 문서 수 제한. 실행 실패가 아니라 현재 protocol 밖 |
+| commercial result | none. 업로드 0건, provider 호출 0건, test 질의 0/1,000 |
+| 로컬 행 | PR #28 결과 그대로 |
+| Adaptive Hybrid | PR #30 병합 전까지 pending |
+
+NAVER 경로는 순수 retriever와 같지 않은 **commercial retrieval pipeline**입니다(query rewrite, 필수 답변 생성, provider chunking, 비공개 embedding · reranking).
+같은 qrels로 평가하지만 drop-in retriever 비교로 보지 않습니다. 상용 API latency는 로컬 캐시 vector CPU latency와 따로 보고합니다.
 
 ## Provider 가능성 검토
 
