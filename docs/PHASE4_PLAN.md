@@ -45,13 +45,15 @@
 
 - Issue: [#24](https://github.com/shannonlee-dev/hybrid-document-search/issues/24) · 브랜치: `feat/b-adaptive-hybrid-router`
 - 선행 작업: #17 / PR #18 — Fixed Score Fusion 구현 및 분석
+- 구현·재현 계약: [Adaptive Hybrid](ADAPTIVE_HYBRID.md) · [실행 결과](ADAPTIVE_RESULTS.md)
 
 | 작업 | 내용 |
 | --- | --- |
 | 세 가지 mode | `keyword-heavy` / `balanced` / `semantic-heavy` (잠정). 기존 Score Fusion 재사용, weight는 train/validation으로 선택 후 고정 |
 | Query feature | query 길이, 숫자 비율, 한글/영문 비율, BM25 top score·gap, Dense top similarity·gap, Sparse/Dense Top-K overlap |
 | 경량 classifier | Logistic Regression, shallow tree / boosting, 근거가 있을 때만 매우 작은 MLP |
-| 선택 규칙 | train으로 label 생성·학습, validation으로 선택, test 기반 튜닝 금지 |
+| 선택 규칙 | train query별 fusion 결과로 label 생성·학습, validation으로 세 mode weight·router 구성 확정, test 전에 동결하고 test 기반 재튜닝 금지 |
+| Ablation·결과 보존 | Dense 단독 · Fixed Score Fusion · Adaptive Hybrid · Oracle mode selection 비교. 개선되지 않아도 결과를 그대로 기록 |
 | Oracle 상한 | 세 mode 중 query별 최고 mode 선택. 평가용 상한으로만 사용 |
 | 비용 분석 | 총 latency와 feature 추출·router 추론 overhead 분리 기록 |
 
