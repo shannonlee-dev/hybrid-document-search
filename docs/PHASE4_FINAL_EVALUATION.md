@@ -2,7 +2,8 @@
 
 #25 종료 문서. 새 실험·튜닝·provider 호출 없이, 이미 merge된 #28·#30·#31의 결과를 한 곳에 정리한다.
 각 영역의 canonical 출처는 [BC_CARD_DATASET.md](BC_CARD_DATASET.md), [ADAPTIVE_RESULTS.md](ADAPTIVE_RESULTS.md),
-[COMMERCIAL_RAG_BENCHMARK.md](COMMERCIAL_RAG_BENCHMARK.md)이며, 숫자는 그대로 가져오고 중복 기록하지 않는다.
+[COMMERCIAL_RAG_BENCHMARK.md](COMMERCIAL_RAG_BENCHMARK.md)다. 핵심 비교값만 요약하고, 상세 결과와 재현 정보는 각
+canonical 문서를 따른다.
 
 ## Primary held-out test — non-synthetic (721)
 
@@ -12,7 +13,7 @@
 | Dense (BGE-M3) | 0.6560 | **0.8988** | 0.7460 | 0.7835 | |
 | Fixed Score Fusion | **0.6852** | 0.8946 | **0.7615** | **0.7940** | 서비스 기본값 |
 | Adaptive Hybrid (#24) | 0.6838 | 0.8918 | 0.7608 | 0.7930 | latency Fixed의 약 2.43배 |
-| Oracle | 0.7171 | 0.9071 | 0.7879 | 0.8171 | 분석 상한, 서비스 선택기 아님 |
+| Adaptive mode Oracle | 0.7171 | 0.9071 | 0.7879 | 0.8171 | keyword/balanced/semantic 중 사후 선택, 서비스 선택기 아님 |
 | NAVER Cloud RAG (#26) | | | | | `READY / BLOCKED, NOT RUN`, 0/1,000 queries |
 | Upstage File Search (#26) | | | | | `EXCLUDED`, chunk ID mapping 불가 |
 
@@ -23,10 +24,12 @@
 
 - 3차(Ko-MIRACL/Ko-StrategyQA)의 Dense 중심·Fixed Score Fusion 결론은 BC Card 기업 도메인에서도 유지된다.
   Fixed가 Dense보다 P@1·MRR@10·nDCG@10에서 소폭 높고, Recall@10은 Dense가 소폭 높다.
-- Adaptive Hybrid는 validation에서 query별로 더 나은 방식이 갈리는 Oracle headroom을 확인했다
-  (Oracle − Fixed nDCG@10 +0.031, `ADAPTIVE_ROUTER_HEADROOM: MODERATE`).
-- 하지만 test 1,000개 전부에서 router가 `balanced`를 선택했고, primary nDCG@10은 Fixed보다 -0.001,
-  검색 latency는 Fixed의 약 2.43배다. 서비스 기본값은 Fixed Score Fusion을 유지한다.
+- PR #28 validation analysis는 BM25/Dense/Fixed 중 query별 최고를 고르는 method-level Oracle에서 Fixed 대비
+  nDCG@10 +0.031의 headroom을 확인했다(`ADAPTIVE_ROUTER_HEADROOM: MODERATE`). Adaptive router 자체의 mode
+  Oracle과는 다른 값이다.
+- Adaptive Hybrid(#24)의 mode Oracle(keyword-heavy/balanced/semantic-heavy 중 사후 선택)은 primary test
+  nDCG@10 0.8171로 Fixed 대비 +0.023이지만, 실제 router는 test 1,000개 전부 `balanced`를 선택해 Fixed보다
+  -0.001 낮았고 검색 latency는 Fixed의 약 2.43배였다. 서비스 기본값은 Fixed Score Fusion을 유지한다.
 - 이는 "Adaptive routing이 불가능하다"가 아니라, **현재 lightweight router 구현이 확인된 headroom을 회수하지 못했다**는
   결과다. 범위는 이번 구현에 한정한다.
 - 상용 RAG는 평가 harness와 NAVER feasibility까지 구현했지만 약관 미확인·credential 없음·비용 unknown으로 live 실행은
