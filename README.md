@@ -26,7 +26,9 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 - [팀원별 기여](docs/CONTRIBUTIONS.md): 담당 작업, 대표 커밋, Git 집계 증빙
 - [4차 계획](docs/PHASE4_PLAN.md): 기업 특화 데이터 기반 Adaptive Hybrid 검증과 상용 RAG 외부 비교 분담
 - [BC Card 데이터셋](docs/BC_CARD_DATASET.md): 4차 기업 특화 평가 데이터, 고정 protocol과 기존 방식 결과
+- [Adaptive Hybrid 결과](docs/ADAPTIVE_RESULTS.md): 4차 #24 query router 실행 결과와 Oracle 비교
 - [상용 RAG 비교](docs/COMMERCIAL_RAG_BENCHMARK.md): 4차 #26 provider 검토, 외부 Top-K 정규화와 차단 상태
+- [4차 최종 평가](docs/PHASE4_FINAL_EVALUATION.md): #25 종료, BC Card·Adaptive·상용 RAG 결과 정리와 후속 방향
 
 ## Retrieval Methods
 
