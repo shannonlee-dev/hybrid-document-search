@@ -1,0 +1,105 @@
+{
+  "run_id": "qdap-full-train-float64-2026-10-30",
+  "queries": 721,
+  "methods": [
+    "BM25",
+    "Dense",
+    "Existing Fixed",
+    "Existing Router",
+    "Paper Fixed",
+    "QDAP-S",
+    "QDAP-L",
+    "Oracle alpha"
+  ],
+  "rows": 5768,
+  "file": "per-query.jsonl",
+  "sha256": "40adc5fdaad6cb157e7b0a0eae6e2946f8058997c4e1dcef2533379b8812930b",
+  "selection_sha256": "834fcafaf5b2c85ff849d98ccaf97de616ea2af0aa9a510daf0ae29bf14ea243",
+  "query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+  "input_sha256": {
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/manifest.json": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/corpus.jsonl": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/queries_test.jsonl": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/qrels_test.jsonl": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65"
+  },
+  "source_output_sha256": {
+    "test-rankings.npz": "cb29527b023ceddb9a4ede643c7a4fa91a5d70c96425c6a3ac8dce737f1b1344",
+    "test-per-query.npz": "433390cf8d864c422b68c106e2788eaade419c22ac9fad7f3bdd7873be55f9ed",
+    "test-predictions.npz": "0765a1863d334ef17ffa54785b503191eb8ababde6732a3adadf115405a1075c",
+    "test-queries.json": "1f67a5520945cbd966cf2e97e502ab42c41dd57fc4cbc3135f42c7a52aacd3c5"
+  },
+  "export_source_sha256": "a9b781b3103b17662a39e9e9b3d5f745910fc7b1d6dbbce2c1829f4df106f425",
+  "metrics_recomputed_and_saved_values_verified": true,
+  "oracle_scope": "post-hoc nDCG argmax among101 alphas; diagnostic only",
+  "aggregates": {
+    "BM25": {
+      "ndcg@10": 0.5755128098916078,
+      "p@1": 0.4188626907073509,
+      "recall@10": 0.7406380027739251,
+      "mrr@10": 0.5232486845871034
+    },
+    "Dense": {
+      "ndcg@10": 0.7828810770027878,
+      "p@1": 0.6546463245492372,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7451781036039011
+    },
+    "Existing Fixed": {
+      "ndcg@10": 0.7940145938588489,
+      "p@1": 0.6851595006934813,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228695
+    },
+    "Existing Router": {
+      "ndcg@10": 0.7929672714773628,
+      "p@1": 0.6837725381414702,
+      "recall@10": 0.8918169209431346,
+      "mrr@10": 0.7608392224203597
+    },
+    "Paper Fixed": {
+      "ndcg@10": 0.7910127414592707,
+      "p@1": 0.6768377253814147,
+      "recall@10": 0.8932038834951457,
+      "mrr@10": 0.7577378200471127
+    },
+    "QDAP-S": {
+      "ndcg@10": 0.7608943793458551,
+      "p@1": 0.6324549237170597,
+      "recall@10": 0.8723994452149791,
+      "mrr@10": 0.7242102018801048
+    },
+    "QDAP-L": {
+      "ndcg@10": 0.7850527088843304,
+      "p@1": 0.6601941747572816,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7481116394777977
+    },
+    "Oracle alpha": {
+      "ndcg@10": 0.8261456513701158,
+      "p@1": 0.7323162274618585,
+      "recall@10": 0.912621359223301,
+      "mrr@10": 0.7981298020826454
+    }
+  },
+  "encoding": {
+    "model": {
+      "model_name": "BAAI/bge-m3",
+      "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+      "normalize_embeddings": true,
+      "query_prefix": "",
+      "passage_prefix": "",
+      "batch_size": 1,
+      "device": "cuda:0"
+    },
+    "dtype": "torch.float32",
+    "max_seq_length": 8192,
+    "vector_sha256": {
+      "document-vectors.npy": "4d5f1c8d9002bfeac0c7a927aa641b0ab17199ea008ea196fab786b08bb3df3a",
+      "query-vectors-train.npy": "8ee3247f10606959b9da988f2f5f58237a5ecbd410b8763add78ea8b1293be2b",
+      "query-vectors-validation.npy": "f61370406088ea19d2dbf2cef5274246a591346e9699639948bb38b99bfddaaf",
+      "query-vectors-test.npy": "db783ead74ea2d702e516e2842c23388a8646987bb6904db77ada46ca3a33826"
+    },
+    "dataset_manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d"
+  },
+  "encoding_record_sha256": "99584e378d55b1413732181f3ee8de84be4b066d7e20c59e5c5672843517bd78"
+}
