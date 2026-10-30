@@ -260,7 +260,7 @@ def cross_model(args):
 def _write_rows(path, rows):
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as target:
-        writer = csv.DictWriter(target, fieldnames=list(rows[0]))
+        writer = csv.DictWriter(target, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(row | {"relevant": " ".join(row["relevant"])})

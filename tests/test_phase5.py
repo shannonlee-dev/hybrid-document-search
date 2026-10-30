@@ -223,6 +223,7 @@ def test_cli_compare_and_cross_model(prepared, capsys):
     assert summary["query_count"] == 2
     assert set(summary["fusion_effect"]) == {"bge", "kanana"}
     assert rows_path.read_text(encoding="utf-8").startswith("query_id,text,relevant")
+    assert b"\r" not in rows_path.read_bytes()
     capsys.readouterr()
 
 
