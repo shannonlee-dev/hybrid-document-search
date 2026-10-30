@@ -29,6 +29,7 @@ Sparse, Dense, Hybrid Retrieval을 비교하고 FastAPI + Streamlit 서비스로
 - [Adaptive Hybrid 결과](docs/ADAPTIVE_RESULTS.md): 4차 #24 query router 실행 결과와 Oracle 비교
 - [상용 RAG 비교](docs/COMMERCIAL_RAG_BENCHMARK.md): 4차 #26 provider 검토, 외부 Top-K 정규화와 차단 상태
 - [4차 최종 평가](docs/PHASE4_FINAL_EVALUATION.md): #25 종료, BC Card·Adaptive·상용 RAG 결과 정리와 후속 방향
+- [5차 외부 encoder 검증](docs/PHASE5_EXTERNAL_VALIDATION.md): #36 Kanana external Dense, paired 통계, cross-model query 분석
 
 ## Retrieval Methods
 
