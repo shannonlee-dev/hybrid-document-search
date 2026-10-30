@@ -263,7 +263,14 @@ def _write_rows(path, rows):
         writer = csv.DictWriter(target, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         for row in rows:
-            writer.writerow(row | {"relevant": " ".join(row["relevant"])})
+            # 원문 질의의 줄바꿈은 CSV 한 줄로 접는다. 질의는 query_id로 식별한다.
+            writer.writerow(
+                row
+                | {
+                    "text": " ".join(row["text"].split()),
+                    "relevant": " ".join(row["relevant"]),
+                }
+            )
 
 
 def main(argv=None):
