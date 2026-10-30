@@ -5,17 +5,26 @@ import gc
 from pathlib import Path
 
 import numpy as np
-import torch
 from threadpoolctl import threadpool_limits
 
 from evaluation.json_io import read_json, write_json
-from evaluation.qdap_benchmark import judgments_for, load_pools, prepare, rows, sha
-from evaluation.qdap_training import fit_official, select_validation_checkpoint
-from fusion.qdap import QDAPLarge, QDAPSmall
+from evaluation.qdap_artifacts import (
+    check,
+    evaluation_files,
+    hashes,
+    model_identity,
+    provenance,
+    sha,
+    vector_cache,
+    verify_prepared,
+)
 
 
 def load_large(model_path, device="cuda"):
+    import torch
     from transformers import AutoModel, AutoTokenizer
+
+    from fusion.qdap import QDAPLarge
 
     encoder = AutoModel.from_pretrained(
         model_path,
@@ -43,32 +52,50 @@ def token_batch(tokenizer, queries, indices, device):
 
 
 def train(args):
+    import torch
+
+    from evaluation.qdap_benchmark import judgments_for, load_pools, rows
+    from evaluation.qdap_training import fit_official
+    from fusion.qdap import QDAPSmall
+
     out = args.output
     if (out / "selection.json").exists():
         raise ValueError("selection already frozen; do not retrain")
-    protocol = read_json(out / "protocol.json")
-    for name, digest in protocol["prepared_sha256"].items():
-        if sha(out / name) != digest:
-            raise ValueError(f"prepared input changed: {name}")
+    protocol = verify_prepared(out)
     with np.load(out / "train.npz") as z:
         vectors, utilities = z["vectors"], z["quality"]
     with np.load(out / "validation.npz") as z:
         val_vectors = z["vectors"]
     train_queries = read_json(out / "train-queries.json")
     val_queries = read_json(out / "validation-queries.json")
-    data = args.inputs / "data/processed/bccard"
-    labels = judgments_for(data, "validation", val_queries, rows(data / "corpus.jsonl"))
+    data = args.inputs / "data/processed/bccard" if args.inputs else None
+    if protocol.get("schema_version") == 2:
+        labels = [
+            {int(k): v for k, v in row.items()}
+            for row in read_json(out / "validation-qrels.json")
+        ]
+    else:
+        labels = judgments_for(
+            data, "validation", val_queries, rows(data / "corpus.jsonl")
+        )
+    identity = model_identity(args) if args.variant == "L" else None
+    if identity is not None:
+        encoded = protocol["encoding"]["model"]
+        if (
+            encoded["model_name"] != identity["name"]
+            or encoded["revision"] != identity["revision"]
+        ):
+            raise ValueError("training model differs from frozen vector model revision")
     pools = load_pools(out, "validation")
     modes = [args.ce_mode] if args.ce_mode else ["literal", "reference"]
     seeds = [42, 43, 44] if args.variant == "S" else [42]
     for mode in modes:
         for seed in seeds:
             path = out / f"{args.variant}-{mode}-{seed}"
-            if (path / "training.json").exists() and len(
-                read_json(path / "training.json")["history"]
-            ) == 5:
-                print("Already trained", path, flush=True)
-                continue
+            if path.exists():
+                raise FileExistsError(
+                    f"training candidate already exists: {path}; choose a new run"
+                )
             torch.manual_seed(seed)
             if args.variant == "S":
                 model = QDAPSmall(vectors.shape[1]).to(args.device)
@@ -124,7 +151,8 @@ def train(args):
                 {
                     "sha256": sha(path / "selected.pt"),
                     "variant": args.variant,
-                    "model": str(args.model),
+                    "execution": provenance(),
+                    "model_identity": identity,
                     "selection_split": "validation",
                 },
             )
@@ -137,10 +165,14 @@ def train(args):
 
 
 def freeze(args):
+    from evaluation.qdap_training import select_validation_checkpoint
+
     out = args.output
     if (out / "selection.json").exists():
         raise ValueError("selection already frozen")
+    protocol = verify_prepared(out, ["validation.npz"])
     selected = {}
+    identity = model_identity(args)
     for variant in ("S", "L"):
         records = []
         for mode in ("literal", "reference"):
@@ -152,10 +184,17 @@ def freeze(args):
                 config = read_json(path / "checkpoint.json")
                 if sha(path / "selected.pt") != config["sha256"]:
                     raise ValueError("checkpoint changed")
+                if variant == "L":
+                    if config.get("model_identity") != identity:
+                        raise ValueError(
+                            "training model identity differs from freeze model"
+                        )
                 records.append(
                     {
                         **report["selected"],
-                        "checkpoint": str(path / "selected.pt"),
+                        "checkpoint": (path / "selected.pt")
+                        .relative_to(out)
+                        .as_posix(),
                         "checkpoint_sha256": config["sha256"],
                         "variant": variant,
                     }
@@ -163,40 +202,26 @@ def freeze(args):
         selected[variant] = select_validation_checkpoint(records, split="validation")
     with np.load(out / "validation.npz") as z:
         fixed = int(z["quality"].mean(0).argmax())
-    data = args.inputs / "data/processed/bccard"
-    cache = args.inputs / "artifacts/bccard-adaptive-vectors-resumed"
-    # Local HF snapshots can use safetensors, PyTorch bin, or sharded weights.
-    model_weights = sorted(args.model.glob("*.safetensors")) + sorted(
-        args.model.glob("pytorch_model*.bin")
-    )
-    if not model_weights:
-        raise ValueError("local model snapshot contains no recognized weight files")
-    evaluation_inputs = [
-        *sorted(data.glob("*.jsonl")),
-        data / "manifest.json",
-        cache / "query-vectors-test.npy",
-        cache / "document-vectors.npy",
-        cache / "encoding.json",
-        args.inputs / "docs/experiments/adaptive/router.json",
-        *model_weights,
-        *sorted(args.model.rglob("*.json")),
-        *sorted(args.model.glob("*.model")),
-    ]
+    evaluation_inputs = evaluation_files(args)
+    protocol = read_json(out / "protocol.json")
+    for key, path in evaluation_inputs.items():
+        if key in protocol.get("input_sha256", {}):
+            check(path, protocol["input_sha256"][key], key)
     write_json(
         out / "selection.json",
         {
+            "schema_version": 2,
+            "run_id": protocol["run_id"],
             "selection_split": "validation",
             "selected": selected,
             "paper_fixed_alpha": fixed / 100,
             "protocol_sha256": sha(out / "protocol.json"),
-            "model": str(args.model),
-            "evaluation_input_sha256": {
-                str(path): sha(path) for path in evaluation_inputs
-            },
+            "model_identity": identity,
+            "evaluation_input_sha256": hashes(evaluation_inputs),
             "source_sha256": {
                 str(p): sha(p)
                 for p in [
-                    Path(__file__),
+                    Path("scripts/run_qdap_benchmark.py"),
                     Path("fusion/qdap.py"),
                     Path("evaluation/qdap_training.py"),
                     Path("evaluation/qdap_benchmark.py"),
@@ -209,37 +234,72 @@ def freeze(args):
     print("FROZEN", selected, "Fixed", fixed / 100, flush=True)
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "stage", choices=["prepare", "train", "freeze", "evaluate", "latency", "verify"]
     )
-    parser.add_argument("--inputs", type=Path, required=True)
-    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--inputs", type=Path)
+    parser.add_argument(
+        "--output", "--run-dir", dest="output", type=Path, required=True
+    )
+    parser.add_argument("--vector-cache", type=Path)
+    parser.add_argument("--model-name")
+    parser.add_argument("--model-revision")
+    parser.add_argument("--checkpoint-s", type=Path)
+    parser.add_argument("--checkpoint-l", type=Path)
     parser.add_argument(
         "--model",
         type=Path,
-        required=True,
         help="Local model snapshot used for this run",
     )
     parser.add_argument("--variant", choices=["S", "L"], default="S")
     parser.add_argument("--ce-mode", choices=["literal", "reference"])
     parser.add_argument("--device", default="cuda")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    if (
+        args.stage in ("prepare", "freeze", "evaluate", "latency", "verify")
+        and args.inputs is None
+    ):
+        parser.error("--inputs is required for this stage")
+    if (
+        args.stage in ("freeze", "evaluate", "latency")
+        or (args.stage == "train" and args.variant == "L")
+    ) and args.model is None:
+        parser.error("--model is required for this stage")
+    if args.stage == "freeze" or (args.stage == "train" and args.variant == "L"):
+        if not args.model_name or not args.model_revision:
+            parser.error(
+                "--model-name and --model-revision are required for model identity"
+            )
+    if args.stage == "verify":
+        from evaluation.qdap_report import enterprise_report
+
+        report = enterprise_report(args.inputs, args.output / "per-query.jsonl")
+        print(
+            {
+                "scope": "artifact replay only",
+                "queries": report["dataset"]["query_count"],
+                "methods": list(report["methods"]),
+            }
+        )
+        return
+    import torch
+
     torch.set_num_threads(4)
     with threadpool_limits(4):
         if args.stage == "prepare":
-            prepare(args.inputs, args.output)
+            from evaluation.qdap_benchmark import prepare
+
+            prepare(args.inputs, args.output, vector_cache(args))
         elif args.stage == "train":
             train(args)
         elif args.stage == "freeze":
             freeze(args)
         else:
-            from evaluation.qdap_execution import evaluate, latency, verify
+            from evaluation.qdap_execution import evaluate, latency
 
-            {"evaluate": evaluate, "latency": latency, "verify": verify}[args.stage](
-                args
-            )
+            {"evaluate": evaluate, "latency": latency}[args.stage](args)
 
 
 if __name__ == "__main__":

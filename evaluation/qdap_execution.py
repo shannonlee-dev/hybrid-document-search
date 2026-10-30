@@ -3,12 +3,11 @@
 import gc
 import platform
 import time
-from pathlib import Path
 
 import numpy as np
 import torch
 
-from evaluation.json_io import read_json, write_json
+from evaluation.json_io import write_json
 from evaluation.latency import latency_summary
 from evaluation.qdap import (
     PoolBatch,
@@ -16,6 +15,13 @@ from evaluation.qdap import (
     probability_alphas,
     rank_pools,
     ranking_metrics,
+)
+from evaluation.qdap_artifacts import (
+    claim_stage,
+    provenance,
+    resolve_selection,
+    unused_target,
+    vector_cache,
 )
 from evaluation.qdap_benchmark import (
     METHODS,
@@ -32,28 +38,7 @@ from fusion.qdap import QDAPLarge, QDAPSmall
 
 
 def frozen_selection(args):
-    selection = read_json(args.output / "selection.json")
-    if selection["selection_split"] != "validation":
-        raise ValueError("Validation selection required")
-    if sha(args.output / "protocol.json") != selection["protocol_sha256"]:
-        raise ValueError("protocol changed after selection")
-
-    for source, digest in selection["evaluation_input_sha256"].items():
-        path = Path(source)
-        # Only the three obsolete DAT cache files are no longer evaluation inputs.
-        if path.parts[-5:-1] == (
-            "artifacts",
-            "paper-guided",
-            "dat-local",
-            "bccard",
-        ) and path.name in ("dense.npy", "sparse.npy", "queries.json"):
-            continue
-        if sha(path) != digest:
-            raise ValueError(f"evaluation input changed after selection: {source}")
-    for config in selection["selected"].values():
-        if sha(config["checkpoint"]) != config["checkpoint_sha256"]:
-            raise ValueError("selected checkpoint changed")
-    return selection
+    return resolve_selection(args)
 
 
 def load_large(selection, device):
@@ -100,18 +85,28 @@ def evaluate(args):
     out = args.output
     if (out / "test-summary.json").exists():
         raise ValueError("Test already evaluated; use verify to replay")
+    for name in (
+        "test-rankings.npz",
+        "test-per-query.npz",
+        "test-pools.npz",
+        "test-predictions.npz",
+        "per-query.jsonl",
+    ):
+        unused_target(out / name)
+    claim_stage(out, "evaluate")
     frozen_hash = sha(out / "selection.json")
     data, docs, qs = test_inputs(args)
+    from evaluation.data import load_evaluation_dataset
+
+    load_evaluation_dataset(data, "test", verify_all_splits=False)
     ids = np.array([d["document_id"] for d in docs])
     labels = judgments_for(data, "test", qs, docs)
-    dense, sparse = split_scores(args.inputs, "test", qs)
+    dense, sparse = split_scores(args.inputs, "test", qs, vector_cache(args))
     pools = PoolBatch.from_scores(dense, sparse, ids)
     curves = batch_utilities(pools, labels)
     all_test = rows(data / "queries_test.jsonl")
     selected = [i for i, q in enumerate(all_test) if primary(q)]
-    vectors = np.load(
-        args.inputs / "artifacts/bccard-adaptive-vectors-resumed/query-vectors-test.npy"
-    )[selected]
+    vectors = np.load(vector_cache(args) / "query-vectors-test.npy")[selected]
     psmall = predict_probabilities(
         selection["selected"]["S"]["checkpoint"], vectors, device=args.device
     )
@@ -189,6 +184,7 @@ def evaluate(args):
         out / "test-summary.json",
         {
             "queries": len(qs),
+            "execution": provenance(),
             "selection_sha256": frozen_hash,
             "rows": result,
             "router_modes": {str(k): modes.count(k) for k in range(3)},
@@ -200,6 +196,11 @@ def evaluate(args):
             "quality_precision": "original frozen FP32 query/document caches, float64 dot products/normalization; S FP32 head, L BF16 encoder and FP32 head",
         },
     )
+    from evaluation.qdap_handoff import save_evaluation_handoff
+
+    save_evaluation_handoff(
+        args, selection, qs, docs, labels, ranking, alphas, oracle, modes, router
+    )
     print("TEST RESULTS", result, flush=True)
 
 
@@ -210,14 +211,15 @@ def latency(args):
     from data.loader import Document
     from retrievers.bm25 import BM25Retriever
 
+    unused_target(args.output / "latency.json")
+    unused_target(args.output / "latency-samples.json")
     selection = frozen_selection(args)
     if not torch.cuda.is_available():
         raise ValueError("GPU required for matched latency")
+    claim_stage(args.output, "latency")
     _, docs, qs = test_inputs(args)
     ids = np.array([d["document_id"] for d in docs])
-    vectors = np.load(
-        args.inputs / "artifacts/bccard-adaptive-vectors-resumed/document-vectors.npy"
-    ).astype(float)
+    vectors = np.load(vector_cache(args) / "document-vectors.npy").astype(float)
     bm25 = BM25Retriever([Document(**doc) for doc in docs])
     dense_model = SentenceTransformer(
         selection["model"], device=args.device, local_files_only=True
@@ -324,84 +326,3 @@ def latency(args):
         },
     )
     print("LATENCY", aggregates, flush=True)
-
-
-def verify(args):
-    """Recompute every final Test metric with the repository's independent API."""
-    from evaluation.metrics import (
-        ndcg_at_k,
-        precision_at_k,
-        recall_at_k,
-        reciprocal_rank_at_k,
-    )
-    from retrievers.base import SearchResult
-
-    selection = frozen_selection(args)
-    data, docs, qs = test_inputs(args)
-    labels = judgments_for(data, "test", qs, docs)
-    summary = read_json(args.output / "test-summary.json")
-    if sha(args.output / "selection.json") != summary["selection_sha256"]:
-        raise ValueError("selection changed since Test")
-    rankings = np.load(args.output / "test-rankings.npz")
-    values = {}
-    for method in METHODS:
-        checks = []
-        for ranking, judgments in zip(rankings[method], labels, strict=True):
-            hits = [
-                SearchResult(docs[int(index)]["document_id"], rank, 0.0)
-                for rank, index in enumerate(ranking, 1)
-            ]
-            rel = {
-                docs[index]["document_id"]: grade for index, grade in judgments.items()
-            }
-            checks.append(
-                [
-                    ndcg_at_k(hits, rel, 10),
-                    precision_at_k(hits, rel, 1),
-                    recall_at_k(hits, rel, 10),
-                    reciprocal_rank_at_k(hits, rel, 10),
-                ]
-            )
-        measured = dict(
-            zip(
-                ("ndcg@10", "p@1", "recall@10", "mrr@10"),
-                np.mean(checks, axis=0).tolist(),
-                strict=True,
-            )
-        )
-        for metric, value in measured.items():
-            np.testing.assert_allclose(
-                value, summary["rows"][method][metric], atol=1e-12
-            )
-        values[method] = measured
-    pools = PoolBatch.load(args.output / "test-pools.npz")
-    predictions = np.load(args.output / "test-predictions.npz")
-    for variant in ("S", "L"):
-        alpha = probability_alphas(
-            predictions[variant], selection["selected"][variant]["readout"]
-        )
-        np.testing.assert_array_equal(
-            rank_pools(pools, alpha), rankings[f"QDAP-{variant}"]
-        )
-    timing = read_json(args.output / "latency.json")
-    samples = read_json(args.output / "latency-samples.json")
-    for method, stats in timing["methods"].items():
-        selected = [s for s in samples if s["method"] == method]
-        assert len(selected) == 60 and len({s["query_id"] for s in selected}) == 30
-        actual = latency_summary([s["total_ms"] for s in selected])
-        for metric in ("mean_ms", "p95_ms"):
-            np.testing.assert_allclose(actual[metric], stats[metric], atol=1e-12)
-    protocol = read_json(args.output / "protocol.json")
-    for path, digest in protocol["input_sha256"].items():
-        if sha(path) != digest:
-            raise ValueError("retrieval input changed during training")
-    result = {
-        "passed": True,
-        "independent_query_rankings": len(qs) * len(METHODS),
-        "latency_samples": len(samples),
-        "metrics": values,
-        "selection_and_checkpoint_hashes": "verified",
-        "retrieval_inputs_unchanged": True,
-    }
-    write_json(args.output / "verification.json", result)
-    print("VERIFIED", result, flush=True)

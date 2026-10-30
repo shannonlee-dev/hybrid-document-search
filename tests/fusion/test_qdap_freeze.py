@@ -19,8 +19,24 @@ def test_freeze_hashes_actual_snapshot_format(tmp_path, weight_name):
     model.mkdir()
     (model / weight_name).write_bytes(b"original model weights")
     (model / "config.json").write_text("{}")
-    write_json(out / "protocol.json", {})
+    write_json(out / "protocol.json", {"prepared_sha256": {}, "run_id": "test"})
+    from evaluation.qdap_artifacts import model_identity
+
+    args = SimpleNamespace(
+        output=out,
+        inputs=inputs,
+        model=model,
+        model_name="BAAI/bge-m3",
+        model_revision="1" * 40,
+    )
     np.savez(out / "validation.npz", quality=np.zeros((2, 101)))
+    write_json(
+        out / "protocol.json",
+        {
+            "prepared_sha256": {"validation.npz": sha(out / "validation.npz")},
+            "run_id": "test",
+        },
+    )
     for variant, seeds in (("S", (42, 43, 44)), ("L", (42,))):
         for mode in ("literal", "reference"):
             for seed in seeds:
@@ -29,7 +45,10 @@ def test_freeze_hashes_actual_snapshot_format(tmp_path, weight_name):
                 (directory / "selected.pt").write_bytes(b"selected weights")
                 write_json(
                     directory / "checkpoint.json",
-                    {"sha256": sha(directory / "selected.pt")},
+                    {
+                        "sha256": sha(directory / "selected.pt"),
+                        "model_identity": model_identity(args),
+                    },
                 )
                 write_json(
                     directory / "training.json",
@@ -44,6 +63,9 @@ def test_freeze_hashes_actual_snapshot_format(tmp_path, weight_name):
                 )
     for name in [
         "data/processed/bccard/manifest.json",
+        "data/processed/bccard/corpus.jsonl",
+        "data/processed/bccard/queries_test.jsonl",
+        "data/processed/bccard/qrels_test.jsonl",
         "artifacts/bccard-adaptive-vectors-resumed/query-vectors-test.npy",
         "artifacts/bccard-adaptive-vectors-resumed/document-vectors.npy",
         "artifacts/bccard-adaptive-vectors-resumed/encoding.json",
@@ -52,9 +74,9 @@ def test_freeze_hashes_actual_snapshot_format(tmp_path, weight_name):
         path = inputs / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(b"unchanged input")
-    freeze(SimpleNamespace(output=out, inputs=inputs, model=model))
+    freeze(args)
     record = read_json(out / "selection.json")
     assert record["selection_split"] == "validation"
-    assert record["evaluation_input_sha256"][str(model / weight_name)] == sha(
+    assert record["evaluation_input_sha256"][f"model/{weight_name}"] == sha(
         model / weight_name
     )

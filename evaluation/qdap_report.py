@@ -12,7 +12,7 @@ from evaluation.data import load_evaluation_dataset
 from evaluation.enterprise import query_metrics, slice_definitions, summarize
 from evaluation.json_io import read_json
 from evaluation.metrics import evaluate_query
-from evaluation.qdap_benchmark import rows, sha
+from evaluation.qdap_artifacts import rows, sha
 from retrievers.base import SearchResult
 
 METHOD_NAMES = {
@@ -61,7 +61,7 @@ def enterprise_report(inputs, source, *, canonical_summary=None):
     ):
         if expected.get(name) != sha(data / name):
             raise ValueError(f"dataset identity mismatch: {name}")
-    dataset = load_evaluation_dataset(data, "test")
+    dataset = load_evaluation_dataset(data, "test", verify_all_splits=False)
     primary_ids = manifest["primary_slice_query_ids"]
     if len(primary_ids) != len(set(primary_ids)) or not primary_ids:
         raise ValueError("unique nonempty primary query IDs required")
@@ -116,6 +116,17 @@ def enterprise_report(inputs, source, *, canonical_summary=None):
     ):
         raise ValueError("encoding dataset identity mismatch")
     grouped, run_id = _read_methods(source, dataset, primary_ids, METHOD_NAMES)
+    if provenance.get("methods") is not None and set(grouped) != set(
+        provenance["methods"]
+    ):
+        raise ValueError("saved method set mismatch")
+    if provenance.get("run_id") is not None and run_id != provenance["run_id"]:
+        raise ValueError("saved run identity mismatch")
+    if (
+        provenance.get("rows") is not None
+        and sum(len(v) for v in grouped.values()) != provenance["rows"]
+    ):
+        raise ValueError("saved row count mismatch")
     report = {
         "schema_version": "1",
         "created_at_utc": datetime.now(UTC).isoformat(),
@@ -157,7 +168,7 @@ def enterprise_report(inputs, source, *, canonical_summary=None):
         {
             "evaluation/qdap_report.py": sha(Path(__file__)),
             "scripts/export_qdap_results.py": sha(
-                Path("scripts/export_qdap_results.py")
+                ROOT / "scripts/export_qdap_results.py"
             ),
         }
     )
@@ -195,9 +206,12 @@ def enterprise_report(inputs, source, *, canonical_summary=None):
                 name: summarize(per_query, ids) for name, ids in slices.items() if ids
             },
         }
-    _add_canonical_baselines(
-        report, source.parent, canonical_summary, dataset, slices, primary_ids
-    )
+    if (source.parent / "baseline-audit.json").exists():
+        _add_canonical_baselines(
+            report, source.parent, canonical_summary, dataset, slices, primary_ids
+        )
+    else:
+        report["conditions"]["official_baselines"] = []
     return report
 
 
@@ -302,8 +316,8 @@ def _add_canonical_baselines(report, directory, summary_path, dataset, slices, i
     canonical = read_json(summary_path)
     if canonical["dataset"]["split"] != "test":
         raise ValueError("canonical Test baseline required")
-    for name, digest in canonical["dataset"]["input_sha256"].items():
-        if dataset.provenance["input_sha256"].get(name) != digest:
+    for name, digest in dataset.provenance["input_sha256"].items():
+        if canonical["dataset"]["input_sha256"].get(name) != digest:
             raise ValueError(f"canonical dataset identity mismatch: {name}")
     grouped, run_id = _read_methods(source, dataset, ids, CANONICAL_METHOD_NAMES)
     if set(grouped) != set(CANONICAL_METHOD_NAMES) or run_id != audit["run_id"]:

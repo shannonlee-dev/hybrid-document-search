@@ -412,7 +412,7 @@ def test_official_721_export_preserves_canonical_and_all_qdap_rankings():
     inputs = Path(os.environ.get("QDAP_INPUTS", root))
     if not (inputs / "data/processed/bccard/manifest.json").is_file():
         pytest.skip("Set QDAP_INPUTS to the prepared BC Card data root")
-    directory = root / "docs/qdap-official-2026-10-30"
+    directory = root / "docs/validation/2026-10-30/qdap"
     source = directory / "per-query.jsonl"
     before = {p.name: sha(p) for p in directory.iterdir() if p.is_file()}
     report = enterprise_report(inputs, source)
@@ -474,3 +474,31 @@ def test_official_721_export_preserves_canonical_and_all_qdap_rankings():
     ] == pytest.approx(0.7828810770027878)
     assert report["methods"]["paper_fixed"]["config"]["alpha_dense"] == 0.84
     assert before == {p.name: sha(p) for p in directory.iterdir() if p.is_file()}
+
+
+def test_report_needs_only_test_data_and_compact_evidence(handoff, monkeypatch):
+    import builtins
+    import shutil
+
+    from evaluation.qdap_report import enterprise_report
+
+    inputs, source = handoff
+    shutil.rmtree(inputs / "artifacts")
+    for split in ("train", "validation"):
+        for kind in ("queries", "qrels"):
+            (inputs / "data/processed/bccard" / f"{kind}_{split}.jsonl").unlink()
+    real_import = builtins.__import__
+
+    def guarded(name, *args, **kwargs):
+        if name in (
+            "torch",
+            "transformers",
+            "sentence_transformers",
+            "evaluation.qdap_execution",
+        ):
+            raise AssertionError(f"report imported inference dependency: {name}")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", guarded)
+    report = enterprise_report(inputs, source)
+    assert len(report["methods"]["qdap_s"]["queries"]) == 2

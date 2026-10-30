@@ -14,6 +14,8 @@ def test_benchmark_requires_explicit_model(monkeypatch, capsys, tmp_path):
         [
             "run_qdap_benchmark",
             "train",
+            "--variant",
+            "L",
             "--inputs",
             str(tmp_path),
             "--output",

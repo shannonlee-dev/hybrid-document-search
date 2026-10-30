@@ -1,40 +1,15 @@
 """Reproducible BC Card QDAP inputs and the eight-method evaluation contract."""
 
-import hashlib
-import json
-from pathlib import Path
-
 import numpy as np
 
 from evaluation.json_io import read_json, write_json
 from evaluation.qdap import ALPHAS, PoolBatch
+from evaluation.qdap_artifacts import METHODS as METHODS
+from evaluation.qdap_artifacts import hashes, provenance
+from evaluation.qdap_artifacts import primary as primary
+from evaluation.qdap_artifacts import rows as rows
+from evaluation.qdap_artifacts import sha as sha
 from evaluation.qdap_training import audit_official_partitions
-
-METHODS = (
-    "BM25",
-    "Dense",
-    "Existing Fixed",
-    "Existing Router",
-    "Paper Fixed",
-    "QDAP-S",
-    "QDAP-L",
-    "Oracle alpha",
-)
-
-
-def rows(path):
-    return [
-        json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()
-    ]
-
-
-def sha(path):
-    with Path(path).open("rb") as source:
-        return hashlib.file_digest(source, "sha256").hexdigest()
-
-
-def primary(query):
-    return query["provenance"] in ("base", "faq_direct")
 
 
 def legacy_ranking(dense, sparse, ids, weight):
@@ -104,14 +79,14 @@ def score_batches(queries, query_vectors, document_vectors, bm25, *, batch_size=
         yield start, end, dense, sparse
 
 
-def split_scores(inputs, split, queries):
+def split_scores(inputs, split, queries, vector_cache=None):
     """Generate scores from shared frozen vectors and BM25, preserving query IDs."""
     from data.loader import Document
     from evaluation.enterprise import _ids_digest
     from retrievers.bm25 import BM25Retriever
 
     data = inputs / "data/processed/bccard"
-    cache = inputs / "artifacts/bccard-adaptive-vectors-resumed"
+    cache = vector_cache or inputs / "artifacts/bccard-adaptive-vectors-resumed"
     record = read_json(cache / "encoding.json")
     if sha(data / "manifest.json") != record["dataset_manifest_sha256"]:
         raise ValueError("dataset/vector manifest mismatch")
@@ -148,22 +123,35 @@ def split_scores(inputs, split, queries):
     )
 
 
-def prepare(inputs, out):
+def prepare(inputs, out, vector_cache=None):
     """Prepare only Train/Validation labels, preserving every official Train row."""
     from data.loader import Document
     from retrievers.bm25 import BM25Retriever
 
     out.mkdir(parents=True, exist_ok=False)
     data = inputs / "data/processed/bccard"
-    cache = inputs / "artifacts/bccard-adaptive-vectors-resumed"
+    cache = vector_cache or inputs / "artifacts/bccard-adaptive-vectors-resumed"
     manifest = read_json(data / "manifest.json")
     encoding = read_json(cache / "encoding.json")
-    for file, digest in manifest["output_sha256"].items():
+    for file in (
+        "corpus.jsonl",
+        "queries_train.jsonl",
+        "queries_validation.jsonl",
+        "queries_test.jsonl",
+        "qrels_train.jsonl",
+        "qrels_validation.jsonl",
+    ):
+        digest = manifest["output_sha256"][file]
         if sha(data / file) != digest:
             raise ValueError(f"dataset hash mismatch: {file}")
     if sha(data / "manifest.json") != encoding["dataset_manifest_sha256"]:
         raise ValueError("dataset/vector manifest mismatch")
-    for file, digest in encoding["vector_sha256"].items():
+    for file in (
+        "document-vectors.npy",
+        "query-vectors-train.npy",
+        "query-vectors-validation.npy",
+    ):
+        digest = encoding["vector_sha256"][file]
         if sha(cache / file) != digest:
             raise ValueError(f"vector hash mismatch: {file}")
     docs = rows(data / "corpus.jsonl")
@@ -210,10 +198,15 @@ def prepare(inputs, out):
             vectors=qvec,
         )
         write_json(out / f"{split}-queries.json", qs)
+        if split == "validation":
+            write_json(out / "validation-qrels.json", labels)
     write_json(
         out / "protocol.json",
         {
-            "inputs": str(inputs),
+            "schema_version": 2,
+            "run_id": out.name,
+            "encoding": encoding,
+            "environment": provenance(),
             "audit": audit,
             "train": "all official Train rows, no calibration or resplit",
             "selection": "official Validation non-synthetic nDCG; epoch, CE, seed, mean/argmax; stable ties",
@@ -225,16 +218,31 @@ def prepare(inputs, out):
             "loss": ".62 squared-target CE + .38 summed CDF WD; literal unnormalized or reference renormalized CE",
             "candidate_pool": "Dense/BM25 top100 union, per-channel union minmax; ID ties; 101 alpha bins",
             "reference_commit": "9e644b6362e5d429b7b4154370efec2d36b98691",
-            "input_sha256": {
-                str(p): sha(p)
-                for p in [
-                    data / "manifest.json",
-                    cache / "encoding.json",
-                    cache / "document-vectors.npy",
-                    cache / "query-vectors-train.npy",
-                    cache / "query-vectors-validation.npy",
-                ]
-            },
+            "input_sha256": hashes(
+                {
+                    **{
+                        f"data/{name}": data / name
+                        for name in (
+                            "manifest.json",
+                            "corpus.jsonl",
+                            "queries_train.jsonl",
+                            "queries_validation.jsonl",
+                            "queries_test.jsonl",
+                            "qrels_train.jsonl",
+                            "qrels_validation.jsonl",
+                        )
+                    },
+                    **{
+                        f"vectors/{name}": cache / name
+                        for name in (
+                            "encoding.json",
+                            "document-vectors.npy",
+                            "query-vectors-train.npy",
+                            "query-vectors-validation.npy",
+                        )
+                    },
+                }
+            ),
             "prepared_sha256": {
                 name: sha(out / name)
                 for name in [
@@ -242,7 +250,56 @@ def prepare(inputs, out):
                     "validation.npz",
                     "train-queries.json",
                     "validation-queries.json",
+                    "validation-qrels.json",
                 ]
+            },
+        },
+    )
+    write_json(
+        out / "config.json",
+        {
+            "schema_version": 2,
+            "run_id": out.name,
+            "variants": ["S", "L"],
+            "ce_modes": ["literal", "reference"],
+            "seeds": {"S": [42, 43, 44], "L": [42]},
+            "epochs": 5,
+            "alpha_bins": 101,
+            "readouts": ["mean", "argmax"],
+        },
+    )
+    write_json(
+        out / "manifest.json",
+        {
+            "schema_version": 2,
+            "run_id": out.name,
+            "files": hashes(
+                {name: out / name for name in ("config.json", "protocol.json")}
+            ),
+            "stages": {
+                "train": [
+                    "protocol.json",
+                    "train.npz",
+                    "validation.npz",
+                    "train-queries.json",
+                    "validation-queries.json",
+                    "validation-qrels.json",
+                ],
+                "evaluate": [
+                    "selection.json",
+                    "data/test",
+                    "vectors/test",
+                    "router",
+                    "model",
+                    "selected_checkpoints",
+                ],
+                "report": [
+                    "per-query.jsonl",
+                    "per-query-manifest.json",
+                    "selection.json",
+                    "protocol.json",
+                    "data/test",
+                ],
             },
         },
     )

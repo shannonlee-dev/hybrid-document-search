@@ -3,7 +3,6 @@
 import hashlib
 import json
 from collections import defaultdict
-from types import SimpleNamespace
 
 import numpy as np
 
@@ -14,14 +13,7 @@ from evaluation.metrics import (
     recall_at_k,
     reciprocal_rank_at_k,
 )
-from evaluation.qdap_benchmark import (
-    METHODS,
-    judgments_for,
-    primary,
-    rows,
-    sha,
-    split_scores,
-)
+from evaluation.qdap_artifacts import METHODS, rows, sha
 from retrievers.base import SearchResult
 
 METRICS = ("ndcg@10", "p@1", "recall@10", "mrr@10")
@@ -150,137 +142,117 @@ def _write_records(path, records):
     path.write_text(text, encoding="utf-8")
 
 
-def export_frozen(args):
-    """Validate the frozen run and export all 721x8 rows, including predictions."""
-    from evaluation.qdap_benchmark import legacy_ranking
-    from evaluation.qdap_execution import frozen_selection
-    from fusion.adaptive import MODES, Router, query_features
+def save_evaluation_handoff(
+    args, selection, queries, docs, labels, rankings, alphas, oracle, modes, router
+):
+    """Persist prediction metadata during inference so reports never rerun a router."""
+    from evaluation.qdap_artifacts import vector_cache
+    from fusion.adaptive import MODES
 
-    selection = frozen_selection(SimpleNamespace(output=args.run))
-    encoding_path = (
-        args.inputs / "artifacts/bccard-adaptive-vectors-resumed/encoding.json"
-    )
-    encoding_record = read_json(encoding_path)
-    data = args.inputs / "data/processed/bccard"
-    docs = rows(data / "corpus.jsonl")
-    queries = read_json(args.run / "test-queries.json")
-    official = [q for q in rows(data / "queries_test.jsonl") if primary(q)]
-    if len(queries) != 721 or [q["query_id"] for q in queries] != [
-        q["query_id"] for q in official
-    ]:
-        raise ValueError("saved queries must match the official ordered 721 IDs")
-    labels = judgments_for(data, "test", queries, docs)
-    with np.load(args.run / "test-rankings.npz", allow_pickle=False) as z:
-        rankings = {method: z[method] for method in METHODS}
-    with np.load(args.run / "test-predictions.npz", allow_pickle=False) as z:
-        alphas = {
-            "QDAP-S": z["S_alpha"],
-            "QDAP-L": z["L_alpha"],
-            "Oracle alpha": z["oracle_alpha"],
-        }
-        oracle = z["oracle_alpha"]
-    alphas["Paper Fixed"] = np.full(721, selection["paper_fixed_alpha"])
-    dense, sparse = split_scores(args.inputs, "test", queries)
-    router = Router.load(args.inputs / "docs/experiments/adaptive/router.json")
-    ids = np.array([doc["document_id"] for doc in docs])
-    modes, weights = [], []
-    for i, q in enumerate(queries):
-        d, s = dense[i], sparse[i]
-        mode = int(router.select([query_features(q["text"], s, d, ids)])[0])
-        weight = router.state["weights"][mode]
-        np.testing.assert_array_equal(
-            legacy_ranking(d, s, ids, weight), rankings["Existing Router"][i]
-        )
-        modes.append(MODES[mode])
-        weights.append(weight)
+    count = len(queries)
     records = per_query_records(
         [q["query_id"] for q in queries],
-        ids.tolist(),
+        [d["document_id"] for d in docs],
         rankings,
         labels,
-        run_id=args.run_id,
-        alphas=alphas,
+        run_id=selection.get("run_id", args.output.name),
+        alphas={
+            "QDAP-S": alphas["S"],
+            "QDAP-L": alphas["L"],
+            "Paper Fixed": np.full(count, selection["paper_fixed_alpha"]),
+            "Oracle alpha": oracle,
+        },
         oracle_alphas=oracle,
-        modes={"Existing Router": modes},
-        weights={"Existing Fixed": np.full(721, 0.05), "Existing Router": weights},
+        modes={"Existing Router": [MODES[m] for m in modes]},
+        weights={
+            "Existing Fixed": np.full(count, 0.05),
+            "Existing Router": [router.state["weights"][m] for m in modes],
+        },
     )
-    expected = read_json(args.run / "test-summary.json")["rows"]
-    with np.load(args.run / "test-per-query.npz", allow_pickle=False) as z:
-        for method in METHODS:
-            exported = [r for r in records if r["method"] == method]
-            np.testing.assert_allclose(
-                [[r[m] for m in METRICS] for r in exported], z[method], atol=1e-12
-            )
-    aggregates = _averages(records)
-    for method in METHODS:
-        for metric in METRICS:
-            np.testing.assert_allclose(
-                aggregates[method][metric], expected[method][metric], atol=1e-12
-            )
-    args.output.mkdir(parents=True, exist_ok=True)
     target = args.output / "per-query.jsonl"
     _write_records(target, records)
+    encoding_path = vector_cache(args) / "encoding.json"
+    encoding = read_json(encoding_path)
+    data = args.inputs / "data/processed/bccard"
     write_json(
         args.output / "per-query-manifest.json",
         {
-            "run_id": args.run_id,
-            "queries": 721,
+            "schema_version": 2,
+            "run_id": selection.get("run_id", args.output.name),
+            "queries": count,
             "methods": list(METHODS),
             "rows": len(records),
             "file": target.name,
             "sha256": sha(target),
-            "selection_sha256": sha(args.run / "selection.json"),
-            "encoding": {
-                key: encoding_record[key]
-                for key in (
-                    "model",
-                    "dtype",
-                    "max_seq_length",
-                    "vector_sha256",
-                    "dataset_manifest_sha256",
-                )
-            },
+            "selection_sha256": sha(args.output / "selection.json"),
+            "encoding": encoding,
             "encoding_record_sha256": sha(encoding_path),
-            "query_ids_sha256": hashlib.sha256(
-                "\n".join(q["query_id"] for q in queries).encode()
-            ).hexdigest(),
             "input_sha256": {
-                str(data / name): sha(data / name)
-                for name in [
+                f"data/{name}": sha(data / name)
+                for name in (
                     "manifest.json",
                     "corpus.jsonl",
                     "queries_test.jsonl",
                     "qrels_test.jsonl",
-                ]
+                )
             },
-            "source_output_sha256": {
-                name: sha(args.run / name)
-                for name in [
-                    "test-rankings.npz",
-                    "test-per-query.npz",
-                    "test-predictions.npz",
-                    "test-queries.json",
-                ]
-            },
-            "export_source_sha256": sha(__file__),
-            "metrics_recomputed_and_saved_values_verified": True,
-            "oracle_scope": "post-hoc nDCG argmax among101 alphas; diagnostic only",
-            "aggregates": aggregates,
+            "query_ids_sha256": hashlib.sha256(
+                "\n".join(q["query_id"] for q in queries).encode()
+            ).hexdigest(),
+            "aggregates": _averages(records),
+            "oracle_scope": "post-hoc Test-qrels diagnostic; not deployable",
         },
     )
-    print(
-        {"exported": str(target), "rows": len(records), "bytes": target.stat().st_size},
-        flush=True,
+
+
+def export_frozen(args):
+    """Verify and copy compact saved evidence; never infer or load checkpoints."""
+    import shutil
+
+    from evaluation.qdap_artifacts import unused_target
+    from evaluation.qdap_report import enterprise_report
+
+    source = args.run / "per-query.jsonl"
+    if not source.is_file():
+        raise FileNotFoundError(
+            "saved per-query.jsonl required; NPZ-only legacy runs need their original handoff (router metadata cannot be recovered without inference)"
+        )
+    report = enterprise_report(
+        args.inputs, source, canonical_summary=args.canonical_summary
     )
+    if args.run_id != report["conditions"]["quality_run"]:
+        raise ValueError(
+            "export must preserve the saved run identity; --run-id differs"
+        )
+    unused_target(args.output)
+    args.output.mkdir(parents=True)
+    for name in (
+        "per-query.jsonl",
+        "per-query-manifest.json",
+        "selection.json",
+        "protocol.json",
+        "main-baseline-per-query.jsonl",
+        "baseline-audit.json",
+        "score-parity.json",
+    ):
+        path = args.run / name
+        if path.is_file():
+            shutil.copyfile(path, args.output / name)
+    write_json(args.output / "report.json", report)
 
 
 def audit_main(args):
     """Replay main's unmodified CPU baseline contracts on the same frozen vectors."""
+    from evaluation.qdap_artifacts import unused_target, vector_cache
+
+    unused_target(args.output / "main-baseline-per-query.jsonl")
+    unused_target(args.output / "baseline-audit.json")
     import faiss
     from threadpoolctl import threadpool_limits
 
     from evaluation.data import load_evaluation_dataset
     from evaluation.enterprise import _build_retrievers, _load_vectors
+    from evaluation.qdap_benchmark import judgments_for, primary
 
     canonical = read_json(args.canonical_summary)
     data = args.inputs / "data/processed/bccard"
@@ -288,7 +260,7 @@ def audit_main(args):
         if sha(data / name) != digest:
             raise ValueError(f"canonical dataset identity differs: {name}")
     dataset = load_evaluation_dataset(data, "test")
-    cache = args.inputs / "artifacts/bccard-adaptive-vectors-resumed"
+    cache = vector_cache(args)
     vectors, query_vectors, encoding = _load_vectors(data, cache, dataset)
     qs = [q for q in rows(data / "queries_test.jsonl") if primary(q)]
     ids = [d.document_id for d in dataset.documents]

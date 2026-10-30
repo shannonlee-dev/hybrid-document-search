@@ -68,3 +68,38 @@ def test_score_generation_rejects_changed_dataset_or_vectors(score_inputs, filen
         message = "vector hash mismatch"
     with pytest.raises(ValueError, match=message):
         split_scores(score_inputs, "test", queries)
+
+
+def test_prepare_and_small_training_need_no_test_qrels_or_model(score_inputs):
+    import shutil
+    from types import SimpleNamespace
+
+    import torch
+
+    from evaluation.json_io import read_json
+    from evaluation.qdap_benchmark import prepare
+    from scripts.run_qdap_benchmark import train
+
+    data = score_inputs / "data/processed/bccard"
+    (data / "qrels_test.jsonl").unlink()
+    cache = score_inputs / "artifacts/bccard-adaptive-vectors-resumed"
+    (cache / "query-vectors-test.npy").unlink()
+    external = score_inputs / "external-vectors"
+    cache.rename(external)
+    out = score_inputs / "run"
+    prepare(score_inputs, out, external)
+    shutil.rmtree(data)
+    shutil.rmtree(external)
+    torch.set_num_threads(2)
+    args = SimpleNamespace(
+        output=out, inputs=None, variant="S", ce_mode="literal", device="cpu"
+    )
+    train(args)
+    for seed in (42, 43, 44):
+        report = read_json(out / f"S-literal-{seed}/training.json")
+        assert report["train_queries"] == 2
+        assert len(report["history"]) == 5
+    with pytest.raises(FileExistsError, match="already exists"):
+        train(args)
+    with pytest.raises(FileExistsError):
+        prepare(score_inputs, out, external)

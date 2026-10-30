@@ -10,6 +10,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__, allow_abbrev=False)
     parser.add_argument("--inputs", type=Path, required=True)
     parser.add_argument("--run", type=Path)
+    parser.add_argument(
+        "--vector-cache", type=Path, help="Used only by canonical audit"
+    )
     parser.add_argument("--run-id", help="Identity for the QDAP JSONL export")
     parser.add_argument("--main-run-id", help="Identity for the main baseline audit")
     parser.add_argument("--output", type=Path, required=True)
@@ -44,6 +47,11 @@ def main(argv=None):
         if args.reference_report:
             reference = align_reference_report(read_json(args.reference_report), report)
             reference["source_report"] = str(args.reference_report)
+        from evaluation.qdap_artifacts import unused_target
+
+        unused_target(args.output / "report.json")
+        if reference is not None:
+            unused_target(args.output / "reference-report.json")
         args.output.mkdir(parents=True, exist_ok=True)
         write_json(args.output / "report.json", report)
         if reference is not None:
