@@ -70,7 +70,10 @@ FAQ 직접 질의(50)에서는 Kanana Dense 0.6772, Kanana + Fixed 0.6716으로 
 | Dense | 6.96 / 7.08 | 16.21 / 16.30 |
 | Fixed | 6.39 / 6.76 | 9.10 / 9.48 |
 
-Kanana Dense가 느린 건 2560-dim FAISS flat 검색 때문이다. Fixed가 Dense보다 빠르게 나오는 현상은 4차와 같고 원인은 보지 않았다.
+세 방식은 같은 계산을 나눠 쓰지 않는다. Dense는 FAISS `IndexFlatIP.search`, BM25는 `score_all()` 뒤 Python에서 양수 점수 후보를 고른다.
+Score Fusion은 DenseRetriever와 BM25Retriever를 순차 호출하지 않고, snapshot한 document vector와의 numpy 내적과 BM25 `score_all()`을
+별도 vectorized full-corpus path에서 결합한다. 그래서 Fixed latency를 Dense와 BM25 latency의 합으로 해석할 수 없고, Fixed가 두 component보다 빠르게 나올 수 있다.
+Kanana Dense는 2560-dim flat 검색이라 BGE-M3(1024-dim)보다 느리다.
 GPU query encoding은 BGE-M3 FP32 9.46 / 9.68 ms(PR #28 기록), Kanana bf16 22.49 / 22.75 ms다. dtype이 달라 모델 비용 비교로 쓰지 않는다.
 
 ## Paired comparison (primary 721)
