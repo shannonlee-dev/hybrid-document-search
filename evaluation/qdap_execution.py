@@ -3,6 +3,7 @@
 import gc
 import platform
 import time
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -37,7 +38,18 @@ def frozen_selection(args):
     if sha(args.output / "protocol.json") != selection["protocol_sha256"]:
         raise ValueError("protocol changed after selection")
 
-    # Archived input paths are provenance; retrieval inputs are checked at use.
+    for source, digest in selection["evaluation_input_sha256"].items():
+        path = Path(source)
+        # Only the three obsolete DAT cache files are no longer evaluation inputs.
+        if path.parts[-5:-1] == (
+            "artifacts",
+            "paper-guided",
+            "dat-local",
+            "bccard",
+        ) and path.name in ("dense.npy", "sparse.npy", "queries.json"):
+            continue
+        if sha(path) != digest:
+            raise ValueError(f"evaluation input changed after selection: {source}")
     for config in selection["selected"].values():
         if sha(config["checkpoint"]) != config["checkpoint_sha256"]:
             raise ValueError("selected checkpoint changed")

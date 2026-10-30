@@ -118,8 +118,9 @@ def test_official_fitting_trains_every_row_and_freezes_validation_choice(tmp_pat
 
 
 @pytest.mark.parametrize("changed", [None, "protocol", "checkpoint"])
+@pytest.mark.parametrize("legacy_state", ["missing", "changed"])
 def test_frozen_selection_ignores_historical_dat_cache_but_checks_guards(
-    tmp_path, changed
+    tmp_path, changed, legacy_state
 ):
     import json
 
@@ -143,6 +144,10 @@ def test_frozen_selection_ignores_historical_dat_cache_but_checks_guards(
             for name in ("dense.npy", "sparse.npy", "queries.json")
         },
     }
+    if legacy_state == "changed":
+        legacy.mkdir(parents=True)
+        for name in ("dense.npy", "sparse.npy", "queries.json"):
+            (legacy / name).write_bytes(b"unused changed DAT cache")
     selection_path = tmp_path / "selection.json"
     selection_path.write_text(json.dumps(selection))
     original = selection_path.read_bytes()
@@ -157,4 +162,57 @@ def test_frozen_selection_ignores_historical_dat_cache_but_checks_guards(
         with pytest.raises(ValueError, match=f"{changed} changed"):
             frozen_selection(SimpleNamespace(output=tmp_path))
     assert selection_path.read_bytes() == original
-    assert not legacy.exists()
+    assert legacy.exists() == (legacy_state == "changed")
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "data/processed/bccard/corpus.jsonl",
+        "data/processed/bccard/queries_test.jsonl",
+        "data/processed/bccard/qrels_test.jsonl",
+        "data/processed/bccard/manifest.json",
+        "docs/experiments/adaptive/router.json",
+        "artifacts/bccard-adaptive-vectors-resumed/document-vectors.npy",
+        "artifacts/bccard-adaptive-vectors-resumed/query-vectors-test.npy",
+        "artifacts/bccard-adaptive-vectors-resumed/encoding.json",
+        "model/pytorch_model.bin",
+        "model/config.json",
+        "model/tokenizer.json",
+        "other/dense.npy",
+    ],
+)
+def test_frozen_selection_rejects_changed_evaluation_input(tmp_path, source):
+    import json
+
+    from evaluation.qdap_benchmark import sha
+    from evaluation.qdap_execution import frozen_selection
+
+    protocol = tmp_path / "protocol.json"
+    protocol.write_text("{}")
+    current = tmp_path / source
+    current.parent.mkdir(parents=True, exist_ok=True)
+    current.write_bytes(b"frozen evaluation input")
+    legacy = tmp_path / "artifacts/paper-guided/dat-local/bccard"
+    selection_path = tmp_path / "selection.json"
+    selection_path.write_text(
+        json.dumps(
+            {
+                "selection_split": "validation",
+                "protocol_sha256": sha(protocol),
+                "selected": {},
+                "evaluation_input_sha256": {
+                    **{
+                        str(legacy / name): "0" * 64
+                        for name in ("dense.npy", "sparse.npy", "queries.json")
+                    },
+                    str(current): sha(current),
+                },
+            }
+        )
+    )
+    original = selection_path.read_bytes()
+    current.write_bytes(b"changed evaluation input")
+    with pytest.raises(ValueError, match="evaluation input changed after selection"):
+        frozen_selection(SimpleNamespace(output=tmp_path))
+    assert selection_path.read_bytes() == original
