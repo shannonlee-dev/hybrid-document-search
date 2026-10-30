@@ -48,3 +48,23 @@ def test_score_generation_rejects_vector_query_order_mismatch(score_inputs):
     queries = rows(score_inputs / "data/processed/bccard/queries_test.jsonl")
     with pytest.raises(ValueError, match="order"):
         split_scores(score_inputs, "test", queries)
+
+
+@pytest.mark.parametrize(
+    "filename", ["manifest.json", "document-vectors.npy", "query-vectors-test.npy"]
+)
+def test_score_generation_rejects_changed_dataset_or_vectors(score_inputs, filename):
+    from evaluation.qdap_benchmark import rows, split_scores
+
+    data = score_inputs / "data/processed/bccard"
+    queries = rows(data / "queries_test.jsonl")
+    if filename == "manifest.json":
+        path = data / filename
+        path.write_text(path.read_text() + " ")
+        message = "manifest mismatch"
+    else:
+        path = score_inputs / "artifacts/bccard-adaptive-vectors-resumed" / filename
+        np.save(path, np.zeros((2, 2), dtype=np.float32))
+        message = "vector hash mismatch"
+    with pytest.raises(ValueError, match=message):
+        split_scores(score_inputs, "test", queries)

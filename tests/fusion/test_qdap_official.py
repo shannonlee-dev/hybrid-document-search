@@ -117,7 +117,10 @@ def test_official_fitting_trains_every_row_and_freezes_validation_choice(tmp_pat
     assert (tmp_path / "fit/selected.pt").is_file()
 
 
-def test_frozen_evaluation_rejects_changed_input_before_test(tmp_path):
+@pytest.mark.parametrize("changed", [None, "protocol", "checkpoint"])
+def test_frozen_selection_ignores_historical_dat_cache_but_checks_guards(
+    tmp_path, changed
+):
     import json
 
     from evaluation.qdap_benchmark import sha
@@ -125,17 +128,33 @@ def test_frozen_evaluation_rejects_changed_input_before_test(tmp_path):
 
     protocol = tmp_path / "protocol.json"
     protocol.write_text("{}")
-    score = tmp_path / "scores.npy"
-    score.write_bytes(b"original scores")
+    checkpoint = tmp_path / "selected.pt"
+    checkpoint.write_bytes(b"original checkpoint")
+    legacy = tmp_path / "artifacts/paper-guided/dat-local/bccard"
     selection = {
         "selection_split": "validation",
         "protocol_sha256": sha(protocol),
-        "selected": {},
+        "selected": {
+            "S": {"checkpoint": str(checkpoint), "checkpoint_sha256": sha(checkpoint)}
+        },
         "source_sha256": {},
-        "evaluation_input_sha256": {str(score): sha(score)},
+        "evaluation_input_sha256": {
+            str(legacy / name): "0" * 64
+            for name in ("dense.npy", "sparse.npy", "queries.json")
+        },
     }
-    (tmp_path / "selection.json").write_text(json.dumps(selection))
-    frozen_selection(SimpleNamespace(output=tmp_path))
-    score.write_bytes(b"changed scores")
-    with pytest.raises(ValueError, match="input changed"):
-        frozen_selection(SimpleNamespace(output=tmp_path))
+    selection_path = tmp_path / "selection.json"
+    selection_path.write_text(json.dumps(selection))
+    original = selection_path.read_bytes()
+    if changed == "protocol":
+        protocol.write_text('{"changed": true}')
+    elif changed == "checkpoint":
+        checkpoint.write_bytes(b"changed checkpoint")
+
+    if changed is None:
+        assert frozen_selection(SimpleNamespace(output=tmp_path)) == selection
+    else:
+        with pytest.raises(ValueError, match=f"{changed} changed"):
+            frozen_selection(SimpleNamespace(output=tmp_path))
+    assert selection_path.read_bytes() == original
+    assert not legacy.exists()
