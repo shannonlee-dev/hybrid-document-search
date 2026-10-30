@@ -73,6 +73,9 @@ def test_kanana_encoding_records_pinned_external_model(tmp_path, monkeypatch):
     assert record["model"]["trust_remote_code"] is True
     assert record["model"]["query_prefix"] == record["model"]["passage_prefix"] == ""
     assert record["embedding_dimension"] == 8
+    assert record["postprocessing"] == "float32 L2 re-normalization"
+    vectors = np.load(tmp_path / "cache" / "document-vectors.npy")
+    assert np.allclose(np.linalg.norm(vectors, axis=1), 1, atol=1e-6)
 
 
 def test_unknown_encoder_is_rejected(tmp_path):

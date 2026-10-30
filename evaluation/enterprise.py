@@ -35,6 +35,8 @@ ENCODERS = {
         "model_name": "kakaocorp/kanana-2-3b-embedding",
         "revision": "2c85dbe61af8ff033d2c9d46a686c665153069aa",
         "trust_remote_code": True,
+        # bf16 출력은 Normalize 이후에도 norm이 1에서 최대 ~0.4% 벗어나 cosine을 float32로 다시 맞춘다.
+        "float32_renormalize": True,
     },
 }
 
@@ -79,8 +81,12 @@ def encode_bccard(
 
         torch.cuda.reset_peak_memory_stats(device)
     started = perf_counter()
-    vectors = np.concatenate(
-        [embedder.encode_documents([build_index_text(doc)]) for doc in documents]
+    renormalize = spec.get("float32_renormalize", False)
+    vectors = _maybe_renormalize(
+        np.concatenate(
+            [embedder.encode_documents([build_index_text(doc)]) for doc in documents]
+        ),
+        renormalize,
     )
     document_seconds = perf_counter() - started
     np.save(cache_dir / "document-vectors.npy", vectors, allow_pickle=False)
@@ -100,6 +106,7 @@ def encode_bccard(
         "embedding_dimension": int(vectors.shape[1]),
         "libraries": _library_versions(),
         "preprocessing": {"document": "Pair positive text only", "query": "unchanged"},
+        "postprocessing": "float32 L2 re-normalization" if renormalize else None,
         "dataset_manifest_sha256": file_sha256(data_dir / "manifest.json"),
         "document_ids_sha256": _ids_digest(doc.document_id for doc in documents),
         "document_encoding_seconds": document_seconds,
@@ -110,7 +117,9 @@ def encode_bccard(
         rows, timings = [], []
         for query in dataset.queries:
             started = perf_counter()
-            rows.append(embedder.encode_query(query.text))
+            rows.append(
+                _maybe_renormalize(embedder.encode_query(query.text), renormalize)
+            )
             timings.append((perf_counter() - started) * 1000)
         name = f"query-vectors-{split}.npy"
         np.save(cache_dir / name, np.concatenate(rows), allow_pickle=False)
@@ -128,6 +137,15 @@ def encode_bccard(
         }
     write_json(cache_dir / "encoding.json", record)
     return record
+
+
+def _maybe_renormalize(vectors, enabled):
+    import numpy as np
+
+    if not enabled:
+        return vectors
+    vectors = np.asarray(vectors, dtype=np.float32)
+    return vectors / np.linalg.norm(vectors, axis=1, keepdims=True)
 
 
 def _library_versions():
