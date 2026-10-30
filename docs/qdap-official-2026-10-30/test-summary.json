@@ -1,0 +1,65 @@
+{
+  "queries": 721,
+  "selection_sha256": "834fcafaf5b2c85ff849d98ccaf97de616ea2af0aa9a510daf0ae29bf14ea243",
+  "rows": {
+    "BM25": {
+      "ndcg@10": 0.5755128098916085,
+      "p@1": 0.4188626907073509,
+      "recall@10": 0.7406380027739251,
+      "mrr@10": 0.5232486845871029
+    },
+    "Dense": {
+      "ndcg@10": 0.7828810770027883,
+      "p@1": 0.6546463245492372,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7451781036039015
+    },
+    "Existing Fixed": {
+      "ndcg@10": 0.7940145938588489,
+      "p@1": 0.6851595006934813,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228696
+    },
+    "Existing Router": {
+      "ndcg@10": 0.7929672714773627,
+      "p@1": 0.6837725381414702,
+      "recall@10": 0.8918169209431346,
+      "mrr@10": 0.7608392224203597
+    },
+    "Paper Fixed": {
+      "ndcg@10": 0.7910127414592707,
+      "p@1": 0.6768377253814147,
+      "recall@10": 0.8932038834951457,
+      "mrr@10": 0.7577378200471127
+    },
+    "QDAP-S": {
+      "ndcg@10": 0.7608943793458556,
+      "p@1": 0.6324549237170597,
+      "recall@10": 0.8723994452149791,
+      "mrr@10": 0.7242102018801047
+    },
+    "QDAP-L": {
+      "ndcg@10": 0.7850527088843305,
+      "p@1": 0.6601941747572816,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7481116394777977
+    },
+    "Oracle alpha": {
+      "ndcg@10": 0.8261456513701159,
+      "p@1": 0.7323162274618585,
+      "recall@10": 0.912621359223301,
+      "mrr@10": 0.7981298020826454
+    }
+  },
+  "router_modes": {
+    "0": 0,
+    "1": 721,
+    "2": 0
+  },
+  "paper_fixed_alpha": 0.84,
+  "existing_fixed_bm25_weight": 0.05,
+  "oracle": "post-hoc nDCG argmax among 101 alphas; not deployable; not used for selection",
+  "test_qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+  "router_sha256": "948c9081a177de62f8b9b46b4350c64c910a276e26318100dba164fdbf6c0cd1",
+  "quality_precision": "original frozen FP32 query/document caches, float64 dot products/normalization; S FP32 head, L BF16 encoder and FP32 head"
+}

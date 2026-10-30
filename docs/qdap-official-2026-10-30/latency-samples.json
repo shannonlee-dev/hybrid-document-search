@@ -1,0 +1,7982 @@
+[
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 5.02957999924547,
+    "ranking": [
+      14843,
+      14844,
+      14845,
+      3823,
+      3829,
+      23322,
+      23328,
+      23344,
+      23350,
+      23341
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 3.9553810020152014,
+    "ranking": [
+      27090,
+      27173,
+      27164,
+      27102,
+      27113,
+      27222,
+      27163,
+      27174,
+      27059,
+      27194
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 3.4262549997947644,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30949,
+      32019,
+      30877,
+      20224,
+      30985,
+      31745,
+      32003
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 4.287066996766953,
+    "ranking": [
+      14765,
+      14601,
+      25443,
+      15082,
+      14713,
+      15166,
+      25495,
+      15209,
+      14749,
+      14545
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 4.372807998151984,
+    "ranking": [
+      448,
+      24432,
+      35173,
+      8850,
+      8862,
+      13306,
+      4975,
+      4668,
+      15442,
+      34872
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 3.2560029976593796,
+    "ranking": [
+      27591,
+      5672,
+      10796,
+      28009,
+      31745,
+      5653,
+      5678,
+      27611,
+      27542,
+      27529
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 4.228679001244018,
+    "ranking": [
+      27062,
+      27017,
+      27180,
+      27136,
+      27159,
+      27118,
+      27127,
+      27109,
+      27071,
+      27160
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 3.732869001396466,
+    "ranking": [
+      27781,
+      27814,
+      7093,
+      7081,
+      27764,
+      27820,
+      10690,
+      7080,
+      8257,
+      27796
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 3.3829809981398284,
+    "ranking": [
+      15057,
+      31997,
+      8257,
+      12992,
+      20725,
+      20698,
+      14920,
+      34971,
+      2649,
+      13319
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 3.6414659989532083,
+    "ranking": [
+      22468,
+      22469,
+      22470,
+      22399,
+      22463,
+      22461,
+      22466,
+      22460,
+      22467,
+      22457
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 3.86934400012251,
+    "ranking": [
+      7947,
+      7929,
+      7937,
+      7922,
+      7927,
+      7920,
+      7940,
+      7934,
+      7843,
+      7924
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 3.686805001052562,
+    "ranking": [
+      3916,
+      3935,
+      3932,
+      3914,
+      32019,
+      32003,
+      32008,
+      3418,
+      31745,
+      32032
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 3.9771459996700287,
+    "ranking": [
+      6626,
+      6630,
+      26253,
+      21534,
+      6587,
+      25979,
+      6608,
+      23717,
+      20231,
+      6625
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 3.6339079997560475,
+    "ranking": [
+      35028,
+      35045,
+      34937,
+      34931,
+      32003,
+      32000,
+      35161,
+      32007,
+      34990,
+      32031
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 3.8783629970566835,
+    "ranking": [
+      20379,
+      20373,
+      20377,
+      20441,
+      20414,
+      20440,
+      29004,
+      20455,
+      20449,
+      20404
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 4.044506000354886,
+    "ranking": [
+      4224,
+      4213,
+      4226,
+      4215,
+      11440,
+      11458,
+      996,
+      4214,
+      11626,
+      4225
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 4.062452000653138,
+    "ranking": [
+      32001,
+      35938,
+      32000,
+      32008,
+      34828,
+      32037,
+      31970,
+      32009,
+      1150,
+      35774
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 3.3065300012822263,
+    "ranking": [
+      35187,
+      35184,
+      35179,
+      35186,
+      35182,
+      35181,
+      35180,
+      36164,
+      32028,
+      32019
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 3.5696619997906964,
+    "ranking": [
+      31745,
+      28435,
+      28445,
+      28454,
+      28450,
+      27870,
+      27857,
+      31963,
+      28429,
+      28425
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 3.735086000233423,
+    "ranking": [
+      23900,
+      23894,
+      34971,
+      31997,
+      8257,
+      35061,
+      23783,
+      2649,
+      34981,
+      23769
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 4.113607999897795,
+    "ranking": [
+      11927,
+      11837,
+      12093,
+      31963,
+      12030,
+      11999,
+      11996,
+      31745,
+      12046,
+      13124
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 3.687606000312371,
+    "ranking": [
+      2106,
+      1597,
+      3556,
+      2107,
+      2783,
+      1598,
+      1621,
+      1304,
+      33680,
+      2780
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 3.956612003094051,
+    "ranking": [
+      1272,
+      4862,
+      2748,
+      4883,
+      2075,
+      4868,
+      6390,
+      4873,
+      4896,
+      4903
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 1.8812220005202107,
+    "ranking": [
+      31997,
+      8257,
+      34971,
+      2649,
+      7103,
+      34981,
+      7083,
+      35061,
+      32045,
+      32012
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 3.2932620015344582,
+    "ranking": [
+      20131,
+      9181,
+      9199,
+      31967,
+      20175,
+      9184,
+      31964,
+      32019,
+      31745,
+      20130
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 2.895872003136901,
+    "ranking": [
+      10683,
+      33368,
+      31997,
+      8257,
+      31690,
+      10680,
+      10674,
+      10684,
+      10675,
+      33635
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 3.1923550013743807,
+    "ranking": [
+      10175,
+      31997,
+      8257,
+      10179,
+      31358,
+      10187,
+      34971,
+      10177,
+      2649,
+      10127
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 3.305056001408957,
+    "ranking": [
+      31997,
+      8257,
+      34971,
+      2649,
+      34981,
+      35061,
+      32045,
+      32012,
+      21006,
+      8405
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 3.540357000019867,
+    "ranking": [
+      18269,
+      8257,
+      31997,
+      2649,
+      34971,
+      35061,
+      34981,
+      18273,
+      32012,
+      32045
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 0,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 3.5322529984114226,
+    "ranking": [
+      4154,
+      14696,
+      15085,
+      15119,
+      15165,
+      15022,
+      15201,
+      14648,
+      14883,
+      14690
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 41.90188299980946,
+    "ranking": [
+      23403,
+      23559,
+      23525,
+      23557,
+      23341,
+      23545,
+      23331,
+      23342,
+      23498,
+      23531
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 63.23998000152642,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27114
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 64.24218699976336,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      25019,
+      24964,
+      25023,
+      24997,
+      25004
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 66.18620900189853,
+    "ranking": [
+      14911,
+      14861,
+      14710,
+      14808,
+      14744,
+      14803,
+      14689,
+      14705,
+      14819,
+      14880
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 76.5713639993919,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      3050,
+      34375,
+      35074,
+      34812,
+      34385
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 78.7249979985063,
+    "ranking": [
+      27591,
+      20786,
+      5665,
+      5655,
+      27561,
+      27587,
+      5678,
+      5647,
+      28086,
+      7051
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 105.62080099771265,
+    "ranking": [
+      27136,
+      27063,
+      27097,
+      27080,
+      27062,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 76.29517299938016,
+    "ranking": [
+      27781,
+      10690,
+      27753,
+      7094,
+      7080,
+      27820,
+      7093,
+      5732,
+      27796,
+      27774
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 79.54998200148111,
+    "ranking": [
+      20725,
+      20698,
+      15057,
+      20716,
+      12988,
+      14920,
+      20734,
+      9464,
+      13237,
+      9471
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 88.41304599991417,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22459,
+      22470,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 75.8925910013204,
+    "ranking": [
+      7879,
+      7877,
+      7876,
+      7843,
+      7922,
+      7940,
+      7926,
+      7882,
+      7937,
+      7844
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 81.47851600006106,
+    "ranking": [
+      3932,
+      3934,
+      3965,
+      3939,
+      3924,
+      3905,
+      3916,
+      3935,
+      3923,
+      3914
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 67.01987199994619,
+    "ranking": [
+      6630,
+      6626,
+      28874,
+      6587,
+      21534,
+      26253,
+      20231,
+      7061,
+      23717,
+      26041
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 102.4706479984161,
+    "ranking": [
+      35028,
+      19108,
+      4046,
+      19153,
+      19094,
+      19089,
+      19119,
+      19143,
+      27086,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 65.49223000183702,
+    "ranking": [
+      20379,
+      20363,
+      20407,
+      20373,
+      20414,
+      20460,
+      20494,
+      20478,
+      20424,
+      20415
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 63.370300998940365,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      17932,
+      349,
+      4213,
+      1857,
+      15341,
+      4214,
+      11474
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 73.50100400071824,
+    "ranking": [
+      34828,
+      11263,
+      11249,
+      34821,
+      4111,
+      1687,
+      9252,
+      4107,
+      34375,
+      34827
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 49.75451600330416,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35185,
+      3165,
+      35181,
+      35182,
+      2456,
+      1708,
+      928
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 83.44737399966107,
+    "ranking": [
+      26690,
+      26676,
+      28425,
+      26687,
+      26679,
+      28130,
+      28442,
+      28445,
+      28450,
+      27852
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 58.53098199804663,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23904,
+      23907,
+      23899,
+      23949,
+      23911,
+      23900,
+      23920
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 64.17847400007304,
+    "ranking": [
+      11927,
+      11837,
+      11968,
+      12030,
+      11836,
+      25185,
+      12046,
+      12093,
+      11999,
+      11989
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 50.89111900088028,
+    "ranking": [
+      1617,
+      1596,
+      2780,
+      1622,
+      1598,
+      2785,
+      1299,
+      3556,
+      828,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 73.9549280006031,
+    "ranking": [
+      2748,
+      4862,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4895,
+      4888
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 60.485417998279445,
+    "ranking": [
+      7103,
+      7104,
+      15313,
+      7083,
+      25476,
+      10072,
+      35793,
+      26732,
+      8389,
+      15956
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 82.90031399883446,
+    "ranking": [
+      20131,
+      20168,
+      20175,
+      20134,
+      20173,
+      9199,
+      20166,
+      20164,
+      9181,
+      20133
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 67.06652900174959,
+    "ranking": [
+      10676,
+      10674,
+      10688,
+      10680,
+      10704,
+      10686,
+      10683,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 71.53636499788263,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31833,
+      31838,
+      31358,
+      31844,
+      31832
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 59.79491399921244,
+    "ranking": [
+      28776,
+      8405,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 54.763500000262866,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25636,
+      25836,
+      25580,
+      18292,
+      10358,
+      25840,
+      4089
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Dense",
+    "round": 0,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 70.17606600129511,
+    "ranking": [
+      14720,
+      14594,
+      14771,
+      7584,
+      25481,
+      14817,
+      14596,
+      14811,
+      14690,
+      31687
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 38.82082999916747,
+    "ranking": [
+      23341,
+      23403,
+      3829,
+      23525,
+      23322,
+      23342,
+      23319,
+      23331,
+      23349,
+      23330
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 36.9468529970618,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 33.84604399980162,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      24997,
+      25019,
+      24964,
+      25023,
+      25004
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 35.297539998282446,
+    "ranking": [
+      14911,
+      14861,
+      14710,
+      14808,
+      14744,
+      14689,
+      14765,
+      14803,
+      14819,
+      14705
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 40.620034000312444,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      3050,
+      34385,
+      35074,
+      11249
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 38.267953001195565,
+    "ranking": [
+      27591,
+      20786,
+      5665,
+      5678,
+      5655,
+      27561,
+      27587,
+      7051,
+      5647,
+      28086
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 49.67385100098909,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27097,
+      27080,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 55.70615900069242,
+    "ranking": [
+      27781,
+      10690,
+      27753,
+      27820,
+      7080,
+      7094,
+      7093,
+      27796,
+      5732,
+      27764
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 36.699557000247296,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      20716,
+      12988,
+      14920,
+      20734,
+      9464,
+      13237,
+      9480
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 38.16279999955441,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22470,
+      22459,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 48.74479600039194,
+    "ranking": [
+      7879,
+      7922,
+      7877,
+      7843,
+      7940,
+      7876,
+      7937,
+      7926,
+      7920,
+      7927
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 50.275638001039624,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3934,
+      3965,
+      3924,
+      3905,
+      3939,
+      3957
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 39.35628599720076,
+    "ranking": [
+      6626,
+      6630,
+      6587,
+      28874,
+      21534,
+      26253,
+      20231,
+      23717,
+      7061,
+      6608
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 52.49750000075437,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      19119,
+      19143,
+      32003,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 38.38707500108285,
+    "ranking": [
+      20379,
+      20363,
+      20373,
+      20414,
+      20407,
+      20460,
+      20415,
+      20424,
+      20494,
+      20478
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 37.85275699920021,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      4213,
+      17932,
+      349,
+      4214,
+      15341,
+      11474,
+      1857
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 35.39624300174182,
+    "ranking": [
+      34828,
+      11263,
+      34821,
+      11249,
+      35938,
+      9252,
+      34827,
+      4111,
+      34375,
+      34815
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 32.50659699915559,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35181,
+      35182,
+      35185,
+      35179,
+      35180,
+      3165,
+      1708
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 36.7527339985827,
+    "ranking": [
+      28425,
+      26690,
+      26676,
+      28445,
+      26687,
+      26679,
+      28450,
+      28130,
+      28442,
+      28435
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 35.156905996700516,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23904,
+      23900,
+      23907,
+      23949,
+      23899,
+      23920,
+      23911
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 34.15031899930909,
+    "ranking": [
+      11927,
+      11837,
+      12030,
+      11968,
+      25185,
+      11836,
+      12093,
+      11999,
+      12046,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 48.8960290022078,
+    "ranking": [
+      1596,
+      1617,
+      2780,
+      1598,
+      3556,
+      1597,
+      2785,
+      1622,
+      1299,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 54.43367200132343,
+    "ranking": [
+      4862,
+      2748,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4895,
+      4905
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 49.545997000677744,
+    "ranking": [
+      7103,
+      7104,
+      7083,
+      15313,
+      35793,
+      25476,
+      10072,
+      26732,
+      6728,
+      27236
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 43.01363700142247,
+    "ranking": [
+      20131,
+      20168,
+      20175,
+      9199,
+      20134,
+      20173,
+      9181,
+      20166,
+      20133,
+      20164
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 42.628759001672734,
+    "ranking": [
+      10674,
+      10676,
+      10688,
+      10680,
+      10683,
+      10686,
+      10704,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 33.809144002589164,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31358,
+      31833,
+      31838,
+      10177,
+      31384
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 51.49475100188283,
+    "ranking": [
+      8405,
+      28776,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 44.206388000020524,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25580,
+      25836,
+      25636,
+      18292,
+      25840,
+      10358,
+      19910
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 0,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 33.62814399952185,
+    "ranking": [
+      14720,
+      14594,
+      25481,
+      7584,
+      14817,
+      14690,
+      4154,
+      14771,
+      14596,
+      15085
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 38.202241998078534,
+    "ranking": [
+      3829,
+      23341,
+      23322,
+      23319,
+      23403,
+      23330,
+      23350,
+      23314,
+      23344,
+      23525
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 41.10024499823339,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 39.06502999961958,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      24997,
+      25019,
+      24964,
+      25023,
+      25004
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 41.55177099892171,
+    "ranking": [
+      14911,
+      14765,
+      14861,
+      14710,
+      14808,
+      14744,
+      15082,
+      14689,
+      14819,
+      14803
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 43.39050500129815,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      448,
+      8862,
+      34385,
+      3050
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 41.26004399950034,
+    "ranking": [
+      27591,
+      20786,
+      5678,
+      5665,
+      5655,
+      27561,
+      7051,
+      27587,
+      5647,
+      28086
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 42.879642998741474,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27097,
+      27080,
+      27028,
+      27098,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 39.05866400236846,
+    "ranking": [
+      27781,
+      10690,
+      27820,
+      7093,
+      27753,
+      7080,
+      7094,
+      27796,
+      27814,
+      5732
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 46.428333000221755,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      14920,
+      20716,
+      12988,
+      20734,
+      9464,
+      13319,
+      13237
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 49.68316899976344,
+    "ranking": [
+      22468,
+      22469,
+      22470,
+      22399,
+      22459,
+      22466,
+      22461,
+      22467,
+      22450,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 53.754503998789005,
+    "ranking": [
+      7879,
+      7922,
+      7940,
+      7937,
+      7843,
+      7877,
+      7920,
+      7926,
+      7927,
+      7876
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 42.061557000124594,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3965,
+      3934,
+      3924,
+      3957,
+      3905,
+      3949
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 37.501595998037374,
+    "ranking": [
+      6626,
+      6630,
+      6587,
+      28874,
+      21534,
+      26253,
+      20231,
+      23717,
+      6608,
+      7061
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 38.98386799846776,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      32003,
+      19119,
+      34990,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 48.51787599909585,
+    "ranking": [
+      20379,
+      20373,
+      20363,
+      20414,
+      20407,
+      20460,
+      20415,
+      20424,
+      20441,
+      20494
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 40.00024700144422,
+    "ranking": [
+      4224,
+      4213,
+      11458,
+      11440,
+      349,
+      17932,
+      4214,
+      15341,
+      11474,
+      359
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 41.46124900216819,
+    "ranking": [
+      34828,
+      11263,
+      34821,
+      11249,
+      35938,
+      9252,
+      34827,
+      34815,
+      34375,
+      35940
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 38.819757999590365,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35181,
+      35182,
+      35179,
+      35180,
+      35185,
+      3165,
+      1708
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 42.480419997446006,
+    "ranking": [
+      28425,
+      28445,
+      28450,
+      26690,
+      26676,
+      28442,
+      28130,
+      28435,
+      26679,
+      26687
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 47.221913999237586,
+    "ranking": [
+      23894,
+      23895,
+      23900,
+      23908,
+      23904,
+      23949,
+      23907,
+      23920,
+      23899,
+      23769
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 42.94780299824197,
+    "ranking": [
+      11927,
+      11837,
+      12030,
+      11968,
+      12093,
+      25185,
+      11999,
+      11836,
+      12046,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 45.223146000353154,
+    "ranking": [
+      1596,
+      2780,
+      1598,
+      3556,
+      1597,
+      1617,
+      2785,
+      1299,
+      1622,
+      6098
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 39.69572200003313,
+    "ranking": [
+      4862,
+      1272,
+      2748,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4905,
+      4895
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 48.8463280016731,
+    "ranking": [
+      7103,
+      7083,
+      7104,
+      35793,
+      15313,
+      25476,
+      10072,
+      26732,
+      6728,
+      27236
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 40.213440002844436,
+    "ranking": [
+      20131,
+      20175,
+      20168,
+      9199,
+      20134,
+      9181,
+      20173,
+      20166,
+      20133,
+      20164
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 47.31429699677392,
+    "ranking": [
+      10674,
+      10676,
+      10688,
+      10680,
+      10683,
+      10686,
+      33371,
+      10704,
+      10710,
+      10675
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 39.184016997751314,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31358,
+      10177,
+      31833,
+      31838,
+      10172
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 42.594621001626365,
+    "ranking": [
+      8405,
+      28776,
+      12283,
+      12408,
+      8018,
+      20325,
+      21275,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 38.77225299947895,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25580,
+      25836,
+      18292,
+      25636,
+      25840,
+      10358,
+      14575
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 0,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 41.981513997598086,
+    "ranking": [
+      14720,
+      14594,
+      25481,
+      4154,
+      7584,
+      14690,
+      14817,
+      15085,
+      14596,
+      15020
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 45.938940998894395,
+    "ranking": [
+      23341,
+      23403,
+      3829,
+      23525,
+      23342,
+      23322,
+      23331,
+      23319,
+      23349,
+      23559
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 52.03771900050924,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 47.160205998807214,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30898,
+      30866,
+      24997,
+      25019,
+      24964,
+      30877,
+      30881
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 50.61201799981063,
+    "ranking": [
+      14911,
+      14861,
+      14765,
+      14710,
+      14808,
+      14744,
+      14689,
+      14819,
+      14803,
+      15082
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 45.84819700176013,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      3050,
+      34385,
+      11249,
+      35074
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 45.74236500047846,
+    "ranking": [
+      27591,
+      20786,
+      5678,
+      5665,
+      5655,
+      27561,
+      7051,
+      27587,
+      5647,
+      28086
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 48.040385998319834,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27097,
+      27080,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 46.92120399704436,
+    "ranking": [
+      27781,
+      10690,
+      7093,
+      27820,
+      27753,
+      7080,
+      7094,
+      27796,
+      27814,
+      5732
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 47.39753299872973,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      14920,
+      20716,
+      12988,
+      20734,
+      9464,
+      13319,
+      13237
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 55.867776998638874,
+    "ranking": [
+      22468,
+      22469,
+      22470,
+      22399,
+      22459,
+      22466,
+      22461,
+      22467,
+      22450,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 49.84522800077684,
+    "ranking": [
+      7879,
+      7922,
+      7940,
+      7937,
+      7843,
+      7877,
+      7920,
+      7926,
+      7927,
+      7876
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 60.88729900147882,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3965,
+      3934,
+      3924,
+      3957,
+      3905,
+      3949
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 48.02960099914344,
+    "ranking": [
+      6626,
+      6630,
+      6587,
+      28874,
+      21534,
+      26253,
+      20231,
+      23717,
+      6608,
+      7061
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 50.10627999945427,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      19119,
+      32003,
+      34990,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 54.149981999216834,
+    "ranking": [
+      20379,
+      20373,
+      20363,
+      20414,
+      20407,
+      20460,
+      20415,
+      20424,
+      20441,
+      20377
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 45.384496999758994,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      4213,
+      17932,
+      349,
+      4214,
+      15341,
+      11474,
+      1857
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 63.22520899993833,
+    "ranking": [
+      34828,
+      11263,
+      34821,
+      11249,
+      35938,
+      9252,
+      34827,
+      34815,
+      34375,
+      4111
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 46.29211599967675,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35181,
+      35182,
+      35179,
+      35180,
+      35185,
+      3165,
+      1708
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 50.085826998838456,
+    "ranking": [
+      28425,
+      26690,
+      28445,
+      26676,
+      28450,
+      26679,
+      26687,
+      28130,
+      28442,
+      28435
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 52.05413700241479,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23900,
+      23904,
+      23907,
+      23949,
+      23899,
+      23920,
+      23911
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 45.67567200138001,
+    "ranking": [
+      11927,
+      11837,
+      12030,
+      11968,
+      12093,
+      25185,
+      11999,
+      11836,
+      12046,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 65.0406099994143,
+    "ranking": [
+      1596,
+      2780,
+      1617,
+      1598,
+      3556,
+      1597,
+      2785,
+      1622,
+      1299,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 52.49628599995049,
+    "ranking": [
+      4862,
+      2748,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4905,
+      4895
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 42.936425998050254,
+    "ranking": [
+      7103,
+      7083,
+      7104,
+      15313,
+      35793,
+      25476,
+      10072,
+      26732,
+      6728,
+      27236
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 52.30686800132389,
+    "ranking": [
+      20131,
+      20175,
+      20168,
+      9199,
+      20134,
+      9181,
+      20173,
+      20166,
+      20133,
+      20164
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 44.55101200073841,
+    "ranking": [
+      10674,
+      10676,
+      10688,
+      10680,
+      10683,
+      10686,
+      33371,
+      10704,
+      10710,
+      10675
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 47.04107100042165,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31358,
+      10177,
+      31833,
+      31838,
+      10172
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 53.633556999557186,
+    "ranking": [
+      8405,
+      28776,
+      12283,
+      12408,
+      8018,
+      20325,
+      21275,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 59.10344999938388,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25580,
+      25836,
+      18292,
+      25636,
+      25840,
+      10358,
+      14575
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 0,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 48.53080300017609,
+    "ranking": [
+      14720,
+      14594,
+      25481,
+      7584,
+      14690,
+      14817,
+      4154,
+      14596,
+      15085,
+      14771
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 52.42607800028054,
+    "ranking": [
+      23341,
+      23403,
+      3829,
+      23525,
+      23322,
+      23342,
+      23331,
+      23319,
+      23349,
+      23330
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 61.32171900026151,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27164,
+      27059,
+      27174,
+      27075,
+      27066,
+      27113,
+      27163
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 47.13877699759905,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30877,
+      30949,
+      30898,
+      30866,
+      20224,
+      30881,
+      24997
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 50.841078998928424,
+    "ranking": [
+      14911,
+      14765,
+      15082,
+      25443,
+      14601,
+      14861,
+      14819,
+      14710,
+      14808,
+      15209
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 52.1021690001362,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      448,
+      8862,
+      34385,
+      4668
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 54.0919910017692,
+    "ranking": [
+      27591,
+      20786,
+      5678,
+      5672,
+      5665,
+      7051,
+      5655,
+      27561,
+      27587,
+      27542
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 56.01619300068705,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27028,
+      27098,
+      27097,
+      27080,
+      27079,
+      27213,
+      27016
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 57.62118900020141,
+    "ranking": [
+      27781,
+      27814,
+      7093,
+      27820,
+      10690,
+      7080,
+      27753,
+      27764,
+      7094,
+      27796
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 52.508433000184596,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      14920,
+      12988,
+      20716,
+      13319,
+      20734,
+      9464,
+      9175
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 49.12569100270048,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22459,
+      22470,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 49.78257099719485,
+    "ranking": [
+      7922,
+      7937,
+      7940,
+      7927,
+      7947,
+      7879,
+      7920,
+      7843,
+      7929,
+      7926
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 59.85597600010806,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3957,
+      3949,
+      3943,
+      3931,
+      3965,
+      3924
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 55.104140999901574,
+    "ranking": [
+      6626,
+      6630,
+      26253,
+      6587,
+      21534,
+      28874,
+      20231,
+      6608,
+      23717,
+      7061
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 62.21878599899355,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      32003,
+      19119,
+      34990,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 57.234720999986166,
+    "ranking": [
+      20379,
+      20373,
+      20414,
+      20363,
+      20415,
+      20460,
+      20407,
+      20441,
+      20424,
+      20377
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 68.18515899794875,
+    "ranking": [
+      4224,
+      4213,
+      11458,
+      11440,
+      349,
+      4214,
+      17932,
+      4226,
+      15341,
+      11474
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 87.55140499852132,
+    "ranking": [
+      35938,
+      32001,
+      34828,
+      32000,
+      32008,
+      32037,
+      31970,
+      32009,
+      35774,
+      32016
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 65.9814729988284,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35179,
+      35182,
+      35181,
+      35180,
+      35185,
+      36164,
+      3165
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 71.68684600037523,
+    "ranking": [
+      28445,
+      28450,
+      28435,
+      28425,
+      28454,
+      28442,
+      27870,
+      28130,
+      26690,
+      26628
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 57.85313899832545,
+    "ranking": [
+      23894,
+      23900,
+      23949,
+      34971,
+      23783,
+      23769,
+      23907,
+      23920,
+      23952,
+      24273
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 55.78568399869255,
+    "ranking": [
+      11927,
+      11837,
+      11968,
+      12030,
+      11836,
+      25185,
+      12093,
+      12046,
+      11999,
+      11989
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 53.31149300036486,
+    "ranking": [
+      1597,
+      3556,
+      1598,
+      2780,
+      1596,
+      2106,
+      2107,
+      2785,
+      6098,
+      1617
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 54.65496900069411,
+    "ranking": [
+      1272,
+      4862,
+      2748,
+      4883,
+      2075,
+      4868,
+      4903,
+      4873,
+      4905,
+      4896
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 45.164660001319135,
+    "ranking": [
+      7103,
+      7104,
+      15313,
+      7083,
+      25476,
+      10072,
+      35793,
+      26732,
+      8389,
+      15956
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 48.99714500061236,
+    "ranking": [
+      20131,
+      9199,
+      9181,
+      20175,
+      20168,
+      9184,
+      20133,
+      20130,
+      9196,
+      9191
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 48.52355399998487,
+    "ranking": [
+      10676,
+      10674,
+      10688,
+      10680,
+      10704,
+      10686,
+      10683,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 47.83156900157337,
+    "ranking": [
+      10175,
+      10179,
+      10187,
+      10127,
+      31358,
+      10189,
+      10177,
+      10172,
+      10191,
+      31416
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 51.30162199930055,
+    "ranking": [
+      28776,
+      8405,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 52.643884999270085,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25636,
+      25836,
+      25580,
+      18292,
+      25840,
+      10358,
+      19910
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 0,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 49.59817299823044,
+    "ranking": [
+      4154,
+      14720,
+      15085,
+      14690,
+      25481,
+      14594,
+      15119,
+      15201,
+      15022,
+      15165
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 78.23522399849026,
+    "ranking": [
+      23403,
+      23559,
+      23525,
+      23557,
+      23341,
+      23545,
+      23331,
+      23342,
+      23498,
+      23531
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 60.564860999875236,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 59.452746998431394,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      25019,
+      24964,
+      24997,
+      25023,
+      25004
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 63.96712099740398,
+    "ranking": [
+      14911,
+      14861,
+      14710,
+      14808,
+      14744,
+      14689,
+      14803,
+      14705,
+      14819,
+      14880
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 64.54772299912293,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      3050,
+      34375,
+      35074,
+      34385,
+      34812
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 73.87879999805591,
+    "ranking": [
+      27591,
+      20786,
+      5665,
+      5655,
+      27561,
+      5678,
+      27587,
+      5647,
+      28086,
+      7051
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 89.79699700284982,
+    "ranking": [
+      27136,
+      27063,
+      27097,
+      27062,
+      27080,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 65.6408789982379,
+    "ranking": [
+      27781,
+      10690,
+      27753,
+      7080,
+      7094,
+      27820,
+      7093,
+      27796,
+      5732,
+      27774
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 61.55871900045895,
+    "ranking": [
+      20725,
+      20698,
+      15057,
+      20716,
+      12988,
+      14920,
+      20734,
+      9464,
+      13237,
+      9471
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 63.885137999022845,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22459,
+      22470,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 69.124412999372,
+    "ranking": [
+      7879,
+      7877,
+      7876,
+      7922,
+      7843,
+      7940,
+      7937,
+      7926,
+      7882,
+      7844
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 66.23757800116437,
+    "ranking": [
+      3932,
+      3934,
+      3965,
+      3924,
+      3939,
+      3905,
+      3916,
+      3935,
+      3914,
+      3923
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 67.6866300018446,
+    "ranking": [
+      6630,
+      6626,
+      28874,
+      6587,
+      21534,
+      26253,
+      20231,
+      7061,
+      23717,
+      26041
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 71.15322199751972,
+    "ranking": [
+      35028,
+      19108,
+      4046,
+      19153,
+      19094,
+      19089,
+      19119,
+      19143,
+      27086,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 66.24967899915646,
+    "ranking": [
+      20379,
+      20363,
+      20407,
+      20373,
+      20414,
+      20460,
+      20424,
+      20415,
+      20494,
+      20478
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 71.66473899997072,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      17932,
+      349,
+      4213,
+      1857,
+      4214,
+      15341,
+      11474
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 75.60167900010129,
+    "ranking": [
+      34828,
+      11263,
+      11249,
+      34821,
+      4111,
+      9252,
+      34375,
+      1687,
+      4107,
+      34827
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 69.03291899652686,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35185,
+      3165,
+      35181,
+      35182,
+      1708,
+      2456,
+      35180
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 61.407080000208225,
+    "ranking": [
+      26690,
+      28425,
+      26676,
+      26687,
+      26679,
+      28130,
+      28445,
+      28442,
+      28450,
+      28443
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 62.601698002254125,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23904,
+      23907,
+      23949,
+      23899,
+      23900,
+      23911,
+      23920
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 59.26375299895881,
+    "ranking": [
+      11927,
+      11837,
+      11968,
+      12030,
+      11836,
+      25185,
+      12093,
+      12046,
+      11999,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 96.20236599948839,
+    "ranking": [
+      1617,
+      1596,
+      2780,
+      1622,
+      1598,
+      2785,
+      1299,
+      3556,
+      828,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 94.31914100059657,
+    "ranking": [
+      2748,
+      4862,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4895,
+      4905
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 67.78984000266064,
+    "ranking": [
+      7103,
+      7104,
+      15313,
+      7083,
+      25476,
+      35793,
+      10072,
+      26732,
+      8389,
+      6728
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 60.93676100135781,
+    "ranking": [
+      20131,
+      20168,
+      20175,
+      20134,
+      9199,
+      20173,
+      20166,
+      9181,
+      20164,
+      20133
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 61.663650998525554,
+    "ranking": [
+      10676,
+      10674,
+      10688,
+      10680,
+      10704,
+      10683,
+      10686,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 83.50304499981576,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31833,
+      31838,
+      31358,
+      10177,
+      31844
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 71.3281790012843,
+    "ranking": [
+      28776,
+      8405,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 64.6469370003615,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25636,
+      25836,
+      25580,
+      18292,
+      25840,
+      10358,
+      4089
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 0,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 65.18809300177963,
+    "ranking": [
+      14720,
+      14594,
+      14771,
+      7584,
+      25481,
+      14817,
+      14596,
+      14811,
+      14690,
+      31687
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 86.17189999858965,
+    "ranking": [
+      23403,
+      23559,
+      23525,
+      23557,
+      23341,
+      23545,
+      23331,
+      23342,
+      23498,
+      23531
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 118.97349499849952,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 165.34368000066024,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      25019,
+      24964,
+      24997,
+      25023,
+      25004
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 186.11087899989798,
+    "ranking": [
+      14911,
+      14861,
+      14710,
+      14808,
+      14744,
+      14689,
+      14803,
+      14705,
+      14819,
+      14880
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 142.448749000323,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      3050,
+      34375,
+      35074,
+      34385,
+      34812
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 92.37044000110473,
+    "ranking": [
+      27591,
+      20786,
+      5665,
+      5655,
+      27561,
+      5678,
+      27587,
+      5647,
+      28086,
+      7051
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 102.18753699882654,
+    "ranking": [
+      27136,
+      27063,
+      27097,
+      27062,
+      27080,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 82.00294400012353,
+    "ranking": [
+      27781,
+      10690,
+      27753,
+      7080,
+      7094,
+      27820,
+      7093,
+      27796,
+      5732,
+      27774
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 82.87675600149669,
+    "ranking": [
+      20725,
+      20698,
+      15057,
+      20716,
+      12988,
+      14920,
+      20734,
+      9464,
+      13237,
+      9471
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 102.58087900001556,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22459,
+      22470,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 167.09881099814083,
+    "ranking": [
+      7879,
+      7877,
+      7876,
+      7922,
+      7843,
+      7940,
+      7937,
+      7926,
+      7882,
+      7844
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 100.01967900097952,
+    "ranking": [
+      3932,
+      3934,
+      3965,
+      3924,
+      3939,
+      3905,
+      3916,
+      3935,
+      3914,
+      3923
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 92.05305200157454,
+    "ranking": [
+      6630,
+      6626,
+      28874,
+      6587,
+      21534,
+      26253,
+      20231,
+      7061,
+      23717,
+      26041
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 72.99025599786546,
+    "ranking": [
+      35028,
+      19108,
+      4046,
+      19153,
+      19094,
+      19089,
+      19119,
+      19143,
+      27086,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 75.73164499990526,
+    "ranking": [
+      20379,
+      20363,
+      20407,
+      20373,
+      20414,
+      20460,
+      20424,
+      20415,
+      20494,
+      20478
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 82.00647600097,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      17932,
+      349,
+      4213,
+      1857,
+      4214,
+      15341,
+      11474
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 62.15918299858458,
+    "ranking": [
+      34828,
+      11263,
+      11249,
+      34821,
+      4111,
+      9252,
+      34375,
+      1687,
+      4107,
+      34827
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 120.25761900076759,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35185,
+      3165,
+      35181,
+      35182,
+      1708,
+      2456,
+      35180
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 69.311999999627,
+    "ranking": [
+      26690,
+      28425,
+      26676,
+      26687,
+      26679,
+      28130,
+      28445,
+      28442,
+      28450,
+      28443
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 67.9306150013872,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23904,
+      23907,
+      23949,
+      23899,
+      23900,
+      23911,
+      23920
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 73.446784997941,
+    "ranking": [
+      11927,
+      11837,
+      11968,
+      12030,
+      11836,
+      25185,
+      12093,
+      12046,
+      11999,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 92.06138900117367,
+    "ranking": [
+      1617,
+      1596,
+      2780,
+      1622,
+      1598,
+      2785,
+      1299,
+      3556,
+      828,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 111.63376499825972,
+    "ranking": [
+      2748,
+      4862,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4895,
+      4905
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 69.34985000043525,
+    "ranking": [
+      7103,
+      7104,
+      15313,
+      7083,
+      25476,
+      35793,
+      10072,
+      26732,
+      8389,
+      6728
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 88.06956699845614,
+    "ranking": [
+      20131,
+      20168,
+      20175,
+      20134,
+      9199,
+      20173,
+      20166,
+      9181,
+      20164,
+      20133
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 68.37673500194796,
+    "ranking": [
+      10676,
+      10674,
+      10688,
+      10680,
+      10704,
+      10683,
+      10686,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 71.53562500025146,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31833,
+      31838,
+      31358,
+      10177,
+      31844
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 95.89452400177834,
+    "ranking": [
+      28776,
+      8405,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 91.00305399988429,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25636,
+      25836,
+      25580,
+      18292,
+      25840,
+      10358,
+      4089
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-L",
+    "round": 1,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 82.6728859974537,
+    "ranking": [
+      14720,
+      14594,
+      14771,
+      7584,
+      25481,
+      14817,
+      14596,
+      14811,
+      14690,
+      31687
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 64.91471600020304,
+    "ranking": [
+      23341,
+      23403,
+      3829,
+      23525,
+      23322,
+      23342,
+      23331,
+      23319,
+      23349,
+      23330
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 79.02604999981122,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27164,
+      27059,
+      27174,
+      27075,
+      27066,
+      27113,
+      27163
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 79.00829400023213,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30877,
+      30949,
+      30898,
+      30866,
+      20224,
+      30881,
+      24997
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 70.00462599899038,
+    "ranking": [
+      14911,
+      14765,
+      15082,
+      25443,
+      14601,
+      14861,
+      14819,
+      14710,
+      14808,
+      15209
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 69.44374099839479,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      448,
+      8862,
+      34385,
+      4668
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 56.93957900075475,
+    "ranking": [
+      27591,
+      20786,
+      5678,
+      5672,
+      5665,
+      7051,
+      5655,
+      27561,
+      27587,
+      27542
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 100.16218799864873,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27028,
+      27098,
+      27097,
+      27080,
+      27079,
+      27213,
+      27016
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 55.90657399807242,
+    "ranking": [
+      27781,
+      27814,
+      7093,
+      27820,
+      10690,
+      7080,
+      27753,
+      27764,
+      7094,
+      27796
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 51.67142100253841,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      14920,
+      12988,
+      20716,
+      13319,
+      20734,
+      9464,
+      9175
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 53.68989300040994,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22459,
+      22470,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 51.23630600064644,
+    "ranking": [
+      7922,
+      7937,
+      7940,
+      7927,
+      7947,
+      7879,
+      7920,
+      7843,
+      7929,
+      7926
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 52.615380998759065,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3957,
+      3949,
+      3943,
+      3931,
+      3965,
+      3924
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 58.6131199997908,
+    "ranking": [
+      6626,
+      6630,
+      26253,
+      6587,
+      21534,
+      28874,
+      20231,
+      6608,
+      23717,
+      7061
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 52.46686299869907,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      32003,
+      19119,
+      34990,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 53.567647002637386,
+    "ranking": [
+      20379,
+      20373,
+      20414,
+      20363,
+      20415,
+      20460,
+      20407,
+      20441,
+      20424,
+      20377
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 56.908135000412585,
+    "ranking": [
+      4224,
+      4213,
+      11458,
+      11440,
+      349,
+      4214,
+      17932,
+      4226,
+      15341,
+      11474
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 55.84747800094192,
+    "ranking": [
+      35938,
+      32001,
+      34828,
+      32000,
+      32008,
+      32037,
+      31970,
+      32009,
+      35774,
+      32016
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 68.38372999845888,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35179,
+      35182,
+      35181,
+      35180,
+      35185,
+      36164,
+      3165
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 54.31846799911,
+    "ranking": [
+      28445,
+      28450,
+      28435,
+      28425,
+      28454,
+      28442,
+      27870,
+      28130,
+      26690,
+      26628
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 53.52175799998804,
+    "ranking": [
+      23894,
+      23900,
+      23949,
+      34971,
+      23783,
+      23769,
+      23907,
+      23920,
+      23952,
+      24273
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 62.68889999773819,
+    "ranking": [
+      11927,
+      11837,
+      11968,
+      12030,
+      11836,
+      25185,
+      12093,
+      12046,
+      11999,
+      11989
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 54.93486700288486,
+    "ranking": [
+      1597,
+      3556,
+      1598,
+      2780,
+      1596,
+      2106,
+      2107,
+      2785,
+      6098,
+      1617
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 59.12503000217839,
+    "ranking": [
+      1272,
+      4862,
+      2748,
+      4883,
+      2075,
+      4868,
+      4903,
+      4873,
+      4905,
+      4896
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 51.44947499866248,
+    "ranking": [
+      7103,
+      7104,
+      15313,
+      7083,
+      25476,
+      10072,
+      35793,
+      26732,
+      8389,
+      15956
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 70.52070899953833,
+    "ranking": [
+      20131,
+      9199,
+      9181,
+      20175,
+      20168,
+      9184,
+      20133,
+      20130,
+      9196,
+      9191
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 61.52301499969326,
+    "ranking": [
+      10676,
+      10674,
+      10688,
+      10680,
+      10704,
+      10686,
+      10683,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 54.21683099848451,
+    "ranking": [
+      10175,
+      10179,
+      10187,
+      10127,
+      31358,
+      10189,
+      10177,
+      10172,
+      10191,
+      31416
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 50.81070300002466,
+    "ranking": [
+      28776,
+      8405,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 47.86179399889079,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25636,
+      25836,
+      25580,
+      18292,
+      25840,
+      10358,
+      19910
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "QDAP-S",
+    "round": 1,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 50.707260001217946,
+    "ranking": [
+      4154,
+      14720,
+      15085,
+      14690,
+      25481,
+      14594,
+      15119,
+      15201,
+      15022,
+      15165
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 70.80947999929776,
+    "ranking": [
+      23341,
+      23403,
+      3829,
+      23525,
+      23342,
+      23322,
+      23331,
+      23319,
+      23349,
+      23559
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 71.33521700234269,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 70.09613099944545,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30898,
+      30866,
+      24997,
+      25019,
+      24964,
+      30877,
+      30881
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 61.92660099986824,
+    "ranking": [
+      14911,
+      14861,
+      14765,
+      14710,
+      14808,
+      14744,
+      14689,
+      14819,
+      14803,
+      15082
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 63.636180999310454,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      3050,
+      34385,
+      11249,
+      35074
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 53.86579599871766,
+    "ranking": [
+      27591,
+      20786,
+      5678,
+      5665,
+      5655,
+      27561,
+      7051,
+      27587,
+      5647,
+      28086
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 56.06875599914929,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27097,
+      27080,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 52.717863996804226,
+    "ranking": [
+      27781,
+      10690,
+      7093,
+      27820,
+      27753,
+      7080,
+      7094,
+      27796,
+      27814,
+      5732
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 55.446571997890715,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      14920,
+      20716,
+      12988,
+      20734,
+      9464,
+      13319,
+      13237
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 62.100959999952465,
+    "ranking": [
+      22468,
+      22469,
+      22470,
+      22399,
+      22459,
+      22466,
+      22461,
+      22467,
+      22450,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 78.58348800073145,
+    "ranking": [
+      7879,
+      7922,
+      7940,
+      7937,
+      7843,
+      7877,
+      7920,
+      7926,
+      7927,
+      7876
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 57.55309600135661,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3965,
+      3934,
+      3924,
+      3957,
+      3905,
+      3949
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 60.336640002788045,
+    "ranking": [
+      6626,
+      6630,
+      6587,
+      28874,
+      21534,
+      26253,
+      20231,
+      23717,
+      6608,
+      7061
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 55.95797599744401,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      19119,
+      32003,
+      34990,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 57.67048900088412,
+    "ranking": [
+      20379,
+      20373,
+      20363,
+      20414,
+      20407,
+      20460,
+      20415,
+      20424,
+      20441,
+      20377
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 53.816956002265215,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      4213,
+      17932,
+      349,
+      4214,
+      15341,
+      11474,
+      1857
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 55.573383000592,
+    "ranking": [
+      34828,
+      11263,
+      34821,
+      11249,
+      35938,
+      9252,
+      34827,
+      34815,
+      34375,
+      4111
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 52.66448100155685,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35181,
+      35182,
+      35179,
+      35180,
+      35185,
+      3165,
+      1708
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 61.356762002105825,
+    "ranking": [
+      28425,
+      26690,
+      28445,
+      26676,
+      28450,
+      26679,
+      26687,
+      28130,
+      28442,
+      28435
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 73.23438900129986,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23900,
+      23904,
+      23907,
+      23949,
+      23899,
+      23920,
+      23911
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 67.57099899914465,
+    "ranking": [
+      11927,
+      11837,
+      12030,
+      11968,
+      12093,
+      25185,
+      11999,
+      11836,
+      12046,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 74.77099300012924,
+    "ranking": [
+      1596,
+      2780,
+      1617,
+      1598,
+      3556,
+      1597,
+      2785,
+      1622,
+      1299,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 49.29732399978093,
+    "ranking": [
+      4862,
+      2748,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4905,
+      4895
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 48.73049899833859,
+    "ranking": [
+      7103,
+      7083,
+      7104,
+      15313,
+      35793,
+      25476,
+      10072,
+      26732,
+      6728,
+      27236
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 52.972413002862595,
+    "ranking": [
+      20131,
+      20175,
+      20168,
+      9199,
+      20134,
+      9181,
+      20173,
+      20166,
+      20133,
+      20164
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 56.44609299997683,
+    "ranking": [
+      10674,
+      10676,
+      10688,
+      10680,
+      10683,
+      10686,
+      33371,
+      10704,
+      10710,
+      10675
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 53.3087069998146,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31358,
+      10177,
+      31833,
+      31838,
+      10172
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 50.48845800047275,
+    "ranking": [
+      8405,
+      28776,
+      12283,
+      12408,
+      8018,
+      20325,
+      21275,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 63.48310300018056,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25580,
+      25836,
+      18292,
+      25636,
+      25840,
+      10358,
+      14575
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Paper Fixed",
+    "round": 1,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 52.54081900056917,
+    "ranking": [
+      14720,
+      14594,
+      25481,
+      7584,
+      14690,
+      14817,
+      4154,
+      14596,
+      15085,
+      14771
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 42.11038600260508,
+    "ranking": [
+      3829,
+      23341,
+      23322,
+      23319,
+      23403,
+      23330,
+      23350,
+      23314,
+      23344,
+      23525
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 45.303752998734126,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 44.222950000403216,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      24997,
+      25019,
+      24964,
+      25023,
+      25004
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 42.749448999529704,
+    "ranking": [
+      14911,
+      14765,
+      14861,
+      14710,
+      14808,
+      14744,
+      15082,
+      14689,
+      14819,
+      14803
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 48.969996998494025,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      448,
+      8862,
+      34385,
+      3050
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 41.45626799800084,
+    "ranking": [
+      27591,
+      20786,
+      5678,
+      5665,
+      5655,
+      27561,
+      7051,
+      27587,
+      5647,
+      28086
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 41.32372299864073,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27097,
+      27080,
+      27028,
+      27098,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 42.44774900143966,
+    "ranking": [
+      27781,
+      10690,
+      27820,
+      7093,
+      27753,
+      7080,
+      7094,
+      27796,
+      27814,
+      5732
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 50.14380799912033,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      14920,
+      20716,
+      12988,
+      20734,
+      9464,
+      13319,
+      13237
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 42.485740003030514,
+    "ranking": [
+      22468,
+      22469,
+      22470,
+      22399,
+      22459,
+      22466,
+      22461,
+      22467,
+      22450,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 41.542464001395274,
+    "ranking": [
+      7879,
+      7922,
+      7940,
+      7937,
+      7843,
+      7877,
+      7920,
+      7926,
+      7927,
+      7876
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 42.469946998608066,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3965,
+      3934,
+      3924,
+      3957,
+      3905,
+      3949
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 41.51370500039775,
+    "ranking": [
+      6626,
+      6630,
+      6587,
+      28874,
+      21534,
+      26253,
+      20231,
+      23717,
+      6608,
+      7061
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 49.034395000489894,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      32003,
+      19119,
+      34990,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 59.06534299720079,
+    "ranking": [
+      20379,
+      20373,
+      20363,
+      20414,
+      20407,
+      20460,
+      20415,
+      20424,
+      20441,
+      20494
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 57.84652800139156,
+    "ranking": [
+      4224,
+      4213,
+      11458,
+      11440,
+      349,
+      17932,
+      4214,
+      15341,
+      11474,
+      359
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 59.08913299936103,
+    "ranking": [
+      34828,
+      11263,
+      34821,
+      11249,
+      35938,
+      9252,
+      34827,
+      34815,
+      34375,
+      35940
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 45.48687399801565,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35181,
+      35182,
+      35179,
+      35180,
+      35185,
+      3165,
+      1708
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 47.95961899799295,
+    "ranking": [
+      28425,
+      28445,
+      28450,
+      26690,
+      26676,
+      28442,
+      28130,
+      28435,
+      26679,
+      26687
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 45.85942400080967,
+    "ranking": [
+      23894,
+      23895,
+      23900,
+      23908,
+      23904,
+      23949,
+      23907,
+      23920,
+      23899,
+      23769
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 43.53417299716966,
+    "ranking": [
+      11927,
+      11837,
+      12030,
+      11968,
+      12093,
+      25185,
+      11999,
+      11836,
+      12046,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 51.720901999942726,
+    "ranking": [
+      1596,
+      2780,
+      1598,
+      3556,
+      1597,
+      1617,
+      2785,
+      1299,
+      1622,
+      6098
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 89.67694199964171,
+    "ranking": [
+      4862,
+      1272,
+      2748,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4905,
+      4895
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 73.691247998795,
+    "ranking": [
+      7103,
+      7083,
+      7104,
+      35793,
+      15313,
+      25476,
+      10072,
+      26732,
+      6728,
+      27236
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 64.13401700046961,
+    "ranking": [
+      20131,
+      20175,
+      20168,
+      9199,
+      20134,
+      9181,
+      20173,
+      20166,
+      20133,
+      20164
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 54.54708400066011,
+    "ranking": [
+      10674,
+      10676,
+      10688,
+      10680,
+      10683,
+      10686,
+      33371,
+      10704,
+      10710,
+      10675
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 58.403291997819906,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31358,
+      10177,
+      31833,
+      31838,
+      10172
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 61.46598299892503,
+    "ranking": [
+      8405,
+      28776,
+      12283,
+      12408,
+      8018,
+      20325,
+      21275,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 50.167416000476805,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25580,
+      25836,
+      18292,
+      25636,
+      25840,
+      10358,
+      14575
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Router",
+    "round": 1,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 56.05226199986646,
+    "ranking": [
+      14720,
+      14594,
+      25481,
+      4154,
+      7584,
+      14690,
+      14817,
+      15085,
+      14596,
+      15020
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 37.88418500334956,
+    "ranking": [
+      23341,
+      23403,
+      3829,
+      23525,
+      23322,
+      23342,
+      23319,
+      23331,
+      23349,
+      23330
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 49.99080199922901,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27103
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 40.1845480009797,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      24997,
+      25019,
+      24964,
+      25023,
+      25004
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 44.29717399762012,
+    "ranking": [
+      14911,
+      14861,
+      14710,
+      14808,
+      14744,
+      14689,
+      14765,
+      14803,
+      14819,
+      14705
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 65.85510199874989,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      34375,
+      3050,
+      34385,
+      35074,
+      11249
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 62.37626199799706,
+    "ranking": [
+      27591,
+      20786,
+      5665,
+      5678,
+      5655,
+      27561,
+      27587,
+      7051,
+      5647,
+      28086
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 63.803091001318535,
+    "ranking": [
+      27136,
+      27062,
+      27063,
+      27097,
+      27080,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 43.85870699843508,
+    "ranking": [
+      27781,
+      10690,
+      27753,
+      27820,
+      7080,
+      7094,
+      7093,
+      27796,
+      5732,
+      27764
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 44.543145999341505,
+    "ranking": [
+      20725,
+      15057,
+      20698,
+      20716,
+      12988,
+      14920,
+      20734,
+      9464,
+      13237,
+      9480
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 48.042088998045074,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22470,
+      22459,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 38.328190999891376,
+    "ranking": [
+      7879,
+      7922,
+      7877,
+      7843,
+      7940,
+      7876,
+      7937,
+      7926,
+      7920,
+      7927
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 38.72065000177827,
+    "ranking": [
+      3932,
+      3916,
+      3935,
+      3914,
+      3934,
+      3965,
+      3924,
+      3905,
+      3939,
+      3957
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 40.04276300111087,
+    "ranking": [
+      6626,
+      6630,
+      6587,
+      28874,
+      21534,
+      26253,
+      20231,
+      23717,
+      7061,
+      6608
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 41.66371999963303,
+    "ranking": [
+      35028,
+      19108,
+      19089,
+      4046,
+      19094,
+      19153,
+      19119,
+      19143,
+      32003,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 38.84905100130709,
+    "ranking": [
+      20379,
+      20363,
+      20373,
+      20414,
+      20407,
+      20460,
+      20415,
+      20424,
+      20494,
+      20478
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 36.511348000203725,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      4213,
+      17932,
+      349,
+      4214,
+      15341,
+      11474,
+      1857
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 38.61050699924817,
+    "ranking": [
+      34828,
+      11263,
+      34821,
+      11249,
+      35938,
+      9252,
+      34827,
+      4111,
+      34375,
+      34815
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 70.01794799725758,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35181,
+      35182,
+      35185,
+      35179,
+      35180,
+      3165,
+      1708
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 57.42883399943821,
+    "ranking": [
+      28425,
+      26690,
+      26676,
+      28445,
+      26687,
+      26679,
+      28450,
+      28130,
+      28442,
+      28435
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 56.88344599911943,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23904,
+      23900,
+      23907,
+      23949,
+      23899,
+      23920,
+      23911
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 40.71417299928726,
+    "ranking": [
+      11927,
+      11837,
+      12030,
+      11968,
+      25185,
+      11836,
+      12093,
+      11999,
+      12046,
+      11990
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 38.24586399787222,
+    "ranking": [
+      1596,
+      1617,
+      2780,
+      1598,
+      3556,
+      1597,
+      2785,
+      1622,
+      1299,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 55.600695002794964,
+    "ranking": [
+      4862,
+      2748,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4895,
+      4905
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 41.87066899976344,
+    "ranking": [
+      7103,
+      7104,
+      7083,
+      15313,
+      35793,
+      25476,
+      10072,
+      26732,
+      6728,
+      27236
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 42.56562799855601,
+    "ranking": [
+      20131,
+      20168,
+      20175,
+      9199,
+      20134,
+      20173,
+      9181,
+      20166,
+      20133,
+      20164
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 55.74745800186065,
+    "ranking": [
+      10674,
+      10676,
+      10688,
+      10680,
+      10683,
+      10686,
+      10704,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 73.58984199890983,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31358,
+      31833,
+      31838,
+      10177,
+      31384
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 67.22090399853187,
+    "ranking": [
+      8405,
+      28776,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 45.84996500125271,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25580,
+      25836,
+      25636,
+      18292,
+      25840,
+      10358,
+      19910
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Existing Fixed",
+    "round": 1,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 45.3536390014051,
+    "ranking": [
+      14720,
+      14594,
+      25481,
+      7584,
+      14817,
+      14690,
+      4154,
+      14771,
+      14596,
+      15085
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 35.82315899984678,
+    "ranking": [
+      23403,
+      23559,
+      23525,
+      23557,
+      23341,
+      23545,
+      23331,
+      23342,
+      23498,
+      23531
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 33.89378400243004,
+    "ranking": [
+      27173,
+      27090,
+      27102,
+      27059,
+      27075,
+      27020,
+      27183,
+      27066,
+      27174,
+      27114
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 35.14176300086547,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30866,
+      30898,
+      25019,
+      24964,
+      25023,
+      24997,
+      25004
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 57.5587599996652,
+    "ranking": [
+      14911,
+      14861,
+      14710,
+      14808,
+      14744,
+      14803,
+      14689,
+      14705,
+      14819,
+      14880
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 34.20584600098664,
+    "ranking": [
+      35173,
+      34872,
+      34873,
+      34379,
+      34832,
+      3050,
+      34375,
+      35074,
+      34812,
+      34385
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 42.8762640003697,
+    "ranking": [
+      27591,
+      20786,
+      5665,
+      5655,
+      27561,
+      27587,
+      5678,
+      5647,
+      28086,
+      7051
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 41.45058399808477,
+    "ranking": [
+      27136,
+      27063,
+      27097,
+      27080,
+      27062,
+      27098,
+      27028,
+      27079,
+      27213,
+      27231
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 42.08054999980959,
+    "ranking": [
+      27781,
+      10690,
+      27753,
+      7094,
+      7080,
+      27820,
+      7093,
+      5732,
+      27796,
+      27774
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 40.71406400180422,
+    "ranking": [
+      20725,
+      20698,
+      15057,
+      20716,
+      12988,
+      14920,
+      20734,
+      9464,
+      13237,
+      9471
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 48.473659000592306,
+    "ranking": [
+      22468,
+      22469,
+      22399,
+      22459,
+      22470,
+      22466,
+      22461,
+      22450,
+      22467,
+      22463
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 37.66695400190656,
+    "ranking": [
+      7879,
+      7877,
+      7876,
+      7843,
+      7922,
+      7940,
+      7926,
+      7882,
+      7937,
+      7844
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 32.1375050007191,
+    "ranking": [
+      3932,
+      3934,
+      3965,
+      3939,
+      3924,
+      3905,
+      3916,
+      3935,
+      3923,
+      3914
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 50.17828600102803,
+    "ranking": [
+      6630,
+      6626,
+      28874,
+      6587,
+      21534,
+      26253,
+      20231,
+      7061,
+      23717,
+      26041
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 36.15210700081661,
+    "ranking": [
+      35028,
+      19108,
+      4046,
+      19153,
+      19094,
+      19089,
+      19119,
+      19143,
+      27086,
+      31987
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 35.43058600189397,
+    "ranking": [
+      20379,
+      20363,
+      20407,
+      20373,
+      20414,
+      20460,
+      20494,
+      20478,
+      20424,
+      20415
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 32.08433300096658,
+    "ranking": [
+      4224,
+      11458,
+      11440,
+      17932,
+      349,
+      4213,
+      1857,
+      15341,
+      4214,
+      11474
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 32.92775999943842,
+    "ranking": [
+      34828,
+      11263,
+      11249,
+      34821,
+      4111,
+      1687,
+      9252,
+      4107,
+      34375,
+      34827
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 52.14465099925292,
+    "ranking": [
+      35187,
+      35186,
+      35184,
+      35185,
+      3165,
+      35181,
+      35182,
+      2456,
+      1708,
+      928
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 37.34662300121272,
+    "ranking": [
+      26690,
+      26676,
+      28425,
+      26687,
+      26679,
+      28130,
+      28442,
+      28445,
+      28450,
+      27852
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 35.53241500048898,
+    "ranking": [
+      23894,
+      23895,
+      23908,
+      23904,
+      23907,
+      23899,
+      23949,
+      23911,
+      23900,
+      23920
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 36.51154899853282,
+    "ranking": [
+      11927,
+      11837,
+      11968,
+      12030,
+      11836,
+      25185,
+      12046,
+      12093,
+      11999,
+      11989
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 40.61089999959222,
+    "ranking": [
+      1617,
+      1596,
+      2780,
+      1622,
+      1598,
+      2785,
+      1299,
+      3556,
+      828,
+      2101
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 36.01513399917167,
+    "ranking": [
+      2748,
+      4862,
+      1272,
+      2075,
+      4883,
+      4868,
+      3532,
+      4903,
+      4895,
+      4888
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 38.4023469996464,
+    "ranking": [
+      7103,
+      7104,
+      15313,
+      7083,
+      25476,
+      10072,
+      35793,
+      26732,
+      8389,
+      15956
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 41.770713000005344,
+    "ranking": [
+      20131,
+      20168,
+      20175,
+      20134,
+      20173,
+      9199,
+      20166,
+      20164,
+      9181,
+      20133
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 47.75850399892079,
+    "ranking": [
+      10676,
+      10674,
+      10688,
+      10680,
+      10704,
+      10686,
+      10683,
+      33371,
+      10678,
+      10710
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 41.14905299866223,
+    "ranking": [
+      10175,
+      10187,
+      10127,
+      10179,
+      10189,
+      31833,
+      31838,
+      31358,
+      31844,
+      31832
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 34.103314003004925,
+    "ranking": [
+      28776,
+      8405,
+      12408,
+      12283,
+      8018,
+      21275,
+      20325,
+      8523,
+      8413,
+      8388
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 40.78495700014173,
+    "ranking": [
+      18269,
+      18295,
+      18377,
+      25636,
+      25836,
+      25580,
+      18292,
+      10358,
+      25840,
+      4089
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "Dense",
+    "round": 1,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 44.79124199860962,
+    "ranking": [
+      14720,
+      14594,
+      14771,
+      7584,
+      25481,
+      14817,
+      14596,
+      14811,
+      14690,
+      31687
+    ],
+    "cached_ranking_equal": false
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_003749_000",
+    "total_ms": 4.951327999151545,
+    "ranking": [
+      14843,
+      14844,
+      14845,
+      3823,
+      3829,
+      23322,
+      23328,
+      23344,
+      23350,
+      23341
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_026894_000",
+    "total_ms": 5.278300999634666,
+    "ranking": [
+      27090,
+      27173,
+      27164,
+      27102,
+      27113,
+      27222,
+      27163,
+      27174,
+      27059,
+      27194
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_030672_000",
+    "total_ms": 4.170142998191295,
+    "ranking": [
+      30981,
+      30966,
+      30871,
+      30949,
+      32019,
+      30877,
+      20224,
+      30985,
+      31745,
+      32003
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_014785_000",
+    "total_ms": 4.46143299996038,
+    "ranking": [
+      14765,
+      14601,
+      25443,
+      15082,
+      14713,
+      15166,
+      25495,
+      15209,
+      14749,
+      14545
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_42000",
+    "total_ms": 4.757552000228316,
+    "ranking": [
+      448,
+      24432,
+      35173,
+      8850,
+      8862,
+      13306,
+      4975,
+      4668,
+      15442,
+      34872
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_027312_000",
+    "total_ms": 3.5069750010734424,
+    "ranking": [
+      27591,
+      5672,
+      10796,
+      28009,
+      31745,
+      5653,
+      5678,
+      27611,
+      27542,
+      27529
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_026857_000",
+    "total_ms": 3.5342479968676344,
+    "ranking": [
+      27062,
+      27017,
+      27180,
+      27136,
+      27159,
+      27118,
+      27127,
+      27109,
+      27071,
+      27160
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_027502_000",
+    "total_ms": 4.185731999314157,
+    "ranking": [
+      27781,
+      27814,
+      7093,
+      7081,
+      27764,
+      27820,
+      10690,
+      7080,
+      8257,
+      27796
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_020583_000",
+    "total_ms": 3.4251120014232583,
+    "ranking": [
+      15057,
+      31997,
+      8257,
+      12992,
+      20725,
+      20698,
+      14920,
+      34971,
+      2649,
+      13319
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_022329_000",
+    "total_ms": 4.057627000292996,
+    "ranking": [
+      22468,
+      22469,
+      22470,
+      22399,
+      22463,
+      22461,
+      22466,
+      22460,
+      22467,
+      22457
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_007739_000",
+    "total_ms": 3.7258080010360572,
+    "ranking": [
+      7947,
+      7929,
+      7937,
+      7922,
+      7927,
+      7920,
+      7940,
+      7934,
+      7843,
+      7924
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_003811_000",
+    "total_ms": 4.187275000731461,
+    "ranking": [
+      3916,
+      3935,
+      3932,
+      3914,
+      32019,
+      32003,
+      32008,
+      3418,
+      31745,
+      32032
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_006524_000",
+    "total_ms": 3.9814260017010383,
+    "ranking": [
+      6626,
+      6630,
+      26253,
+      21534,
+      6587,
+      25979,
+      6608,
+      23717,
+      20231,
+      6625
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_299000",
+    "total_ms": 3.7692689984396566,
+    "ranking": [
+      35028,
+      35045,
+      34937,
+      34931,
+      32003,
+      32000,
+      35161,
+      32007,
+      34990,
+      32031
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_020237_000",
+    "total_ms": 4.5988210003997665,
+    "ranking": [
+      20379,
+      20373,
+      20377,
+      20441,
+      20414,
+      20440,
+      29004,
+      20455,
+      20449,
+      20404
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_004124_000",
+    "total_ms": 4.1650229977676645,
+    "ranking": [
+      4224,
+      4213,
+      4226,
+      4215,
+      11440,
+      11458,
+      996,
+      4214,
+      11626,
+      4225
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_167000",
+    "total_ms": 4.2035299993585795,
+    "ranking": [
+      32001,
+      35938,
+      32000,
+      32008,
+      34828,
+      32037,
+      31970,
+      32009,
+      1150,
+      35774
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "crawl_bc-personal_customer-center_faq_433000",
+    "total_ms": 3.825537998636719,
+    "ranking": [
+      35187,
+      35184,
+      35179,
+      35186,
+      35182,
+      35181,
+      35180,
+      36164,
+      32028,
+      32019
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_028163_000",
+    "total_ms": 3.790151000430342,
+    "ranking": [
+      31745,
+      28435,
+      28445,
+      28454,
+      28450,
+      27870,
+      27857,
+      31963,
+      28429,
+      28425
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_023717_000",
+    "total_ms": 3.6715870010084473,
+    "ranking": [
+      23900,
+      23894,
+      34971,
+      31997,
+      8257,
+      35061,
+      23783,
+      2649,
+      34981,
+      23769
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_011801_000",
+    "total_ms": 3.5458329984976444,
+    "ranking": [
+      11927,
+      11837,
+      12093,
+      31963,
+      12030,
+      11999,
+      11996,
+      31745,
+      12046,
+      13124
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_001542_000",
+    "total_ms": 4.451499997230712,
+    "ranking": [
+      2106,
+      1597,
+      3556,
+      2107,
+      2783,
+      1598,
+      1621,
+      1304,
+      33680,
+      2780
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_002008_000",
+    "total_ms": 4.196440000669099,
+    "ranking": [
+      1272,
+      4862,
+      2748,
+      4883,
+      2075,
+      4868,
+      6390,
+      4873,
+      4896,
+      4903
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_007001_000",
+    "total_ms": 1.9425499995122664,
+    "ranking": [
+      31997,
+      8257,
+      34971,
+      2649,
+      7103,
+      34981,
+      7083,
+      35061,
+      32045,
+      32012
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_019989_000",
+    "total_ms": 3.435760001593735,
+    "ranking": [
+      20131,
+      9181,
+      9199,
+      31967,
+      20175,
+      9184,
+      31964,
+      32019,
+      31745,
+      20130
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_010548_000",
+    "total_ms": 3.4701709992077667,
+    "ranking": [
+      10683,
+      33368,
+      31997,
+      8257,
+      31690,
+      10680,
+      10674,
+      10684,
+      10675,
+      33635
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_010049_000",
+    "total_ms": 4.22413300111657,
+    "ranking": [
+      10175,
+      31997,
+      8257,
+      10179,
+      31358,
+      10187,
+      34971,
+      10177,
+      2649,
+      10127
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_012157_000",
+    "total_ms": 3.5416300015640445,
+    "ranking": [
+      31997,
+      8257,
+      34971,
+      2649,
+      34981,
+      35061,
+      32045,
+      32012,
+      21006,
+      8405
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_018143_000",
+    "total_ms": 3.7455460005730856,
+    "ranking": [
+      18269,
+      8257,
+      31997,
+      2649,
+      34971,
+      35061,
+      34981,
+      18273,
+      32012,
+      32045
+    ],
+    "cached_ranking_equal": true
+  },
+  {
+    "method": "BM25",
+    "round": 1,
+    "query_id": "base_bcai_014470_000",
+    "total_ms": 3.716331000759965,
+    "ranking": [
+      4154,
+      14696,
+      15085,
+      15119,
+      15165,
+      15022,
+      15201,
+      14648,
+      14883,
+      14690
+    ],
+    "cached_ranking_equal": true
+  }
+]

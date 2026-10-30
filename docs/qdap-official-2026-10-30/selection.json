@@ -1,0 +1,72 @@
+{
+  "selection_split": "validation",
+  "selected": {
+    "S": {
+      "epoch": 4,
+      "readout": "argmax",
+      "ce_mode": "literal",
+      "seed": 42,
+      "metrics": {
+        "ndcg@10": 0.7849871851297499,
+        "p@1": 0.6590604026845638,
+        "recall@10": 0.8993288590604027,
+        "mrr@10": 0.7477026739107276
+      },
+      "checkpoint": "/tmp/qdap-issue33-run/S-literal-42/selected.pt",
+      "checkpoint_sha256": "caea3770b3c14652921910e923517d07f8dbef1632c2f7982754d73b6a477fc8",
+      "variant": "S"
+    },
+    "L": {
+      "epoch": 1,
+      "readout": "argmax",
+      "ce_mode": "literal",
+      "seed": 42,
+      "metrics": {
+        "ndcg@10": 0.7919745555862975,
+        "p@1": 0.6630872483221476,
+        "recall@10": 0.9087248322147651,
+        "mrr@10": 0.7539687866197933
+      },
+      "checkpoint": "/tmp/qdap-issue33-run/L-literal-42/selected.pt",
+      "checkpoint_sha256": "835858df94736b41978401823679a6482a904f57dd2452d5819bcc7b5346e47a",
+      "variant": "L"
+    }
+  },
+  "paper_fixed_alpha": 0.84,
+  "protocol_sha256": "b3e29388a5131f4e2e902693d9e423a1331aea408d1c144c9f7a22792c7cc98a",
+  "model": "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181",
+  "evaluation_input_sha256": {
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/corpus.jsonl": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/qrels_test.jsonl": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/qrels_train.jsonl": "4f20c6ea97b995e0c442ce1a763265da92cf2e549210625c9fa0d585f1141432",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/qrels_validation.jsonl": "7c015d88b3f1f025532048ad55e928f766e95d95f8b36d7ea8037d0518f1f3ac",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/queries_test.jsonl": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/queries_train.jsonl": "b5360838f23717309fb3887b9ffee55642c5656d7edd32c63fed209b07e2475d",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/queries_validation.jsonl": "776a73b49a61b5fe6512b5cd5933aa32453fbccdf3216f0d8ef12aaa4b971333",
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/manifest.json": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/bccard-adaptive-vectors-resumed/query-vectors-test.npy": "db783ead74ea2d702e516e2842c23388a8646987bb6904db77ada46ca3a33826",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/bccard-adaptive-vectors-resumed/document-vectors.npy": "4d5f1c8d9002bfeac0c7a927aa641b0ab17199ea008ea196fab786b08bb3df3a",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/paper-guided/dat-local/bccard/dense.npy": "162df362953f082dddb40b7f38929fa28c35d7cb8ef1b1b553637d68b0d383c5",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/paper-guided/dat-local/bccard/sparse.npy": "fb47c61a0ee085aa9c51bdaef43ab9f6d5fe3493dc70949be27fdbded5f18289",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/paper-guided/dat-local/bccard/queries.json": "79aa1f34c6193bf09f7ae508b953ad76fea4077e4daa0aae3fa6f1ef9d098820",
+    "/home/shannon/__dev/hybrid-document-search/docs/experiments/adaptive/router.json": "948c9081a177de62f8b9b46b4350c64c910a276e26318100dba164fdbf6c0cd1",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/pytorch_model.bin": "b5e0ce3470abf5ef3831aa1bd5553b486803e83251590ab7ff35a117cf6aad38",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/1_Pooling/config.json": "e54c164a07274f2eb45bb724f54a79d1efcc90c41573887cd9a29aeee0597352",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/config.json": "26159e7ad065073448460117eb24b7a4572f6f4e78eadff65dc0a11c052449fa",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/config_sentence_transformers.json": "1eef72430e7194a1e59680e635aed81ffa083f05668dbc5bb1c56c04c0999c38",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/modules.json": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/sentence_bert_config.json": "eb9b44b13c0f52a3b3685c3b1cbdea1ba8b04bea123b98f61610048940776eb1",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/special_tokens_map.json": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/tokenizer.json": "21106b6d7dab2952c1d496fb21d5dc9db75c28ed361a05f5020bbba27810dd08",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/tokenizer_config.json": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4",
+    "/home/shannon/.cache/huggingface/hub/models--BAAI--bge-m3/snapshots/5617a9f61b028005a4858fdac845db406aefb181/sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865"
+  },
+  "source_sha256": {
+    "/tmp/hds-phase4-20261030/worktrees/qdap/scripts/run_qdap_benchmark.py": "bfef16625869aee28e97db5bf78426c69dadd87ce66b32d2b47681c8369103cf",
+    "fusion/qdap.py": "899ba1a1c72b8a6deb182c84197c55721301b054b2fa1fe0f70b007125992342",
+    "evaluation/qdap_training.py": "101498cb6cec92cc21c0f1954d6aba1e838fb08e1ffd3dd12494df55796728aa",
+    "evaluation/qdap_benchmark.py": "7bd41b8e10e3b881251442e45f75760bd8b6eb49dc2855beefc5af7d33f81172",
+    "evaluation/qdap_execution.py": "bb8eea9561dfbbb45cece682136d32c937f37e3bfbfac40158294dd255a97475",
+    "evaluation/qdap.py": "0e6312b9e8cfd039990056fbd31af8951235ae46e737d01048a6269078a6c9ea"
+  }
+}

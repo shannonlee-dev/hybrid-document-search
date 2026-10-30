@@ -1,0 +1,24 @@
+{
+  "upstream_commit": "9e644b6362e5d429b7b4154370efec2d36b98691",
+  "upstream": {
+    "README.md": "c092eeb6ceaeb824391f51ea41a99873bd8dff2bc1c0aa87fa42507dae323dd7",
+    "configs/train_dense.yaml": "3bfa067d71f5c40051a95bba9d938df931399bda1207d7242027261c722e6010",
+    "configs/train_qdap.yaml": "d9107ebfec7f36d97797f613320095921f8fcf3bd739be5e1a0b5b9d2a9a8457",
+    "src/training/train_dense.py": "caffa349965c14e4ba5c478b403fa28f8eea653222e8e45a5caafe7646a8a231",
+    "src/training/losses.py": "0cd080bb36bff5937e1f71e3a8ae5cdcd0bceaa0e57c93b9dc78ba0abdfa76d7",
+    "src/training/train_qdap.py": "642850b54cfa71dfbee022a7a674eeed2199638cd8aa7ae47d69d31a09ff2540",
+    "src/models/dense_encoder.py": "f2ecc9896bd6cb40dbd78321d22a520cb6dacea986af22030fc7423a9be8cae9",
+    "src/models/qdap_l.py": "c5f9ca379227abbd52ed9e347c53ac8d9b9791fa56e8a0b90a400ed0e2f31fae",
+    "src/models/qdap_s.py": "8845777ab0ea79c0808ad9221d7116f5eefeefd21de4291017f526cfceaf3ebc",
+    "src/models/hybrid_retriever.py": "442a0fe88792f9771212f33669f1a6af443ebe9a0d0ee1dc5cf04bc884705833"
+  },
+  "paper_pdf_sha256": "e872760c12881ee24b04d0cfe860a3aadf0049d7c5fdd3e307cf70ea6e5ba9ec",
+  "executed_source_sha256": {
+    "/tmp/hds-phase4-20261030/worktrees/qdap/scripts/run_qdap_benchmark.py": "bfef16625869aee28e97db5bf78426c69dadd87ce66b32d2b47681c8369103cf",
+    "fusion/qdap.py": "899ba1a1c72b8a6deb182c84197c55721301b054b2fa1fe0f70b007125992342",
+    "evaluation/qdap_training.py": "101498cb6cec92cc21c0f1954d6aba1e838fb08e1ffd3dd12494df55796728aa",
+    "evaluation/qdap_benchmark.py": "7bd41b8e10e3b881251442e45f75760bd8b6eb49dc2855beefc5af7d33f81172",
+    "evaluation/qdap_execution.py": "bb8eea9561dfbbb45cece682136d32c937f37e3bfbfac40158294dd255a97475",
+    "evaluation/qdap.py": "0e6312b9e8cfd039990056fbd31af8951235ae46e737d01048a6269078a6c9ea"
+  }
+}

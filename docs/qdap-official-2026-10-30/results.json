@@ -1,0 +1,116 @@
+{
+  "quality_queries": 721,
+  "train_queries": 43394,
+  "validation_primary_queries": 745,
+  "selection_split": "validation",
+  "rows": {
+    "BM25": {
+      "ndcg@10": 0.5755128098916085,
+      "p@1": 0.4188626907073509,
+      "recall@10": 0.7406380027739251,
+      "mrr@10": 0.5232486845871029,
+      "mean_ms": 3.816531116657037,
+      "p95_ms": 4.767240800174476,
+      "sample_count": 60
+    },
+    "Dense": {
+      "ndcg@10": 0.7828810770027883,
+      "p@1": 0.6546463245492372,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7451781036039015,
+      "mean_ms": 55.21947750015291,
+      "p95_ms": 83.69565759967371,
+      "sample_count": 60
+    },
+    "Existing Fixed": {
+      "ndcg@10": 0.7940145938588489,
+      "p@1": 0.6851595006934813,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228696,
+      "mean_ms": 45.19042323330117,
+      "p95_ms": 65.92339209873899,
+      "sample_count": 60
+    },
+    "Existing Router": {
+      "ndcg@10": 0.7929672714773627,
+      "p@1": 0.6837725381414702,
+      "recall@10": 0.8918169209431346,
+      "mrr@10": 0.7608392224203597,
+      "mean_ms": 46.91117249961584,
+      "p95_ms": 61.59938469900225,
+      "sample_count": 60
+    },
+    "Paper Fixed": {
+      "ndcg@10": 0.7910127414592707,
+      "p@1": 0.6768377253814147,
+      "recall@10": 0.8932038834951457,
+      "mrr@10": 0.7577378200471127,
+      "mean_ms": 55.18838171665266,
+      "p95_ms": 71.43017560229055,
+      "sample_count": 60
+    },
+    "QDAP-S": {
+      "ndcg@10": 0.7608943793458556,
+      "p@1": 0.6324549237170597,
+      "recall@10": 0.8723994452149791,
+      "mrr@10": 0.7242102018801047,
+      "mean_ms": 57.975747366496456,
+      "p95_ms": 79.00918180021108,
+      "sample_count": 60
+    },
+    "QDAP-L": {
+      "ndcg@10": 0.7850527088843305,
+      "p@1": 0.6601941747572816,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7481116394777977,
+      "mean_ms": 83.36333978319696,
+      "p95_ms": 143.5934955503398,
+      "sample_count": 60
+    },
+    "Oracle alpha": {
+      "ndcg@10": 0.8261456513701159,
+      "p@1": 0.7323162274618585,
+      "recall@10": 0.912621359223301,
+      "mrr@10": 0.7981298020826454,
+      "mean_ms": null,
+      "p95_ms": null,
+      "sample_count": 0
+    }
+  },
+  "quality_scope": "original frozen FP32 query/document caches, float64 dot products/normalization; S FP32 head, L BF16 encoder and FP32 head",
+  "latency_scope": "warm batch1: live tokenizer/GPU BF16 encoder, CPU4 full-corpus Dense/BM25, fusion/router/top10; L overlaps independent prediction encoder using a separate CUDA stream; excludes loading/HTTP/concurrent requests",
+  "status": "executed and independently verified; previously exposed official Test reused",
+  "test_tuning": false,
+  "selected": {
+    "S": {
+      "epoch": 4,
+      "readout": "argmax",
+      "ce_mode": "literal",
+      "seed": 42,
+      "metrics": {
+        "ndcg@10": 0.7849871851297499,
+        "p@1": 0.6590604026845638,
+        "recall@10": 0.8993288590604027,
+        "mrr@10": 0.7477026739107276
+      },
+      "checkpoint": "/tmp/qdap-issue33-run/S-literal-42/selected.pt",
+      "checkpoint_sha256": "caea3770b3c14652921910e923517d07f8dbef1632c2f7982754d73b6a477fc8",
+      "variant": "S"
+    },
+    "L": {
+      "epoch": 1,
+      "readout": "argmax",
+      "ce_mode": "literal",
+      "seed": 42,
+      "metrics": {
+        "ndcg@10": 0.7919745555862975,
+        "p@1": 0.6630872483221476,
+        "recall@10": 0.9087248322147651,
+        "mrr@10": 0.7539687866197933
+      },
+      "checkpoint": "/tmp/qdap-issue33-run/L-literal-42/selected.pt",
+      "checkpoint_sha256": "835858df94736b41978401823679a6482a904f57dd2452d5819bcc7b5346e47a",
+      "variant": "L"
+    }
+  }
+}
