@@ -1,0 +1,487 @@
+{
+  "scope": "canonical main baselines and matched single-query DAT evaluation",
+  "runs": {
+    "dat-main-canonical-replay-2026-10-31": {
+      "scope": "main canonical baseline replay; no model fitting or new latency",
+      "encoding": {
+        "model": {
+          "model_name": "BAAI/bge-m3",
+          "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+          "normalize_embeddings": true,
+          "query_prefix": "",
+          "passage_prefix": "",
+          "batch_size": 1,
+          "device": "cuda:0"
+        },
+        "max_seq_length": 8192,
+        "dtype": "torch.float32",
+        "preprocessing": {
+          "document": "Pair positive text only",
+          "query": "unchanged"
+        },
+        "dataset_manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "document_ids_sha256": "2da38f56e7bd154a86907cbb8e9ccd7620152c47790b2e59d222a9e3566396d6",
+        "document_encoding_seconds": 829.6548119720001,
+        "splits": {
+          "train": {
+            "query_encoding_latency": {
+              "mean_ms": 17.837242518757936,
+              "p95_ms": 27.73871160020462,
+              "sample_count": 43394
+            },
+            "queries": 43394,
+            "query_ids_sha256": "bbd235145e8e46eb6818f880b1e1e4bd669b50b3261257b741c4c23fa6cdb47c"
+          },
+          "validation": {
+            "query_encoding_latency": {
+              "mean_ms": 18.350055066988716,
+              "p95_ms": 28.71001614994384,
+              "sample_count": 1000
+            },
+            "queries": 1000,
+            "query_ids_sha256": "73cf86834a460c7ac018659f8f07a5cd431a664a47475b4956c94cc995b8a5ce"
+          },
+          "test": {
+            "query_encoding_latency": {
+              "mean_ms": 16.88761121500829,
+              "p95_ms": 25.160986800119645,
+              "sample_count": 1000
+            },
+            "queries": 1000,
+            "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5"
+          }
+        },
+        "vector_sha256": {
+          "document-vectors.npy": "4d5f1c8d9002bfeac0c7a927aa641b0ab17199ea008ea196fab786b08bb3df3a",
+          "query-vectors-train.npy": "8ee3247f10606959b9da988f2f5f58237a5ecbd410b8763add78ea8b1293be2b",
+          "query-vectors-validation.npy": "f61370406088ea19d2dbf2cef5274246a591346e9699639948bb38b99bfddaaf",
+          "query-vectors-test.npy": "db783ead74ea2d702e516e2842c23388a8646987bb6904db77ada46ca3a33826"
+        }
+      },
+      "canonical_summary_sha256": "ae7d4867f28d28350256a4d98ea866dfb325d3ff56ee821e585a9bd07d61cc13",
+      "canonical_git_commit": "107eed243b9716821ee0eaae4a46d9d4be4cc0db",
+      "dense": "main DenseRetriever FAISS FP32 single-query search",
+      "fixed": "main ScoreFusionRetriever; full-corpus Dense + .05*BM25/corpus-max",
+      "original_bundle": {
+        "path": "docs/validation/2026-10-31/dat/main-baseline",
+        "commit": "1cfc1dc6e50e34cc3484b3a44ac4c86a312d7f31",
+        "manifest_sha256": "1f0690b45a6c6d457352746d70cc7a491cb72af8600740aa8e37b331bb13ca32",
+        "artifact_sha256": {
+          "baseline-audit.json": "ea715bb3d8018f9cdcae3a38bba983e1217b637a17bd0a5175de0c50d194a895",
+          "protocol.json": "cedff103f16834b89795089a631643e03d2c9849dd3c6e13c6224dd63e81704c",
+          "per-query.jsonl": "dc9a18ddd7044509e96f7fd3856f0f797120c529dbefa773a3e2699aa830d67f",
+          "results.json": "8976608f4ed509eb626f76d16488461b238ec453fc3618b3343d8b2c68e4d28f",
+          "selection.json": "8d659a814be132a89445c76233c42e030f59ee9960c7aafdcc8845d175cb483a"
+        }
+      },
+      "schema_version": 2,
+      "queries": 721,
+      "query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+      "query_ids_hash_format": "UTF-8 IDs joined by LF, no trailing LF",
+      "methods": [
+        "bm25",
+        "dense",
+        "score_fusion"
+      ],
+      "method_runs": {
+        "bm25": "dat-main-canonical-replay-2026-10-31",
+        "dense": "dat-main-canonical-replay-2026-10-31",
+        "score_fusion": "dat-main-canonical-replay-2026-10-31"
+      },
+      "rows": 2163,
+      "dataset": {
+        "id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "corpus_documents": 36281,
+        "query_scope": "official primary non_synthetic test"
+      },
+      "input_sha256": {
+        "manifest.json": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus.jsonl": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_test.jsonl": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_test.jsonl": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65"
+      },
+      "selection": {
+        "selection": "unchanged main PR28 baselines; BM25 weight .05"
+      },
+      "oracle": "not computed; Phase 5 analysis excluded",
+      "artifact_sha256": {
+        "per-query.jsonl": "dc9a18ddd7044509e96f7fd3856f0f797120c529dbefa773a3e2699aa830d67f",
+        "results.json": "fe122b518f826efbf2333ab3926c0fee05cad52de33761f10113f097561cdd41"
+      }
+    },
+    "dat-live-2026-10-31": {
+      "scope": "local DAT-style top1 relevance-odds weighting; not full DAT reproduction",
+      "quality_source": "fresh single-query inference, first complete primary pass",
+      "test_status": "previously exposed official test; exploratory comparison",
+      "query_scope": "official primary non_synthetic test",
+      "query_count": 721,
+      "encoder": {
+        "name": "BAAI/bge-m3",
+        "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "files_sha256": {
+          "1_Pooling/config.json": "e54c164a07274f2eb45bb724f54a79d1efcc90c41573887cd9a29aeee0597352",
+          "README.md": "0b81ccf9134e5874d620a86e6905062ea999e779c34eb1a7e65eaeb7fe00e450",
+          "config.json": "26159e7ad065073448460117eb24b7a4572f6f4e78eadff65dc0a11c052449fa",
+          "config_sentence_transformers.json": "1eef72430e7194a1e59680e635aed81ffa083f05668dbc5bb1c56c04c0999c38",
+          "modules.json": "84e40c8e006c9b1d6c122e02cba9b02458120b5fb0c87b746c41e0207cf642cf",
+          "pytorch_model.bin": "b5e0ce3470abf5ef3831aa1bd5553b486803e83251590ab7ff35a117cf6aad38",
+          "sentence_bert_config.json": "eb9b44b13c0f52a3b3685c3b1cbdea1ba8b04bea123b98f61610048940776eb1",
+          "sentencepiece.bpe.model": "cfc8146abe2a0488e9e2a0c56de7952f7c11ab059eca145a0a727afce0db2865",
+          "special_tokens_map.json": "8c785abebea9ae3257b61681b4e6fd8365ceafde980c21970d001e834cf10835",
+          "tokenizer.json": "21106b6d7dab2952c1d496fb21d5dc9db75c28ed361a05f5020bbba27810dd08",
+          "tokenizer_config.json": "a62b2b6784f990259fddef5f16388693a8043be4f69179e6a5257eeb3f9abac4"
+        },
+        "snapshot_sha256": "146858029794aff9a579dee26f3147c68216d6572e886eb6468d648eef977563"
+      },
+      "judge": {
+        "name": "Qwen/Qwen3-Reranker-0.6B",
+        "revision": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+        "files_sha256": {
+          "1_LogitScore/config.json": "73e3156450564d8a98b7e47bcf5aace0f29600828b51937da545571e84db3ff3",
+          "README.md": "5bba8c734f6dd3ae48317b4139317e45a7fce48fc55e15670b23a0dd15492ab6",
+          "config.json": "d479c427a9ca5295218063d4f9aca4f297ab4ac27487cca7af42c84643d51ef0",
+          "config_sentence_transformers.json": "6a153d6696f78fd588c1c728967f0b773ea869d3c6028f151ce71ebe49140762",
+          "generation_config.json": "81051cd3f6e77013827148d0b8a6ead93f8ac390d5ab805f849199f0af6a08db",
+          "merges.txt": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5",
+          "model.safetensors": "27cd75a405b9c1b46b59abfd88aaa209e6fed2a1972cde9b70e7659537c5e65b",
+          "modules.json": "6f13b6b4a89e577b591b2077bca40c67c26541a6740a8809267cb474f90806a9",
+          "sentence_bert_config.json": "3234ebd224d492cbe8d55d5ec80a3f408451c4db3005bafb64fe1c51c763e01e",
+          "tokenizer.json": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+          "tokenizer_config.json": "253153d0738ceb4c668d2eff957714dd2bea0b56de772a9fdccd96cbf517e6a0",
+          "vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+        },
+        "snapshot_sha256": "dcef49d9c5a0a6d25476b185a4a4c3fece2ab969024b8df3a77e42ed11e46d86"
+      },
+      "encoding": {
+        "model": {
+          "model_name": "BAAI/bge-m3",
+          "revision": "5617a9f61b028005a4858fdac845db406aefb181",
+          "normalize_embeddings": true,
+          "query_prefix": "",
+          "passage_prefix": "",
+          "batch_size": 1,
+          "device": "cuda:0"
+        },
+        "max_seq_length": 8192,
+        "dtype": "torch.float32",
+        "preprocessing": {
+          "document": "Pair positive text only",
+          "query": "unchanged"
+        },
+        "dataset_manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "document_ids_sha256": "2da38f56e7bd154a86907cbb8e9ccd7620152c47790b2e59d222a9e3566396d6",
+        "document_encoding_seconds": 829.6548119720001,
+        "splits": {
+          "train": {
+            "query_encoding_latency": {
+              "mean_ms": 17.837242518757936,
+              "p95_ms": 27.73871160020462,
+              "sample_count": 43394
+            },
+            "queries": 43394,
+            "query_ids_sha256": "bbd235145e8e46eb6818f880b1e1e4bd669b50b3261257b741c4c23fa6cdb47c"
+          },
+          "validation": {
+            "query_encoding_latency": {
+              "mean_ms": 18.350055066988716,
+              "p95_ms": 28.71001614994384,
+              "sample_count": 1000
+            },
+            "queries": 1000,
+            "query_ids_sha256": "73cf86834a460c7ac018659f8f07a5cd431a664a47475b4956c94cc995b8a5ce"
+          },
+          "test": {
+            "query_encoding_latency": {
+              "mean_ms": 16.88761121500829,
+              "p95_ms": 25.160986800119645,
+              "sample_count": 1000
+            },
+            "queries": 1000,
+            "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5"
+          }
+        },
+        "vector_sha256": {
+          "document-vectors.npy": "4d5f1c8d9002bfeac0c7a927aa641b0ab17199ea008ea196fab786b08bb3df3a",
+          "query-vectors-train.npy": "8ee3247f10606959b9da988f2f5f58237a5ecbd410b8763add78ea8b1293be2b",
+          "query-vectors-validation.npy": "f61370406088ea19d2dbf2cef5274246a591346e9699639948bb38b99bfddaaf",
+          "query-vectors-test.npy": "db783ead74ea2d702e516e2842c23388a8646987bb6904db77ada46ca3a33826"
+        }
+      },
+      "source_sha256": {
+        "fusion/contextual.py": "c6289450639fc99a5413501f4ae633d2c9c980c7d608fe1b5e1fe798e9fba8bd",
+        "fusion/contextual_judge.py": "f9172d04a4857fc6e4b3feeaedd971331000821dfb73669ed320b02848120cc1",
+        "evaluation/contextual.py": "608343419bf78bade885b0acf9ed9ebbb6782935dcad504c5ffe7c670e2d9ba1",
+        "evaluation/contextual_execution.py": "06b3ef4ecb37c7eb07552a123784d7d945d94ba152efa924a4b98ea77f07661e",
+        "evaluation/contextual_report.py": "72b74df8973d4f49f0a4677de887c8f22fbf6d5028735afd0cb8399413d1507d",
+        "scripts/evaluate_contextual.py": "c872f836fd4bc1c1710c5521118fe9ce9ef713ded07154e80facdb74792e950e"
+      },
+      "candidate_k": 100,
+      "alpha_definition": "Dense coefficient; alpha*Dense+(1-alpha)*BM25",
+      "adaptive_rule": "Dense odds / (Dense odds + Sparse odds); clip probabilities to [1e-7,1-1e-7]",
+      "agreement_rule": "skip judge and use frozen Fixed",
+      "test_policy_tuning": false,
+      "seed": 20261030,
+      "selection_sha256": "70996ab31df6c53a0ee38bb79b31c6d6623e0b7b10906bd1dbf8d7ffa00991be",
+      "oracle": "not computed; Phase 5 analysis excluded",
+      "original_bundle": {
+        "path": "docs/validation/2026-10-31/dat/live",
+        "commit": "1cfc1dc6e50e34cc3484b3a44ac4c86a312d7f31",
+        "manifest_sha256": "0aa1ccfb694b4a215c639dc84f4c637c8fa1a68bf37b25b925dd96f065dfeb42",
+        "artifact_sha256": {
+          "protocol.json": "b3c7e6fa4d18d664d50494306f4426ecc3fca61680ae98db5b9cf80d4fd2d805",
+          "latency-samples.json": "95a31b1e0df27d90d11484049acc97f331a24ef26e14d2701129c3a649ee6129",
+          "per-query.jsonl": "ba2cbb0d633b5681bb7310d3ffc76a628b2847977babe1bb63c412c32f9db6fd",
+          "results.json": "510d4a96bf8f65a3abe61419c8693638658012ef6bf33135e2db5174db50afc3",
+          "latency.json": "1c3658631e1df14bfb57054a15e7bd8e76caeef06c71971d2c822e3cdff09dde",
+          "selection.json": "70996ab31df6c53a0ee38bb79b31c6d6623e0b7b10906bd1dbf8d7ffa00991be",
+          "environment.json": "bdcb09c422456318cdc0d6345029c683f1e512b0849a78c55a0dd94d6f811d77"
+        }
+      },
+      "schema_version": 2,
+      "queries": 721,
+      "query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+      "query_ids_hash_format": "UTF-8 IDs joined by LF, no trailing LF",
+      "methods": [
+        "dat_fixed",
+        "dat"
+      ],
+      "method_runs": {
+        "dat_fixed": "dat-live-2026-10-31",
+        "dat": "dat-live-2026-10-31"
+      },
+      "rows": 1442,
+      "dataset": {
+        "id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "corpus_documents": 36281,
+        "query_scope": "official primary non_synthetic test"
+      },
+      "input_sha256": {
+        "manifest.json": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus.jsonl": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_test.jsonl": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_test.jsonl": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65"
+      },
+      "selection": {
+        "alpha": 0.84,
+        "normalization": "union_minmax",
+        "validation_ndcg@10": 0.8054856659335342,
+        "validation_queries": 745,
+        "selection": "404 candidates; official non-synthetic validation only",
+        "adaptive": "frozen local DAT odds policy; preserve top1 agreement",
+        "selection_split": "validation",
+        "input_sha256": {
+          "dataset_manifest": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+          "queries": "79aa1f34c6193bf09f7ae508b953ad76fea4077e4daa0aae3fa6f1ef9d098820",
+          "tables": "e1d2b68fd2a7b9e3c32711b93fa1ac77214f54e05e2a43a1fe8b085584040aa1"
+        }
+      },
+      "environment": {
+        "effective_threadpools": [
+          {
+            "user_api": "blas",
+            "internal_api": "openblas",
+            "num_threads": 2,
+            "prefix": "libscipy_openblas",
+            "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-5f890258.so",
+            "version": "0.3.31.dev",
+            "threading_layer": "pthreads",
+            "architecture": "Haswell"
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libgomp",
+            "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/torch/lib/libgomp.so.1",
+            "version": null
+          },
+          {
+            "user_api": "openmp",
+            "internal_api": "openmp",
+            "num_threads": 2,
+            "prefix": "libgomp",
+            "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scikit_learn.libs/libgomp-e985bcbb.so.1.0.0",
+            "version": null
+          },
+          {
+            "user_api": "blas",
+            "internal_api": "openblas",
+            "num_threads": 2,
+            "prefix": "libscipy_openblas",
+            "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-f48b354e.so",
+            "version": "0.3.34.106.0",
+            "threading_layer": "pthreads",
+            "architecture": "Haswell"
+          }
+        ],
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "torch": "2.14.1+cu130",
+        "numpy": "2.5.3",
+        "transformers": "5.18.0",
+        "sentence_transformers": "6.1.0",
+        "device": "cuda",
+        "gpu": "NVIDIA GeForce RTX 4060",
+        "cpu_threads": 2,
+        "query_encoder_dtype": "float32",
+        "judge_dtype": "torch.bfloat16",
+        "dense_search": "CPU float64 full-corpus dot product with fixed document vectors",
+        "query_batch": 1,
+        "judge_batch": 2,
+        "judge_max_tokens": 2048,
+        "judge_pairs_all_passes": 2394,
+        "truncated_pairs_all_passes": 0,
+        "warmup_queries_per_method": 10,
+        "passes": 3,
+        "latency_passes": 2,
+        "quality_pass_excluded_from_latency": true,
+        "scope": "encoding + Dense/BM25 retrieval + optional judge tokenization/forward + fusion/top10; excludes loading, metrics, HTTP",
+        "no_query_or_score_or_judge_cache": true,
+        "no_external_inference_api": true
+      },
+      "timing": {
+        "method_runs": {
+          "dat_fixed": "dat-live-2026-10-31",
+          "dat": "dat-live-2026-10-31"
+        },
+        "passes": 3,
+        "samples": 4326,
+        "excluded_passes": [
+          0
+        ]
+      },
+      "artifact_sha256": {
+        "latency-samples.json": "95a31b1e0df27d90d11484049acc97f331a24ef26e14d2701129c3a649ee6129",
+        "per-query.jsonl": "ba2cbb0d633b5681bb7310d3ffc76a628b2847977babe1bb63c412c32f9db6fd",
+        "results.json": "1e6a482b509676074f30c82370f90108fc0d475be625ab070986827d351df830"
+      }
+    }
+  },
+  "conversion": "Verified existing rankings and times; no new model inference",
+  "schema_version": 2,
+  "queries": 721,
+  "query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+  "query_ids_hash_format": "UTF-8 IDs joined by LF, no trailing LF",
+  "methods": [
+    "bm25",
+    "dense",
+    "score_fusion",
+    "dat_fixed",
+    "dat"
+  ],
+  "method_runs": {
+    "bm25": "dat-main-canonical-replay-2026-10-31",
+    "dense": "dat-main-canonical-replay-2026-10-31",
+    "score_fusion": "dat-main-canonical-replay-2026-10-31",
+    "dat_fixed": "dat-live-2026-10-31",
+    "dat": "dat-live-2026-10-31"
+  },
+  "rows": 3605,
+  "dataset": {
+    "id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+    "revision": "f63d59969dba9916bd34c86c82112331890b11da",
+    "corpus_documents": 36281,
+    "query_scope": "official primary non_synthetic test"
+  },
+  "input_sha256": {
+    "manifest.json": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+    "corpus.jsonl": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+    "queries_test.jsonl": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+    "qrels_test.jsonl": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65"
+  },
+  "selection": {
+    "alpha": 0.84,
+    "normalization": "union_minmax",
+    "validation_ndcg@10": 0.8054856659335342,
+    "validation_queries": 745,
+    "selection": "404 candidates; official non-synthetic validation only",
+    "adaptive": "frozen local DAT odds policy; preserve top1 agreement",
+    "selection_split": "validation",
+    "input_sha256": {
+      "dataset_manifest": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+      "queries": "79aa1f34c6193bf09f7ae508b953ad76fea4077e4daa0aae3fa6f1ef9d098820",
+      "tables": "e1d2b68fd2a7b9e3c32711b93fa1ac77214f54e05e2a43a1fe8b085584040aa1"
+    }
+  },
+  "oracle": "not computed; Phase 5 analysis excluded",
+  "environment": {
+    "effective_threadpools": [
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scipy.libs/libscipy_openblas-5f890258.so",
+        "version": "0.3.31.dev",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 2,
+        "prefix": "libgomp",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/torch/lib/libgomp.so.1",
+        "version": null
+      },
+      {
+        "user_api": "openmp",
+        "internal_api": "openmp",
+        "num_threads": 2,
+        "prefix": "libgomp",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/scikit_learn.libs/libgomp-e985bcbb.so.1.0.0",
+        "version": null
+      },
+      {
+        "user_api": "blas",
+        "internal_api": "openblas",
+        "num_threads": 2,
+        "prefix": "libscipy_openblas",
+        "filepath": "/home/shannon/__dev/hybrid-document-search/.venv/lib/python3.12/site-packages/numpy.libs/libscipy_openblas64_-f48b354e.so",
+        "version": "0.3.34.106.0",
+        "threading_layer": "pthreads",
+        "architecture": "Haswell"
+      }
+    ],
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "torch": "2.14.1+cu130",
+    "numpy": "2.5.3",
+    "transformers": "5.18.0",
+    "sentence_transformers": "6.1.0",
+    "device": "cuda",
+    "gpu": "NVIDIA GeForce RTX 4060",
+    "cpu_threads": 2,
+    "query_encoder_dtype": "float32",
+    "judge_dtype": "torch.bfloat16",
+    "dense_search": "CPU float64 full-corpus dot product with fixed document vectors",
+    "query_batch": 1,
+    "judge_batch": 2,
+    "judge_max_tokens": 2048,
+    "judge_pairs_all_passes": 2394,
+    "truncated_pairs_all_passes": 0,
+    "warmup_queries_per_method": 10,
+    "passes": 3,
+    "latency_passes": 2,
+    "quality_pass_excluded_from_latency": true,
+    "scope": "encoding + Dense/BM25 retrieval + optional judge tokenization/forward + fusion/top10; excludes loading, metrics, HTTP",
+    "no_query_or_score_or_judge_cache": true,
+    "no_external_inference_api": true
+  },
+  "timing": {
+    "method_runs": {
+      "dat_fixed": "dat-live-2026-10-31",
+      "dat": "dat-live-2026-10-31"
+    },
+    "passes": 3,
+    "samples": 4326,
+    "excluded_passes": [
+      0
+    ]
+  },
+  "artifact_sha256": {
+    "latency-samples.json": "95a31b1e0df27d90d11484049acc97f331a24ef26e14d2701129c3a649ee6129",
+    "per-query.jsonl": "db22fcc34ab05af273f654a4d191f373a32d7e74b1f70936305bb558883354b0",
+    "results.json": "1836f619d40abdf16c85d5089c0b26e7ba1c0dfdf890e89cb07e80044f3f1e32"
+  }
+}
