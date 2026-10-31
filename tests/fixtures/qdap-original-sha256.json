@@ -1,0 +1,18 @@
+{
+  "docs/validation/2026-10-30/qdap/baseline-audit.json": "406ff70087b9cb19af89cb5d15194d66a4c67c5639c59311155bedc06434f084",
+  "docs/validation/2026-10-30/qdap/environment.json": "c87a122855333f049d7fd8ebcb920da1e3d293b6a171b5e4cf49603ca633c743",
+  "docs/validation/2026-10-30/qdap/handoff-verification.json": "5d5e52999b45947d1f19fa7c37a951675d571e5420be528b7cfc5c5407f59f2a",
+  "docs/validation/2026-10-30/qdap/latency-samples.json": "50cdf9be1579ba15e2c2dc123dad3133a53968439f53091aa42276de2eaa205a",
+  "docs/validation/2026-10-30/qdap/latency.json": "81f1cd845153fe693187b72f24275fd3e40669cb371cc9dc6c7d9e3ee121b0e3",
+  "docs/validation/2026-10-30/qdap/main-baseline-per-query.jsonl": "75706c90db431f92a34a28eee9a8ae4240c5626337c4a6dd25f2d4be8cd784af",
+  "docs/validation/2026-10-30/qdap/per-query-manifest.json": "89c92fb9abf4ab9b670001c0d8b36f684c14e090b986f3b161af9f0ec9aa79cd",
+  "docs/validation/2026-10-30/qdap/per-query.jsonl": "40adc5fdaad6cb157e7b0a0eae6e2946f8058997c4e1dcef2533379b8812930b",
+  "docs/validation/2026-10-30/qdap/protocol.json": "b3e29388a5131f4e2e902693d9e423a1331aea408d1c144c9f7a22792c7cc98a",
+  "docs/validation/2026-10-30/qdap/results.json": "f01748becdcf3b2c7f1c2561a438159420098dd39bd08ae262c3c00edd38bb84",
+  "docs/validation/2026-10-30/qdap/score-parity.json": "c6eb0392ec13bc6b5a642145e78097551bf3c291ded39b41be678caa611ed3fc",
+  "docs/validation/2026-10-30/qdap/selection.json": "834fcafaf5b2c85ff849d98ccaf97de616ea2af0aa9a510daf0ae29bf14ea243",
+  "docs/validation/2026-10-30/qdap/source-manifest.json": "2ec25ece198f03f83672071c06c5f8ac7f929cfea8d53b70f78bbbc8bfa05932",
+  "docs/validation/2026-10-30/qdap/test-summary.json": "b859545e805a4ba4ebce7f2fdd8d02423a78504e8c71d57dfc44dceb43ed698c",
+  "docs/validation/2026-10-30/qdap/training-records.json": "41a95f74bdf6c790291761101b4855d1a43d796326a8a8541c5850fd64682d64",
+  "docs/validation/2026-10-30/qdap/verification.json": "ccd6827e9ee6bc41f8cde5f5cb851d812ae0df1f5d62647bdb4dd5c7ab2f498c"
+}

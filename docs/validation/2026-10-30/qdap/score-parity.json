@@ -1,0 +1,59 @@
+{
+  "validation": {
+    "queries": 745,
+    "dense_exact": false,
+    "dense_max_abs": 2.7755575615628914e-15,
+    "sparse_exact": true,
+    "sparse_max_abs": 0.0,
+    "pool_indices_exact": true,
+    "pool_pairs_exact": false,
+    "pool_pairs_max_abs": 1.7985612998927536e-14,
+    "target_utilities_exact": true
+  },
+  "test": {
+    "queries": 721,
+    "dense_exact": false,
+    "dense_max_abs": 2.7755575615628914e-15,
+    "sparse_exact": true,
+    "sparse_max_abs": 0.0,
+    "pool_indices_exact": true,
+    "pool_pairs_exact": false,
+    "pool_pairs_max_abs": 3.197442310920451e-14,
+    "target_utilities_exact": true,
+    "rankings_exact": {
+      "BM25": true,
+      "Dense": true,
+      "Existing Fixed": true,
+      "Paper Fixed": true,
+      "Oracle alpha": true,
+      "QDAP-S": true,
+      "QDAP-L": true,
+      "Existing Router": true
+    }
+  },
+  "train": {
+    "total_queries": 43394,
+    "all_query_vectors_exact": true,
+    "replayed_queries": 192,
+    "batch_starts": [
+      0,
+      21696,
+      43328
+    ],
+    "pools_pairs_targets_exact": true,
+    "scope": "Three original 64-row batches; all Train scoring uses the unchanged float64 dot/BM25 formula."
+  },
+  "scope": "Score generation changed only; frozen checkpoints and existing quality/latency artifacts preserved.",
+  "quality_rerun": "Replayed all Test rankings from frozen predictions; all eight methods identical; no training or latency rerun.",
+  "code_sha256": {
+    "evaluation/qdap_benchmark.py": "245c34ee153f315fb83aa5dccc1d1ba9aa02bef43d7dd01d0918d36874135770",
+    "evaluation/qdap_execution.py": "e33378e6661ffec2e11ab34d127a311e87760412fe028881872aab6486aeb24a",
+    "evaluation/qdap_handoff.py": "cdba241e38cb3ae46dd03c4d8512422888f7f08b0a00b2835e85d579715d11a0",
+    "scripts/run_qdap_benchmark.py": "3161b7a5339275ce03784436629e757ac4d426bf91684f6d0f7395d061e2d94b"
+  },
+  "reference_score_sha256": {
+    "dense.npy": "162df362953f082dddb40b7f38929fa28c35d7cb8ef1b1b553637d68b0d383c5",
+    "sparse.npy": "fb47c61a0ee085aa9c51bdaef43ab9f6d5fe3493dc70949be27fdbded5f18289"
+  },
+  "preserved_selection_sha256": "834fcafaf5b2c85ff849d98ccaf97de616ea2af0aa9a510daf0ae29bf14ea243"
+}

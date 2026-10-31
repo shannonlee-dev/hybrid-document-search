@@ -1,0 +1,46 @@
+{
+  "methods": {
+    "BM25": {
+      "mean_ms": 3.816531116657037,
+      "p95_ms": 4.767240800174476,
+      "sample_count": 60
+    },
+    "Dense": {
+      "mean_ms": 55.21947750015291,
+      "p95_ms": 83.69565759967371,
+      "sample_count": 60
+    },
+    "Existing Fixed": {
+      "mean_ms": 45.19042323330117,
+      "p95_ms": 65.92339209873899,
+      "sample_count": 60
+    },
+    "Existing Router": {
+      "mean_ms": 46.91117249961584,
+      "p95_ms": 61.59938469900225,
+      "sample_count": 60
+    },
+    "Paper Fixed": {
+      "mean_ms": 55.18838171665266,
+      "p95_ms": 71.43017560229055,
+      "sample_count": 60
+    },
+    "QDAP-S": {
+      "mean_ms": 57.975747366496456,
+      "p95_ms": 79.00918180021108,
+      "sample_count": 60
+    },
+    "QDAP-L": {
+      "mean_ms": 83.36333978319696,
+      "p95_ms": 143.5934955503398,
+      "sample_count": 60
+    }
+  },
+  "hardware": "NVIDIA GeForce RTX 4060",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "scope": "warm batch1: live tokenizer/GPU BF16 encoder, CPU4 full-corpus Dense/BM25, fusion/router/top10; L overlaps independent prediction encoder using a separate CUDA stream; excludes loading/HTTP/concurrent requests",
+  "sampling": "same30 Test queries x2 per method, reversed method order,10 warmup per block",
+  "precision_note": "latency uses fresh BF16 query encoding; quality table uses original FP32 caches; raw ranking parity flags are retained",
+  "selection_sha256": "834fcafaf5b2c85ff849d98ccaf97de616ea2af0aa9a510daf0ae29bf14ea243",
+  "oracle_latency": null
+}

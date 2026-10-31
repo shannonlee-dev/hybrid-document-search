@@ -38,3 +38,17 @@ dist/
 *.sqlite-*
 *.sqlite3
 *.sqlite3-*
+
+# QDAP local heavyweight run inputs; compact JSON/JSONL evidence stays committable
+/runs/**/*.pt
+/runs/**/*.npz
+/runs/**/*.npy
+/runs/**/models/
+/runs/**/vectors/
+
+# QDAP local evidence supplements (optional; absent in a fresh clone)
+/docs/validation/2026-10-30/qdap/handoff-verification.json
+/docs/validation/2026-10-30/qdap/latency-samples.json
+/docs/validation/2026-10-30/qdap/source-manifest.json
+/docs/validation/2026-10-30/qdap/test-summary.json
+/docs/validation/2026-10-30/qdap/verification.json

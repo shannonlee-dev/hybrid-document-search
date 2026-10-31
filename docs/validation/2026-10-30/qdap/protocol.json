@@ -1,0 +1,35 @@
+{
+  "inputs": "/home/shannon/__dev/hybrid-document-search",
+  "audit": {
+    "train_queries": 43394,
+    "validation_queries": 1000,
+    "test_queries": 1000,
+    "train_validation_text_overlap": 50,
+    "train_test_text_overlap": 60,
+    "query_and_parent_disjoint": true,
+    "policy": "preserve all official rows; existing text overlaps disclosed"
+  },
+  "train": "all official Train rows, no calibration or resplit",
+  "selection": "official Validation non-synthetic nDCG; epoch, CE, seed, mean/argmax; stable ties",
+  "test": "721 non-synthetic official Test; previously exposed; not a fresh test",
+  "architecture": "Linear1024x101, Conv1d(1,1,7,padding3), softmax; L independent original BGE-M3 CLS/L2",
+  "optimizer": "AdamW lr1e-4,wd.01,5epochs,effective batch128,OneCycle warmup.05,clip1",
+  "large_resource_adaptation": "BF16 encoder/Adam states, FP32 head, gradient checkpointing, microbatch8,max128 tokens,seed42",
+  "small": "frozen original BGE-M3 vectors; seeds42/43/44; both CE modes",
+  "loss": ".62 squared-target CE + .38 summed CDF WD; literal unnormalized or reference renormalized CE",
+  "candidate_pool": "Dense/BM25 top100 union, per-channel union minmax; ID ties; 101 alpha bins",
+  "reference_commit": "9e644b6362e5d429b7b4154370efec2d36b98691",
+  "input_sha256": {
+    "/home/shannon/__dev/hybrid-document-search/data/processed/bccard/manifest.json": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/bccard-adaptive-vectors-resumed/encoding.json": "99584e378d55b1413732181f3ee8de84be4b066d7e20c59e5c5672843517bd78",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/bccard-adaptive-vectors-resumed/document-vectors.npy": "4d5f1c8d9002bfeac0c7a927aa641b0ab17199ea008ea196fab786b08bb3df3a",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/bccard-adaptive-vectors-resumed/query-vectors-train.npy": "8ee3247f10606959b9da988f2f5f58237a5ecbd410b8763add78ea8b1293be2b",
+    "/home/shannon/__dev/hybrid-document-search/artifacts/bccard-adaptive-vectors-resumed/query-vectors-validation.npy": "f61370406088ea19d2dbf2cef5274246a591346e9699639948bb38b99bfddaaf"
+  },
+  "prepared_sha256": {
+    "train.npz": "bb624847abcbddd3a7a4732e86c07fc37a93f12463b66c3e372b69006f9b175f",
+    "validation.npz": "e9869c80a5ce1868bb27c44e06b3fb85116ea0db0033bf7cd24ccbd6aa8904e6",
+    "train-queries.json": "73c561149de10ff8999e8e75e8f3883114920bb341521cd4f10ac7e6aa529a82",
+    "validation-queries.json": "e6e0fb5b433fda558c3ceda83535058591f661ef8ba6c772161eb2b6f28c1e16"
+  }
+}

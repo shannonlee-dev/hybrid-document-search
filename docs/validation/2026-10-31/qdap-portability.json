@@ -1,0 +1,149 @@
+{
+  "scope": "checkpoint evaluation with original S/L weights; not fresh training or latency reproduction",
+  "date": "2026-10-31",
+  "query_count": 721,
+  "qdap_rows_compared": 5768,
+  "original_per_query_sha256": "40adc5fdaad6cb157e7b0a0eae6e2946f8058997c4e1dcef2533379b8812930b",
+  "new_per_query_sha256": "0c2ef047cd2fc05d163c60f56cf9c7dd025c8a785d4b64f715a0a89e85c2daff",
+  "run_identity": "New checkpoint-evaluation run; original selection and protocol copied byte-for-byte",
+  "selection_sha256": "834fcafaf5b2c85ff849d98ccaf97de616ea2af0aa9a510daf0ae29bf14ea243",
+  "protocol_sha256": "b3e29388a5131f4e2e902693d9e423a1331aea408d1c144c9f7a22792c7cc98a",
+  "field_difference_counts": {
+    "query_id": 0,
+    "method": 0,
+    "p@1": 0,
+    "recall@10": 0,
+    "mrr@10": 0,
+    "ndcg@10": 0,
+    "top10_document_ids": 0,
+    "relevant_rank_top10": 0,
+    "selected_alpha_dense": 0,
+    "oracle_alpha_dense": 0,
+    "selected_mode": 0,
+    "bm25_weight": 0
+  },
+  "checkpoint_sha256": {
+    "S": "caea3770b3c14652921910e923517d07f8dbef1632c2f7982754d73b6a477fc8",
+    "L": "835858df94736b41978401823679a6482a904f57dd2452d5819bcc7b5346e47a"
+  },
+  "metrics": {
+    "BM25": {
+      "ndcg@10": 0.5755128098916085,
+      "p@1": 0.4188626907073509,
+      "recall@10": 0.7406380027739251,
+      "mrr@10": 0.5232486845871029
+    },
+    "Dense": {
+      "ndcg@10": 0.7828810770027883,
+      "p@1": 0.6546463245492372,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7451781036039015
+    },
+    "Existing Fixed": {
+      "ndcg@10": 0.7940145938588489,
+      "p@1": 0.6851595006934813,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228696
+    },
+    "Existing Router": {
+      "ndcg@10": 0.7929672714773627,
+      "p@1": 0.6837725381414702,
+      "recall@10": 0.8918169209431346,
+      "mrr@10": 0.7608392224203597
+    },
+    "Paper Fixed": {
+      "ndcg@10": 0.7910127414592707,
+      "p@1": 0.6768377253814147,
+      "recall@10": 0.8932038834951457,
+      "mrr@10": 0.7577378200471127
+    },
+    "QDAP-S": {
+      "ndcg@10": 0.7608943793458556,
+      "p@1": 0.6324549237170597,
+      "recall@10": 0.8723994452149791,
+      "mrr@10": 0.7242102018801047
+    },
+    "QDAP-L": {
+      "ndcg@10": 0.7850527088843305,
+      "p@1": 0.6601941747572816,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7481116394777977
+    },
+    "Oracle alpha": {
+      "ndcg@10": 0.8261456513701159,
+      "p@1": 0.7323162274618585,
+      "recall@10": 0.912621359223301,
+      "mrr@10": 0.7981298020826454
+    }
+  },
+  "execution": {
+    "git_commit": "ab555bbfaa12806c1bdf681c51f52af11be5014a",
+    "dirty": true,
+    "python": "3.12.3",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+    "packages": {
+      "numpy": "2.5.3",
+      "torch": "2.14.1",
+      "transformers": "5.18.0",
+      "bm25s": "0.3.12",
+      "sentence-transformers": "6.1.0"
+    }
+  },
+  "tests": {
+    "full_pytest_passed": 929,
+    "full_pytest_skipped": 0,
+    "focused_pytest_passed": 101,
+    "ruff_lint": "passed",
+    "ruff_format": "passed"
+  },
+  "original_artifacts_sha256": {
+    "docs/validation/2026-10-30/qdap/baseline-audit.json": "406ff70087b9cb19af89cb5d15194d66a4c67c5639c59311155bedc06434f084",
+    "docs/validation/2026-10-30/qdap/environment.json": "c87a122855333f049d7fd8ebcb920da1e3d293b6a171b5e4cf49603ca633c743",
+    "docs/validation/2026-10-30/qdap/handoff-verification.json": "5d5e52999b45947d1f19fa7c37a951675d571e5420be528b7cfc5c5407f59f2a",
+    "docs/validation/2026-10-30/qdap/latency-samples.json": "50cdf9be1579ba15e2c2dc123dad3133a53968439f53091aa42276de2eaa205a",
+    "docs/validation/2026-10-30/qdap/latency.json": "81f1cd845153fe693187b72f24275fd3e40669cb371cc9dc6c7d9e3ee121b0e3",
+    "docs/validation/2026-10-30/qdap/main-baseline-per-query.jsonl": "75706c90db431f92a34a28eee9a8ae4240c5626337c4a6dd25f2d4be8cd784af",
+    "docs/validation/2026-10-30/qdap/per-query-manifest.json": "89c92fb9abf4ab9b670001c0d8b36f684c14e090b986f3b161af9f0ec9aa79cd",
+    "docs/validation/2026-10-30/qdap/per-query.jsonl": "40adc5fdaad6cb157e7b0a0eae6e2946f8058997c4e1dcef2533379b8812930b",
+    "docs/validation/2026-10-30/qdap/protocol.json": "b3e29388a5131f4e2e902693d9e423a1331aea408d1c144c9f7a22792c7cc98a",
+    "docs/validation/2026-10-30/qdap/results.json": "f01748becdcf3b2c7f1c2561a438159420098dd39bd08ae262c3c00edd38bb84",
+    "docs/validation/2026-10-30/qdap/score-parity.json": "c6eb0392ec13bc6b5a642145e78097551bf3c291ded39b41be678caa611ed3fc",
+    "docs/validation/2026-10-30/qdap/selection.json": "834fcafaf5b2c85ff849d98ccaf97de616ea2af0aa9a510daf0ae29bf14ea243",
+    "docs/validation/2026-10-30/qdap/source-manifest.json": "2ec25ece198f03f83672071c06c5f8ac7f929cfea8d53b70f78bbbc8bfa05932",
+    "docs/validation/2026-10-30/qdap/test-summary.json": "b859545e805a4ba4ebce7f2fdd8d02423a78504e8c71d57dfc44dceb43ed698c",
+    "docs/validation/2026-10-30/qdap/training-records.json": "41a95f74bdf6c790291761101b4855d1a43d796326a8a8541c5850fd64682d64",
+    "docs/validation/2026-10-30/qdap/verification.json": "ccd6827e9ee6bc41f8cde5f5cb851d812ae0df1f5d62647bdb4dd5c7ab2f498c"
+  },
+  "changed_files": {
+    "modified": [
+      ".gitignore",
+      "docs/BCCARD_QDAP_WEIGHTING.md",
+      "evaluation/data.py",
+      "evaluation/qdap_benchmark.py",
+      "evaluation/qdap_execution.py",
+      "evaluation/qdap_handoff.py",
+      "evaluation/qdap_report.py",
+      "scripts/export_qdap_results.py",
+      "scripts/run_qdap_benchmark.py",
+      "tests/fusion/test_qdap_cli.py",
+      "tests/fusion/test_qdap_freeze.py",
+      "tests/fusion/test_qdap_official.py",
+      "tests/fusion/test_qdap_report.py",
+      "tests/fusion/test_qdap_scores.py"
+    ],
+    "added": [
+      "docs/qdap-portability-validation.json",
+      "evaluation/qdap_artifacts.py",
+      "tests/fixtures/qdap-original-sha256.json",
+      "tests/fusion/test_qdap_artifacts.py",
+      "tests/fusion/test_qdap_pipeline.py"
+    ],
+    "deleted": []
+  },
+  "cli_validation": [
+    "verify original artifacts: 721 queries / 11 methods",
+    "enterprise original artifacts: 721 queries / 11 methods",
+    "enterprise fresh checkpoint evaluation: 721 queries / 8 methods",
+    "export original compact bundle: original JSONL SHA preserved"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "run_id": "main-pr28-contract-replay-2026-10-30",
+  "canonical_summary": "docs/experiments/bccard/test-summary.json",
+  "canonical_summary_sha256": "ae7d4867f28d28350256a4d98ea866dfb325d3ff56ee821e585a9bd07d61cc13",
+  "canonical_git_commit": "107eed243b9716821ee0eaae4a46d9d4be4cc0db",
+  "queries": 721,
+  "same_dataset_corpus_queries_qrels": true,
+  "all_three_main_baselines_reproduced": true,
+  "replayed_metrics": {
+    "BM25": {
+      "ndcg@10": 0.5755128098916078,
+      "p@1": 0.4188626907073509,
+      "recall@10": 0.7406380027739251,
+      "mrr@10": 0.5232486845871034
+    },
+    "Dense": {
+      "ndcg@10": 0.7835091332711331,
+      "p@1": 0.6560332871012483,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7460064284613522
+    },
+    "Existing Fixed": {
+      "ndcg@10": 0.7940145938588489,
+      "p@1": 0.6851595006934813,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228695
+    }
+  },
+  "saved_qdap_run_metrics": {
+    "BM25": {
+      "ndcg@10": 0.5755128098916085,
+      "p@1": 0.4188626907073509,
+      "recall@10": 0.7406380027739251,
+      "mrr@10": 0.5232486845871029
+    },
+    "Dense": {
+      "ndcg@10": 0.7828810770027883,
+      "p@1": 0.6546463245492372,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7451781036039015
+    },
+    "Existing Fixed": {
+      "ndcg@10": 0.7940145938588489,
+      "p@1": 0.6851595006934813,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228696
+    }
+  },
+  "canonical_vector_sha256": {
+    "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+    "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+    "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+  },
+  "current_vector_sha256": {
+    "document-vectors.npy": "4d5f1c8d9002bfeac0c7a927aa641b0ab17199ea008ea196fab786b08bb3df3a",
+    "query-vectors-train.npy": "8ee3247f10606959b9da988f2f5f58237a5ecbd410b8763add78ea8b1293be2b",
+    "query-vectors-validation.npy": "f61370406088ea19d2dbf2cef5274246a591346e9699639948bb38b99bfddaaf",
+    "query-vectors-test.npy": "db783ead74ea2d702e516e2842c23388a8646987bb6904db77ada46ca3a33826"
+  },
+  "precision_explanation": "Using the identical current query/document vectors, main DenseRetriever's FAISS IndexFlatIP FP32 single-query path reproduces canonical metrics; the saved QDAP run used NumPy float64 score computation and document-ID ties. This is a retrieval computation/tie-order distinction, not a model or dataset change in this controlled replay.",
+  "dense_top10_rankings_differ_between_paths": 39,
+  "existing_fixed_explanation": "main Fixed is full-corpus cosine + .05*BM25/corpus-max; Paper Fixed is separate validation-selected union-minmax alpha=.84. Do not equate their numbers.",
+  "results_preserved": "Original QDAP model choices, training, test results and latency are unchanged; this audit is a separate baseline replay with no new latency measurement.",
+  "per_query_file": "main-baseline-per-query.jsonl",
+  "per_query_rows": 2163,
+  "per_query_sha256": "75706c90db431f92a34a28eee9a8ae4240c5626337c4a6dd25f2d4be8cd784af",
+  "source_sha256": {
+    "/tmp/hds-phase4-20261030/worktrees/qdap/evaluation/qdap_handoff.py": "a9b781b3103b17662a39e9e9b3d5f745910fc7b1d6dbbce2c1829f4df106f425",
+    "evaluation/enterprise.py": "5fc9ad13add10ad0c8a43087c018c4ab1a2aea4d3a5d803d4ab6d6c17aa52bb1",
+    "indexing/faiss_index.py": "b40d64f94fa703fe310063c17fd69f720977730086d074bf9787e49d8b392609",
+    "fusion/score.py": "dec2738b5f38071b48b0621f279796cad6a3a154e0aa7a6cc29c7699076916d0",
+    "retrievers/dense.py": "29665f845190866ea43f8dc116d0fd912abc90e68229cb0dfd26c0a077f5c65e"
+  }
+}

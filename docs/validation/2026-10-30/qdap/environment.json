@@ -1,0 +1,14 @@
+{
+  "python": "3.12.3",
+  "packages": {
+    "torch": "2.14.1",
+    "transformers": "5.18.0",
+    "sentence-transformers": "6.1.0",
+    "numpy": "2.5.3",
+    "scikit-learn": "1.9.1",
+    "bm25s": "0.3.12"
+  },
+  "worktree": "/tmp/hds-phase4-20261030/worktrees/qdap",
+  "branch": "feat/qdap-adaptive-weighting",
+  "training_inputs": "/tmp/qdap-issue33-run/protocol.json"
+}

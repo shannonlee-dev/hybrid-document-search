@@ -34,7 +34,7 @@ def file_sha256(path: Path) -> str:
 
 
 def load_evaluation_dataset(
-    directory: str | Path, split: str = "dev"
+    directory: str | Path, split: str = "dev", *, verify_all_splits: bool = True
 ) -> EvaluationDataset:
     """Load and validate the manifest's prepared files without resampling.
 
@@ -67,7 +67,8 @@ def load_evaluation_dataset(
     if not isinstance(manifest.get("selected_query_ids", {}), dict):
         raise ValueError("manifest selected_query_ids는 split별 mapping이어야 합니다.")
 
-    # 한 split만 평가해도 전체 준비 데이터가 같은 manifest에 속하는지 확인한다.
+    # Existing callers validate all partitions; artifact replay consumes one split.
+    splits = splits if verify_all_splits else [split]
     names = ["corpus.jsonl"]
     for part in splits:
         for kind in ("queries", "qrels"):
