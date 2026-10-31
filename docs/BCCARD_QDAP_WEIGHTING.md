@@ -18,11 +18,19 @@ Antagonist Mining 기반 Dense 재학습은 제외했다.
 - Head: Linear(1024,101) → Conv1d(kernel=7, padding=3) → Softmax.
 - Train 43,394개로 5 epochs 학습하고 비합성 Validation 745개의 nDCG@10으로
   CE 해석·seed·epoch·mean/argmax를 선택·동결한 뒤 비합성 Test 721개를 평가했다.
+- Train 질의는 공식 split이지만 Train qrels는 공식 label이 아니라 dataset card의
+  chunk-distance 등급 규칙으로 재구성했다. Validation/Test는 공식 label을 사용하며,
+  데이터 준비 시 같은 규칙으로 공식 label이 재현되는지 검증했다.
+  과거 실험의 `protocol.json`은 원본 보존을 위해 수정하지 않으며, 새 Run의 protocol에는
+  데이터 manifest에 기록된 split별 qrels 출처와 Train target의 관계를 남긴다.
 - Target은 α별 graded nDCG@10의 Softmax, IDCG는 전체 qrels 기준이다.
+  따라서 학습 target은 재구성한 Train qrels에 의존한다.
   Loss는 `.62 × squared-target CE + .38 × sum(abs(CDF(pred)−CDF(target)))`다.
   CE target 제곱 후 재정규화하는 `reference`와 하지 않는 `literal`을 비교했다.
 - AdamW lr=1e-4, weight decay=.01, effective batch=128, OneCycle warmup=.05, clipping=1.
   L은 BF16 Encoder/Adam state, FP32 Head, gradient checkpointing, microbatch=8, max128 tokens다.
+  원 BGE-M3 토크나이저로 특수 토큰을 포함해 확인하면 128 토큰 초과 질의는 Train 43,394개 중
+  1개, 비합성 Validation 745개와 Test 721개에서는 각각 0개다.
 - 분할 간 query ID·parent 중복은 없지만 정규화 문장은 Train/Validation 50종,
   Train/Test 60종이 겹친다. 이미 노출된 공식 Test를 재사용한 탐색적 비교다.
 
@@ -94,7 +102,7 @@ Python 3.12 이상이 필요하다. 경로별 입력은 다음과 같다.
 
 | 인자 | 필요한 파일 |
 |---|---|
-| `--inputs /data/project` | `data/processed/bccard/`의 공식 manifest·corpus·split별 queries/qrels, `docs/experiments/adaptive/router.json` |
+| `--inputs /data/project` | `data/processed/bccard/`의 manifest·corpus·split별 queries/qrels, `docs/experiments/adaptive/router.json` (Train qrels는 위 규칙으로 재구성) |
 | `--vector-cache /data/vectors` | `encoding.json`, `document-vectors.npy`, `query-vectors-{train,validation,test}.npy` |
 | `--model /models/bge-m3` | BGE-M3 로컬 snapshot 전체(weight·config·tokenizer·pooling 포함) |
 | `--run-dir runs/qdap-new` | 새 실행 디렉터리 (`--output`과 같은 인자) |

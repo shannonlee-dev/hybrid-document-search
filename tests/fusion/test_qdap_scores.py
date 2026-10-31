@@ -10,10 +10,36 @@ pytest.importorskip("bm25s")
 
 
 def test_prepare_needs_no_external_score_cache(score_inputs):
+    from evaluation.json_io import read_json, write_json
+    from evaluation.qdap_artifacts import sha
     from evaluation.qdap_benchmark import prepare
 
+    data = score_inputs / "data/processed/bccard"
+    manifest_path = data / "manifest.json"
+    manifest = read_json(manifest_path)
+    manifest["split_stats"] = {
+        "train": {
+            "qrels_source": "reconstructed with the dataset-card chunk-distance rule"
+        },
+        "validation": {
+            "qrels_source": "official relevant_chunk_ids / relevance_scores"
+        },
+        "test": {"qrels_source": "official relevant_chunk_ids / relevance_scores"},
+    }
+    write_json(manifest_path, manifest)
+    encoding_path = (
+        score_inputs / "artifacts/bccard-adaptive-vectors-resumed/encoding.json"
+    )
+    encoding = read_json(encoding_path)
+    encoding["dataset_manifest_sha256"] = sha(manifest_path)
+    write_json(encoding_path, encoding)
     out = score_inputs / "run"
     prepare(score_inputs, out)
+    protocol = read_json(out / "protocol.json")
+    assert protocol["qrels_provenance"] == {
+        split: stats["qrels_source"] for split, stats in manifest["split_stats"].items()
+    }
+    assert "Train qrels" in protocol["training_target"]
     for split in ("train", "validation"):
         with np.load(out / f"{split}.npz") as saved:
             assert saved["pools"].shape == (2, 2)

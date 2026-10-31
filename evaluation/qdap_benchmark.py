@@ -209,6 +209,14 @@ def prepare(inputs, out, vector_cache=None):
             "environment": provenance(),
             "audit": audit,
             "train": "all official Train rows, no calibration or resplit",
+            "qrels_provenance": {
+                split: manifest.get("split_stats", {})
+                .get(split, {})
+                .get("qrels_source", "not recorded in dataset manifest")
+                for split in ("train", "validation", "test")
+            },
+            "qrels_rule_verification": "BC Card preparation checks that the dataset-card chunk-distance rule reproduces the official Validation/Test labels",
+            "training_target": "softmax over alpha-specific graded nDCG using Train qrels",
             "selection": "official Validation non-synthetic nDCG; epoch, CE, seed, mean/argmax; stable ties",
             "test": "721 non-synthetic official Test; previously exposed; not a fresh test",
             "architecture": "Linear1024x101, Conv1d(1,1,7,padding3), softmax; L independent original BGE-M3 CLS/L2",
