@@ -1,0 +1,58 @@
+{
+  "model": {
+    "model_name": "kakaocorp/kanana-2-3b-embedding",
+    "revision": "2c85dbe61af8ff033d2c9d46a686c665153069aa",
+    "normalize_embeddings": true,
+    "query_prefix": "",
+    "passage_prefix": "",
+    "batch_size": 1,
+    "device": "cuda:0",
+    "trust_remote_code": true
+  },
+  "max_seq_length": 4096,
+  "dtype": "torch.bfloat16",
+  "embedding_dimension": 2560,
+  "libraries": {
+    "torch": "2.14.1",
+    "transformers": "5.18.0",
+    "sentence-transformers": "6.1.0"
+  },
+  "preprocessing": {
+    "document": "Pair positive text only",
+    "query": "unchanged"
+  },
+  "postprocessing": "float32 L2 re-normalization",
+  "dataset_manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+  "document_ids_sha256": "2da38f56e7bd154a86907cbb8e9ccd7620152c47790b2e59d222a9e3566396d6",
+  "document_encoding_seconds": 840.2237377399579,
+  "splits": {
+    "validation": {
+      "query_encoding_latency": {
+        "mean_ms": 22.479445067001507,
+        "p95_ms": 22.74175223428756,
+        "sample_count": 1000
+      },
+      "query_count": 1000,
+      "query_ids_sha256": "73cf86834a460c7ac018659f8f07a5cd431a664a47475b4956c94cc995b8a5ce"
+    },
+    "test": {
+      "query_encoding_latency": {
+        "mean_ms": 22.488944994052872,
+        "p95_ms": 22.749983938410878,
+        "sample_count": 1000
+      },
+      "query_count": 1000,
+      "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5"
+    }
+  },
+  "vector_sha256": {
+    "document-vectors.npy": "e8fc9d3b345bce6a475246a71e1a0bd12e97f22290c6eb372a60ea7db59793c5",
+    "query-vectors-validation.npy": "9c7c5e685c2d91948387b6f891918c0423311ba2e088a6e3e5543799341ba816",
+    "query-vectors-test.npy": "3d0a0da8c548c3ccc6d6e21e71c2b479b4c914b37d5baf6c5ebfc713a8a6c6da"
+  },
+  "gpu": {
+    "name": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
+    "peak_memory_allocated_bytes": 6608913920
+  },
+  "record_sha256": "4273fff480a274cb06696e9441fa0b468d51e94f81da19f072a71d6bce401366"
+}

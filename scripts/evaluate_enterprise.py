@@ -17,6 +17,12 @@ def main(argv=None):
     parser.add_argument(
         "--cache-dir", type=Path, default=Path("artifacts/bccard-bge-m3")
     )
+    parser.add_argument(
+        "--encoder",
+        choices=("bge", "kanana"),
+        default="bge",
+        help="encode only; kanana is the Phase 5 external model at its pinned revision",
+    )
     parser.add_argument("--split", choices=("validation", "test"))
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--warmup", type=_positive_int, default=DEFAULT_WARMUP)
@@ -31,13 +37,15 @@ def main(argv=None):
             from evaluation.runtime_config import configure_runtime
 
             runtime = configure_runtime(args.threads, cuda=True)
-            record = encode_bccard(args.data_dir, args.cache_dir)
+            record = encode_bccard(args.data_dir, args.cache_dir, encoder=args.encoder)
             print(
                 json.dumps(
                     {
                         "runtime_gpu": runtime.get("gpu"),
                         "dtype": record["dtype"],
                         "max_seq_length": record["max_seq_length"],
+                        "embedding_dimension": record["embedding_dimension"],
+                        "gpu": record.get("gpu"),
                         "document_encoding_seconds": record[
                             "document_encoding_seconds"
                         ],

@@ -63,6 +63,26 @@ def test_encoding_records_model_and_hashes(encoded):
     assert np.load(cache / "document-vectors.npy").shape == (10, 8)
 
 
+def test_kanana_encoding_records_pinned_external_model(tmp_path, monkeypatch):
+    data = tmp_path / "prepared"
+    prepare_bccard(*_write(tmp_path / "raw"), data)
+    monkeypatch.setattr("retrievers.dense.DenseEmbedder", _FakeEmbedder)
+    record = encode_bccard(data, tmp_path / "cache", device="cpu", encoder="kanana")
+    assert record["model"]["model_name"] == "kakaocorp/kanana-2-3b-embedding"
+    assert record["model"]["revision"] == "2c85dbe61af8ff033d2c9d46a686c665153069aa"
+    assert record["model"]["trust_remote_code"] is True
+    assert record["model"]["query_prefix"] == record["model"]["passage_prefix"] == ""
+    assert record["embedding_dimension"] == 8
+    assert record["postprocessing"] == "float32 L2 re-normalization"
+    vectors = np.load(tmp_path / "cache" / "document-vectors.npy")
+    assert np.allclose(np.linalg.norm(vectors, axis=1), 1, atol=1e-6)
+
+
+def test_unknown_encoder_is_rejected(tmp_path):
+    with pytest.raises(ValueError, match="encoder"):
+        encode_bccard(tmp_path, tmp_path / "cache", encoder="e5")
+
+
 def test_baselines_report_slices_and_existing_metrics(encoded):
     data, cache, _ = encoded
     report = run_enterprise_baselines(data, cache, "test", warmup=1, repeats=1)
