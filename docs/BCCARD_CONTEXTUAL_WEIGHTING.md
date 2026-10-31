@@ -71,6 +71,8 @@ RTX 4060 8GB, CPU·BLAS/OpenMP 2 threads, 단건 인코딩·검색, judge batch 
 
 **Paired CI, Finance vs Kanana, oracle/headroom·disagreement·slice·Fixed-vs-DAT 승패 분석은 이번 범위에서 제외한다.** Oracle은 계산하지 않았고 JSONL의 oracle 필드는 `null`이다. Finance encoder의 학습·checkpoint 요구사항은 별도 #35 범위다.
 
+`verification.json`의 `validated_code_commit`은 검증 실행 당시 체크아웃한 커밋이며, squash 후 조상 관계를 요구하지 않는다. 검증한 코드·테스트의 동일성은 `source_sha256`으로 확인한다. 이전 실행 기록은 `previous_validation`에 보존한다.
+
 `verify`는 입력·결과 SHA, 공식 721개 ID·순서, query/method 누락·중복·run ID를 검사한다. Top10·qrels에서 네 지표·relevant rank·집계를 재계산하고, frozen Fixed 정책과 DAT 분기·확률·α·fallback 순위, 시간 표본 조합·단계 합·첫 회차 제외 통계도 대조한다. 준비된 dataset이 필요하며 모델·벡터·GPU는 필요 없다.
 
 ```bash
