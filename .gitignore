@@ -46,6 +46,9 @@ dist/
 /runs/**/models/
 /runs/**/vectors/
 
+# Finance local scores, model replay outputs, and intermediate evaluation tables
+/runs/finance-*/
+
 # QDAP local evidence supplements (optional; absent in a fresh clone)
 /docs/validation/2026-10-30/qdap/handoff-verification.json
 /docs/validation/2026-10-30/qdap/latency-samples.json
