@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "training": {
+    "run_id": "finance-seed43-4096-2026-11-02-f49ec8b",
+    "code_commit": "f49ec8b41a70ae663aec2837f51d69ec52e4c061",
+    "clean_tree_at_start": true,
+    "seed": 43,
+    "explicit_steps": 4096,
+    "batch_size": 16,
+    "training_examples_processed": 65536,
+    "eligible_training_examples": 43150,
+    "excluded_duplicate_examples": 244,
+    "selected_step": 4096,
+    "validation_dense_ndcg@10": 0.8225110741406398,
+    "elapsed_seconds": 318.37268914000015,
+    "checkpoint_sha256": "d36f5c66c0caf2d8dd451d7e6ed1b1a433ea8aafe2b2d82a2ad5a9cd2ecb4a75",
+    "protocol_sha256": "adb936aa835d40be88e8c06af23b0e27b9f4c57a28fc55025bd3974ac728553c",
+    "validation_vectors_sha256": "2b011db70795d72fb6ad51c4304ee9485564372fd4b6c8f47567e1b9c4fa1922",
+    "test_vectors_sha256": "91dbb16463a058e8a97d1a3fc328c8afa48121a841041a1ef9b960a419015e52",
+    "source_hashes_match_final_code": true
+  },
+  "smoke": {
+    "passed": true,
+    "training_steps": 2,
+    "selected_step": 2,
+    "reloaded_validation_queries": 16,
+    "maximum_vector_absolute_difference": 0.0,
+    "checkpoint_sha256": "3730ee96493ed17b919b6b80a82515bcc75bf4bfc0a2e0d05019e8b70fb3d7db",
+    "test_qrels_read": false
+  },
+  "smoke_source_hashes_match_training": true,
+  "evaluation": {
+    "run_id": "finance-retrained-replay-2026-11-02-f49ec8b",
+    "verified": true,
+    "queries": 721,
+    "rows": 2884,
+    "aggregates": {
+      "baseline + Fixed": {
+        "p@1": 0.6768377253814147,
+        "recall@10": 0.8932038834951457,
+        "mrr@10": 0.7576492085507343,
+        "ndcg@10": 0.79093193891841
+      },
+      "seed43 + Fixed": {
+        "p@1": 0.694868238557559,
+        "recall@10": 0.9223300970873787,
+        "mrr@10": 0.7798763842106422,
+        "ndcg@10": 0.8149500101779285
+      },
+      "baseline + Fixed alpha=0.84": {
+        "p@1": 0.6768377253814147,
+        "recall@10": 0.8932038834951457,
+        "mrr@10": 0.7576492085507343,
+        "ndcg@10": 0.79093193891841
+      },
+      "seed43 + Fixed alpha=0.84": {
+        "p@1": 0.6934812760055479,
+        "recall@10": 0.9223300970873787,
+        "mrr@10": 0.7792869251260375,
+        "ndcg@10": 0.8145230714883046
+      }
+    },
+    "metric_absolute_tolerance": 1e-12
+  },
+  "tests": {
+    "pre_training_full_suite": {
+      "passed": 1059,
+      "skipped": 2,
+      "scope": "before the training run; two historical evidence tests were present"
+    },
+    "final_finance_tests": {
+      "passed": 34,
+      "skipped": 0,
+      "command": "FINANCE_DATA_DIR=/data/bccard pytest -q tests/dense/test_query_training.py tests/dense/test_query_encoder_replay.py tests/dense/test_query_encoder_evidence.py"
+    },
+    "final_full_suite": {
+      "passed": 1058,
+      "skipped": 2,
+      "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 FINANCE_DATA_DIR=/data/bccard pytest -q"
+    },
+    "final_locked_default_ci": {
+      "passed": 636,
+      "skipped": 226,
+      "command": "uv run --locked pytest -q"
+    },
+    "lint": "passed",
+    "format": "passed",
+    "scope": "Latest evidence test replaces historical-run tests; production training source is unchanged. API fixtures use loopback sockets; model downloads disabled."
+  },
+  "test_sha256": {
+    "tests/dense/test_query_encoder_evidence.py": "f5cbc15a834a886eac6c5d114abb826f4e5c14acad35df3a31c88e354f8cca73",
+    "tests/dense/test_query_encoder_replay.py": "ac4f6ebbecae792aa18bc7c36daa081a8c388819def7d8816dab6863877f5c1a",
+    "tests/dense/test_query_training.py": "48224eac4f9aef6b715ca4e487fd60625a4d685f7a01b634624418d063b48925"
+  },
+  "artifact_sha256": {
+    "frozen.json": "2415d900b258c99e39ee93aeae864850275fac64712c1e4f93b38b511cb98b53",
+    "per-query-manifest.json": "90afd3fb2c4b0a9a5549f559a8afef9075b52f5a7ae3696a6831500bb2b1a01c",
+    "per-query.jsonl": "7868a130b8af47e5cf2fd442f90eec7edabb5701295b7b1555c30db5c3899ce5",
+    "protocol.json": "e58c1cf0b2ce885b9381187f9ff589f1af98322d62d03a800f1a3d71686d50b2"
+  },
+  "not_run": [
+    "new latency benchmark",
+    "paired CI",
+    "Finance vs Kanana comparison",
+    "oracle/headroom analysis",
+    "bitwise training reproduction on another machine"
+  ]
+}
