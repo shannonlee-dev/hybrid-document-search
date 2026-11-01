@@ -67,6 +67,7 @@ vector를 양쪽에 고정했다. Canonical 참고값은 저장된 결과에서 
 ## 실행 증거
 
 - 학습 코드 commit: `f49ec8b41a70ae663aec2837f51d69ec52e4c061`.
+  실제 학습 당시 코드 출처인 이력 정리 전 커밋이며, 현재 브랜치의 조상이 아니다.
   학습 시작 시 clean tree였으며 학습 중 source SHA가 바뀌지 않았다.
 - Training Run ID: `finance-seed43-4096-2026-11-02-f49ec8b`.
 - 평가 Run ID: `finance-retrained-replay-2026-11-02-f49ec8b`.
@@ -262,7 +263,7 @@ PYRESULTS
 
 **기존 기준값**: Seed42는 커밋 `c95c3fb`의 `docs/validation/2026-11-01/finance/`
 protocol·frozen, Seed43은 현재 `2026-11-02/finance-retrain` 기록이다. 과거 Validation 추이는
-`git show c95c3fb:docs/validation/2026-11-01/finance/protocol.json`으로 확인한다.
+[당시 protocol.json](https://github.com/shannonlee-dev/hybrid-document-search/blob/c95c3fb106287749fbec268fb52768e854e00c05/docs/validation/2026-11-01/finance/protocol.json)에서 확인한다.
 
 | 기존 run | 선택 step | Validation Dense nDCG@10 | Validation Fixed nDCG@10 | Fixed α |
 |---|---:|---:|---:|---:|
