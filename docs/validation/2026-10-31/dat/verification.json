@@ -1,0 +1,352 @@
+{
+  "schema_version": 1,
+  "executed_at": "2026-10-31T13:22:51.494928+09:00",
+  "completed_at": "2026-10-31T13:23:40.071566+09:00",
+  "validated_code_commit": "fa5a549b0703e666f17509a2eddfe83da0e96be3",
+  "identity_semantics": {
+    "validated_code_commit": "Commit checked out when these checks ran; execution provenance, not an ancestry requirement after squash or rebase.",
+    "source_sha256": "Content identity of the validated DAT implementation and tests; compare these hashes when commit history changes.",
+    "unchanged_artifact_sha256": "Preserved input/result artifacts; no retrieval inference or latency remeasurement in this validation."
+  },
+  "source_sha256": {
+    "fusion/contextual.py": "c6289450639fc99a5413501f4ae633d2c9c980c7d608fe1b5e1fe798e9fba8bd",
+    "fusion/contextual_judge.py": "f9172d04a4857fc6e4b3feeaedd971331000821dfb73669ed320b02848120cc1",
+    "evaluation/contextual.py": "181aa8554437c00e4e232d386b5bff72396ea134dd42d7d5abee35d6715165bb",
+    "evaluation/contextual_execution.py": "482afd613c1f1160bcfad866ff2fabdfbd49821895df8d353b2ab7dfe2b7fc8c",
+    "evaluation/contextual_report.py": "b3075dad17d92cd8afa11ffdeedc2369251d0b88c73727b8aa50a2b4a5bef56f",
+    "scripts/evaluate_contextual.py": "95dd23b679315a18de2b96fdbefe028f3507597f04727098886e53bf0c22ec8e",
+    "tests/fusion/test_contextual.py": "eb3e69b101592dee835c468d159019408ecd5895eae226c4ba2ca6ee1f769b1f",
+    "tests/fusion/test_contextual_judge.py": "9a536aea57566d3a08b2a4b5de7c96c305486d23800ebf310bea81bb09e17c3a",
+    "tests/fusion/test_contextual_judge_live.py": "6e0fcc05773ed8a87e48d0ca7264c0ec7b84590a43f2d75f5e7b6daf9acdbd91",
+    "tests/fusion/test_contextual_report.py": "5aba73da9f2d3ccc1a9db408c144b5be9e70a6cfc44fcdadd1d1ca78f78b2eea"
+  },
+  "unchanged_artifact_sha256": {
+    "docs/validation/2026-10-31/dat/protocol.json": "f200bf24b3931f4dbb4f406e8cc951fb62aa7164a3bc2c68d2779025ac071952",
+    "docs/validation/2026-10-31/dat/results.json": "1836f619d40abdf16c85d5089c0b26e7ba1c0dfdf890e89cb07e80044f3f1e32",
+    "docs/validation/2026-10-31/dat/per-query.jsonl": "db22fcc34ab05af273f654a4d191f373a32d7e74b1f70936305bb558883354b0",
+    "docs/validation/2026-10-31/dat/latency-samples.json": "95a31b1e0df27d90d11484049acc97f331a24ef26e14d2701129c3a649ee6129",
+    "docs/validation/2026-10-31/dat/judge-smoke.json": "19d7b6cf68d3eb2370445eb62625edf33e1b0e98f1559df19284486a4978ec11",
+    "docs/experiments/bccard/encoding.json": "0f914819cce36e01cd9bfb79369173a1783e77bf56203068589d1bfc78179cca"
+  },
+  "scope": "Stored 721-query result verification and final code checks; no retrieval re-inference or Phase 5 analysis",
+  "environment": {
+    "python": "3.12.3 (main, Jun 19 2026, 12:46:00) [GCC 13.3.0]",
+    "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "fixed_policy": {
+    "alpha": 0.84,
+    "normalization": "union_minmax"
+  },
+  "routing_checks": [
+    "dat_fixed mode, alpha and normalization match the selected policy",
+    "DAT Top-1 agreement requires Fixed fallback mode and selected policy",
+    "DAT disagreement requires judge mode and probability-derived alpha",
+    "dat and dat_fixed record the same Dense/BM25 Top-1 for each query",
+    "DAT and dat_fixed Top10 rankings match when Top-1 agrees"
+  ],
+  "verification": {
+    "queries": 721,
+    "rows": 3605,
+    "methods": {
+      "bm25": {
+        "p@1": 0.4188626907073509,
+        "recall@10": 0.7406380027739251,
+        "mrr@10": 0.5232486845871034,
+        "ndcg@10": 0.5755128098916078
+      },
+      "dense": {
+        "p@1": 0.6560332871012483,
+        "recall@10": 0.8987517337031901,
+        "mrr@10": 0.7460064284613521,
+        "ndcg@10": 0.7835091332711331
+      },
+      "score_fusion": {
+        "p@1": 0.6851595006934813,
+        "recall@10": 0.8945908460471568,
+        "mrr@10": 0.7614617044228695,
+        "ndcg@10": 0.7940145938588489
+      },
+      "dat_fixed": {
+        "p@1": 0.6768377253814147,
+        "recall@10": 0.8932038834951457,
+        "mrr@10": 0.7577378200471127,
+        "ndcg@10": 0.7910127414592707
+      },
+      "dat": {
+        "p@1": 0.6629680998613038,
+        "recall@10": 0.883495145631068,
+        "mrr@10": 0.7431449926248817,
+        "ndcg@10": 0.7774967481675491
+      }
+    },
+    "verified": true,
+    "timing_samples": 4326,
+    "latency": {
+      "dat_fixed": {
+        "encode": {
+          "mean_ms": 21.098065254513138,
+          "p95_ms": 37.83030950016837,
+          "sample_count": 1442
+        },
+        "retrieve": {
+          "mean_ms": 13.802358416774073,
+          "p95_ms": 19.466891999695694,
+          "sample_count": 1442
+        },
+        "judge": {
+          "mean_ms": 0.09254810333377955,
+          "p95_ms": 0.14074769965191083,
+          "sample_count": 1442
+        },
+        "fusion": {
+          "mean_ms": 0.49715425034069105,
+          "p95_ms": 0.7632570002670037,
+          "sample_count": 1442
+        },
+        "total": {
+          "mean_ms": 35.49012602496168,
+          "p95_ms": 58.21320309969452,
+          "sample_count": 1442
+        }
+      },
+      "dat": {
+        "encode": {
+          "mean_ms": 21.32287941956327,
+          "p95_ms": 38.6156610000171,
+          "sample_count": 1442
+        },
+        "retrieve": {
+          "mean_ms": 13.848725443824149,
+          "p95_ms": 19.690014199932197,
+          "sample_count": 1442
+        },
+        "judge": {
+          "mean_ms": 29.57968246879783,
+          "p95_ms": 79.66123510009315,
+          "sample_count": 1442
+        },
+        "fusion": {
+          "mean_ms": 0.5285036047121108,
+          "p95_ms": 0.8084262000920717,
+          "sample_count": 1442
+        },
+        "total": {
+          "mean_ms": 65.27979093689737,
+          "p95_ms": 128.39862649973392,
+          "sample_count": 1442
+        }
+      }
+    }
+  },
+  "checks": {
+    "full_suite": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /home/shannon/__dev/hybrid-document-search/.venv/bin/python -m pytest -q -p no:cacheprovider --tb=short",
+      "started_at": "2026-10-31T13:22:51.495207+09:00",
+      "completed_at": "2026-10-31T13:23:40.062709+09:00",
+      "duration_seconds": 48.568,
+      "exit_code": 0,
+      "summary": "1012 passed, 2 skipped in 46.57s"
+    },
+    "targeted_tests": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /home/shannon/__dev/hybrid-document-search/.venv/bin/python -m pytest tests/fusion/test_contextual.py tests/fusion/test_contextual_judge.py tests/fusion/test_contextual_report.py -q -p no:cacheprovider --tb=short",
+      "started_at": "2026-10-31T13:22:51.495444+09:00",
+      "completed_at": "2026-10-31T13:22:59.888968+09:00",
+      "duration_seconds": 8.394,
+      "exit_code": 0,
+      "summary": "84 passed in 6.64s"
+    },
+    "lint": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /home/shannon/__dev/hybrid-document-search/.venv/bin/ruff check --no-cache .",
+      "started_at": "2026-10-31T13:22:51.495868+09:00",
+      "completed_at": "2026-10-31T13:22:51.537596+09:00",
+      "duration_seconds": 0.042,
+      "exit_code": 0,
+      "summary": "All checks passed!"
+    },
+    "format": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /home/shannon/__dev/hybrid-document-search/.venv/bin/ruff format --check --no-cache .",
+      "started_at": "2026-10-31T13:22:51.496419+09:00",
+      "completed_at": "2026-10-31T13:22:51.535824+09:00",
+      "duration_seconds": 0.039,
+      "exit_code": 0,
+      "summary": "167 files already formatted"
+    },
+    "diff": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 git -c safe.directory=/tmp/hds-phase4-20261030/worktrees/dat diff --check main...HEAD",
+      "started_at": "2026-10-31T13:22:51.497156+09:00",
+      "completed_at": "2026-10-31T13:22:51.520042+09:00",
+      "duration_seconds": 0.023,
+      "exit_code": 0,
+      "summary": ""
+    },
+    "verify": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 /home/shannon/__dev/hybrid-document-search/.venv/bin/python -m scripts.evaluate_contextual verify --data /home/shannon/__dev/hybrid-document-search/data/processed/bccard --output docs/validation/2026-10-31/dat",
+      "started_at": "2026-10-31T13:22:51.498827+09:00",
+      "completed_at": "2026-10-31T13:22:52.454627+09:00",
+      "duration_seconds": 0.956,
+      "exit_code": 0,
+      "summary": "721 queries, 3605 rows, 4326 timing samples verified"
+    }
+  },
+  "previous_validation": {
+    "schema_version": 1,
+    "executed_at": "2026-10-31T13:01:12.520896+09:00",
+    "validated_code_commit": "f9cbf75d42c23a4e103ecfd84110cea9cb73406b",
+    "source_sha256": {
+      "evaluation/contextual_report.py": "b3075dad17d92cd8afa11ffdeedc2369251d0b88c73727b8aa50a2b4a5bef56f",
+      "tests/fusion/test_contextual_report.py": "5aba73da9f2d3ccc1a9db408c144b5be9e70a6cfc44fcdadd1d1ca78f78b2eea",
+      "fusion/contextual.py": "c6289450639fc99a5413501f4ae633d2c9c980c7d608fe1b5e1fe798e9fba8bd",
+      "fusion/contextual_judge.py": "f9172d04a4857fc6e4b3feeaedd971331000821dfb73669ed320b02848120cc1"
+    },
+    "unchanged_artifact_sha256": {
+      "docs/validation/2026-10-31/dat/protocol.json": "f200bf24b3931f4dbb4f406e8cc951fb62aa7164a3bc2c68d2779025ac071952",
+      "docs/validation/2026-10-31/dat/results.json": "1836f619d40abdf16c85d5089c0b26e7ba1c0dfdf890e89cb07e80044f3f1e32",
+      "docs/validation/2026-10-31/dat/per-query.jsonl": "db22fcc34ab05af273f654a4d191f373a32d7e74b1f70936305bb558883354b0",
+      "docs/validation/2026-10-31/dat/latency-samples.json": "95a31b1e0df27d90d11484049acc97f331a24ef26e14d2701129c3a649ee6129",
+      "docs/validation/2026-10-31/dat/judge-smoke.json": "19d7b6cf68d3eb2370445eb62625edf33e1b0e98f1559df19284486a4978ec11",
+      "docs/experiments/bccard/encoding.json": "0f914819cce36e01cd9bfb79369173a1783e77bf56203068589d1bfc78179cca"
+    },
+    "scope": "Stored 721-query result verification and final code checks; no retrieval re-inference or Phase 5 analysis",
+    "fixed_policy": {
+      "alpha": 0.84,
+      "normalization": "union_minmax"
+    },
+    "routing_checks": [
+      "dat_fixed mode, alpha and normalization match the selected policy",
+      "DAT Top-1 agreement requires Fixed fallback mode and selected policy",
+      "DAT disagreement requires judge mode and probability-derived alpha",
+      "dat and dat_fixed record the same Dense/BM25 Top-1 for each query",
+      "DAT and dat_fixed Top10 rankings match when Top-1 agrees"
+    ],
+    "verification": {
+      "queries": 721,
+      "rows": 3605,
+      "methods": {
+        "bm25": {
+          "p@1": 0.4188626907073509,
+          "recall@10": 0.7406380027739251,
+          "mrr@10": 0.5232486845871034,
+          "ndcg@10": 0.5755128098916078
+        },
+        "dense": {
+          "p@1": 0.6560332871012483,
+          "recall@10": 0.8987517337031901,
+          "mrr@10": 0.7460064284613521,
+          "ndcg@10": 0.7835091332711331
+        },
+        "score_fusion": {
+          "p@1": 0.6851595006934813,
+          "recall@10": 0.8945908460471568,
+          "mrr@10": 0.7614617044228695,
+          "ndcg@10": 0.7940145938588489
+        },
+        "dat_fixed": {
+          "p@1": 0.6768377253814147,
+          "recall@10": 0.8932038834951457,
+          "mrr@10": 0.7577378200471127,
+          "ndcg@10": 0.7910127414592707
+        },
+        "dat": {
+          "p@1": 0.6629680998613038,
+          "recall@10": 0.883495145631068,
+          "mrr@10": 0.7431449926248817,
+          "ndcg@10": 0.7774967481675491
+        }
+      },
+      "verified": true,
+      "timing_samples": 4326,
+      "latency": {
+        "dat_fixed": {
+          "encode": {
+            "mean_ms": 21.098065254513138,
+            "p95_ms": 37.83030950016837,
+            "sample_count": 1442
+          },
+          "retrieve": {
+            "mean_ms": 13.802358416774073,
+            "p95_ms": 19.466891999695694,
+            "sample_count": 1442
+          },
+          "judge": {
+            "mean_ms": 0.09254810333377955,
+            "p95_ms": 0.14074769965191083,
+            "sample_count": 1442
+          },
+          "fusion": {
+            "mean_ms": 0.49715425034069105,
+            "p95_ms": 0.7632570002670037,
+            "sample_count": 1442
+          },
+          "total": {
+            "mean_ms": 35.49012602496168,
+            "p95_ms": 58.21320309969452,
+            "sample_count": 1442
+          }
+        },
+        "dat": {
+          "encode": {
+            "mean_ms": 21.32287941956327,
+            "p95_ms": 38.6156610000171,
+            "sample_count": 1442
+          },
+          "retrieve": {
+            "mean_ms": 13.848725443824149,
+            "p95_ms": 19.690014199932197,
+            "sample_count": 1442
+          },
+          "judge": {
+            "mean_ms": 29.57968246879783,
+            "p95_ms": 79.66123510009315,
+            "sample_count": 1442
+          },
+          "fusion": {
+            "mean_ms": 0.5285036047121108,
+            "p95_ms": 0.8084262000920717,
+            "sample_count": 1442
+          },
+          "total": {
+            "mean_ms": 65.27979093689737,
+            "p95_ms": 128.39862649973392,
+            "sample_count": 1442
+          }
+        }
+      }
+    },
+    "checks": {
+      "sync": {
+        "command": "UV_PROJECT_ENVIRONMENT=/home/shannon/__dev/hybrid-document-search/.venv uv sync --locked --extra dense --extra sparse --inexact --no-install-project --offline --cache-dir /tmp/hds-phase4-20261030/uv-cache",
+        "exit_code": 0,
+        "summary": "Resolved 122 packages in 1ms\nChecked 100 packages in 1ms"
+      },
+      "verify": {
+        "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 UV_PROJECT_ENVIRONMENT=/home/shannon/__dev/hybrid-document-search/.venv uv run --locked --no-sync --cache-dir /tmp/hds-phase4-20261030/uv-cache python -m scripts.evaluate_contextual verify --data /home/shannon/__dev/hybrid-document-search/data/processed/bccard --output docs/validation/2026-10-31/dat",
+        "exit_code": 0
+      },
+      "lint": {
+        "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 UV_PROJECT_ENVIRONMENT=/home/shannon/__dev/hybrid-document-search/.venv uv run --locked --no-sync --cache-dir /tmp/hds-phase4-20261030/uv-cache ruff check .",
+        "exit_code": 0,
+        "summary": "All checks passed!"
+      },
+      "format": {
+        "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 UV_PROJECT_ENVIRONMENT=/home/shannon/__dev/hybrid-document-search/.venv uv run --locked --no-sync --cache-dir /tmp/hds-phase4-20261030/uv-cache ruff format --check .",
+        "exit_code": 0,
+        "summary": "167 files already formatted"
+      },
+      "diff": {
+        "command": "git diff --check",
+        "exit_code": 0,
+        "summary": ""
+      },
+      "targeted_tests": {
+        "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 UV_PROJECT_ENVIRONMENT=/home/shannon/__dev/hybrid-document-search/.venv uv run --locked --no-sync --cache-dir /tmp/hds-phase4-20261030/uv-cache python -m pytest tests/fusion/test_contextual.py tests/fusion/test_contextual_judge.py tests/fusion/test_contextual_report.py -q -p no:cacheprovider --tb=short",
+        "exit_code": 0,
+        "summary": "84 passed in 5.39s"
+      },
+      "full_suite": {
+        "command": "HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 UV_PROJECT_ENVIRONMENT=/home/shannon/__dev/hybrid-document-search/.venv uv run --locked --no-sync --cache-dir /tmp/hds-phase4-20261030/uv-cache python -m pytest -q -p no:cacheprovider --tb=short",
+        "exit_code": 0,
+        "summary": "1012 passed, 2 skipped in 41.38s"
+      }
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "queries": 721,
+  "methods": {
+    "bm25": {
+      "p@1": 0.4188626907073509,
+      "recall@10": 0.7406380027739251,
+      "mrr@10": 0.5232486845871034,
+      "ndcg@10": 0.5755128098916078
+    },
+    "dense": {
+      "p@1": 0.6560332871012483,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7460064284613521,
+      "ndcg@10": 0.7835091332711331
+    },
+    "score_fusion": {
+      "p@1": 0.6851595006934813,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228695,
+      "ndcg@10": 0.7940145938588489
+    },
+    "dat_fixed": {
+      "p@1": 0.6768377253814147,
+      "recall@10": 0.8932038834951457,
+      "mrr@10": 0.7577378200471127,
+      "ndcg@10": 0.7910127414592707
+    },
+    "dat": {
+      "p@1": 0.6629680998613038,
+      "recall@10": 0.883495145631068,
+      "mrr@10": 0.7431449926248817,
+      "ndcg@10": 0.7774967481675491
+    }
+  },
+  "baseline_audit": {
+    "all_three_main_baselines_reproduced": true,
+    "queries": 721,
+    "canonical_metrics": {
+      "bm25": {
+        "p@1": 0.4188626907073509,
+        "recall@10": 0.7406380027739251,
+        "mrr@10": 0.5232486845871034,
+        "ndcg@10": 0.5755128098916078
+      },
+      "dense": {
+        "p@1": 0.6560332871012483,
+        "recall@10": 0.8987517337031901,
+        "mrr@10": 0.7460064284613521,
+        "ndcg@10": 0.7835091332711331
+      },
+      "score_fusion": {
+        "p@1": 0.6851595006934813,
+        "recall@10": 0.8945908460471568,
+        "mrr@10": 0.7614617044228695,
+        "ndcg@10": 0.7940145938588489
+      }
+    },
+    "replayed_metrics": {
+      "bm25": {
+        "p@1": 0.4188626907073509,
+        "recall@10": 0.7406380027739251,
+        "mrr@10": 0.5232486845871034,
+        "ndcg@10": 0.5755128098916078
+      },
+      "dense": {
+        "p@1": 0.6560332871012483,
+        "recall@10": 0.8987517337031901,
+        "mrr@10": 0.7460064284613521,
+        "ndcg@10": 0.7835091332711331
+      },
+      "score_fusion": {
+        "p@1": 0.6851595006934813,
+        "recall@10": 0.8945908460471568,
+        "mrr@10": 0.7614617044228695,
+        "ndcg@10": 0.7940145938588489
+      }
+    },
+    "canonical_vector_sha256": {
+      "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+      "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+      "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+    },
+    "replay_vector_sha256": {
+      "document-vectors.npy": "4d5f1c8d9002bfeac0c7a927aa641b0ab17199ea008ea196fab786b08bb3df3a",
+      "query-vectors-train.npy": "8ee3247f10606959b9da988f2f5f58237a5ecbd410b8763add78ea8b1293be2b",
+      "query-vectors-validation.npy": "f61370406088ea19d2dbf2cef5274246a591346e9699639948bb38b99bfddaaf",
+      "query-vectors-test.npy": "db783ead74ea2d702e516e2842c23388a8646987bb6904db77ada46ca3a33826"
+    },
+    "fixed_distinction": "canonical .05 full-corpus Fixed differs from validation-selected DAT Fixed alpha=.84 union-minmax",
+    "dense_distinction": "FP32 FAISS main Dense differs from float64 full-corpus NumPy DAT score path"
+  },
+  "latency": {
+    "dat_fixed": {
+      "encode": {
+        "mean_ms": 21.098065254513138,
+        "p95_ms": 37.83030950016837,
+        "sample_count": 1442
+      },
+      "retrieve": {
+        "mean_ms": 13.802358416774073,
+        "p95_ms": 19.466891999695694,
+        "sample_count": 1442
+      },
+      "judge": {
+        "mean_ms": 0.09254810333377955,
+        "p95_ms": 0.14074769965191083,
+        "sample_count": 1442
+      },
+      "fusion": {
+        "mean_ms": 0.49715425034069105,
+        "p95_ms": 0.7632570002670037,
+        "sample_count": 1442
+      },
+      "total": {
+        "mean_ms": 35.49012602496168,
+        "p95_ms": 58.21320309969452,
+        "sample_count": 1442
+      }
+    },
+    "dat": {
+      "encode": {
+        "mean_ms": 21.32287941956327,
+        "p95_ms": 38.6156610000171,
+        "sample_count": 1442
+      },
+      "retrieve": {
+        "mean_ms": 13.848725443824149,
+        "p95_ms": 19.690014199932197,
+        "sample_count": 1442
+      },
+      "judge": {
+        "mean_ms": 29.57968246879783,
+        "p95_ms": 79.66123510009315,
+        "sample_count": 1442
+      },
+      "fusion": {
+        "mean_ms": 0.5285036047121108,
+        "p95_ms": 0.8084262000920717,
+        "sample_count": 1442
+      },
+      "total": {
+        "mean_ms": 65.27979093689737,
+        "p95_ms": 128.39862649973392,
+        "sample_count": 1442
+      }
+    }
+  }
+}
