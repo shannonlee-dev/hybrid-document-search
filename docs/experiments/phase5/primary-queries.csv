@@ -1,0 +1,722 @@
+query_id,text,relevant,bm25_rank,bm25_ndcg@10,bge_dense_rank,bge_dense_ndcg@10,bge_fixed_rank,bge_fixed_ndcg@10,kanana_dense_rank,kanana_dense_ndcg@10,kanana_fixed_rank,kanana_fixed_ndcg@10,adaptive_rank,adaptive_ndcg@10,adaptive_mode,adaptive_oracle_rank,adaptive_oracle_ndcg@10,adaptive_oracle_mode,top1_differs:bm25|bge_dense,top10_overlap:bm25|bge_dense,top1_differs:bm25|kanana_dense,top10_overlap:bm25|kanana_dense,top1_differs:bge_dense|kanana_dense,top10_overlap:bge_dense|kanana_dense
+crawl_bc-personal_customer-center_faq_52000,가족카드로 모바일카드를 발급받을 수 있나요?,crawl_bc-personal_customer-center_faq_52000,,0.0,8,0.31546487678572877,10,0.2890648263178879,,0.0,,0.0,,0.0,balanced,9,0.3010299956639812,semantic-heavy,True,0,True,1,True,7
+crawl_bc-personal_customer-center_faq_344000,할부 금액에 대한 TOP포인트 적립은 어떻게 되나요?,crawl_bc-personal_customer-center_faq_344000,,0.0,2,0.6309297535714575,,0.0,7,0.3333333333333333,,0.0,,0.0,balanced,2,0.6309297535714575,semantic-heavy,True,2,True,2,True,5
+crawl_bc-merchant_customer-center_faq_55000,가맹점 매출한도는 무엇인가요?,crawl_bc-merchant_customer-center_faq_55000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,3
+crawl_bc-personal_customer-center_faq_404000,단기카드대출 수수료는 얼마나 되나요?,crawl_bc-personal_customer-center_faq_404000,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,3,True,3,True,4
+crawl_bc-merchant_customer-center_faq_72000,BC카드 가맹점이 되어 있습니다. 판매후 매출표 접수 없이 입금을 받고 싶은데 어떻게 해야 하나요?(EDC가,crawl_bc-merchant_customer-center_faq_72000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,1,False,3
+crawl_bc-personal_customer-center_faq_299000,신한(구 조흥)은행 취소 대금이 입금이 안되었어요. 어떻게 된 건가요,crawl_bc-personal_customer-center_faq_299000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,2,False,7
+crawl_bc-personal_customer-center_faq_433000,골프라운지 이용하려고 하는데 어떻게 해야하나요,crawl_bc-personal_customer-center_faq_433000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,8
+crawl_bc-personal_customer-center_faq_203000,공항라운지 카드(Priority Pass Card)로 국내공항에서도 사용 가능한가요?,crawl_bc-personal_customer-center_faq_203000,5,0.38685280723454163,3,0.5,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,8,True,8,True,9
+crawl_bc-personal_customer-center_faq_362000,KT1's포인트 사용은 어떻게 하면 되나요?,crawl_bc-personal_customer-center_faq_362000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,5
+crawl_bc-personal_customer-center_faq_195000,VIP카드 회원을 위한 여행관련 서비스는 무엇인가요?,crawl_bc-personal_customer-center_faq_195000,,0.0,10,0.2890648263178879,10,0.2890648263178879,9,0.3010299956639812,10,0.2890648263178879,9,0.3010299956639812,balanced,9,0.3010299956639812,balanced,True,0,True,0,True,7
+crawl_bc-personal_customer-center_faq_122000,이마트 포인트카드로 인터넷 결제가 가능한가요?,crawl_bc-personal_customer-center_faq_122000,1,1.0,3,0.5,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,True,3
+crawl_bc-personal_customer-center_faq_102000,중국 온라인사이트에서도 비씨 유니온페이 카드 이용이 가능한가요?,crawl_bc-personal_customer-center_faq_102000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,True,6,True,7
+crawl_bc-personal_customer-center_faq_341000,기업포인트는 전화나 인터넷에서 사용신청이 불가한가요?,crawl_bc-personal_customer-center_faq_341000,,0.0,,0.0,,0.0,6,0.3562071871080222,7,0.3333333333333333,,0.0,balanced,,0.0,balanced,True,2,True,1,False,4
+crawl_bc-personal_customer-center_faq_431000,골프라운지 멤버십이 뭔가요?,crawl_bc-personal_customer-center_faq_431000,9,0.3010299956639812,1,1.0,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,7,True,8,False,8
+crawl_bc-personal_customer-center_faq_238000,가족카드를 발급 받고 싶습니다. 어떻게 하면 되나요?,crawl_bc-personal_customer-center_faq_238000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,False,10
+crawl_bc-personal_customer-center_faq_161000,"기프트카드 잔액확인, 거래내역확인, 충전가능 횟수 등(관련조회) 확인은 어떻게 하나요?",crawl_bc-personal_customer-center_faq_161000,,0.0,2,0.6309297535714575,3,0.5,1,1.0,1,1.0,3,0.5,balanced,2,0.6309297535714575,semantic-heavy,True,2,True,1,True,5
+crawl_bc-personal_customer-center_faq_487000,비씨카드 홈페이지 비밀번호를 변경하려고 하는데 어떻게 하면 되나요?,crawl_bc-personal_customer-center_faq_487000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,3,False,7
+crawl_bc-personal_customer-center_faq_2000,모바일카드 ISP 등록은 어떻게 하나요?,crawl_bc-personal_customer-center_faq_2000,,0.0,,0.0,,0.0,,0.0,,0.0,8,0.31546487678572877,balanced,8,0.31546487678572877,balanced,True,0,True,0,True,4
+crawl_bc-merchant_customer-center_faq_15000,대출거래 내역은 어디서 확인 가능하나요?,crawl_bc-merchant_customer-center_faq_15000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,1,False,5
+crawl_bc-personal_customer-center_faq_280000,해외에서 할부로 구매했는데 일시불로 청구 되었습니다. 할부로 결제를 할 수 있나요?,crawl_bc-personal_customer-center_faq_280000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,1,False,8
+crawl_bc-personal_customer-center_faq_167000,기프트카드 남은 잔액을 환불 받고 싶습니다. 어떻게 하면 되나요?,crawl_bc-personal_customer-center_faq_167000,5,0.38685280723454163,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,5
+crawl_bc-merchant_customer-center_faq_80000,"BC카드에 가맹이 안되어 있는 경우, BC카드 승인은 어떻게 하며 입금은 어디로 되나요?",crawl_bc-merchant_customer-center_faq_80000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,3,False,3
+crawl_bc-personal_customer-center_faq_86000,스마트폰 OS업그레이드는 모바일카드에 영향이 없나요?,crawl_bc-personal_customer-center_faq_86000,,0.0,9,0.3010299956639812,9,0.3010299956639812,,0.0,,0.0,,0.0,balanced,9,0.3010299956639812,semantic-heavy,True,3,True,3,True,4
+crawl_bc-personal_customer-center_faq_98000,체크카드는 어떤 카드 인가요?,crawl_bc-personal_customer-center_faq_98000,,0.0,5,0.38685280723454163,5,0.38685280723454163,2,0.6309297535714575,2,0.6309297535714575,6,0.3562071871080222,balanced,5,0.38685280723454163,semantic-heavy,True,2,True,0,False,4
+crawl_bc-personal_customer-center_faq_290000,카드 이용한도 증액을 더 이상 하고 싶지 않습니다. 어떻게 하면 되나요?,crawl_bc-personal_customer-center_faq_290000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,1,True,1,True,2
+crawl_bc-personal_customer-center_faq_435000,신용평점은 올랐는데 신용등급에는 변화가 없습니다. 그 이유는 무엇인가요?,crawl_bc-personal_customer-center_faq_435000,7,0.3333333333333333,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,3
+crawl_bc-personal_customer-center_faq_380000,BC Town에서 관심가맹점 등록을 했는데 어디서 확인하나요?,crawl_bc-personal_customer-center_faq_380000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,1,False,5
+crawl_bc-personal_customer-center_faq_338000,"본인카드를 분실 신고 하였는데, 가족 카드는 사용이 가능 한가요?",crawl_bc-personal_customer-center_faq_338000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,2
+crawl_bc-personal_customer-center_faq_441000,신용평점은 올랐는데 신용등급에는 변화가 없습니다. 그 이유는 무엇인가요?,crawl_bc-personal_customer-center_faq_441000,8,0.31546487678572877,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,False,3
+crawl_bc-personal_customer-center_faq_479000,사업자번호 하나에 가맹점번호가 여러 개인데 파트너스(가맹점) 홈페이지 가입은 어떻게 하나요?,crawl_bc-personal_customer-center_faq_479000,3,0.5,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,3,False,4,False,7
+crawl_bc-personal_customer-center_faq_42000,티머니 선불 기능이 있는 체크카드를 분실했습니다. 교통카드 잔액 환불이 가능한가요?,crawl_bc-personal_customer-center_faq_42000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,4
+crawl_bc-personal_customer-center_faq_336000,분실신고 했던 카드를 찾았는데 이 카드를 다시 사용 할 수 있나요?,crawl_bc-personal_customer-center_faq_336000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,1,False,1,True,3
+crawl_bc-personal_customer-center_faq_298000,"월3회 매출표를 접수하고 대금을 지급받고 있는데, 고객이 청구가 늦어지고 있다고 합니다. 고객이 신속히 청구서를 수령 받으려면 어떤 조치가 필요합니까?",crawl_bc-personal_customer-center_faq_298000,,0.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,3,False,2,False,6
+crawl_bc-personal_customer-center_faq_151000,기프트카드 택시에서 사용이 가능한가요?,crawl_bc-personal_customer-center_faq_151000,,0.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,0,True,1,True,3
+crawl_bc-personal_customer-center_faq_90000,모바일카드 해지한 당일에 바로 다시 등록할 수 있나요?,crawl_bc-personal_customer-center_faq_90000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,4
+crawl_bc-personal_customer-center_faq_225000,일반카드를 골드로 교체 발급 받을 수 있나요?,crawl_bc-personal_customer-center_faq_225000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,4
+crawl_bc-personal_customer-center_faq_328000,카드를 분실했었는데 사용하지 않은 대금이 청구되었습니다. 어떻게 해야 하나요?,crawl_bc-personal_customer-center_faq_328000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,4
+crawl_bc-personal_customer-center_faq_247000,비밀번호 사후등록이 뭔가요?,crawl_bc-personal_customer-center_faq_247000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,3
+crawl_bc-personal_customer-center_faq_107000,가족카드는 본인카드 이용실적에 합산되나요?,crawl_bc-personal_customer-center_faq_107000,1,1.0,4,0.43067655807339306,3,0.5,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,balanced,1,1.0,keyword-heavy,True,1,True,1,False,5
+crawl_bc-personal_customer-center_faq_207000,선불교통카드를 이용하고 있는데 후불교통카드로 발급 받으려고 합니다. 선불교통카드에 충전된 금액 환불 방법이 어떻게 되나요?,crawl_bc-personal_customer-center_faq_207000,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,3,True,3,False,6
+crawl_bc-merchant_customer-center_faq_12000,대출실행 완료 후 대출취소 가능한가요?,crawl_bc-merchant_customer-center_faq_12000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,7
+crawl_bc-personal_customer-center_faq_173000,비씨카드를 소지하고 있는 고객(비씨카드 미 소지자 인터넷 등록) 이 아닌 경우 기프트카드 본인인증은 어떻게 하나요?,crawl_bc-personal_customer-center_faq_173000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,7
+crawl_bc-personal_customer-center_faq_410000,"플래티늄카드의 ""구매품 보상""이 무엇인가요?",crawl_bc-personal_customer-center_faq_410000,,0.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,8
+crawl_bc-personal_customer-center_faq_445000,"명의보호를 차단으로 설정 중이었는데, 급하게 실명인증 할 일이 생겼습니다. 즉시 해제가 가능한가요?",crawl_bc-personal_customer-center_faq_445000,,0.0,2,0.6309297535714575,4,0.43067655807339306,2,0.6309297535714575,5,0.38685280723454163,7,0.3333333333333333,balanced,2,0.6309297535714575,semantic-heavy,True,1,True,2,False,9
+crawl_bc-personal_customer-center_faq_131000,전통시장 온누리상품권도 소득공제 가능한가요?,crawl_bc-personal_customer-center_faq_131000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,5,False,6
+crawl_bc-personal_customer-center_faq_466000,"개인정보 유효기간제 준수를 위해 사업자는 매일 유효기간이 경과한 이용자의 개인정보를 파기해야 하는지, 아니면 주기적으로 해도 되는지요?",crawl_bc-personal_customer-center_faq_466000,10,0.2890648263178879,1,1.0,3,0.5,1,1.0,1,1.0,4,0.43067655807339306,balanced,1,1.0,semantic-heavy,True,8,True,6,False,6
+crawl_bc-personal_customer-center_faq_407000,인터넷을 통해 단기카드이용대출 서비스 제한을 신청했었는데 카드를 재발급 받은 경우 기존 서비스가 연결되나요?,crawl_bc-personal_customer-center_faq_407000,1,1.0,1,1.0,1,1.0,3,0.5,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,False,2,True,2,True,5
+crawl_bc-personal_customer-center_faq_467000,"개인정보 유효기간 관련 규정은 시행일이 2014.11.29.이 아니라 2015.8.18.로 되어 있는데, 그 이유는 무엇이며, 실제로 이용자의 개인정보를 파기 등의 조치를 취해야 하는 시점이 언제인가요?",crawl_bc-personal_customer-center_faq_467000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,8
+crawl_bc-personal_customer-center_faq_67000,모바일카드의 CVC값은 어떻게 확인하나요?,crawl_bc-personal_customer-center_faq_67000,7,0.3333333333333333,3,0.5,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,True,8
+crawl_bc-personal_customer-center_faq_128000,현재 카드형 상품권을 보유중인데 지류상품권으로 바꿔서 이용할순 없나요?,crawl_bc-personal_customer-center_faq_128000,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,6,True,4,False,4
+base_bcai_014787_000,신용점수를 올리기 위해 주기적인 신용카드 사용이 중요한가요?,base_bcai_014787_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,1,False,4
+base_bcai_030877_000,CPI 상승률이 개인 자산에 미치는 영향은 무엇인가요?,base_bcai_030877_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,7
+base_bcai_004364_000,비씨 바로카드 고객센터 전화번호가 궁금합니다.,base_bcai_004364_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_025382_000,R의 공포가 카드사의 신용 한도 운영에 어떤 영향을 미치나요?,base_bcai_025382_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,True,4,False,8
+base_bcai_014760_000,신용점수가 낮아도 정부 지원 대출을 받을 수 있나요?,base_bcai_014760_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,5,False,7
+base_bcai_014168_000,동일 보험사에서 사고 후 보험금을 받기 위해 필요한 서류는 무엇인가요?,base_bcai_014168_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,8
+base_bcai_013809_000,구조조정이 주식 투자에 어떤 영향을 미칠 수 있나요?,base_bcai_013809_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,4,True,4,True,6
+base_bcai_014225_000,백내장 수술 시 보험금 지급 과정은 어떻게 되나요?,base_bcai_014225_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_016983_000,워라벨이 좋은 직장을 선택하는 기준은 무엇인가요?,base_bcai_016983_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,8
+base_bcai_007521_000,비씨카드가 머신러닝을 사용하여 탐지하는 부정 거래의 종류는 무엇인가요?,base_bcai_007521_000,2,0.6309297535714575,3,0.5,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,9,True,8,True,7
+base_bcai_027628_000,PSD3가 지급결제시스템에 미칠 수 있는 긍정적인 영향은 무엇인가요?,base_bcai_027628_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,8
+base_bcai_015237_000,IBK 데일리위드 카드의 신청 방법은 무엇인가요?,base_bcai_015237_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,False,5
+base_bcai_026461_000,지급결제 리스크 관리에 필요한 사전 평가 요소는 무엇인가요?,base_bcai_026461_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,7
+base_bcai_024561_000,펌뱅킹에서 자금 관리의 자동화를 어떻게 최적화할 수 있나요?,base_bcai_024561_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,6,False,8
+base_bcai_013032_000,신한은행의 무이자 할부 서비스는 무엇인가요?,base_bcai_013032_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,2,False,3
+base_bcai_019213_000,VAN사도 PG 사업을 할 수 있나요?,base_bcai_019213_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,7,False,7
+base_bcai_028039_000,한은금융망과 같은 거액결제시스템에서 실시간 총액결제 방식이 중요한 이유는 무엇인가요?,base_bcai_028039_000,,0.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,4,False,6,True,8
+base_bcai_019356_000,금융회사는 보안성심의 체크리스트를 어떻게 활용하나요?,base_bcai_019356_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,5
+base_bcai_029185_000,공모를 선택하면 어떤 장점과 단점이 있나요?,base_bcai_029185_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,6
+base_bcai_012553_000,국민행복카드로 통신요금 자동납부 시 혜택이 있나요?,base_bcai_012553_000,3,0.5,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,5,True,4,True,6
+base_bcai_030560_000,MMF에 투자하면 언제든지 돈을 인출할 수 있나요?,base_bcai_030560_000,8,0.31546487678572877,3,0.5,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,4,0.43067655807339306,balanced,3,0.5,semantic-heavy,True,5,True,5,False,7
+base_bcai_021958_000,캠핑 시 화로대 사용의 장점은 무엇인가요?,base_bcai_021958_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,4
+base_bcai_003749_000,"카드론 월 이자율이 1.1%일 때, 900만원을 1년 동안 사용하면 이자는 얼마인가요?",base_bcai_003749_000,,0.0,,0.0,,0.0,1,1.0,1,1.0,,0.0,balanced,,0.0,balanced,True,1,True,2,True,0
+base_bcai_022725_000,올림푸스 백화점은 언제 문을 닫았나요?,base_bcai_022725_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,6
+base_bcai_015611_000,기준금리가 하락하면 예금자에게는 어떤 영향이 있나요?,base_bcai_015611_000,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,False,3,True,6
+base_bcai_010049_000,리스 계약 시 잔존가치는 무엇인가요?,base_bcai_010049_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,7
+base_bcai_026183_000,한국을 방문하는 외국인 관광객들의 주요 국적은 어디인가요?,base_bcai_026183_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,5,False,7
+base_bcai_029906_000,"수익률 곡선이 실물 자산, 특히 원자재 가격에 미치는 영향은 무엇인가요?",base_bcai_029906_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,5
+base_bcai_003003_000,요즘 인기 있는 웹드라마가 무엇인가요?,base_bcai_003003_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,7
+base_bcai_022329_000,유럽에서 가장 많은 영화제가 열리는 도시는 어디인가요?,base_bcai_022329_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,8,False,8
+base_bcai_030672_000,MMF와 정기예금의 수익률 비교는 어떻게 하나요?,base_bcai_030672_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,5,False,7
+base_bcai_028743_000,부가가치세란 무엇인가요?,base_bcai_028743_000,,0.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,1,True,1,True,5
+base_bcai_004155_000,어디로든 그린카드를 사용하는 것이 어떤 혜택을 가져다주나요?,base_bcai_004155_000,5,0.38685280723454163,,0.0,,0.0,6,0.3562071871080222,8,0.31546487678572877,,0.0,balanced,10,0.2890648263178879,keyword-heavy,True,1,True,7,True,3
+base_bcai_005318_000,해외에서 카드 분실 신고를 할 수 있는 방법이 있나요?,base_bcai_005318_000,4,0.43067655807339306,2,0.6309297535714575,3,0.5,2,0.6309297535714575,2,0.6309297535714575,3,0.5,balanced,2,0.6309297535714575,semantic-heavy,True,3,True,3,True,7
+base_bcai_022282_000,유럽에서 인구 고령화가 심각한 국가는 어디인가요?,base_bcai_022282_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,7
+base_bcai_011914_000,고금리 적금 상품을 찾는 방법은 무엇인가요?,base_bcai_011914_000,7,0.3333333333333333,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,5
+base_bcai_012562_000,iM뱅크 그린카드 v2의 해외 이용 수수료는 얼마인가요?,base_bcai_012562_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,6,False,6
+base_bcai_013312_000,아멕스 플래티넘 카드로 공항 리무진 서비스를 이용할 수 있나요?,base_bcai_013312_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,6,False,6
+base_bcai_006726_000,금융·외환위기를 조기에 경보할 수 있는 방법은 무엇인가요?,base_bcai_006726_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,5
+base_bcai_018080_000,치아 보험료는 어떤 방식으로 계산되나요?,base_bcai_018080_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,2,False,6
+base_bcai_019061_000,한국에서도 DMS를 사용할 수 있나요?,base_bcai_019061_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,7,False,9
+base_bcai_023810_000,글로벌 경기침체가 미국 경제에 미치는 영향은 무엇인가요?,base_bcai_023810_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_018956_000,온라인에서 신용카드 결제를 취소하려면 어떻게 하나요?,base_bcai_018956_000,,0.0,,0.0,,0.0,1,1.0,2,0.6309297535714575,,0.0,balanced,,0.0,balanced,True,1,True,0,True,4
+base_bcai_026317_000,지급결제에서 사용되는 암호화 방식은 어떤 종류가 있나요?,base_bcai_026317_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,False,4,True,4,True,6
+base_bcai_012216_000,미국 주식 시장에서 주식 분할이란 무엇인가요?,base_bcai_012216_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,0,True,1,True,5
+base_bcai_014932_000,수협은행의 금융기관 코드는 무엇인가요?,base_bcai_014932_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,5
+base_bcai_015222_000,BC카드 중에서 포인트 적립이 좋은 카드는 무엇인가요?,base_bcai_015222_000,9,0.3010299956639812,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,4
+base_bcai_026967_000,B2B 결제시스템에서 대규모 거래의 결제 방식은 무엇이 있나요?,base_bcai_026967_000,,0.0,,0.0,,0.0,4,0.43067655807339306,4,0.43067655807339306,,0.0,balanced,,0.0,balanced,True,3,False,3,True,5
+base_bcai_003896_000,해외쇼핑몰에서의 문제 해결이 어려운 이유는 무엇인가요?,base_bcai_003896_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,6
+base_bcai_007508_000,머신러닝을 사용한 비씨카드의 신용 승인 시스템이 신용 등급을 예측할 때 어떤 알고리즘을 사용하나요?,base_bcai_007508_000,3,0.5,3,0.5,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,3,0.5,balanced,3,0.5,balanced,False,8,False,7,False,9
+base_bcai_023795_000,1980년대 초반 미국 경제는 왜 이중 경기침체(double-dip recession)를 경험했나요?,base_bcai_023795_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,8
+base_bcai_000157_000,BC카드의 지급결제 프로세싱 사업에서의 성과는 어떤가요?,base_bcai_000157_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,7,True,7,False,7
+base_bcai_013638_000,옵션 거래에서 헤지란 무엇인가요?,base_bcai_013638_000,10,0.2890648263178879,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,2,True,2,True,6
+base_bcai_023701_000,쇼핑몰의 정산 주기가 길면 어떤 문제가 발생할 수 있나요?,base_bcai_023701_000,3,0.5,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,5,True,4,True,7
+base_bcai_007105_000,신용카드사의 실질적 진입장벽은 무엇인가요?,base_bcai_007105_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,4
+base_bcai_016643_000,20대 커플들이 주로 찾는 공방은 어디인가요?,base_bcai_016643_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,4
+base_bcai_013716_000,마진 거래에서 어떤 주식을 선택해야 하나요?,base_bcai_013716_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,5
+base_bcai_008789_000,롯데카드는 어떤 방식으로 카드 대금을 결제하나요?,base_bcai_008789_000,3,0.5,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,4,False,3,False,6
+base_bcai_009343_000,SC은행의 경영 개선 조치는 어떤 것이 있나요?,base_bcai_009343_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,5
+base_bcai_018221_000,"맞벌이 부부가 매달 고정적으로 발생하는 비용은 어떤 것이 있으며, 구체적인 비용은 얼마나 될까요?",base_bcai_018221_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,False,6
+base_bcai_020080_000,라인 경영권 탈취 시도가 글로벌 IT 업계에 어떤 메시지를 줄 수 있나요?,base_bcai_020080_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,False,8,True,8,True,7
+base_bcai_025851_000,자산 재분배 리밸런싱이란 무엇인가요?,base_bcai_025851_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,8
+base_bcai_016684_000,30대 연령대가 가장 많이 방문하는 국내 핫플레이스는 어디인가요?,base_bcai_016684_000,2,0.6309297535714575,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,6,True,5,True,8
+base_bcai_022013_000,전라남도 순천의 순천만습지는 어떤 곳인가요?,base_bcai_022013_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,3,False,3
+base_bcai_025179_000,"대출 건수가 많을 때, 대출을 어떻게 정리해야 하나요?",base_bcai_025179_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,False,4,True,4,True,5
+base_bcai_017904_000,건강보험 혜택으로 받을 수 있는 소아 건강 검진은 무엇인가요?,base_bcai_017904_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,9
+base_bcai_008389_000,BPR이 낮을 때의 투자 전략은 무엇인가요?,base_bcai_008389_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,1,False,2,False,7
+base_bcai_015954_000,대환대출을 통해 월 상환금을 줄일 수 있나요?,base_bcai_015954_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,6,False,7
+base_bcai_015470_000,블랙핑크 신용카드를 사용하면 어떤 미용실에서 혜택을 받을 수 있나요?,base_bcai_015470_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,8
+base_bcai_002596_000,BC카드의 4월 레저와 펫 및 문화 분야에서의 매출이 어떻게 변했나요?,base_bcai_002596_000,3,0.5,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,3,False,3,True,6
+base_bcai_008328_000,ISA 계좌의 의무 가입 기간은 어떻게 되나요?,base_bcai_008328_000,2,0.6309297535714575,3,0.5,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,4,False,3,True,8
+base_bcai_001772_000,SK OIL＆LPG카드에서 제공하는 생활할인서비스의 조건은 무엇인가요?,base_bcai_001772_000,,0.0,,0.0,,0.0,3,0.5,4,0.43067655807339306,,0.0,balanced,7,0.3333333333333333,keyword-heavy,True,1,True,5,False,2
+base_bcai_005396_000,정부 지원 대출을 받기 위한 자격 요건은 무엇인가요?,base_bcai_005396_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,6
+base_bcai_007763_000,AICC의 음성 인식 정확도는 어떻게 개선할 수 있나요?,base_bcai_007763_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,7
+base_bcai_004868_000,페이북 머니 체크카드로 어떤 가맹점에서 혜택을 받을 수 있나요?,base_bcai_004868_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,7,True,5,False,6
+base_bcai_021852_000,해외직구 시 은행 송금을 이용할 수 있나요?,base_bcai_021852_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,2,False,3
+base_bcai_018980_000,"체크카드 결제를 취소했는데, 환불이 바로 되지 않았습니다. 이유가 무엇인가요?",base_bcai_018980_000,6,0.3562071871080222,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,6
+base_bcai_031025_000,커버드콜 ETF는 어떤 시장 상황에서 유리한가요?,base_bcai_031025_000,,0.0,3,0.5,3,0.5,3,0.5,3,0.5,5,0.38685280723454163,balanced,3,0.5,semantic-heavy,True,4,True,3,False,7
+base_bcai_016060_000,ISA 계좌의 투자 수익은 어떻게 관리하나요?,base_bcai_016060_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_017605_000,현대카드 더 핑크의 쇼핑 혜택은 무엇인가요?,base_bcai_017605_000,,0.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,6
+base_bcai_018820_000,마이신한포인트로 지방세를 납부할 수 있나요?,base_bcai_018820_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,6,False,7
+base_bcai_013523_000,FIDO를 지원하는 서비스를 어떻게 찾을 수 있나요?,base_bcai_013523_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,6,False,9
+base_bcai_024852_000,벤처 펀드의 투자 결정은 어떻게 이루어지나요?,base_bcai_024852_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,3,False,7
+base_bcai_012360_000,창업을 시작하려면 어떤 절차를 밟아야 하나요?,base_bcai_012360_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,1,False,7
+base_bcai_011629_000,삼성페이를 사용하여 QR코드 결제가 가능한가요?,base_bcai_011629_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,2
+base_bcai_006232_000,신용카드 가맹점 수수료율 관련 법규는 어떤 것이 있나요?,base_bcai_006232_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,5,False,5
+base_bcai_029560_000,모기지 백트 증권의 가격은 어떻게 평가되나요?,base_bcai_029560_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,5
+base_bcai_030932_000,스트림플레이션이 OTT 서비스의 기술 발전에 어떤 영향을 줄까요?,base_bcai_030932_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,True,6,False,6
+base_bcai_013840_000,유상증자나 무상증자가 발생하면 주식 시장에 미치는 영향은 무엇인가요?,base_bcai_013840_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,5,False,6
+base_bcai_004031_000,신용카드와 체크카드의 차이점에 대해서 설명해주세요.,base_bcai_004031_000,,0.0,7,0.3333333333333333,8,0.31546487678572877,4,0.43067655807339306,7,0.3333333333333333,,0.0,balanced,7,0.3333333333333333,semantic-heavy,False,4,True,4,True,8
+base_bcai_004392_000,농협카드(채움/비씨)는 어떤 카드인가요?,base_bcai_004392_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,4,True,4,True,8
+base_bcai_021360_000,취업 후 상환 학자금대출은 어떤 조건에서 받을 수 있나요?,base_bcai_021360_000,,0.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,6,True,5,True,8
+base_bcai_023498_000,채권 투자와 주식 투자의 차이점은 무엇인가요?,base_bcai_023498_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,7
+base_bcai_011801_000,정기예금을 중도에 해지하면 어떤 불이익이 있나요?,base_bcai_011801_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,7
+base_bcai_017686_000,신한카드 메리어트 본보이 더 베스트 카드로 공항 발렛 서비스를 받을 수 있나요?,base_bcai_017686_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,9
+base_bcai_000522_000,"BC 바로 에어 플러스 아시아나 신용카드로 연간 3,000만원을 사용하면 총 몇 마일리지를 적립할 수 있나요?",base_bcai_000522_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,6,False,5,True,8
+base_bcai_001949_000,중국은련 카드는 어느 곳에서 신청할 수 있죠?,base_bcai_001949_000,3,0.5,3,0.5,3,0.5,3,0.5,3,0.5,3,0.5,balanced,3,0.5,balanced,False,4,False,5,False,8
+base_bcai_012660_000,로스트아크 카드로 통신비를 자동이체하면 혜택이 있나요?,base_bcai_012660_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,4
+base_bcai_002233_000,kt DC PLUS 카드로 SK주유소에서 할인 혜택을 받을 수 없는 경우는 무엇인가요?,base_bcai_002233_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,7,True,6,False,8
+base_bcai_001576_000,IBK기업은행 K패스 카드로 주유 할인을 받을 수 있는 대상은 어떤 사람들인가요?,base_bcai_001576_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,1,False,7
+base_bcai_026232_000,현재 경제 상황에서 가장 큰 문제는 무엇인가요?,base_bcai_026232_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,6
+base_bcai_012589_000,로스트아크 카드의 로열 크리스탈 할인 혜택은 어떻게 적용되나요?,base_bcai_012589_000,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,3,0.5,balanced,2,0.6309297535714575,semantic-heavy,True,9,True,9,True,9
+base_bcai_003441_000,BC카드가 선택한 해외 시장 진출 전략은 어떻게 되나요?,base_bcai_003441_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,5
+base_bcai_012638_000,그린카드의 포인트 적립 한도는 어떻게 되나요?,base_bcai_012638_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,3,True,3,False,4
+base_bcai_021891_000,사이버먼데이(Cyber Monday)는 언제 시작되나요?,base_bcai_021891_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,10,False,8,False,8
+base_bcai_010087_000,온라인 거래에서 안전하게 결제하려면 어떻게 해야 하나요?,base_bcai_010087_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,6
+base_bcai_020575_000,KEB하나은행의 주요 금융 상품은 무엇인가요?,base_bcai_020575_000,7,0.3333333333333333,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,7
+base_bcai_001012_000,BNK경남 SK OIL＆LPG카드의 생활할인서비스 제공 조건은 무엇인가요?,base_bcai_001012_000,,0.0,,0.0,,0.0,8,0.31546487678572877,7,0.3333333333333333,9,0.3010299956639812,balanced,6,0.3562071871080222,keyword-heavy,False,3,False,3,False,4
+base_bcai_019519_000,카드매출 누락은 어떻게 조회하나요?,base_bcai_019519_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,4
+base_bcai_010373_000,적금을 활용하면 어떤 장점이 있나요?,base_bcai_010373_000,7,0.3333333333333333,5,0.38685280723454163,3,0.5,5,0.38685280723454163,4,0.43067655807339306,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,3,True,3,False,8
+base_bcai_030711_000,신용카드 한도를 초과하여 결제할 수 있나요?,base_bcai_030711_000,,0.0,5,0.38685280723454163,6,0.3562071871080222,2,0.6309297535714575,2,0.6309297535714575,5,0.38685280723454163,balanced,5,0.38685280723454163,balanced,True,6,True,4,False,7
+base_bcai_018284_000,신용카드의 한도를 어떻게 관리하면 좋을까요?,base_bcai_018284_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,False,7
+base_bcai_023717_000,카드사가 티메프 사태에서 큰 책임이 없다고 보는 이유는 무엇인가요?,base_bcai_023717_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,3,True,9
+base_bcai_029170_000,포워드 가이던스와 신뢰도의 관계는 무엇인가요?,base_bcai_029170_000,7,0.3333333333333333,3,0.5,3,0.5,6,0.3562071871080222,5,0.38685280723454163,3,0.5,balanced,3,0.5,balanced,False,4,True,3,True,6
+base_bcai_027727_000,본인계좌 일괄지급정지서비스 신청 후 해제할 때 별도 수수료가 발생하나요?,base_bcai_027727_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,7,False,8
+base_bcai_030855_000,한국에서 소비자물가지수의 구성 항목은 어떻게 설정되나요?,base_bcai_030855_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,5,False,6
+base_bcai_029718_000,이자율 스왑 계약을 체결한 후 금리가 급격히 변동하면 어떻게 되나요?,base_bcai_029718_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,6,False,5
+base_bcai_001817_000,신세계 BC 바로 리워드 플러스 카드를 통해 신세계 백화점과 제휴된 다양한 혜택 및 서비스가 있나요?,base_bcai_001817_000,7,0.3333333333333333,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,6,False,7,False,6
+base_bcai_023631_000,PG사가 쇼핑몰의 선정산 대출에 관여하는 이유는 무엇인가요?,base_bcai_023631_000,5,0.38685280723454163,6,0.3562071871080222,6,0.3562071871080222,4,0.43067655807339306,3,0.5,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,True,6,True,5,True,7
+base_bcai_020583_000,SC제일은행의 글로벌 전략은 무엇인가요?,base_bcai_020583_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,3,False,7
+base_bcai_012544_000,국민행복카드로 주유소에서 할인을 받을 수 있나요?,base_bcai_012544_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,5
+base_bcai_025235_000,고향사랑기부금은 어떻게 기부할 수 있나요?,base_bcai_025235_000,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,7,False,4,True,6
+base_bcai_030333_000,예대율이 낮은 은행은 고객에게 어떤 혜택을 줄 수 있나요?,base_bcai_030333_000,,0.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,4,True,4,False,6
+base_bcai_020270_000,부동산 투자에서 시장 분석의 중요성은 무엇인가요?,base_bcai_020270_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,6
+base_bcai_013105_000,삼성카드의 모바일 카드는 어떻게 사용할 수 있나요?,base_bcai_013105_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,6
+base_bcai_029058_000,리세션 동안 왜 고용 시장이 불안정해지나요?,base_bcai_029058_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,4
+base_bcai_018572_000,현대 한국 문학에서 주목받는 작가들은 누구인가요?,base_bcai_018572_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,8
+base_bcai_017174_000,한미반도체가 삼성전자와 거래하지 않는 이유는 무엇인가요?,base_bcai_017174_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,6
+base_bcai_031163_000,원자재 선물 시장에서 시간가치(Time Value)란 무엇인가요?,base_bcai_031163_000,5,0.38685280723454163,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,5,True,3,False,6
+base_bcai_005268_000,플래티늄카드의 카드 발급이 중단된 은행이 있나요?,base_bcai_005268_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,5
+base_bcai_023721_000,티메프 사태에서 PG사는 어떤 주장을 하고 있나요?,base_bcai_023721_000,8,0.31546487678572877,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,6,True,5,True,8
+base_bcai_028923_000,한국에서 워라밸 트렌드가 어떻게 발전하고 있나요?,base_bcai_028923_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,7
+base_bcai_030139_000,시간가치는 콜 옵션과 풋 옵션에서 같은 방식으로 계산되나요?,base_bcai_030139_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,6
+base_bcai_008741_000,삼성카드는 어떤 방식으로 고객의 요구에 맞춘 서비스를 제공하나요?,base_bcai_008741_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,3,False,5
+base_bcai_010967_000,케이뱅크는 어떤 방식으로 고객 맞춤형 금융 서비스를 제공하나요?,base_bcai_010967_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,7,False,8
+base_bcai_020393_000,2024년에 소비자들이 가장 많이 구입하는 스포츠 용품은 무엇인가요?,base_bcai_020393_000,,0.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,True,8
+base_bcai_006072_000,페이북 QR 결제 시 결제 알림을 받을 수 있나요?,base_bcai_006072_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,6
+base_bcai_029103_000,리세션 중 기업들이 직원 교육이나 훈련을 줄이는 이유는 무엇인가요?,base_bcai_029103_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,7
+base_bcai_020034_000,베트남의 산업 클러스터는 무엇인가요?,base_bcai_020034_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,7
+base_bcai_005904_000,페이북의 머니박스와 모으기 기능은 어떻게 다르나요?,base_bcai_005904_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,6,False,6
+base_bcai_024640_000,CD금리 ETF의 매매 타이밍을 잡는 방법은 무엇인가요?,base_bcai_024640_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,4,False,5
+base_bcai_000490_000,연회비 납부 시 추가 혜택이 있나요?,base_bcai_000490_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,4
+base_bcai_025222_000,대출 상환을 일찍 완료하면 신용점수에 긍정적인 영향을 미치나요?,base_bcai_025222_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,8
+base_bcai_027096_000,전자지로에서 납부할 수 있는 요금 중 신용카드 납부가 가능한 항목이 있나요?,base_bcai_027096_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,4
+base_bcai_022939_000,기준금리가 0.5%p 인하되면 8억원의 대기업 대출 금리는 어떻게 변하나요?,base_bcai_022939_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,6,False,6
+base_bcai_017771_000,KB국민카드의 SMS 서비스 이용 혜택은 무엇인가요?,base_bcai_017771_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,1,False,3
+base_bcai_011786_000,펀드의 운용 기간이란 무엇인가요?,base_bcai_011786_000,8,0.31546487678572877,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,8
+base_bcai_027812_000,사용자 경험을 최적화한 결제 시스템의 예로는 무엇이 있나요?,base_bcai_027812_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,7,False,9
+base_bcai_027585_000,미국의 CHIPS 시스템은 어떤 결제 시스템인가요?,base_bcai_027585_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,5
+base_bcai_011660_000,삼성페이로 결제할 때 혜택이나 할인이 있나요?,base_bcai_011660_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,6
+base_bcai_024501_000,펌뱅킹 서비스 이용 시 실시간 거래가 가능한가요?,base_bcai_024501_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,4,False,8
+base_bcai_018135_000,한국에서 가전제품을 구입하는 비용은 얼마나 드나요?,base_bcai_018135_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,3,False,3
+base_bcai_023643_000,선정산 대출에서 은행이 부과하는 추가 수수료는 무엇이 있나요?,base_bcai_023643_000,,0.0,,0.0,,0.0,2,0.6309297535714575,2,0.6309297535714575,,0.0,balanced,,0.0,balanced,True,0,True,0,True,1
+base_bcai_009639_000,화재보험의 가입 절차는 어떻게 되나요?,base_bcai_009639_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,False,5
+base_bcai_015784_000,변동금리 대출에서 추가 상환은 가능한가요?,base_bcai_015784_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,keyword-heavy,True,0,True,1,True,5
+base_bcai_016541_000,KBO 리그에서 가장 많은 연속 경기 안타를 기록한 선수는 누구인가요?,base_bcai_016541_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,10,False,10,False,10
+base_bcai_027930_000,출금이체 방식에서 사전 동의가 필요한 이유는 무엇인가요?,base_bcai_027930_000,5,0.38685280723454163,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,3,True,3,False,8
+base_bcai_006815_000,역사문화자원의 보존이 지역 경제에 어떤 영향을 미치나요?,base_bcai_006815_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,6,False,7
+base_bcai_029370_000,구조적 디플레이션이 지속되면 기업의 연구개발(R&D) 활동에 어떤 영향을 미치나요?,base_bcai_029370_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,4,True,5,True,6
+base_bcai_015736_000,CD 금리와 통화 정책의 관계는 무엇인가요?,base_bcai_015736_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,5
+base_bcai_021288_000,"무주택 기간 12년, 부양가족 수 6명, 청약통장 가입 기간 3년인 경우 청약가점은 얼마인가요?",base_bcai_021288_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,8,False,9
+base_bcai_028489_000,자산운용에서 말하는 펀드란 무엇인가요?,base_bcai_028489_000,,0.0,1,1.0,1,1.0,4,0.43067655807339306,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,0,True,0,True,3
+base_bcai_013122_000,삼성카드의 이벤트 참여 방법은 무엇인가요?,base_bcai_013122_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,7
+base_bcai_011901_000,비과세 종합저축이란 무엇인가요?,base_bcai_011901_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,2,False,5
+base_bcai_008192_000,대출을 받을 때 담보를 제공하면 어떤 이점이 있나요?,base_bcai_008192_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,3,False,8
+base_bcai_005264_000,플래티늄카드의 제주 렌터카 혜택은 무엇인가요?,base_bcai_005264_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,3,0.5,3,0.5,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,3,False,4,False,8
+base_bcai_029165_000,포워드 가이던스가 금융 시장의 예측 가능성을 높이는 이유는 무엇인가요?,base_bcai_029165_000,6,0.3562071871080222,1,1.0,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,5,True,5,False,6
+base_bcai_019989_000,베트남에 회사를 설립하려면 어떤 절차가 필요하나요?,base_bcai_019989_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,2,False,7
+base_bcai_002717_000,비씨카드를 해외에서 사용하면 추가 비용이 발생하나요?,base_bcai_002717_000,,0.0,8,0.31546487678572877,,0.0,,0.0,,0.0,,0.0,balanced,8,0.31546487678572877,semantic-heavy,True,0,True,1,False,5
+base_bcai_023251_000,"1년 동안 150,000원을 예금할 경우, 이자 소득세를 반영한 이자는 얼마나 되나요?",base_bcai_023251_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,3
+base_bcai_016832_000,60대의 주요 소비 트렌드는 무엇인가요?,base_bcai_016832_000,6,0.3562071871080222,1,1.0,1,1.0,3,0.5,3,0.5,1,1.0,balanced,1,1.0,balanced,True,4,True,5,True,7
+base_bcai_019121_000,카드 결제 시 승인 보류는 어떤 경우에 발생하나요?,base_bcai_019121_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,8
+base_bcai_014384_000,신용카드를 여러 개 사용하면 신용등급에 어떤 영향을 미치나요?,base_bcai_014384_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,3,False,4,False,7
+base_bcai_002323_000,IBK기업은행 K패스 카드의 연회비 환급 조건은 어떻게 되나요?,base_bcai_002323_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,4,True,5,False,8
+base_bcai_019399_000,체크카드의 자정 이용 제한이 금융 보안에 어떻게 기여하나요?,base_bcai_019399_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,2,False,2
+base_bcai_004706_000,체크카드 환불 시 승인취소된 경우 돈이 들어오지 않나요?,base_bcai_004706_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,3,True,2,False,5
+base_bcai_018359_000,현금서비스와 일시불/할부의 신용 공여 기간이 다른 이유는 무엇인가요?,base_bcai_018359_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,3,False,3
+base_bcai_000480_000,에어 플러스 아시아나 카드의 공항 라운지 무료 이용 혜택은 어떤 방식으로 제공되나요?,base_bcai_000480_000,7,0.3333333333333333,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,5,True,5
+base_bcai_028399_000,옵션의 내재가치(Intrinsic Value)와 시간가치(Time Value)란 무엇인가요?,base_bcai_028399_000,,0.0,5,0.38685280723454163,6,0.3562071871080222,2,0.6309297535714575,2,0.6309297535714575,6,0.3562071871080222,balanced,5,0.38685280723454163,keyword-heavy,False,3,False,3,False,6
+base_bcai_022276_000,유럽에서 물가 상승률이 가장 낮은 국가는 어디인가요?,base_bcai_022276_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,6
+base_bcai_006721_000,대기업의 재무건전성을 강화하기 위한 방법은 무엇인가요?,base_bcai_006721_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,6
+base_bcai_018019_000,특약의 갱신 조건은 무엇인가요?,base_bcai_018019_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,5
+base_bcai_013596_000,P2P 대출 플랫폼의 신뢰성은 어떻게 판단할 수 있나요?,base_bcai_013596_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,6,False,5
+base_bcai_002841_000,kt DC PLUS 카드의 월 통합 할인 한도는 어떻게 되나요?,base_bcai_002841_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,6,True,4,False,7
+base_bcai_001384_000,BC바로 에어플러스 아시아나 카드를 이용해서 해외에서 결제할 때 수수료가 어떻게 부과되는지 궁금하신가요?,base_bcai_001384_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,3,True,7
+base_bcai_023744_000,2차 PG가 필요한 이유는 무엇인가요?,base_bcai_023744_000,,0.0,5,0.38685280723454163,6,0.3562071871080222,2,0.6309297535714575,2,0.6309297535714575,6,0.3562071871080222,balanced,5,0.38685280723454163,semantic-heavy,True,1,True,2,False,8
+base_bcai_006559_000,결혼 이민자의 배우자 통장 개설을 위한 서류는 무엇인가요?,base_bcai_006559_000,1,1.0,2,0.6309297535714575,1,1.0,3,0.5,3,0.5,1,1.0,balanced,1,1.0,balanced,True,4,True,4,True,8
+base_bcai_025039_000,외국환업무 취급기관에서 제공하는 외환 리스크 관리 전략은 무엇인가요?,base_bcai_025039_000,9,0.3010299956639812,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,4,True,3,False,7
+base_bcai_020838_000,미국 주식에서 발생하는 배당소득세는 어떻게 되나요?,base_bcai_020838_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,5,True,4,True,8
+base_bcai_002008_000,BC 온누리몰 오픈 이벤트에 대한 정보 좀 알 수 있을까요?,base_bcai_002008_000,5,0.38685280723454163,4,0.43067655807339306,4,0.43067655807339306,3,0.5,4,0.43067655807339306,4,0.43067655807339306,balanced,4,0.43067655807339306,balanced,True,7,True,7,False,8
+base_bcai_011921_000,적금 이자 지급 방식에는 어떤 것들이 있나요?,base_bcai_011921_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,4
+base_bcai_006446_000,신용등급이 낮은 경우 대출이 가능한가요?,base_bcai_006446_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,1,True,1,True,9
+base_bcai_006524_000,주택담보대출을 받을 때 LTV는 어떤 비율로 적용되나요?,base_bcai_006524_000,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,7,False,5,True,7
+base_bcai_026573_000,지급결제 프로세스에서 상계는 왜 중요한가요?,base_bcai_026573_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,0,False,8
+base_bcai_003129_000,BC 즉 바로 컬리카드의 5% 적립 조건에 대해 알고 싶은데요.,base_bcai_003129_000,,0.0,3,0.5,3,0.5,,0.0,,0.0,3,0.5,balanced,3,0.5,balanced,True,2,True,2,False,5
+base_bcai_007352_000,독도와 관련된 국제 분쟁은 무엇인가요?,base_bcai_007352_000,,0.0,8,0.31546487678572877,8,0.31546487678572877,3,0.5,3,0.5,,0.0,balanced,8,0.31546487678572877,semantic-heavy,True,2,True,1,False,7
+base_bcai_003158_000,kt SUPER 카드를 사용하면 할인 혜택을 받을 수 있는 조건이 어떻게 되나요?,base_bcai_003158_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,5,True,2,True,2
+base_bcai_012053_000,공매도는 주로 어떤 시점에 실행되나요?,base_bcai_012053_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,6
+base_bcai_016169_000,외식비용은 어떻게 변화하고 있나요?,base_bcai_016169_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,7
+base_bcai_020733_000,자동차 수리 시 신뢰할 수 있는 정비소를 찾는 방법은?,base_bcai_020733_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,6,False,6
+base_bcai_008025_000,파생상품 거래의 주요 리스크는 무엇인가요?,base_bcai_008025_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,8
+base_bcai_005643_000,금융 사고로 인한 법적 분쟁 시 금융감독원의 도움을 받을 수 있나요?,base_bcai_005643_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,8
+base_bcai_029712_000,이자율 스왑을 통해 회사가 금리 변동에 유리해질 수 있는 이유는 무엇인가요?,base_bcai_029712_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,6
+base_bcai_011942_000,청년희망적금 가입 시 우대 조건은 무엇인가요?,base_bcai_011942_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,7
+base_bcai_014828_000,메리츠화재의 금융기관 코드는 무엇인가요?,base_bcai_014828_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,5,False,7
+base_bcai_022253_000,우리금융지주는 어떤 회사인가요?,base_bcai_022253_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,5
+base_bcai_000880_000,IBK기업은행 K22 Point 카드의 바우처 신청 유의사항은 무엇인가요?,base_bcai_000880_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,1,True,5
+base_bcai_006920_000,금융 시장이란 무엇인가요?,base_bcai_006920_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,7
+base_bcai_000315_000,카카오페이 IBK 카픽 카드의 적립 포인트는 어떻게 확인할 수 있나요?,base_bcai_000315_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,9,False,8,False,8
+base_bcai_015426_000,썸뱅크 체크카드의 이용 한도는 어떻게 설정되나요?,base_bcai_015426_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,4
+base_bcai_010056_000,할부금융과 리스 이용 시 이자율은 어떻게 결정되나요?,base_bcai_010056_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,3,False,3
+base_bcai_029380_000,구조적 디플레이션 상황에서 실물 자산 투자는 어떤 영향을 받나요?,base_bcai_029380_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,3,False,5
+base_bcai_023051_000,"코픽스 금리가 1.6%에서 1.2%로 하락하면, 10년 만기 6천만원 대출의 월 상환금액은 어떻게 변하나요?",base_bcai_023051_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,6,False,9
+base_bcai_003404_000,두 카드의 연회비는 각각 얼마인가요?,base_bcai_003404_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,1
+base_bcai_003398_000,BC 바로 에어 플러스 스카이패스 카드의 주요 적립 제외 항목은 무엇인가요?,base_bcai_003398_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,5,True,4,False,6
+base_bcai_007393_000,블라인드 앱에서 명예훼손으로 고소된 사례가 있나요?,base_bcai_007393_000,4,0.43067655807339306,4,0.43067655807339306,4,0.43067655807339306,4,0.43067655807339306,4,0.43067655807339306,4,0.43067655807339306,balanced,4,0.43067655807339306,balanced,True,7,True,7,False,8
+base_bcai_009997_000,금융리스와 운용리스의 차이점은 무엇인가요?,base_bcai_009997_000,,0.0,4,0.43067655807339306,4,0.43067655807339306,3,0.5,3,0.5,4,0.43067655807339306,balanced,4,0.43067655807339306,balanced,True,5,True,6,False,7
+base_bcai_020303_000,지방 부동산 투자가 왜 위험할 수 있나요?,base_bcai_020303_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,True,3,True,4
+base_bcai_011374_000,대구은행 신용카드의 비대면 발급 방법은 무엇인가요?,base_bcai_011374_000,7,0.3333333333333333,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,5
+base_bcai_019556_000,NFC 결제는 어떻게 작동하나요?,base_bcai_019556_000,2,0.6309297535714575,4,0.43067655807339306,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,True,8
+base_bcai_024072_000,포항의 주요 특징은 무엇인가요?,base_bcai_024072_000,9,0.3010299956639812,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,5
+base_bcai_003224_000,Green City를 이용하기 위한 The Gallery Card의 제공 조건은 무엇인가요?,base_bcai_003224_000,4,0.43067655807339306,3,0.5,3,0.5,2,0.6309297535714575,3,0.5,3,0.5,balanced,3,0.5,balanced,True,8,True,8,False,8
+base_bcai_006394_000,케이뱅크 신용카드의 포인트 적립률은 어떻게 되나요?,base_bcai_006394_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,6
+base_bcai_008765_000,롯데카드는 어떤 방식으로 재무 관리를 하고 있나요?,base_bcai_008765_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,5
+base_bcai_012612_000,iM뱅크 GREIT카드의 캐시백 서비스는 어떻게 이용하나요?,base_bcai_012612_000,5,0.38685280723454163,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,3,True,3,True,5
+base_bcai_014219_000,파산 선언 후 신용등급에 어떤 영향을 미치나요?,base_bcai_014219_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,2
+base_bcai_005174_000,신용카드로 해외 호텔 무료 숙박 혜택을 받을 수 있는 카드가 있나요?,base_bcai_005174_000,,0.0,3,0.5,4,0.43067655807339306,4,0.43067655807339306,5,0.38685280723454163,7,0.3333333333333333,balanced,3,0.5,semantic-heavy,True,3,True,4,True,4
+base_bcai_030655_000,MMF에서 환매 요청 후 돈이 입금되는 데 시간이 걸리나요?,base_bcai_030655_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,5,True,5,True,8
+base_bcai_024581_000,CD 금리는 왜 자주 변동되나요?,base_bcai_024581_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,4,True,3,False,5
+base_bcai_019186_000,PG 서비스는 해외 결제도 지원하나요?,base_bcai_019186_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,7
+base_bcai_017858_000,퇴직 후에도 건강보험 혜택을 계속 받을 수 있나요?,base_bcai_017858_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,3
+base_bcai_030729_000,"마진콜이 발생한 후 자산을 일부 청산해도 되는지, 아니면 전체를 청산해야 하나요?",base_bcai_030729_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,6
+base_bcai_026957_000,어음교환 시스템에서 결제 지연이 발생할 수 있는 이유는 무엇인가요?,base_bcai_026957_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,5
+base_bcai_007407_000,카드론 이용 한도는 어떻게 설정되나요?,base_bcai_007407_000,4,0.43067655807339306,1,1.0,1,1.0,3,0.5,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,2,True,1,True,4
+base_bcai_000184_000,GOAT 카드의 페이북 머니 유효기간은 어떻게 되나요?,base_bcai_000184_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,6,False,9
+base_bcai_004060_000,카드 해지 혹은 탈회를 결정하기 전에 고려해야 할 것은 무엇인가요?,base_bcai_004060_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,8
+base_bcai_007833_000,맞춤형 고객 서비스를 제공하는 방법이 있나요?,base_bcai_007833_000,,0.0,7,0.3333333333333333,7,0.3333333333333333,1,1.0,1,1.0,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,True,3,True,2,True,6
+base_bcai_024168_000,비씨카드로 결제한 후 환불받을 때 환불 수수료가 부과되나요?,base_bcai_024168_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,2,False,2
+base_bcai_013230_000,신용카드 사용 시 주의사항은 무엇인가요?,base_bcai_013230_000,10,0.2890648263178879,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,7
+base_bcai_007658_000,금융사 시스템 장애 시 고객의 개인정보는 안전한가요?,base_bcai_007658_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,6
+base_bcai_020234_000,부동산 투자 시 어떤 데이터를 참고해야 하나요?,base_bcai_020234_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,8
+base_bcai_011645_000,BC카드의 EDC 방식 도입 후 매출 데이터의 보안은 어떻게 유지되나요?,base_bcai_011645_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,8
+base_bcai_015472_000,블랙핑크 신용카드는 비즈니스 클래스 항공권 할인 혜택이 있나요?,base_bcai_015472_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,7
+base_bcai_026160_000,외국인 관광객들의 쇼핑 트렌드 변화는 면세점에 어떤 영향을 미쳤나요?,base_bcai_026160_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,8,False,7,True,7
+base_bcai_030385_000,PEG 값이 1이면 무조건 적정 평가된 상태인가요?,base_bcai_030385_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,2,False,6
+base_bcai_024346_000,대부업체의 대출 상환 방식은 어떻게 되나요?,base_bcai_024346_000,9,0.3010299956639812,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,2,False,6
+base_bcai_019075_000,"미국에서는 DMS를 선호하여 시스템 장애 시에도 거래를 정산할 수 있는데, 한국은 왜 이를 사용하지 않나요?",base_bcai_019075_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,3,0.5,3,0.5,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,7,True,9,False,8
+base_bcai_010541_000,자동납부를 통해 여러 요금을 한꺼번에 납부할 수 있나요?,base_bcai_010541_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,2,False,2
+base_bcai_000847_000,IBK기업 I-Pet 온라인 쇼핑에서 받을 수 있는 할인율은 얼마인가요?,base_bcai_000847_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,6,True,6,False,10
+base_bcai_002864_000,BNK경남 에어마일 카드의 연회비는 얼마인가요? 혹시 아시나요?,base_bcai_002864_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,3,False,7
+base_bcai_001678_000,BC 바로 컬리카드를 이용하여 해외 가맹점에서 결제할 때 특히 통화 환전 관련해서 주의할 사항이 있을까요?,base_bcai_001678_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,1,True,1,False,5
+base_bcai_014603_000,신용점수가 낮아도 신용카드를 발급받을 수 있나요?,base_bcai_014603_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,6
+base_bcai_010772_000,빅테크사의 금융 서비스가 보안 측면에서 안전한가요?,base_bcai_010772_000,6,0.3562071871080222,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,3,0.5,balanced,2,0.6309297535714575,semantic-heavy,True,4,True,2,True,7
+base_bcai_028003_000,주요 선불전자지급수단 기업 간 경쟁이 치열한 이유는 무엇인가요?,base_bcai_028003_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,5
+base_bcai_018498_000,일본 소설에서 자주 등장하는 상징적인 장소는 무엇인가요?,base_bcai_018498_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,7,False,9
+base_bcai_019128_000,카드 결제 시의 도난 카드 방지 시스템은 어떻게 작동하나요?,base_bcai_019128_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,6
+base_bcai_022506_000,KB손해보험의 상해보험은 어떤 보장을 제공하나요?,base_bcai_022506_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,5,False,7
+base_bcai_029035_000,은행에서 제공하는 대출 상품의 스프레드는 어떤 요인들에 의해 결정되나요?,base_bcai_029035_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,6
+base_bcai_001174_000,비씨카드의 고객 만족도는 어떻게 평가되나요?,base_bcai_001174_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,4
+base_bcai_001941_000,신용카드 전용 카드사는 어디서 발급받을 수 있나요?,base_bcai_001941_000,,0.0,,0.0,,0.0,4,0.43067655807339306,3,0.5,,0.0,balanced,,0.0,balanced,True,0,True,0,True,2
+base_bcai_018146_000,한국에서 보험 가입 시 고려해야 할 점은 무엇인가요?,base_bcai_018146_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,6
+base_bcai_022823_000,이탈리아의 주요 지리적 특징과 주변 국가들은 어떤가요?,base_bcai_022823_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,7,True,8,False,7
+base_bcai_004701_000,부산은행 체크카드 교통카드 등록 방법을 알려주세요.,base_bcai_004701_000,8,0.31546487678572877,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,4,False,3
+base_bcai_030458_000,"DCF 분석에서 WACC란 무엇이며, 어떻게 계산하나요?",base_bcai_030458_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,4,False,7
+base_bcai_004400_000,BC카드의 결제 확정일은 언제인가요?,base_bcai_004400_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,1,True,1,True,5
+base_bcai_028550_000,가중평균자본비용(WACC)이란 무엇인가요?,base_bcai_028550_000,10,0.2890648263178879,3,0.5,3,0.5,3,0.5,3,0.5,3,0.5,balanced,3,0.5,balanced,True,4,False,4,True,6
+base_bcai_029528_000,오퍼레이션 트위스트가 인플레이션 기대에 미치는 영향은 무엇인가요?,base_bcai_029528_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,3,True,3,False,8
+base_bcai_028826_000,2025년 한국의 디스플레이 산업 수출 전망은 어떤가요?,base_bcai_028826_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,7,False,7
+base_bcai_011940_000,적금 금리 비교는 어떻게 하나요?,base_bcai_011940_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,4
+base_bcai_012505_000,iM뱅크 그린카드 v2로 대형마트에서 결제 시 혜택이 있나요?,base_bcai_012505_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,7
+base_bcai_003917_000,체리슈머들이 주로 활용하는 신용카드 혜택은 무엇인가요?,base_bcai_003917_000,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,2,True,2,True,6
+base_bcai_004550_000,BC카드가 없는데 결제 문자를 받았습니다. 피싱인가요?,base_bcai_004550_000,,0.0,3,0.5,2,0.6309297535714575,3,0.5,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,False,8
+base_bcai_012842_000,SC은행의 신용카드 신청 절차는 어떻게 되나요?,base_bcai_012842_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,False,4
+base_bcai_016524_000,한국의 주요 금융 시장은 어떤가요?,base_bcai_016524_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,7
+base_bcai_022819_000,핀란드의 지리적 특징과 주변 국가들에 대해 알려주세요.,base_bcai_022819_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,8
+base_bcai_010265_000,합리적 소비를 위해 대형마트와 전통시장을 비교하여 장보기를 할 때 어떤 점을 고려해야 하나요?,base_bcai_010265_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,4
+base_bcai_016141_000,ISA 계좌는 만기 후 어떻게 처리되나요?,base_bcai_016141_000,2,0.6309297535714575,6,0.3562071871080222,3,0.5,4,0.43067655807339306,3,0.5,3,0.5,balanced,2,0.6309297535714575,keyword-heavy,True,3,True,2,False,5
+base_bcai_011665_000,삼성페이로 택배 요금을 결제할 수 있나요?,base_bcai_011665_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,5
+base_bcai_007922_000,금융투자소득세는 언제부터 도입되나요?,base_bcai_007922_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,4,False,8
+base_bcai_006880_000,Pay by Palm 서비스의 위생적 장점은 무엇인가요?,base_bcai_006880_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,6,True,6,True,10
+base_bcai_023737_000,카드사들이 티메프 사태에서 겪고 있는 어려움은 무엇인가요?,base_bcai_023737_000,9,0.3010299956639812,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,3,True,2,True,6
+base_bcai_020274_000,부동산 투자에서 공실률을 줄이는 방법은 무엇인가요?,base_bcai_020274_000,,0.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,1,True,3,False,6
+base_bcai_017765_000,신한카드 레이디클래식의 롯데시네마 스위트 콤보 제공 혜택을 최대한 활용하려면 어떻게 해야 하나요?,base_bcai_017765_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,8,False,9
+base_bcai_014470_000,신용카드 미사용이 신용점수에 미치는 영향은 어떤가요?,base_bcai_014470_000,,0.0,6,0.3562071871080222,9,0.3010299956639812,3,0.5,2,0.6309297535714575,9,0.3010299956639812,balanced,6,0.3562071871080222,semantic-heavy,True,1,True,2,False,5
+base_bcai_006327_000,케이뱅크 신용카드 발급 조건은 무엇인가요?,base_bcai_006327_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,4
+base_bcai_028402_000,자산부채관리(ALM)이란 무엇인가요?,base_bcai_028402_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,4
+base_bcai_011879_000,해외 주식 투자 시 정치적 리스크를 어떻게 관리하나요?,base_bcai_011879_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,5
+base_bcai_009514_000,고객센터에서 신용카드 발급 신청을 할 수 있나요?,base_bcai_009514_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,3
+base_bcai_020597_000,하나은행의 글로벌 전략은 무엇인가요?,base_bcai_020597_000,9,0.3010299956639812,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,7
+base_bcai_000352_000,비씨카드의 바로 클리어 플러스 카드는 어떤 혜택을 제공하나요?,base_bcai_000352_000,,0.0,8,0.31546487678572877,,0.0,3,0.5,6,0.3562071871080222,,0.0,balanced,8,0.31546487678572877,semantic-heavy,True,8,True,7,True,7
+base_bcai_014514_000,신용점수가 낮을 때 금융거래에 어떤 제약이 따르나요?,base_bcai_014514_000,,0.0,5,0.38685280723454163,7,0.3333333333333333,1,1.0,2,0.6309297535714575,7,0.3333333333333333,balanced,5,0.38685280723454163,semantic-heavy,True,3,True,2,True,7
+base_bcai_014346_000,주식 거래 수수료는 어떻게 지불하나요?,base_bcai_014346_000,,0.0,6,0.3562071871080222,7,0.3333333333333333,7,0.3333333333333333,6,0.3562071871080222,7,0.3333333333333333,balanced,6,0.3562071871080222,semantic-heavy,False,1,True,1,True,5
+base_bcai_028885_000,한국에서 자영업자의 고용 형태는 어떤가요?,base_bcai_028885_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,2,False,6
+base_bcai_018273_000,한국의 평균 결혼 비용은 얼마나 드나요?,base_bcai_018273_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,3
+base_bcai_018274_000,한국에서 교통비로 월 평균 얼마를 지출하나요?,base_bcai_018274_000,,0.0,4,0.43067655807339306,4,0.43067655807339306,3,0.5,3,0.5,4,0.43067655807339306,balanced,4,0.43067655807339306,balanced,True,3,True,4,False,6
+base_bcai_010514_000,Light 할부 이용 시 신용등급에 영향을 미치나요?,base_bcai_010514_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,4,False,5
+base_bcai_003506_000,무이자 할부를 제공할 때 판매자에게 어떤 이점이 있나요?,base_bcai_003506_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,7
+base_bcai_019102_000,카드 결제 시 추가 인증이 필요한 경우는 언제인가요?,base_bcai_019102_000,2,0.6309297535714575,4,0.43067655807339306,3,0.5,2,0.6309297535714575,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,3,True,3,True,7
+base_bcai_028880_000,고용시장에서 나이가 들수록 취업이 어려워지는 이유는 무엇인가요?,base_bcai_028880_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,6
+base_bcai_008199_000,대출을 받을 때 주의해야 할 주요 사항은 무엇인가요?,base_bcai_008199_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,8
+base_bcai_002019_000,최원석 대표의 경력 증가 과정을 알고 계신가요?,base_bcai_002019_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,5,True,2,True,3
+base_bcai_030695_000,신용카드 가맹점이 지켜야 할 주요 준수사항은 무엇인가요?,base_bcai_030695_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,7
+base_bcai_028553_000,회계감사란 무엇인가요?,base_bcai_028553_000,10,0.2890648263178879,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,True,8
+base_bcai_023306_000,"6개월 동안 15,000,000원을 예금할 경우, 이자 소득세를 반영한 이자는 얼마나 되나요?",base_bcai_023306_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,6
+base_bcai_027312_000,오픈뱅킹과 마이데이터는 어떻게 다른가요?,base_bcai_027312_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,1,False,4
+base_bcai_007410_000,카드론을 이용할 때 발생할 수 있는 위험은 무엇인가요?,base_bcai_007410_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,4
+base_bcai_025099_000,엔캐리 트레이드를 성공적으로 수행하기 위해 필요한 경제 지표는 무엇인가요?,base_bcai_025099_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,True,4,True,6
+base_bcai_012586_000,iM뱅크 UntacT카드의 분실 신고 후 재발급 절차는 어떻게 되나요?,base_bcai_012586_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,5
+base_bcai_012157_000,미국 주식의 IPO란 무엇인가요?,base_bcai_012157_000,,0.0,4,0.43067655807339306,4,0.43067655807339306,2,0.6309297535714575,1,1.0,4,0.43067655807339306,balanced,2,0.6309297535714575,keyword-heavy,True,1,True,1,False,10
+base_bcai_015196_000,"OTT 서비스를 자주 이용하는데, 관련 혜택이 좋은 BC카드는 무엇인가요?",base_bcai_015196_000,7,0.3333333333333333,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,1,True,2,True,4
+base_bcai_013345_000,애플페이의 결제 속도는 어떤가요?,base_bcai_013345_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_016912_000,왜 일부 젊은 세대가 워라벨을 잘못 이해하고 있는 건가요?,base_bcai_016912_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,8
+base_bcai_013175_000,롯데카드의 고객센터 연락처와 운영 시간은 어떻게 되나요?,base_bcai_013175_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,2,False,5
+base_bcai_015309_000,썸뱅크 체크카드를 이용해 커피 전문점에서 결제할 때 혜택이 있나요?,base_bcai_015309_000,6,0.3562071871080222,4,0.43067655807339306,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,3,True,5
+base_bcai_030415_000,PEG는 주로 단기 투자보다는 장기 투자에 적합한가요?,base_bcai_030415_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,5
+base_bcai_025423_000,미국 금리 인하가 한국의 기술 산업에 어떤 영향을 미칠까요?,base_bcai_025423_000,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,9
+base_bcai_019305_000,VAN사의 주요 서비스는 무엇인가요?,base_bcai_019305_000,,0.0,8,0.31546487678572877,7,0.3333333333333333,,0.0,,0.0,8,0.31546487678572877,balanced,6,0.3562071871080222,keyword-heavy,True,1,True,1,True,6
+base_bcai_005749_000,전세자금대출은 DSR에 포함되지 않나요?,base_bcai_005749_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,7
+base_bcai_013374_000,삼성페이의 결제 내역은 어디에서 확인할 수 있나요?,base_bcai_013374_000,7,0.3333333333333333,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,6,True,5,True,8
+base_bcai_028500_000,M&A란 무엇인가요?,base_bcai_028500_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,5
+base_bcai_003812_000,차지백 서비스 신청 후 카드사로부터 추가 정보를 요구받는 경우 어떻게 해야 하나요?,base_bcai_003812_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,2,True,3,True,7
+base_bcai_015803_000,변액보험의 보험료는 어떻게 산정되나요?,base_bcai_015803_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,4,False,4,False,7
+base_bcai_008752_000,하나카드의 고객 서비스는 어떤가요?,base_bcai_008752_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,False,5
+base_bcai_011029_000,해외여행 시 신용카드 사용 팁이 있나요?,base_bcai_011029_000,6,0.3562071871080222,,0.0,7,0.3333333333333333,6,0.3562071871080222,2,0.6309297535714575,5,0.38685280723454163,balanced,2,0.6309297535714575,keyword-heavy,True,1,True,1,False,5
+base_bcai_007805_000,타인의 신용카드를 사용해 온라인 쇼핑을 하면 어떤 처벌을 받나요?,base_bcai_007805_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,7
+base_bcai_027815_000,트래블룰이 가상자산 거래소와 사용자의 신뢰성 확보에 미치는 영향은 무엇인가요?,base_bcai_027815_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,8,False,9
+base_bcai_001624_000,IBK I-Pet 카드의 가족카드를 신청할 수 있을까요?,base_bcai_001624_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,3,False,4,False,3
+base_bcai_000725_000,BC On&Off 신용카드의 대중교통 할인 한도는 어떻게 되나요?,base_bcai_000725_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,7,True,6,True,8
+base_bcai_016497_000,한국의 전자 금융 서비스는 어떤가요?,base_bcai_016497_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_012025_000,공매도는 주로 어떤 시장에서 이루어지나요?,base_bcai_012025_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,6
+base_bcai_026894_000,지방은행공동망을 통해 각 지방은행의 통장 이체 내역을 확인할 수 있나요?,base_bcai_026894_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,7,False,6
+base_bcai_003373_000,이태영 대해서 알려주세요.,base_bcai_003373_000,,0.0,9,0.3010299956639812,9,0.3010299956639812,5,0.38685280723454163,5,0.38685280723454163,9,0.3010299956639812,balanced,9,0.3010299956639812,balanced,True,1,True,1,False,9
+base_bcai_016381_000,20대 커플들이 주로 즐기는 실내 스포츠는 무엇인가요?,base_bcai_016381_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,7
+base_bcai_000491_000,연회비 납부 후 카드 사용을 중단하면 어떻게 되나요?,base_bcai_000491_000,,0.0,2,0.6309297535714575,4,0.43067655807339306,5,0.38685280723454163,6,0.3562071871080222,5,0.38685280723454163,balanced,2,0.6309297535714575,semantic-heavy,True,0,True,0,False,5
+base_bcai_015239_000,IBK 데일리위드 카드의 할인 혜택은 어디서 사용할 수 있나요?,base_bcai_015239_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,7
+base_bcai_014236_000,신용 사면을 받은 후 공공요금 연체는 신용 점수에 영향을 미치나요?,base_bcai_014236_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,4,False,7
+base_bcai_003478_000,무이자 할부의 단점은 무엇인가요?,base_bcai_003478_000,3,0.5,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,True,5
+base_bcai_008363_000,BPR이 높으면 어떤 의미인가요?,base_bcai_008363_000,,0.0,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,3,0.5,balanced,1,1.0,semantic-heavy,True,7,True,8,False,8
+base_bcai_022317_000,유럽에서 가장 큰 기술 중심지는 어디인가요?,base_bcai_022317_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,9
+base_bcai_018120_000,신용카드 사용을 통해 신용 점수를 개선할 수 있는 방법은 무엇인가요?,base_bcai_018120_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,3
+base_bcai_027429_000,전자지급서비스 이용에 따른 개인정보 유출 위험은 어떻게 관리되나요?,base_bcai_027429_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,6
+base_bcai_012501_000,iM뱅크 그린카드 v2는 무이자 할부 혜택이 있나요?,base_bcai_012501_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,6,False,3
+base_bcai_016305_000,부산은 4050세대에게 왜 인기 있는 여행지로 떠오르고 있나요?,base_bcai_016305_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,6
+base_bcai_018279_000,한국에서의 연간 여가 및 오락 비용은 어느 정도인가요?,base_bcai_018279_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,False,6
+base_bcai_029571_000,환율 리스크가 국제 투자에 미치는 영향은 무엇인가요?,base_bcai_029571_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,0,True,0,True,8
+base_bcai_004263_000,BC카드 분실 시 대처 방법은 무엇인가요?,base_bcai_004263_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,keyword-heavy,True,1,True,0,True,7
+base_bcai_007179_000,PYUSD의 송금 서비스는 어떻게 이루어지나요?,base_bcai_007179_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,5,False,7
+base_bcai_020382_000,2024년에 소비자들이 가장 많이 이용하는 투자 상품은 무엇인가요?,base_bcai_020382_000,,0.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,3,True,1,True,6
+base_bcai_026721_000,금융결제원의 소액결제시스템에서 비밀번호 설정 시 주의사항은 무엇인가요?,base_bcai_026721_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,1,True,1,False,8
+base_bcai_011008_000,체크카드 할부의 장점과 단점은 무엇인가요?,base_bcai_011008_000,,0.0,,0.0,,0.0,1,1.0,1,1.0,,0.0,balanced,,0.0,balanced,True,0,True,2,True,2
+base_bcai_002159_000,포인트 및 할인 혜택은 그린카드의 부가서비스로 어느 곳을 가도 제공되나요?,base_bcai_002159_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,2,False,2,False,3
+base_bcai_011200_000,국민행복카드 발급 방법은 무엇인가요?,base_bcai_011200_000,,0.0,10,0.2890648263178879,,0.0,1,1.0,1,1.0,,0.0,balanced,10,0.2890648263178879,semantic-heavy,True,0,True,0,True,9
+base_bcai_008786_000,롯데카드는 어떤 방식으로 고객에게 혜택을 제공하나요?,base_bcai_008786_000,1,1.0,5,0.38685280723454163,3,0.5,3,0.5,1,1.0,3,0.5,balanced,2,0.6309297535714575,keyword-heavy,True,4,True,4,True,7
+base_bcai_007739_000,AICC는 어떻게 고객 만족도를 향상시키나요?,base_bcai_007739_000,9,0.3010299956639812,4,0.43067655807339306,4,0.43067655807339306,6,0.3562071871080222,4,0.43067655807339306,5,0.38685280723454163,balanced,4,0.43067655807339306,semantic-heavy,True,4,True,2,True,7
+base_bcai_016245_000,양도소득세 절감을 위해 활용할 수 있는 방법은 무엇인가요?,base_bcai_016245_000,2,0.6309297535714575,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,True,6
+base_bcai_002748_000,"KT 마이알뜰폰 카드 발급 시, 가족카드 또한 함께 신청할 수 있나요?",base_bcai_002748_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,1,True,2,False,7
+base_bcai_027182_000,CMS 공동망에서 다수의 계좌를 일괄 이체할 때 보안은 어떻게 강화되나요?,base_bcai_027182_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,4,False,8
+base_bcai_011777_000,펀드의 환매수수료는 무엇인가요?,base_bcai_011777_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,8
+base_bcai_002014_000,최원석의 주된 경력은 BC카드 대표이사로 무엇인가요?,base_bcai_002014_000,6,0.3562071871080222,2,0.6309297535714575,1,1.0,6,0.3562071871080222,4,0.43067655807339306,1,1.0,balanced,1,1.0,balanced,True,4,True,3,True,8
+base_bcai_008223_000,EPS(주당순이익)는 무엇인가요?,base_bcai_008223_000,,0.0,6,0.3562071871080222,6,0.3562071871080222,8,0.31546487678572877,8,0.31546487678572877,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,True,3,True,2,True,8
+base_bcai_029655_000,PD Bond에 투자하면 어떤 리스크가 있을까요?,base_bcai_029655_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,6
+base_bcai_004285_000,BC카드 실적은 어떻게 확인하나요?,base_bcai_004285_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,4
+base_bcai_008265_000,ISA 계좌의 장점은 무엇인가요?,base_bcai_008265_000,6,0.3562071871080222,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,8
+base_bcai_019386_000,금융회사의 클라우드 이용 시 전산 장애 예방 방안은 무엇인가요?,base_bcai_019386_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,3
+base_bcai_026740_000,CD공동망을 통해 입금할 수 있는 한도는 얼마인가요?,base_bcai_026740_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,6
+base_bcai_017528_000,배대지를 통해 의류를 합배송할 때 주의할 점은 무엇인가요?,base_bcai_017528_000,1,1.0,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,False,5,True,5
+base_bcai_029637_000,모기지 백트 증권의 금리 변화가 수익에 미치는 영향을 어떻게 예측할 수 있나요?,base_bcai_029637_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,6
+base_bcai_016045_000,ISA 계좌의 수익은 언제 과세되나요?,base_bcai_016045_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,8
+base_bcai_026080_000,여행사들이 수익성을 높이기 위해 어떤 전략을 취하고 있나요?,base_bcai_026080_000,3,0.5,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,3,0.5,balanced,2,0.6309297535714575,keyword-heavy,True,6,True,6,False,7
+base_bcai_028011_000,선불충전금의 잔액을 관리하는 데 주의할 점은 무엇인가요?,base_bcai_028011_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,6
+base_bcai_029803_000,유동성 함정이 발생하는 원인은 무엇인가요?,base_bcai_029803_000,10,0.2890648263178879,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,6
+base_bcai_018534_000,재고 자산의 평가 방법은 무엇인가요?,base_bcai_018534_000,7,0.3333333333333333,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,6
+base_bcai_023870_000,대공황 동안 금에 투자한 사례는 어떤가요?,base_bcai_023870_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,3,False,7
+base_bcai_007876_000,신용카드 결제 내역이 명세서에 누락되었습니다. 어떻게 해결할 수 있나요?,base_bcai_007876_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,6
+base_bcai_021839_000,가을철 대한민국에서 추천하는 미식 여행지는 어디인가요?,base_bcai_021839_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,5
+base_bcai_008538_000,비트코인이란 무엇인가요?,base_bcai_008538_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,1,False,7
+base_bcai_009462_000,BNK경남은행의 전자민원 서비스는 무엇인가요?,base_bcai_009462_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,7
+base_bcai_001542_000,BC바로 K-패스 카드의 대중교통 할인에서 제외되는 부분이 어떤 것인가요?,base_bcai_001542_000,6,0.3562071871080222,5,0.38685280723454163,4,0.43067655807339306,,0.0,,0.0,3,0.5,balanced,3,0.5,balanced,True,3,True,4,True,6
+base_bcai_024147_000,"비씨카드로 결제할 때, 가맹점은 어떻게 수익을 받나요?",base_bcai_024147_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,7
+base_bcai_004663_000,BC바로카드가 무엇인가요?,base_bcai_004663_000,,0.0,7,0.3333333333333333,6,0.3562071871080222,6,0.3562071871080222,6,0.3562071871080222,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,True,1,True,1,True,7
+base_bcai_026629_000,금융시장 인프라에서 중앙청산소(CCP)의 역할은 무엇인가요?,base_bcai_026629_000,6,0.3562071871080222,6,0.3562071871080222,6,0.3562071871080222,5,0.38685280723454163,5,0.38685280723454163,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,False,9,True,6,True,7
+base_bcai_020498_000,트레블월렛카드는 어떻게 관리하나요?,base_bcai_020498_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,7
+base_bcai_005221_000,BLISS.7 카드의 발급 조건은 어떻게 되나요?,base_bcai_005221_000,,0.0,2,0.6309297535714575,5,0.38685280723454163,2,0.6309297535714575,3,0.5,6,0.3562071871080222,balanced,2,0.6309297535714575,semantic-heavy,True,5,True,5,False,6
+base_bcai_004098_000,"비자카드의 등급에는 어떤 종류가 있으며, 각 등급의 특징은 무엇인가요?",base_bcai_004098_000,,0.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,9
+base_bcai_001377_000,BC 에어 플러스 아시아나 카드를 사용하여 아시아나항공 마일리지를 어떻게 적립할 수 있는지 알고 계신가요?,base_bcai_001377_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,9,True,8,True,7
+base_bcai_016685_000,30대가 선호하는 결제 방식은 무엇인가요?,base_bcai_016685_000,10,0.2890648263178879,3,0.5,1,1.0,3,0.5,3,0.5,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,8
+base_bcai_005732_000,소득이 적은 사람은 DSR 규제로 대출이 어려워지나요?,base_bcai_005732_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,3,0.5,3,0.5,balanced,2,0.6309297535714575,semantic-heavy,True,4,True,4,False,6
+base_bcai_027674_000,모바일현금카드 공동QR코드 ATM 입출금서비스는 어떤 ATM에서 이용이 가능한가요?,base_bcai_027674_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,9,False,8,False,8
+base_bcai_026344_000,지급결제에서 혁신적인 기술로 어떤 것이 사용되나요?,base_bcai_026344_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,4,True,4,True,9
+base_bcai_028660_000,지급준비율이란 무엇인가요?,base_bcai_028660_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,4,0.43067655807339306,3,0.5,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,1,True,1,True,5
+base_bcai_001976_000,KT 마이알뜰폰 BC바로카드의 연회비는 얼마인가요?,base_bcai_001976_000,5,0.38685280723454163,4,0.43067655807339306,4,0.43067655807339306,5,0.38685280723454163,4,0.43067655807339306,4,0.43067655807339306,balanced,4,0.43067655807339306,balanced,False,5,True,5,True,10
+base_bcai_009873_000,긴급 재난 대출의 상환 기간은 어떻게 되나요?,base_bcai_009873_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,4
+base_bcai_003081_000,IBK K22 Point 신용카드의 연체 이자율은 어떻게 되나요?,base_bcai_003081_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,5,False,6,False,5
+base_bcai_017225_000,KT 슈퍼카드는 소셜 커머스에서도 혜택이 적용되나요?,base_bcai_017225_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,3,False,7
+base_bcai_011324_000,BC카드 에어로플러스 카드의 혜택은 언제까지 유지되나요?,base_bcai_011324_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,3,False,4
+base_bcai_009893_000,스탁론 대출 한도는 어떻게 되나요?,base_bcai_009893_000,9,0.3010299956639812,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,6
+base_bcai_001240_000,최원석 대표의 리더십 스타일은 어떻게 묘사할 수 있나요?,base_bcai_001240_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,2,True,8
+base_bcai_020237_000,부동산 투자 시 시세 차익을 기대하는 지역은 어디인가요?,base_bcai_020237_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,1,False,7
+base_bcai_021241_000,중소기업취업청년 전세자금대출의 대출 한도와 금리는 어떻게 되나요?,base_bcai_021241_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,6,False,7
+base_bcai_004313_000,BC 바로 어디로든 그린카드 발급 방법이 궁금합니다.,base_bcai_004313_000,,0.0,6,0.3562071871080222,5,0.38685280723454163,2,0.6309297535714575,2,0.6309297535714575,9,0.3010299956639812,balanced,6,0.3562071871080222,semantic-heavy,True,0,True,1,True,3
+base_bcai_003875_000,DCC 차단을 요청할 때 카드사에 어떻게 연락해야 하나요?,base_bcai_003875_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,False,8
+base_bcai_013065_000,롯데카드의 법인카드 연회비는 얼마인가요?,base_bcai_013065_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,6,True,6,False,6
+base_bcai_024103_000,선정산 대출을 받기 위해 필요한 서류는 무엇인가요?,base_bcai_024103_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,3
+base_bcai_010054_000,운용리스와 금융리스 중 어떤 것을 선택해야 하나요?,base_bcai_010054_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,True,5,False,5
+base_bcai_006035_000,비씨카드가 핀테크 회사와의 협력을 통해 고객 서비스 품질을 어떻게 개선하고 있나요?,base_bcai_006035_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,False,6,True,6
+base_bcai_030263_000,시간가치가 많이 남아 있을 때 콜 옵션을 매도하는 것이 유리할 때는 언제인가요?,base_bcai_030263_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,5,False,6
+base_bcai_026857_000,타행환공동망의 송금 시간은 제한이 있나요?,base_bcai_026857_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,7
+base_bcai_001745_000,"The Gallery Card의 가계카드 연회비는 알고 싶은데요, 어떻게 될까요?",base_bcai_001745_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,3,True,1,True,4
+base_bcai_001589_000,IBK기업은행 K패스 카드의 연회비는 어느 정도인가요?,base_bcai_001589_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,3,False,4
+base_bcai_000017_000,비씨카드의 주유 할인 혜택은 어떻게 되나요?,base_bcai_000017_000,6,0.3562071871080222,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,2,False,5
+base_bcai_008696_000,KB국민카드의 주유 할인 혜택은 어떤 것이 있나요?,base_bcai_008696_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,1,False,5
+base_bcai_027259_000,CMS 공동망에서 실시간 자금 관리가 가능한 이유는 무엇인가요?,base_bcai_027259_000,,0.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,2,True,3,True,6
+base_bcai_030965_000,먹방 유튜버들이 자주 사용하는 결제 수단은 무엇인가요?,base_bcai_030965_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,2,False,6
+base_bcai_012777_000,BNK금융그룹은 어떤 사회 공헌 활동을 하고 있나요?,base_bcai_012777_000,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,7
+base_bcai_016057_000,ISA 계좌의 투자 리스크는 어떻게 관리하나요?,base_bcai_016057_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,5
+base_bcai_024861_000,벤처 펀드의 펀드 클로징이란 무엇인가요?,base_bcai_024861_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,3,True,3,True,6
+base_bcai_004033_000,신용카드의 할부결제 서비스는 무엇인가요?,base_bcai_004033_000,,0.0,5,0.38685280723454163,3,0.5,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,True,6
+base_bcai_008681_000,KB국민카드의 주요 경쟁사는 어디인가요?,base_bcai_008681_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,9
+base_bcai_006067_000,페이북 QR 결제를 위해 필요한 스마트폰 사양이 있나요?,base_bcai_006067_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,6,True,5,False,7
+base_bcai_006963_000,은퇴 소득대체율이란 무엇인가요?,base_bcai_006963_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,3
+base_bcai_023338_000,"1년 동안 매달 8,000,000원을 적금할 경우, 이자 소득세를 반영한 이자는 얼마나 되나요?",base_bcai_023338_000,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,False,5,True,3
+base_bcai_017062_000,미국 금리 인상이 한국 환율에 미치는 영향은 무엇인가요?,base_bcai_017062_000,,0.0,,0.0,,0.0,5,0.38685280723454163,7,0.3333333333333333,,0.0,balanced,,0.0,balanced,True,1,True,1,False,8
+base_bcai_021776_000,역직구 상품의 품질을 보장받을 수 있는 방법은 무엇인가요?,base_bcai_021776_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,3,False,6
+base_bcai_004508_000,400만원을 12개월 할부할 때 매달 수수료가 얼마인가요?,base_bcai_004508_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,1,True,1,False,6
+base_bcai_002156_000,어느 방향으로든 그린카드의 부가서비스 변경 시 미리 알려줘야 하는 기간은 얼마인가요?,base_bcai_002156_000,3,0.5,7,0.3333333333333333,7,0.3333333333333333,,0.0,,0.0,7,0.3333333333333333,balanced,6,0.3562071871080222,keyword-heavy,True,5,False,3,True,4
+base_bcai_007058_000,비씨카드의 사업 안정성은 어떻게 평가되나요?,base_bcai_007058_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,7
+base_bcai_020680_000,한국은행의 금융통화위원회의 역할은 무엇인가요?,base_bcai_020680_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,False,6
+base_bcai_004386_000,할부 결제 후 바로 알림이 오나요?,base_bcai_004386_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,1,True,3
+base_bcai_005207_000,프리미엄 리무진 서비스를 제공하는 카드를 알고 싶어요.,base_bcai_005207_000,1,1.0,3,0.5,1,1.0,5,0.38685280723454163,4,0.43067655807339306,1,1.0,balanced,1,1.0,balanced,True,3,True,5,True,5
+base_bcai_028756_000,소비자물가지수(CPI)란 무엇인가요?,base_bcai_028756_000,1,1.0,2,0.6309297535714575,1,1.0,3,0.5,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,True,5,True,7
+base_bcai_018193_000,신용카드와 체크카드의 주요 차이점은 무엇인가요?,base_bcai_018193_000,5,0.38685280723454163,1,1.0,1,1.0,4,0.43067655807339306,4,0.43067655807339306,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,4,True,4,True,5
+base_bcai_029533_000,MBS에는 어떤 위험이 있나요?,base_bcai_029533_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,False,6
+base_bcai_012874_000,하나은행의 대출 상품을 신청하려면 어떤 서류가 필요한가요?,base_bcai_012874_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,7
+base_bcai_014530_000,단기 대출과 장기 대출의 이자율 차이는 무엇인가요?,base_bcai_014530_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,2
+base_bcai_024547_000,펌뱅킹에서 ERP 시스템에 오류가 발생하면 어떻게 되나요?,base_bcai_024547_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,8
+base_bcai_011338_000,유학생에게 추천할 만한 무실적 신용카드는 무엇인가요?,base_bcai_011338_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,False,4,True,6
+base_bcai_012984_000,하나은행의 청약저축 가입 시 주의할 점은 무엇인가요?,base_bcai_012984_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,8
+base_bcai_008094_000,상가 대출 시 신용도가 중요한 이유는 무엇인가요?,base_bcai_008094_000,8,0.31546487678572877,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,False,5
+base_bcai_020415_000,2024년에 소비자들이 가장 많이 지출하는 기술 제품은 무엇인가요?,base_bcai_020415_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,7
+base_bcai_015402_000,썸뱅크 체크카드로 온라인 결제 시 추가 인증 절차가 있나요?,base_bcai_015402_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,6,False,4
+base_bcai_007001_000,지연인출제도란 무엇인가요?,base_bcai_007001_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,3
+base_bcai_000043_000,비씨카드의 실무면접에서는 무엇을 평가하나요?,base_bcai_000043_000,2,0.6309297535714575,2,0.6309297535714575,3,0.5,2,0.6309297535714575,2,0.6309297535714575,3,0.5,balanced,2,0.6309297535714575,semantic-heavy,True,6,True,6,False,8
+base_bcai_014304_000,손해사정사 시험에 합격하기 위한 가장 중요한 팁은 무엇인가요?,base_bcai_014304_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,10
+base_bcai_006964_000,소득크레바스란 무엇인가요?,base_bcai_006964_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,1
+base_bcai_021152_000,암호화폐 투자를 시작하려면 어떤 단계를 거쳐야 하나요?,base_bcai_021152_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,8
+base_bcai_008616_000,현대카드는 어떤 포인트 프로그램을 운영하나요?,base_bcai_008616_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,7
+base_bcai_024120_000,선정산 대출의 주요 리스크는 무엇인가요?,base_bcai_024120_000,,0.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,1,True,5
+base_bcai_029398_000,오퍼레이션 트위스트가 소비자 신용에 어떤 영향을 줄 수 있나요?,base_bcai_029398_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,4,True,6
+base_bcai_009607_000,광주은행의 주요 금융 상품 중 하나인 와요버스에 대해 설명해 주세요.,base_bcai_009607_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,2,False,6
+base_bcai_029527_000,오퍼레이션 트위스트가 투자 다변화에 미치는 영향은 무엇인가요?,base_bcai_029527_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,3,True,2,True,7
+base_bcai_000692_000,공항 라운지 혜택이 있는 카드가 있나요?,base_bcai_000692_000,,0.0,3,0.5,3,0.5,8,0.31546487678572877,8,0.31546487678572877,3,0.5,balanced,3,0.5,balanced,True,6,True,5,False,6
+base_bcai_013524_000,FIDO를 사용하면 어떻게 사용자의 개인정보가 보호되나요?,base_bcai_013524_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,3,True,4,True,7
+base_bcai_000689_000,가족카드로도 혜택을 받을 수 있는 카드가 있나요?,base_bcai_000689_000,1,1.0,9,0.3010299956639812,8,0.31546487678572877,,0.0,,0.0,1,1.0,balanced,1,1.0,balanced,True,1,True,0,True,4
+base_bcai_008155_000,금리 인하 요구권 신청 후 다른 금융 상품을 신청할 때 영향을 미치나요?,base_bcai_008155_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,7
+base_bcai_029769_000,이자율 스왑의 리스크를 완화하기 위해 보험을 사용할 수 있나요?,base_bcai_029769_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,2,False,2
+base_bcai_014872_000,기술보증기금의 금융기관 코드는 무엇인가요?,base_bcai_014872_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,6
+base_bcai_025482_000,미국 금리 인하가 한국의 제조업체 자금 조달에 미치는 영향은 무엇인가요?,base_bcai_025482_000,3,0.5,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,True,6
+base_bcai_014767_000,신용점수를 올리기 위해 적금을 가입하는 것이 좋은가요?,base_bcai_014767_000,9,0.3010299956639812,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,True,4,False,6
+base_bcai_000456_000,GOAT 카드의 연간 추가 적립 혜택은 어떻게 적용되나요?,base_bcai_000456_000,,0.0,5,0.38685280723454163,5,0.38685280723454163,3,0.5,2,0.6309297535714575,4,0.43067655807339306,balanced,3,0.5,keyword-heavy,False,4,True,4,True,7
+base_bcai_008927_000,Visa와 MasterCard의 차이점은 무엇인가요?,base_bcai_008927_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,4
+base_bcai_008792_000,롯데카드는 어떤 방식으로 고객의 카드 한도를 설정하나요?,base_bcai_008792_000,3,0.5,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,7,True,7,True,9
+base_bcai_027336_000,비대면 금융 서비스의 발전이 지급결제 시장에 미치는 영향은 무엇인가요?,base_bcai_027336_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,5
+base_bcai_027439_000,전자지급서비스를 이용할 때 해외 송금도 가능한가요?,base_bcai_027439_000,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,4
+base_bcai_027502_000,보이스피싱 피해자가 경찰에 신고할 때 필요한 자료는 무엇인가요?,base_bcai_027502_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,7
+base_bcai_020011_000,일본의 주요 투자 산업은 무엇인가요?,base_bcai_020011_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,5
+base_bcai_009905_000,학자금 대출 신청은 언제 해야 하나요?,base_bcai_009905_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,8
+base_bcai_018496_000,일본 소설에서 종종 등장하는 지역적 배경은 무엇인가요?,base_bcai_018496_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,8,False,7
+base_bcai_008002_000,부동산 임대 소득에 대한 절세 방법은 무엇인가요?,base_bcai_008002_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,6
+base_bcai_018796_000,현대카드 M포인트 사용 내역을 확인하는 방법은 무엇인가요?,base_bcai_018796_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,7
+base_bcai_017083_000,생성형 AI가 금융 기관의 전략적 의사결정에 어떻게 기여할 수 있나요?,base_bcai_017083_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,False,5,True,5,True,8
+base_bcai_025582_000,대출 규제가 강화되면 대출 상환 기간을 연장하는 것이 좋은 전략인가요?,base_bcai_025582_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,4,False,7
+base_bcai_011437_000,대구은행 신용카드의 혜택은 언제 변경될 수 있나요?,base_bcai_011437_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,7
+base_bcai_017958_000,표적항암약물 허가 치료 특약은 어떤 경우에 유용한가요?,base_bcai_017958_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,7,False,9
+base_bcai_006164_000,체리피킹이 카드사의 수익성에 어떤 영향을 미치나요?,base_bcai_006164_000,3,0.5,4,0.43067655807339306,3,0.5,1,1.0,1,1.0,3,0.5,balanced,3,0.5,balanced,True,5,True,5,True,9
+base_bcai_016073_000,ISA 계좌의 손익통산은 어떻게 이루어지나요?,base_bcai_016073_000,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,7,True,7,True,9
+base_bcai_001940_000,비씨카드가 다이너스 클럽의 한국 라이선스를 획득한 날짜가 언제인가요?,base_bcai_001940_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,True,6,False,7
+base_bcai_010308_000,오픈뱅킹 서비스 이용 시 유의할 점은 무엇인가요?,base_bcai_010308_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,False,4
+base_bcai_003025_000,IBK I-Pet 반려동물 사진관 할인 혜택을 받을 수 있는 대상은 누구인가요?,base_bcai_003025_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,8,False,6,False,6
+base_bcai_012648_000,로스트아크 카드의 해외 이용 시 적용되는 수수료는 무엇인가요?,base_bcai_012648_000,2,0.6309297535714575,2,0.6309297535714575,1,1.0,3,0.5,3,0.5,1,1.0,balanced,1,1.0,balanced,True,5,True,6,False,6
+base_bcai_007715_000,FDS의 최신 트렌드는 무엇인가요?,base_bcai_007715_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,8
+base_bcai_020970_000,대체 투자란 무엇인가요?,base_bcai_020970_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,7
+base_bcai_014607_000,신용 점수를 올리기 위해 대출 상환 기간을 연장하는 것이 좋은가요?,base_bcai_014607_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,5
+base_bcai_027404_000,전자지급서비스가 현금보다 선호되는 이유는 무엇인가요?,base_bcai_027404_000,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,5,True,3,True,6
+base_bcai_025160_000,간편보험 시장이 앞으로 어떻게 변할 것으로 예상되나요?,base_bcai_025160_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,7
+base_bcai_014209_000,신용 사면을 받으면 은행 대출이 쉬워지나요?,base_bcai_014209_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,8
+base_bcai_011122_000,온누리 카드를 사용하면 부가세 환급이 가능한가요?,base_bcai_011122_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,1,False,4
+base_bcai_002519_000,생활 카테고리 대상 가맹점을 알려주세요. 신세계 BC 바로 리워드 플러스 카드에서 사용할 수 있는 곳이에요.,base_bcai_002519_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,5,True,4,True,5
+base_bcai_006351_000,케이뱅크 신용카드의 여행 관련 혜택은 어떤 것들이 있나요?,base_bcai_006351_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,6
+base_bcai_028163_000,지급서비스 제공자별 주요 서비스 유형은 어떤 차이가 있나요?,base_bcai_028163_000,,0.0,7,0.3333333333333333,9,0.3010299956639812,,0.0,,0.0,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,True,3,True,2,False,6
+base_bcai_030165_000,옵션 만기일이 얼마 남지 않았는데 주가가 크게 변동할 가능성이 높을 때는 어떻게 대응해야 하나요?,base_bcai_030165_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_021509_000,특별재난지역으로 지정되면 농지보전부담금은 어떻게 되나요?,base_bcai_021509_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,8
+base_bcai_021711_000,K-콘텐츠의 글로벌 시장 진출 전략은 무엇인가요?,base_bcai_021711_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,4,False,6
+base_bcai_019717_000,신용 대출은 어떤 추세를 보이고 있나요?,base_bcai_019717_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,4
+base_bcai_027407_000,현금 결제는 사라질 가능성이 있나요?,base_bcai_027407_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,7
+base_bcai_010548_000,후불 하이패스카드는 무엇인가요?,base_bcai_010548_000,7,0.3333333333333333,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,5,True,5
+base_bcai_010925_000,한국화재보험협회는 어떤 국제 인증을 받았나요?,base_bcai_010925_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,8,True,10,False,8
+base_bcai_014785_000,신용점수를 올리기 위해 자주 대출을 상환하는 것이 좋은가요?,base_bcai_014785_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,1,False,4
+base_bcai_009060_000,비씨카드는 해외 자회사를 통해 어떤 금융 서비스를 제공하나요?,base_bcai_009060_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,7
+base_bcai_014586_000,신용 점수를 올리기 위해 저축은행에서 대출을 받는 것이 좋은가요?,base_bcai_014586_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,6
+base_bcai_004243_000,신용카드 해지 후 재발급 가능한가요?,base_bcai_004243_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,4
+base_bcai_027455_000,소상공인이 전자지급서비스를 통해 고객 관리도 할 수 있나요?,base_bcai_027455_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,5,False,8
+base_bcai_005506_000,케이뱅크 SIMPLE 카드는 다른 은행의 ATM에서도 이용할 수 있나요?,base_bcai_005506_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,8
+base_bcai_006748_000,조기경보모형의 개선 방안은 무엇인가요?,base_bcai_006748_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,5,False,8
+base_bcai_010381_000,홈카페를 운영하면 어떤 이점이 있나요?,base_bcai_010381_000,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,False,7
+base_bcai_001335_000,그린카드의 연회비를 어디로든 반환받는 데 걸리는 시간은 어느 정도인가요?,base_bcai_001335_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,0,True,0,False,7
+base_bcai_002382_000,IBK K22 Point 카드의 백화점 및 대형마트 할인율은 몇 퍼센트 인가요?,base_bcai_002382_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,6,True,6,False,5
+base_bcai_015315_000,썸뱅크 체크카드로 교육비 결제 시 혜택이 있나요?,base_bcai_015315_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,2,True,4,True,6
+base_bcai_008751_000,하나카드의 연회비는 얼마인가요?,base_bcai_008751_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,6
+base_bcai_024336_000,금리스프레드가 좁아지면 경제 전반에 어떤 영향을 미칠 수 있나요?,base_bcai_024336_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,4,False,5
+base_bcai_007563_000,신용카드사들의 평균 조달금리는 어떻게 변화했나요?,base_bcai_007563_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,8,False,9
+base_bcai_018698_000,법인포인트 사용 시 포인트가 부족하면 어떻게 하나요?,base_bcai_018698_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,6
+base_bcai_009802_000,간호간병통합서비스를 이용하면 어떤 혜택이 있나요?,base_bcai_009802_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,6
+base_bcai_012608_000,iM뱅크 GREIT카드의 연회비는 얼마인가요?,base_bcai_012608_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,6,False,5
+base_bcai_011904_000,적금을 중도 해지하면 불이익이 있나요?,base_bcai_011904_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,7,True,8,False,9
+base_bcai_023499_000,신용점수를 올리는 방법은 무엇인가요?,base_bcai_023499_000,,0.0,2,0.6309297535714575,6,0.3562071871080222,1,1.0,2,0.6309297535714575,7,0.3333333333333333,balanced,2,0.6309297535714575,semantic-heavy,True,2,True,1,True,6
+base_bcai_028936_000,기준금리가 낮아지면 주식 투자자들에게는 어떤 영향을 미치나요?,base_bcai_028936_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,2,False,7
+base_bcai_027430_000,전자지급서비스는 소액 결제에 더 적합한가요?,base_bcai_027430_000,5,0.38685280723454163,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,4,False,5
+base_bcai_030021_000,지급준비율이 경제 성장률에 어떤 영향을 미칠 수 있나요?,base_bcai_030021_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,3,False,4
+base_bcai_000569_000,KB국민카드의 고객 중심 가치가 의미하는 바는 무엇인가요?,base_bcai_000569_000,,0.0,6,0.3562071871080222,6,0.3562071871080222,6,0.3562071871080222,5,0.38685280723454163,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,True,1,True,1,False,7
+base_bcai_003811_000,차지백 서비스 신청 전 판매자와의 해결 시도는 어떻게 해야 하나요?,base_bcai_003811_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,4,True,3,False,7
+base_bcai_027717_000,본인계좌 일괄지급정지서비스가 다른 나라에서도 제공되나요?,base_bcai_027717_000,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,8,False,7,True,8
+base_bcai_000055_000,비씨카드의 비전에서 No.1 Platform이 의미하는 바는 무엇인가요?,base_bcai_000055_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_016786_000,30대가 주로 사용하는 독서 앱은 무엇인가요?,base_bcai_016786_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,6,False,7
+base_bcai_029993_000,지급준비율을 낮추면 은행에는 어떤 장점이 있나요?,base_bcai_029993_000,,0.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,6
+base_bcai_026338_000,지급결제 시스템의 운영 비용은 어떻게 구성되나요?,base_bcai_026338_000,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,2,False,2,False,5
+base_bcai_018143_000,한국에서 생활하면서 중요한 재정 관리 팁은 무엇인가요?,base_bcai_018143_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,2,False,4
+base_bcai_010341_000,퇴직금 중간정산을 요구했을 때 사용자가 반드시 응해야 하나요?,base_bcai_010341_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,5
+base_bcai_002990_000,힙지로딕댱인은 언제 처음 방영되었나요?,base_bcai_002990_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,6
+base_bcai_024616_000,"CD금리는 어떻게 변동하며, 그 요인은 무엇인가요?",base_bcai_024616_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,1,False,5
+base_bcai_006216_000,카드 결제 단말기 설치비용도 지원받을 수 있나요?,base_bcai_006216_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,3
+base_bcai_006243_000,수수료율 인하 정책이 지역 경제에 미치는 영향은 무엇인가요?,base_bcai_006243_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,7
+base_bcai_026263_000,에드 콘웨이의 책에서 언급된 리튬의 역할은 무엇인가요?,base_bcai_026263_000,,0.0,5,0.38685280723454163,5,0.38685280723454163,5,0.38685280723454163,5,0.38685280723454163,5,0.38685280723454163,balanced,5,0.38685280723454163,balanced,True,4,True,4,True,5
+base_bcai_025704_000,가계부채가 급증하면 사회적 불평등이 어떻게 심화되나요?,base_bcai_025704_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,8
+base_bcai_029891_000,수익률 곡선의 형태에 따라 채권 포트폴리오를 어떻게 구성해야 할까요?,base_bcai_029891_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,5,False,8
+base_bcai_026644_000,금융기관이 결제 준비금을 예치해야 하는 이유는 무엇인가요?,base_bcai_026644_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,7
+base_bcai_003606_000,결혼식 축의금으로 적절한 금액은 얼마인가요?,base_bcai_003606_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,8,False,6
+base_bcai_009457_000,BNK경남은행의 외환 서비스는 어떤 것이 있나요?,base_bcai_009457_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,3,False,8
+base_bcai_016306_000,4050세대의 결제 성향은 어떻게 되나요?,base_bcai_016306_000,1,1.0,2,0.6309297535714575,1,1.0,3,0.5,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,1,True,5
+base_bcai_021247_000,KB 청년 맞춤형 전세자금대출의 대출 한도와 금리는 어떻게 되나요?,base_bcai_021247_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,9,False,9,False,8
+base_bcai_026327_000,지급결제제도에서 청산과 결제의 차이점은 무엇인가요?,base_bcai_026327_000,,0.0,3,0.5,7,0.3333333333333333,5,0.38685280723454163,5,0.38685280723454163,7,0.3333333333333333,balanced,3,0.5,semantic-heavy,True,1,True,1,True,9
+base_bcai_022244_000,가을철 대한민국에서 가족과 함께 즐길 수 있는 체험 프로그램은 무엇인가요?,base_bcai_022244_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,7
+base_bcai_022131_000,중고차 할부 이자율이 금융사마다 다른 이유는 무엇인가요?,base_bcai_022131_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,7
+base_bcai_018091_000,월 소득 중 소비와 저축의 적절한 비율은 어떻게 되나요?,base_bcai_018091_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,8
+base_bcai_021579_000,겨울철에 소비자들이 주로 구매하는 가전제품은 무엇인가요?,base_bcai_021579_000,6,0.3562071871080222,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,2,False,8
+base_bcai_009486_000,고객센터에서 계좌 해지를 할 수 있나요?,base_bcai_009486_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,7
+base_bcai_027180_000,오픈뱅킹 시스템의 주요 사용자층은 누구인가요?,base_bcai_027180_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,6
+base_bcai_010068_000,리딩방 피해 사례 중에서 가장 흔한 것은 무엇인가요?,base_bcai_010068_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,8
+base_bcai_015729_000,CD 금리와 고정 금리는 어떻게 다른가요?,base_bcai_015729_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,7
+base_bcai_001402_000,KT DC PLUS 카드의 부가카드를 발급할 수 있을까요?,base_bcai_001402_000,3,0.5,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,1,True,6
+base_bcai_022580_000,하나금융그룹의 재무 건전성은 어떻게 평가되나요?,base_bcai_022580_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,8
+base_bcai_024215_000,예대마진이 뭔가요? 은행은 이걸로 얼마나 수익을 내나요?,base_bcai_024215_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,7,True,3,False,5
+base_bcai_002740_000,KT 마이알뜰폰 카드의 부가 서비스 수정 시에는 어떻게 알려드리나요?,base_bcai_002740_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,1,False,3
+base_bcai_004291_000,BC카드의 비밀번호를 여러 번 잘못 입력하면 어떻게 되나요?,base_bcai_004291_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,8
+base_bcai_017133_000,NFT 결제의 단점이나 위험성은 무엇인가요?,base_bcai_017133_000,7,0.3333333333333333,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,7
+base_bcai_005798_000,DSR 규제 시행 후에도 대출 한도를 늘릴 수 있는 방법이 있나요?,base_bcai_005798_000,,0.0,,0.0,,0.0,8,0.31546487678572877,8,0.31546487678572877,,0.0,balanced,,0.0,balanced,True,2,True,1,True,5
+base_bcai_018055_000,어린이 보험의 보험금을 청구하는 방법은 무엇인가요?,base_bcai_018055_000,,0.0,,0.0,9,0.3010299956639812,10,0.2890648263178879,8,0.31546487678572877,8,0.31546487678572877,balanced,6,0.3562071871080222,keyword-heavy,True,1,True,1,False,7
+base_bcai_027820_000,Nexus 프로젝트가 소액 해외 송금 외에도 지원할 수 있는 서비스는 무엇인가요?,base_bcai_027820_000,1,1.0,3,0.5,3,0.5,1,1.0,1,1.0,3,0.5,balanced,1,1.0,keyword-heavy,True,9,False,9,True,9
+base_bcai_028023_000,BNPL 서비스에서 연체가 발생하면 어떤 일이 벌어지나요?,base_bcai_028023_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,8
+base_bcai_010027_000,레버리지 배율을 계산할 때 어떤 요소들이 필요한가요?,base_bcai_010027_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,8
+base_bcai_021962_000,캠핑 시 전기는 어떻게 사용하나요?,base_bcai_021962_000,,0.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,0,True,0,True,7
+base_bcai_014501_000,변동금리와 고정금리의 차이는 무엇인가요?,base_bcai_014501_000,,0.0,1,1.0,1,1.0,3,0.5,2,0.6309297535714575,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,3,True,2,True,8
+base_bcai_028206_000,환거래은행 모델이란 무엇인가요?,base_bcai_028206_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,5,False,5
+base_bcai_017874_000,건강보험 혜택으로 받을 수 있는 만성질환 관리는 어떻게 되나요?,base_bcai_017874_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,False,7,True,6,True,7
+base_bcai_003412_000,KT 마이알뜰폰 BC카드로 SK주유소에서 할인 혜택을 받을 수 있는 방법이 있는지 궁금합니다.,base_bcai_003412_000,5,0.38685280723454163,2,0.6309297535714575,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,8,True,9,True,9
+base_bcai_012239_000,세 마녀의 날에 주식 시장에서 발생할 수 있는 기회는 무엇인가요?,base_bcai_012239_000,,0.0,6,0.3562071871080222,6,0.3562071871080222,4,0.43067655807339306,4,0.43067655807339306,6,0.3562071871080222,balanced,6,0.3562071871080222,balanced,True,4,True,2,True,4
+base_bcai_003913_000,카드 등록 후 60일 내 혜택을 놓치지 않기 위한 팁은 무엇인가요?,base_bcai_003913_000,,0.0,7,0.3333333333333333,,0.0,,0.0,,0.0,,0.0,balanced,7,0.3333333333333333,semantic-heavy,True,2,True,2,False,6
+base_bcai_026106_000,외도 보타니아는 어떻게 푸른 식물원으로 변모했나요?,base_bcai_026106_000,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,False,4,True,4
+base_bcai_008359_000,PBR이 높은 회사에 투자하는 것이 위험한가요?,base_bcai_008359_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,5,False,8
+base_bcai_020114_000,신용 점수에 영향을 미치는 요소는 무엇인가요?,base_bcai_020114_000,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,4,True,4,True,7
+base_bcai_022146_000,할부금 계산기를 사용할 때 어떤 정보를 입력해야 하나요?,base_bcai_022146_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,5
+base_bcai_014081_000,신용카드를 잃어버렸을 때 어떻게 해야 하나요?,base_bcai_014081_000,,0.0,10,0.2890648263178879,6,0.3562071871080222,6,0.3562071871080222,3,0.5,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,0,True,0,True,8
+base_bcai_019624_000,애플페이 도입이 현대카드의 비용 구조에 어떤 영향을 미쳤나요?,base_bcai_019624_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,8,False,8,False,7
+base_bcai_016191_000,맛집 방문 시 주로 몇 명이 함께 가나요?,base_bcai_016191_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,8
+base_bcai_026261_000,에드 콘웨이가 생각하는 미래에 중요할 수 있는 다른 물질은 무엇인가요?,base_bcai_026261_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,6
+base_bcai_023439_000,"배당금을 45,000,000원 받았을 때 배당소득세는 얼마인가요?",base_bcai_023439_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,6
+base_bcai_030012_000,대차대조표에서 퇴직급여충당부채는 무엇인가요?,base_bcai_030012_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,4
+base_bcai_025810_000,리밸런싱과 최적 자산 배분은 어떻게 연결되나요?,base_bcai_025810_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,6
+base_bcai_024957_000,지금이자받기 서비스를 이용할 때 서류가 필요한가요?,base_bcai_024957_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,6
+base_bcai_028376_000,변액보험(Variable Life Insurance)이란 무엇인가요?,base_bcai_028376_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,1,1.0,keyword-heavy,True,0,True,0,False,7
+base_bcai_008462_000,GNP와 GDP의 차이는 무엇인가요?,base_bcai_008462_000,8,0.31546487678572877,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,4
+base_bcai_008542_000,초보자가 코인 투자를 시작할 때 주의할 점은 무엇인가요?,base_bcai_008542_000,,0.0,9,0.3010299956639812,8,0.31546487678572877,,0.0,,0.0,7,0.3333333333333333,balanced,6,0.3562071871080222,keyword-heavy,True,0,True,0,True,6
+base_bcai_008319_000,ISA 계좌를 개설하려면 어떤 서류가 필요한가요?,base_bcai_008319_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,True,2,True,8
+base_bcai_004833_000,BC 바로 On&Off 카드의 국제 브랜드 서비스는 무엇이 포함되나요?,base_bcai_004833_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,5,True,5,False,6
+base_bcai_006114_000,체크카드로 온라인 결제가 가능한가요?,base_bcai_006114_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,False,2,True,7
+base_bcai_027814_000,신원 도용 방지를 위한 AI 기반 이상 거래 탐지 시스템의 장점은 무엇인가요?,base_bcai_027814_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,4,False,7
+base_bcai_003862_000,차지백 서비스 신청 절차는 어떻게 되나요?,base_bcai_003862_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,6
+base_bcai_028606_000,주식에서 감자란 무엇인가요?,base_bcai_028606_000,10,0.2890648263178879,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,False,7
+base_bcai_022029_000,전라남도 고흥의 나로우주센터는 어떤 곳인가요?,base_bcai_022029_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,4
+base_bcai_004124_000,어떤 카드는 전월실적 조건 없이 카드 사용액 1천원당 1마일을 무제한으로 적립하나요?,base_bcai_004124_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,6
+base_bcai_012706_000,그린카드로 주유비 결제 시 혜택이 있나요?,base_bcai_012706_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,6
+base_bcai_023232_000,"6개월 동안 25,000원을 예금할 경우, 이자 소득세를 반영한 이자는 얼마나 되나요?",base_bcai_023232_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,3
+base_bcai_023435_000,"배당금을 25,000,000원 받았을 때 배당소득세는 얼마인가요?",base_bcai_023435_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,4
+base_bcai_023199_000,"1년 동안 매달 1,500만원씩 적금할 경우, 이자 소득세를 반영한 이자는 얼마나 되나요?",base_bcai_023199_000,1,1.0,6,0.3562071871080222,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,False,3,True,5
+base_bcai_030325_000,최근 한국의 은행들이 예대율 관리를 위해 어떤 조치를 취하고 있나요?,base_bcai_030325_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,1,False,7
+base_bcai_001261_000,비씨카드의 창립 연도가 언제인가요?,base_bcai_001261_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,0,True,6
+base_bcai_007857_000,카드 명세서에 모르는 거래가 있습니다. 어떻게 확인할 수 있나요?,base_bcai_007857_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,2,False,4
+base_bcai_012710_000,그린카드의 포인트 전환 방법은 무엇인가요?,base_bcai_012710_000,,0.0,7,0.3333333333333333,8,0.31546487678572877,4,0.43067655807339306,4,0.43067655807339306,8,0.31546487678572877,balanced,7,0.3333333333333333,semantic-heavy,True,2,True,2,False,7
+base_bcai_025613_000,금융기관의 부실화가 경제에 미치는 영향은 무엇인가요?,base_bcai_025613_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,7
+base_bcai_028456_000,배당성향(Dividend Payout Ratio)이란 무엇인가요?,base_bcai_028456_000,,0.0,2,0.6309297535714575,3,0.5,2,0.6309297535714575,2,0.6309297535714575,3,0.5,balanced,2,0.6309297535714575,semantic-heavy,True,4,True,2,False,7
+base_bcai_000584_000,삼성카드의 미래 비전은 무엇인가요?,base_bcai_000584_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,3,False,7
+base_bcai_020766_000,미성년 자녀에게 증여한 금액을 초과하여 신고하지 않으면 어떤 문제가 발생하나요?,base_bcai_020766_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,7,False,8
+base_bcai_012908_000,신한은행의 주요 예금 상품에는 어떤 것들이 있나요?,base_bcai_012908_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,6
+base_bcai_002659_000,BC카드의 카드 발급 속도는 얼마나 빠른가요?,base_bcai_002659_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,7
+base_bcai_001694_000,kt SUPER 카드로 SK 주유소에서 어디서 할인을 받을 수 있나요?,base_bcai_001694_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,4,True,5,True,6
+base_bcai_006392_000,케이뱅크 카드로 결제한 내역을 어떻게 확인할 수 있나요?,base_bcai_006392_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,5
+base_bcai_022838_000,세르비아의 지리적 특징과 인접 국가들은 무엇인가요?,base_bcai_022838_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,5,False,5
+base_bcai_001869_000,비씨카드 한도를 늘리는 방법은 무엇인가요?,base_bcai_001869_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,2,True,2,False,9
+base_bcai_020199_000,투자금융회사의 재무 상담 서비스는 어떤 도움을 주나요?,base_bcai_020199_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,7,False,5
+base_bcai_007580_000,신용카드사의 평균 조달금리는 어떻게 변화했나요?,base_bcai_007580_000,2,0.6309297535714575,1,1.0,2,0.6309297535714575,3,0.5,3,0.5,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,6,False,6,True,8
+base_bcai_016260_000,2030세대는 주로 어떤 결제 방식을 선호하나요?,base_bcai_016260_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,3,True,3,False,9
+base_bcai_028429_000,순환적 소비재란 무엇인가요?,base_bcai_028429_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,7
+base_bcai_029216_000,포워드 가이던스가 세계 경제에 미칠 수 있는 영향은 무엇인가요?,base_bcai_029216_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,3,False,5
+base_bcai_016423_000,20대 커플들이 주로 찾는 힐링 스팟은 어디인가요?,base_bcai_016423_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,5
+base_bcai_005165_000,신용카드로 해외여행 중 의료 지원을 받을 수 있는 카드가 있나요?,base_bcai_005165_000,4,0.43067655807339306,3,0.5,1,1.0,,0.0,10,0.2890648263178879,1,1.0,balanced,1,1.0,balanced,True,2,True,1,True,3
+base_bcai_013826_000,증자와 감자가 주식 시장의 투자자들에게 미치는 심리적 영향은 무엇인가요?,base_bcai_013826_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,4,True,4,False,5
+base_bcai_021966_000,캠핑 랜턴은 어떤 것이 좋나요?,base_bcai_021966_000,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,balanced,1,1.0,balanced,True,4,True,6,False,6
+base_bcai_027636_000,한은금융망에서 실시간 총액결제방식(RTGS)이란 무엇인가요?,base_bcai_027636_000,1,1.0,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,True,7,True,9
+base_bcai_022643_000,신한베트남은행의 주요 서비스는 무엇인가요?,base_bcai_022643_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,7
+base_bcai_002585_000,비씨카드가 다이너스 클럽의 대한민국 라이선스를 언제 획득했는지 알고 계세요?,base_bcai_002585_000,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,6,True,6,False,6
+base_bcai_019655_000,한국의 PF 시장 상황은 어떤가요?,base_bcai_019655_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,6
+base_bcai_013220_000,현대카드는 어떤 장점이 있나요?,base_bcai_013220_000,9,0.3010299956639812,7,0.3333333333333333,6,0.3562071871080222,2,0.6309297535714575,2,0.6309297535714575,5,0.38685280723454163,balanced,3,0.5,keyword-heavy,True,1,True,1,True,6
+base_bcai_030495_000,배출권이 남는 경우 이를 보관하거나 다음 해로 넘길 수 있나요?,base_bcai_030495_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,5
+base_bcai_014997_000,신용점수가 낮은데도 대출을 받을 수 있는 방법은 무엇인가요?,base_bcai_014997_000,10,0.2890648263178879,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,4,False,7
+base_bcai_028676_000,경상수지 흑자란 무엇인가요?,base_bcai_028676_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,2,False,6
+base_bcai_014352_000,주식 거래 수수료를 자동으로 계산해주는 도구가 있나요?,base_bcai_014352_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,2,False,4
+base_bcai_025426_000,미국의 금리 인하가 한국의 채권 시장에 미치는 영향은 무엇인가요?,base_bcai_025426_000,,0.0,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,True,6
+base_bcai_001832_000,신세계 BC 바로 리워드 플러스 카드로 기본 적립과 특별 적립을 동시에 받을 수 있을까요?,base_bcai_001832_000,,0.0,,0.0,,0.0,9,0.3010299956639812,,0.0,,0.0,balanced,,0.0,balanced,False,2,False,3,False,3
+base_bcai_021634_000,K-콘텐츠 팬들이 한국에서 가장 많이 방문하는 드라마 촬영지는 어디인가요?,base_bcai_021634_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,9
+base_bcai_017210_000,KT 슈퍼카드의 해외 결제 수수료는 어떻게 되나요?,base_bcai_017210_000,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,True,8
+base_bcai_010995_000,전통시장에서의 소비는 어떻게 소득공제가 되나요?,base_bcai_010995_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,5,False,7
+base_bcai_019540_000,QR결제 방식은 어느 나라에서 많이 사용되고 있나요?,base_bcai_019540_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,6
+base_bcai_024578_000,CD 금리는 어떻게 계산되나요? 예를 들어 1000만 원을 투자하면 어느 정도 수익을 기대할 수 있나요?,base_bcai_024578_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,3
+base_bcai_021345_000,ISO 8583 표준과 ISO 20022 표준의 차이점은 무엇인가요?,base_bcai_021345_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,4,False,8
+base_bcai_027174_000,오픈뱅킹 시스템을 통해 송금할 때 수수료가 발생하나요?,base_bcai_027174_000,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,3,True,5
+base_bcai_030905_000,한국에서 공공요금이 CPI에 미치는 영향은 어떤가요?,base_bcai_030905_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,9,False,6,False,7
+base_bcai_016585_000,KBO 리그의 경기 결과가 지역 경제에 미치는 영향은 무엇인가요?,base_bcai_016585_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,8
+base_bcai_029874_000,유동성 함정에서 중앙은행이 외환 시장에 개입하는 것이 도움이 될까요?,base_bcai_029874_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,5,False,5
+base_bcai_024461_000,대부업체 대출을 받을 때 연체 위험을 어떻게 줄일 수 있나요?,base_bcai_024461_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,1,False,5
+base_bcai_001980_000,BC카드와 KT가 협력하여 제공하는 혜택은 무엇이 있는지 궁금하신가요?,base_bcai_001980_000,,0.0,5,0.38685280723454163,5,0.38685280723454163,6,0.3562071871080222,6,0.3562071871080222,5,0.38685280723454163,balanced,5,0.38685280723454163,balanced,True,2,True,2,False,8
+base_bcai_008271_000,예금자보호제도란 무엇인가요?,base_bcai_008271_000,5,0.38685280723454163,1,1.0,1,1.0,2,0.6309297535714575,1,1.0,2,0.6309297535714575,balanced,1,1.0,semantic-heavy,True,3,True,3,True,8
+base_bcai_016199_000,맛집에서의 평균 식사 시간은 얼마나 되나요?,base_bcai_016199_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,6,False,6,False,8
+base_bcai_020967_000,적립식 펀드 투자는 무엇인가요?,base_bcai_020967_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,8
+base_bcai_026364_000,지급수단을 선택할 때 어떤 요소를 고려해야 하나요?,base_bcai_026364_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,5,False,4
+base_bcai_023116_000,자유적금의 이자 계산 방법은 어떻게 되나요?,base_bcai_023116_000,9,0.3010299956639812,3,0.5,3,0.5,4,0.43067655807339306,3,0.5,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,2,True,2,True,5
+base_bcai_006720_000,부동산업의 총자산증가율은 어떻게 되나요?,base_bcai_006720_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,3,False,7
+base_bcai_003146_000,BC 바로 컬리카드의 전월 실적 조건이 충족되지 않으면 어떤 상황이 발생하나요?,base_bcai_003146_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,True,0,True,2,False,5
+base_bcai_012446_000,iM뱅크 그린카드 v2의 기본 적립률은 어떻게 되나요?,base_bcai_012446_000,10,0.2890648263178879,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,6
+base_bcai_024154_000,비씨카드가 거래를 처리하는 데 걸리는 시간은 얼마나 되나요?,base_bcai_024154_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,1,False,1,False,3
+base_bcai_018949_000,해외에서 카드 결제를 취소했는데 환율 차이로 금액이 달라졌습니다. 어떻게 해결하나요?,base_bcai_018949_000,4,0.43067655807339306,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,3,True,3,False,9
+base_bcai_001263_000,비씨카드를 제외한 다른 카드사는 어떤 회사들이 있는지 알고 계신가요?,base_bcai_001263_000,,0.0,8,0.31546487678572877,10,0.2890648263178879,,0.0,,0.0,10,0.2890648263178879,balanced,8,0.31546487678572877,semantic-heavy,True,0,True,1,True,3
+base_bcai_015012_000,펀드 투자 시 세금은 어떻게 부과되나요?,base_bcai_015012_000,9,0.3010299956639812,2,0.6309297535714575,1,1.0,2,0.6309297535714575,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,7
+base_bcai_003705_000,현금서비스 수수료는 어떻게 계산되나요?,base_bcai_003705_000,7,0.3333333333333333,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,1,True,1,False,2
+base_bcai_006903_000,인플레이션과 디플레이션의 차이는 무엇인가요?,base_bcai_006903_000,5,0.38685280723454163,2,0.6309297535714575,2,0.6309297535714575,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,5,True,5,True,7
+base_bcai_015871_000,종신보험의 해지환급금이 적은 이유는 무엇인가요?,base_bcai_015871_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,7,False,6,False,8
+base_bcai_006961_000,디플레이션이란 무엇인가요?,base_bcai_006961_000,,0.0,3,0.5,3,0.5,2,0.6309297535714575,2,0.6309297535714575,4,0.43067655807339306,balanced,3,0.5,semantic-heavy,True,1,True,1,False,9
+base_bcai_017911_000,실손보험의 자기부담금은 어떻게 적용되나요?,base_bcai_017911_000,4,0.43067655807339306,2,0.6309297535714575,2,0.6309297535714575,6,0.3562071871080222,4,0.43067655807339306,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,False,10,False,9,False,9
+base_bcai_028492_000,부동산 리츠(REITs)란 무엇인가요?,base_bcai_028492_000,,0.0,3,0.5,6,0.3562071871080222,4,0.43067655807339306,5,0.38685280723454163,6,0.3562071871080222,balanced,3,0.5,semantic-heavy,True,6,True,4,False,7
+base_bcai_024504_000,펌뱅킹 서비스 이용 시 발생할 수 있는 리스크는 무엇인가요?,base_bcai_024504_000,,0.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,0,True,0,False,6
+base_bcai_030349_000,예대율이 대출 금리와 예금 금리에 영향을 주나요?,base_bcai_030349_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,8
+base_bcai_013326_000,아멕스 카드로 온라인 쇼핑 시 할인 혜택을 받을 수 있나요?,base_bcai_013326_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,5,False,5,False,4
+base_bcai_002953_000,K패스 카드를 신청할 때 IBK기업은행에서 연회비를 면제해 주는 조건이 뭔가요?,base_bcai_002953_000,,0.0,,0.0,,0.0,,0.0,,0.0,,0.0,balanced,,0.0,balanced,False,3,False,3,False,5
+base_bcai_020864_000,미국 주식 배당소득세와 국내 주식 배당소득세의 차이는 무엇인가요?,base_bcai_020864_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,4,False,8
+base_bcai_024148_000,PG사 수수료가 3%에서 5%인 이유는 무엇인가요?,base_bcai_024148_000,2,0.6309297535714575,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,2,True,3,False,8
+base_bcai_006561_000,금융실명제에 따라 현금 50만원을 송금할 때 주민등록번호를 기재해야 하나요?,base_bcai_006561_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,2,False,4
+base_bcai_007106_000,신용카드사의 가맹점 수수료율은 어떻게 변해왔나요?,base_bcai_007106_000,5,0.38685280723454163,4,0.43067655807339306,3,0.5,1,1.0,1,1.0,2,0.6309297535714575,balanced,2,0.6309297535714575,balanced,True,5,True,5,True,7
+base_bcai_020861_000,미국 주식 양도소득세는 모든 투자자에게 적용되나요?,base_bcai_020861_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,3,False,4,False,7
+base_bcai_005244_000,영화관람 혜택이 좋은 카드를 추천해 주세요.,base_bcai_005244_000,1,1.0,2,0.6309297535714575,2,0.6309297535714575,8,0.31546487678572877,3,0.5,1,1.0,balanced,1,1.0,balanced,True,1,True,1,True,3
+base_bcai_019321_000,카드깡에 연루된 PG사는 어떤 처벌을 받게 되나요?,base_bcai_019321_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,2,False,2,False,3
+base_bcai_020801_000,미성년 자녀에게 증여한 재산의 가치가 하락했을 때 세금 문제는 어떻게 되나요?,base_bcai_020801_000,3,0.5,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,True,5,True,6,False,8
+base_bcai_011225_000,GOAT BC카드를 해외 직구용으로 사용하면 어떤 장점이 있나요?,base_bcai_011225_000,,0.0,1,1.0,1,1.0,1,1.0,3,0.5,1,1.0,balanced,1,1.0,balanced,True,1,True,3,False,6
+base_bcai_011876_000,정기예금을 부모님 명의로 가입하면 혜택이 있나요?,base_bcai_011876_000,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,1,1.0,balanced,1,1.0,balanced,False,4,False,3,False,6

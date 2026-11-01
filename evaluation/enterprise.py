@@ -28,23 +28,65 @@ REPORT_METRICS = ("p@1", "recall@10", "mrr@10", "ndcg@10", "graded_ndcg@10")
 _TIE_TOLERANCE = 1e-12
 
 
-def encode_bccard(data_dir, cache_dir, *, splits=ENCODED_SPLITS, device="cuda:0"):
-    """Encode the corpus and selected query splits one text at a time in FP32."""
+# Phase 5 외부 encoder는 model card 설정 그대로 쓴다(prefix 없음, full dimension).
+ENCODERS = {
+    "bge": {"model_name": "BAAI/bge-m3"},
+    "kanana": {
+        "model_name": "kakaocorp/kanana-2-3b-embedding",
+        "revision": "2c85dbe61af8ff033d2c9d46a686c665153069aa",
+        "trust_remote_code": True,
+        # bf16 출력은 Normalize 이후에도 norm이 1에서 최대 ~0.4% 벗어나 cosine을 float32로 다시 맞춘다.
+        "float32_renormalize": True,
+    },
+}
+
+
+def encode_bccard(
+    data_dir, cache_dir, *, splits=ENCODED_SPLITS, device="cuda:0", encoder="bge"
+):
+    """Encode the corpus and selected query splits one text at a time."""
     import numpy as np
 
     from retrievers.dense import DenseConfig, DenseEmbedder
 
+    if encoder not in ENCODERS:
+        raise ValueError(f"encoder는 {', '.join(ENCODERS)} 중에서 선택합니다.")
+    spec = ENCODERS[encoder]
     data_dir, cache_dir = Path(data_dir), Path(cache_dir)
     if cache_dir.exists() and any(cache_dir.iterdir()):
         raise ValueError("cache-dir은 새 경로 또는 비어 있는 디렉터리여야 합니다.")
     cache_dir.mkdir(parents=True, exist_ok=True)
     datasets = {split: load_evaluation_dataset(data_dir, split) for split in splits}
     documents = next(iter(datasets.values())).documents
-    config = DenseConfig(device=device, batch_size=1)
+    config = DenseConfig(
+        model_name=spec["model_name"],
+        revision=spec.get("revision"),
+        device=device,
+        batch_size=1,
+    )
     embedder = DenseEmbedder(config)
+    trust_remote_code = spec.get("trust_remote_code", False)
+    if trust_remote_code and embedder.model is None:
+        from sentence_transformers import SentenceTransformer
+
+        embedder.model = SentenceTransformer(
+            config.model_name,
+            device=device,
+            revision=config.revision,
+            trust_remote_code=True,
+        )
+    on_gpu = str(device).startswith("cuda")
+    if on_gpu:
+        import torch
+
+        torch.cuda.reset_peak_memory_stats(device)
     started = perf_counter()
-    vectors = np.concatenate(
-        [embedder.encode_documents([build_index_text(doc)]) for doc in documents]
+    renormalize = spec.get("float32_renormalize", False)
+    vectors = _maybe_renormalize(
+        np.concatenate(
+            [embedder.encode_documents([build_index_text(doc)]) for doc in documents]
+        ),
+        renormalize,
     )
     document_seconds = perf_counter() - started
     np.save(cache_dir / "document-vectors.npy", vectors, allow_pickle=False)
@@ -57,10 +99,14 @@ def encode_bccard(data_dir, cache_dir, *, splits=ENCODED_SPLITS, device="cuda:0"
             "passage_prefix": config.passage_prefix,
             "batch_size": config.batch_size,
             "device": device,
+            "trust_remote_code": trust_remote_code,
         },
         "max_seq_length": embedder.model.max_seq_length,
         "dtype": str(next(embedder.model.parameters()).dtype),
+        "embedding_dimension": int(vectors.shape[1]),
+        "libraries": _library_versions(),
         "preprocessing": {"document": "Pair positive text only", "query": "unchanged"},
+        "postprocessing": "float32 L2 re-normalization" if renormalize else None,
         "dataset_manifest_sha256": file_sha256(data_dir / "manifest.json"),
         "document_ids_sha256": _ids_digest(doc.document_id for doc in documents),
         "document_encoding_seconds": document_seconds,
@@ -71,7 +117,9 @@ def encode_bccard(data_dir, cache_dir, *, splits=ENCODED_SPLITS, device="cuda:0"
         rows, timings = [], []
         for query in dataset.queries:
             started = perf_counter()
-            rows.append(embedder.encode_query(query.text))
+            rows.append(
+                _maybe_renormalize(embedder.encode_query(query.text), renormalize)
+            )
             timings.append((perf_counter() - started) * 1000)
         name = f"query-vectors-{split}.npy"
         np.save(cache_dir / name, np.concatenate(rows), allow_pickle=False)
@@ -82,8 +130,34 @@ def encode_bccard(data_dir, cache_dir, *, splits=ENCODED_SPLITS, device="cuda:0"
         record["vector_sha256"][name] = None
     for name in record["vector_sha256"]:
         record["vector_sha256"][name] = file_sha256(cache_dir / name)
+    if on_gpu:
+        record["gpu"] = {
+            "name": torch.cuda.get_device_name(device),
+            "peak_memory_allocated_bytes": torch.cuda.max_memory_allocated(device),
+        }
     write_json(cache_dir / "encoding.json", record)
     return record
+
+
+def _maybe_renormalize(vectors, enabled):
+    import numpy as np
+
+    if not enabled:
+        return vectors
+    vectors = np.asarray(vectors, dtype=np.float32)
+    return vectors / np.linalg.norm(vectors, axis=1, keepdims=True)
+
+
+def _library_versions():
+    import importlib.metadata
+
+    versions = {}
+    for name in ("torch", "transformers", "sentence-transformers"):
+        try:
+            versions[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            versions[name] = None
+    return versions
 
 
 def _ids_digest(ids):
@@ -253,12 +327,20 @@ def run_enterprise_baselines(
         },
         "encoding": {
             key: encoding[key]
-            for key in ("model", "max_seq_length", "dtype", "vector_sha256")
+            for key in (
+                "model",
+                "max_seq_length",
+                "dtype",
+                "embedding_dimension",
+                "vector_sha256",
+            )
+            if key in encoding
         }
         | {
+            "record_sha256": file_sha256(Path(cache_dir) / "encoding.json"),
             "query_encoding_latency": encoding["splits"][split][
                 "query_encoding_latency"
-            ]
+            ],
         },
         "environment": _environment(),
         "code": _code_provenance(),
@@ -268,6 +350,8 @@ def run_enterprise_baselines(
     report["code"]["sha256"]["evaluation/enterprise.py"] = file_sha256(Path(__file__))
     for name in methods:
         retriever, setup_seconds, config = retrievers[name]
+        if name == "dense":
+            config = {"embedding": f"cached {encoding['model']['model_name']} vectors"}
         if progress:
             progress(f"{split}: {name} / {len(dataset.queries)} queries / {repeats}")
         result = benchmark_retriever(retriever, dataset, warmup=warmup, repeats=repeats)

@@ -1,0 +1,1163 @@
+{
+  "slice": "non_synthetic (primary)",
+  "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+  "runs": {
+    "bge:dense": {
+      "protocol": {
+        "split": "test",
+        "dataset_id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "dataset_revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus_sha256": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_sha256": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+        "corpus_size": 36281,
+        "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5",
+        "top_k": 10,
+        "relevance": "binary metrics use relevance > 0; graded nDCG uses gains 1-3",
+        "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+        "primary_slice_query_count": 721,
+        "primary_slice_query_count_in_report": 721
+      },
+      "method": {
+        "name": "dense",
+        "config": {
+          "embedding": "cached BAAI/bge-m3 vectors"
+        },
+        "model_name": "BAAI/bge-m3",
+        "model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "normalize_embeddings": true,
+        "query_prefix": "",
+        "passage_prefix": "",
+        "dtype": "torch.float32",
+        "max_seq_length": 8192,
+        "embedding_dimension": null,
+        "vector_sha256": {
+          "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+          "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+          "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+        }
+      },
+      "run": {
+        "git_commit": "6375acce454103fd27614ceba93ce9e63fdd7c91",
+        "working_tree_dirty": false,
+        "created_at_utc": "2026-10-30T05:10:45.799874+00:00",
+        "environment": {
+          "python": "3.12.3",
+          "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+          "cpu_count": 128,
+          "packages": {
+            "scikit-learn": "1.9.1",
+            "bm25s": "0.3.12",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "sentence-transformers": "6.1.0",
+            "faiss-cpu": "1.15.1"
+          }
+        },
+        "result_sha256": "ad6d455581d85ee15a14f23aed801ca7177586d2a0f85a1fd57be08080646a5a"
+      }
+    },
+    "bge:score_fusion": {
+      "protocol": {
+        "split": "test",
+        "dataset_id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "dataset_revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus_sha256": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_sha256": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+        "corpus_size": 36281,
+        "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5",
+        "top_k": 10,
+        "relevance": "binary metrics use relevance > 0; graded nDCG uses gains 1-3",
+        "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+        "primary_slice_query_count": 721,
+        "primary_slice_query_count_in_report": 721
+      },
+      "method": {
+        "name": "score_fusion",
+        "config": {
+          "bm25_weight": 0.05,
+          "normalization": "per-query corpus maximum",
+          "candidate_scope": "full corpus",
+          "vector_correction": false
+        },
+        "model_name": "BAAI/bge-m3",
+        "model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "normalize_embeddings": true,
+        "query_prefix": "",
+        "passage_prefix": "",
+        "dtype": "torch.float32",
+        "max_seq_length": 8192,
+        "embedding_dimension": null,
+        "vector_sha256": {
+          "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+          "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+          "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+        }
+      },
+      "run": {
+        "git_commit": "6375acce454103fd27614ceba93ce9e63fdd7c91",
+        "working_tree_dirty": false,
+        "created_at_utc": "2026-10-30T05:10:45.799874+00:00",
+        "environment": {
+          "python": "3.12.3",
+          "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+          "cpu_count": 128,
+          "packages": {
+            "scikit-learn": "1.9.1",
+            "bm25s": "0.3.12",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "sentence-transformers": "6.1.0",
+            "faiss-cpu": "1.15.1"
+          }
+        },
+        "result_sha256": "ad6d455581d85ee15a14f23aed801ca7177586d2a0f85a1fd57be08080646a5a"
+      }
+    },
+    "adaptive:adaptive": {
+      "protocol": {
+        "split": "test",
+        "dataset_id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "dataset_revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus_sha256": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_sha256": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+        "corpus_size": 36281,
+        "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5",
+        "top_k": 10,
+        "relevance": "binary metrics use relevance > 0; graded nDCG uses gains 1-3",
+        "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+        "primary_slice_query_count": 721,
+        "primary_slice_query_count_in_report": 721
+      },
+      "method": {
+        "name": "adaptive",
+        "config": {
+          "router_sha256": "948c9081a177de62f8b9b46b4350c64c910a276e26318100dba164fdbf6c0cd1",
+          "weights": [
+            0.2,
+            0.1,
+            0
+          ],
+          "selection": "frozen router"
+        },
+        "model_name": "BAAI/bge-m3",
+        "model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "normalize_embeddings": true,
+        "query_prefix": "",
+        "passage_prefix": "",
+        "dtype": "torch.float32",
+        "max_seq_length": 8192,
+        "embedding_dimension": null,
+        "vector_sha256": {
+          "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+          "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+          "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+        }
+      },
+      "run": {
+        "git_commit": "6375acce454103fd27614ceba93ce9e63fdd7c91",
+        "working_tree_dirty": false,
+        "created_at_utc": "2026-10-30T05:09:36.060993+00:00",
+        "environment": {
+          "python": "3.12.3",
+          "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+          "cpu_count": 128,
+          "packages": {
+            "scikit-learn": "1.9.1",
+            "bm25s": "0.3.12",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "sentence-transformers": "6.1.0",
+            "faiss-cpu": "1.15.1"
+          }
+        },
+        "result_sha256": "ef62e4b8587f7c288682b78fa0034e2aef7683ee82f9594abd36fe88aa07655b"
+      }
+    },
+    "adaptive:adaptive_oracle": {
+      "protocol": {
+        "split": "test",
+        "dataset_id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "dataset_revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus_sha256": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_sha256": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+        "corpus_size": 36281,
+        "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5",
+        "top_k": 10,
+        "relevance": "binary metrics use relevance > 0; graded nDCG uses gains 1-3",
+        "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+        "primary_slice_query_count": 721,
+        "primary_slice_query_count_in_report": 721
+      },
+      "method": {
+        "name": "adaptive_oracle",
+        "config": {
+          "router_sha256": "948c9081a177de62f8b9b46b4350c64c910a276e26318100dba164fdbf6c0cd1",
+          "weights": [
+            0.2,
+            0.1,
+            0
+          ],
+          "selection": "best frozen mode by binary nDCG@10; post-hoc upper bound"
+        },
+        "model_name": "BAAI/bge-m3",
+        "model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "normalize_embeddings": true,
+        "query_prefix": "",
+        "passage_prefix": "",
+        "dtype": "torch.float32",
+        "max_seq_length": 8192,
+        "embedding_dimension": null,
+        "vector_sha256": {
+          "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+          "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+          "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+        }
+      },
+      "run": {
+        "git_commit": "6375acce454103fd27614ceba93ce9e63fdd7c91",
+        "working_tree_dirty": false,
+        "created_at_utc": "2026-10-30T05:09:36.060993+00:00",
+        "environment": {
+          "python": "3.12.3",
+          "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+          "cpu_count": 128,
+          "packages": {
+            "scikit-learn": "1.9.1",
+            "bm25s": "0.3.12",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "sentence-transformers": "6.1.0",
+            "faiss-cpu": "1.15.1"
+          }
+        },
+        "result_sha256": "ef62e4b8587f7c288682b78fa0034e2aef7683ee82f9594abd36fe88aa07655b"
+      }
+    },
+    "kanana:dense": {
+      "protocol": {
+        "split": "test",
+        "dataset_id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "dataset_revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus_sha256": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_sha256": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+        "corpus_size": 36281,
+        "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5",
+        "top_k": 10,
+        "relevance": "binary metrics use relevance > 0; graded nDCG uses gains 1-3",
+        "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+        "primary_slice_query_count": 721,
+        "primary_slice_query_count_in_report": 721
+      },
+      "method": {
+        "name": "dense",
+        "config": {
+          "embedding": "cached kakaocorp/kanana-2-3b-embedding vectors"
+        },
+        "model_name": "kakaocorp/kanana-2-3b-embedding",
+        "model_revision": "2c85dbe61af8ff033d2c9d46a686c665153069aa",
+        "normalize_embeddings": true,
+        "query_prefix": "",
+        "passage_prefix": "",
+        "dtype": "torch.bfloat16",
+        "max_seq_length": 4096,
+        "embedding_dimension": 2560,
+        "vector_sha256": {
+          "document-vectors.npy": "e8fc9d3b345bce6a475246a71e1a0bd12e97f22290c6eb372a60ea7db59793c5",
+          "query-vectors-validation.npy": "9c7c5e685c2d91948387b6f891918c0423311ba2e088a6e3e5543799341ba816",
+          "query-vectors-test.npy": "3d0a0da8c548c3ccc6d6e21e71c2b479b4c914b37d5baf6c5ebfc713a8a6c6da"
+        }
+      },
+      "run": {
+        "git_commit": "cdf7c2f33678fa00efbd78030a9a58ef903493f7",
+        "working_tree_dirty": false,
+        "created_at_utc": "2026-10-30T06:25:11.795896+00:00",
+        "environment": {
+          "python": "3.12.3",
+          "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+          "cpu_count": 128,
+          "packages": {
+            "scikit-learn": "1.9.1",
+            "bm25s": "0.3.12",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "sentence-transformers": "6.1.0",
+            "faiss-cpu": "1.15.1"
+          }
+        },
+        "result_sha256": "fe0776fbc75c83d9b662cf1008859d5735fb71208c9a3012d454668056bd7432"
+      }
+    },
+    "kanana:score_fusion": {
+      "protocol": {
+        "split": "test",
+        "dataset_id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "dataset_revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus_sha256": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_sha256": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+        "corpus_size": 36281,
+        "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5",
+        "top_k": 10,
+        "relevance": "binary metrics use relevance > 0; graded nDCG uses gains 1-3",
+        "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+        "primary_slice_query_count": 721,
+        "primary_slice_query_count_in_report": 721
+      },
+      "method": {
+        "name": "score_fusion",
+        "config": {
+          "bm25_weight": 0.05,
+          "normalization": "per-query corpus maximum",
+          "candidate_scope": "full corpus",
+          "vector_correction": false
+        },
+        "model_name": "kakaocorp/kanana-2-3b-embedding",
+        "model_revision": "2c85dbe61af8ff033d2c9d46a686c665153069aa",
+        "normalize_embeddings": true,
+        "query_prefix": "",
+        "passage_prefix": "",
+        "dtype": "torch.bfloat16",
+        "max_seq_length": 4096,
+        "embedding_dimension": 2560,
+        "vector_sha256": {
+          "document-vectors.npy": "e8fc9d3b345bce6a475246a71e1a0bd12e97f22290c6eb372a60ea7db59793c5",
+          "query-vectors-validation.npy": "9c7c5e685c2d91948387b6f891918c0423311ba2e088a6e3e5543799341ba816",
+          "query-vectors-test.npy": "3d0a0da8c548c3ccc6d6e21e71c2b479b4c914b37d5baf6c5ebfc713a8a6c6da"
+        }
+      },
+      "run": {
+        "git_commit": "cdf7c2f33678fa00efbd78030a9a58ef903493f7",
+        "working_tree_dirty": false,
+        "created_at_utc": "2026-10-30T06:25:11.795896+00:00",
+        "environment": {
+          "python": "3.12.3",
+          "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+          "cpu_count": 128,
+          "packages": {
+            "scikit-learn": "1.9.1",
+            "bm25s": "0.3.12",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "sentence-transformers": "6.1.0",
+            "faiss-cpu": "1.15.1"
+          }
+        },
+        "result_sha256": "fe0776fbc75c83d9b662cf1008859d5735fb71208c9a3012d454668056bd7432"
+      }
+    },
+    "pr28:score_fusion": {
+      "protocol": {
+        "split": "test",
+        "dataset_id": "BCCard/BCAI-Finance-Kor-Embedding-Triplet",
+        "dataset_revision": "f63d59969dba9916bd34c86c82112331890b11da",
+        "manifest_sha256": "b6bb7822896b3e669a72c072c5c7524fc8653871258d5db660a329cc297a924d",
+        "corpus_sha256": "64ae43df76e827247b117e60e2e0b8164aa5b18365bb7c3f8d691ede71b56a0c",
+        "queries_sha256": "cec1dbaee2f77dc1ac40bdf9d9b6694012aebd9916503a9099538550a5824d31",
+        "qrels_sha256": "edf920d266cbced80bb726d32f6b794d82a24ca256eed5b6c0fd7af4184efb65",
+        "corpus_size": 36281,
+        "query_ids_sha256": "f6a402c7b6938ee471c42ce0a5766f31eb1320bb70d539585d5f8f2f76a7b3c5",
+        "top_k": 10,
+        "relevance": "binary metrics use relevance > 0; graded nDCG uses gains 1-3",
+        "primary_slice_query_ids_sha256": "3797c3ae61324371b5d0438ef75de27f8a4ae28780e464de6c16ba18d07e8117",
+        "primary_slice_query_count": 721,
+        "primary_slice_query_count_in_report": 721
+      },
+      "method": {
+        "name": "score_fusion",
+        "config": {
+          "bm25_weight": 0.05,
+          "normalization": "per-query corpus maximum",
+          "candidate_scope": "full corpus",
+          "vector_correction": false
+        },
+        "model_name": "BAAI/bge-m3",
+        "model_revision": "5617a9f61b028005a4858fdac845db406aefb181",
+        "normalize_embeddings": true,
+        "query_prefix": "",
+        "passage_prefix": "",
+        "dtype": "torch.float32",
+        "max_seq_length": 8192,
+        "embedding_dimension": null,
+        "vector_sha256": {
+          "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+          "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+          "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+        }
+      },
+      "run": {
+        "git_commit": "107eed243b9716821ee0eaae4a46d9d4be4cc0db",
+        "working_tree_dirty": false,
+        "created_at_utc": "2026-10-28T03:49:21.433108+00:00",
+        "environment": {
+          "python": "3.12.3",
+          "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+          "cpu_count": 128,
+          "packages": {
+            "scikit-learn": "1.9.1",
+            "bm25s": "0.3.12",
+            "numpy": "2.5.3",
+            "scipy": "1.18.1",
+            "sentence-transformers": "6.1.0",
+            "faiss-cpu": "1.15.1"
+          }
+        },
+        "result_sha256": "89ee12cd72a5d31e5daa5c401a4e778d2c45b21e329c0104bc82f7c2ae0fdbbe"
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "a": "bge:dense",
+      "b": "bge:score_fusion",
+      "identity": {
+        "differences": {
+          "name": [
+            "dense",
+            "score_fusion"
+          ],
+          "config": [
+            {
+              "embedding": "cached BAAI/bge-m3 vectors"
+            },
+            {
+              "bm25_weight": 0.05,
+              "normalization": "per-query corpus maximum",
+              "candidate_scope": "full corpus",
+              "vector_correction": false
+            }
+          ]
+        },
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.7835091332711331,
+          "mean_b": 0.7940145938588489,
+          "difference": 0.010505460587715794,
+          "ci95": [
+            0.0025068348788048465,
+            0.01871404759822121
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 62,
+          "ties": 618,
+          "losses_b": 41
+        },
+        "mrr@10": {
+          "mean_a": 0.7460064284613521,
+          "mean_b": 0.7614617044228695,
+          "difference": 0.015455275961517294,
+          "ci95": [
+            0.0053327746956387725,
+            0.025964819584791847
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 62,
+          "ties": 618,
+          "losses_b": 41
+        },
+        "recall@10": {
+          "mean_a": 0.8987517337031901,
+          "mean_b": 0.8945908460471568,
+          "difference": -0.004160887656033287,
+          "ci95": [
+            -0.011095700416088766,
+            0.0027739251040221915
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 2,
+          "ties": 714,
+          "losses_b": 5
+        },
+        "p@1": {
+          "mean_a": 0.6560332871012483,
+          "mean_b": 0.6851595006934813,
+          "difference": 0.02912621359223301,
+          "ci95": [
+            0.011095700416088766,
+            0.04854368932038835
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 34,
+          "ties": 674,
+          "losses_b": 13
+        }
+      }
+    },
+    {
+      "a": "bge:score_fusion",
+      "b": "adaptive:adaptive",
+      "identity": {
+        "differences": {
+          "name": [
+            "score_fusion",
+            "adaptive"
+          ],
+          "config": [
+            {
+              "bm25_weight": 0.05,
+              "normalization": "per-query corpus maximum",
+              "candidate_scope": "full corpus",
+              "vector_correction": false
+            },
+            {
+              "router_sha256": "948c9081a177de62f8b9b46b4350c64c910a276e26318100dba164fdbf6c0cd1",
+              "weights": [
+                0.2,
+                0.1,
+                0
+              ],
+              "selection": "frozen router"
+            }
+          ]
+        },
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.7940145938588489,
+          "mean_b": 0.7929672714773627,
+          "difference": -0.0010473223814861325,
+          "ci95": [
+            -0.006437232340328319,
+            0.004347412774864335
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 27,
+          "ties": 662,
+          "losses_b": 32
+        },
+        "mrr@10": {
+          "mean_a": 0.7614617044228695,
+          "mean_b": 0.7608392224203597,
+          "difference": -0.0006224820025097416,
+          "ci95": [
+            -0.0072832595821500125,
+            0.006008093366796555
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 27,
+          "ties": 662,
+          "losses_b": 32
+        },
+        "recall@10": {
+          "mean_a": 0.8945908460471568,
+          "mean_b": 0.8918169209431346,
+          "difference": -0.0027739251040221915,
+          "ci95": [
+            -0.009708737864077669,
+            0.004160887656033287
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 2,
+          "ties": 715,
+          "losses_b": 4
+        },
+        "p@1": {
+          "mean_a": 0.6851595006934813,
+          "mean_b": 0.6837725381414702,
+          "difference": -0.0013869625520110957,
+          "ci95": [
+            -0.013869625520110958,
+            0.011095700416088766
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 9,
+          "ties": 702,
+          "losses_b": 10
+        }
+      }
+    },
+    {
+      "a": "bge:score_fusion",
+      "b": "adaptive:adaptive_oracle",
+      "identity": {
+        "differences": {
+          "name": [
+            "score_fusion",
+            "adaptive_oracle"
+          ],
+          "config": [
+            {
+              "bm25_weight": 0.05,
+              "normalization": "per-query corpus maximum",
+              "candidate_scope": "full corpus",
+              "vector_correction": false
+            },
+            {
+              "router_sha256": "948c9081a177de62f8b9b46b4350c64c910a276e26318100dba164fdbf6c0cd1",
+              "weights": [
+                0.2,
+                0.1,
+                0
+              ],
+              "selection": "best frozen mode by binary nDCG@10; post-hoc upper bound"
+            }
+          ]
+        },
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.7940145938588489,
+          "mean_b": 0.8171080618818238,
+          "difference": 0.02309346802297493,
+          "ci95": [
+            0.017054127554788846,
+            0.029768297199293154
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 73,
+          "ties": 646,
+          "losses_b": 2
+        },
+        "mrr@10": {
+          "mean_a": 0.7614617044228695,
+          "mean_b": 0.7878976509697729,
+          "difference": 0.026435946546903552,
+          "ci95": [
+            0.01914128029852718,
+            0.034508563943376695
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 73,
+          "ties": 646,
+          "losses_b": 2
+        },
+        "recall@10": {
+          "mean_a": 0.8945908460471568,
+          "mean_b": 0.9070735090152566,
+          "difference": 0.012482662968099861,
+          "ci95": [
+            0.005547850208044383,
+            0.020804438280166437
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 9,
+          "ties": 712,
+          "losses_b": 0
+        },
+        "p@1": {
+          "mean_a": 0.6851595006934813,
+          "mean_b": 0.7170596393897365,
+          "difference": 0.0319001386962552,
+          "ci95": [
+            0.019417475728155338,
+            0.04576976421636616
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 23,
+          "ties": 698,
+          "losses_b": 0
+        }
+      }
+    },
+    {
+      "a": "bge:dense",
+      "b": "kanana:dense",
+      "identity": {
+        "differences": {
+          "config": [
+            {
+              "embedding": "cached BAAI/bge-m3 vectors"
+            },
+            {
+              "embedding": "cached kakaocorp/kanana-2-3b-embedding vectors"
+            }
+          ],
+          "model_name": [
+            "BAAI/bge-m3",
+            "kakaocorp/kanana-2-3b-embedding"
+          ],
+          "model_revision": [
+            "5617a9f61b028005a4858fdac845db406aefb181",
+            "2c85dbe61af8ff033d2c9d46a686c665153069aa"
+          ],
+          "dtype": [
+            "torch.float32",
+            "torch.bfloat16"
+          ],
+          "max_seq_length": [
+            8192,
+            4096
+          ],
+          "embedding_dimension": [
+            null,
+            2560
+          ],
+          "vector_sha256": [
+            {
+              "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+              "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+              "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+            },
+            {
+              "document-vectors.npy": "e8fc9d3b345bce6a475246a71e1a0bd12e97f22290c6eb372a60ea7db59793c5",
+              "query-vectors-validation.npy": "9c7c5e685c2d91948387b6f891918c0423311ba2e088a6e3e5543799341ba816",
+              "query-vectors-test.npy": "3d0a0da8c548c3ccc6d6e21e71c2b479b4c914b37d5baf6c5ebfc713a8a6c6da"
+            }
+          ]
+        },
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.7835091332711331,
+          "mean_b": 0.8028604550749961,
+          "difference": 0.019351321803862974,
+          "ci95": [
+            0.0057861592923561175,
+            0.03303615214470655
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 106,
+          "ties": 542,
+          "losses_b": 73
+        },
+        "mrr@10": {
+          "mean_a": 0.7460064284613521,
+          "mean_b": 0.7703877991325981,
+          "difference": 0.024381370671245847,
+          "ci95": [
+            0.008077680910551924,
+            0.04099489795918366
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 106,
+          "ties": 542,
+          "losses_b": 73
+        },
+        "recall@10": {
+          "mean_a": 0.8987517337031901,
+          "mean_b": 0.9015256588072122,
+          "difference": 0.0027739251040221915,
+          "ci95": [
+            -0.011095700416088766,
+            0.016643550624133148
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 15,
+          "ties": 693,
+          "losses_b": 13
+        },
+        "p@1": {
+          "mean_a": 0.6560332871012483,
+          "mean_b": 0.6893203883495146,
+          "difference": 0.033287101248266296,
+          "ci95": [
+            0.006934812760055479,
+            0.059639389736477116
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 60,
+          "ties": 625,
+          "losses_b": 36
+        }
+      }
+    },
+    {
+      "a": "bge:score_fusion",
+      "b": "kanana:score_fusion",
+      "identity": {
+        "differences": {
+          "model_name": [
+            "BAAI/bge-m3",
+            "kakaocorp/kanana-2-3b-embedding"
+          ],
+          "model_revision": [
+            "5617a9f61b028005a4858fdac845db406aefb181",
+            "2c85dbe61af8ff033d2c9d46a686c665153069aa"
+          ],
+          "dtype": [
+            "torch.float32",
+            "torch.bfloat16"
+          ],
+          "max_seq_length": [
+            8192,
+            4096
+          ],
+          "embedding_dimension": [
+            null,
+            2560
+          ],
+          "vector_sha256": [
+            {
+              "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+              "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+              "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+            },
+            {
+              "document-vectors.npy": "e8fc9d3b345bce6a475246a71e1a0bd12e97f22290c6eb372a60ea7db59793c5",
+              "query-vectors-validation.npy": "9c7c5e685c2d91948387b6f891918c0423311ba2e088a6e3e5543799341ba816",
+              "query-vectors-test.npy": "3d0a0da8c548c3ccc6d6e21e71c2b479b4c914b37d5baf6c5ebfc713a8a6c6da"
+            }
+          ]
+        },
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.7940145938588489,
+          "mean_b": 0.8087191867106275,
+          "difference": 0.01470459285177855,
+          "ci95": [
+            0.0017043897921118194,
+            0.02751563523851896
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 93,
+          "ties": 565,
+          "losses_b": 63
+        },
+        "mrr@10": {
+          "mean_a": 0.7614617044228695,
+          "mean_b": 0.7784740109636088,
+          "difference": 0.017012306540739274,
+          "ci95": [
+            0.0014341578055170276,
+            0.032175164564207555
+          ],
+          "ci_excludes_zero": true,
+          "wins_b": 93,
+          "ties": 565,
+          "losses_b": 63
+        },
+        "recall@10": {
+          "mean_a": 0.8945908460471568,
+          "mean_b": 0.9001386962552012,
+          "difference": 0.005547850208044383,
+          "ci95": [
+            -0.008321775312066574,
+            0.019417475728155338
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 14,
+          "ties": 697,
+          "losses_b": 10
+        },
+        "p@1": {
+          "mean_a": 0.6851595006934813,
+          "mean_b": 0.7004160887656034,
+          "difference": 0.015256588072122053,
+          "ci95": [
+            -0.009708737864077669,
+            0.04022191400832178
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 49,
+          "ties": 634,
+          "losses_b": 38
+        }
+      }
+    },
+    {
+      "a": "kanana:dense",
+      "b": "kanana:score_fusion",
+      "identity": {
+        "differences": {
+          "name": [
+            "dense",
+            "score_fusion"
+          ],
+          "config": [
+            {
+              "embedding": "cached kakaocorp/kanana-2-3b-embedding vectors"
+            },
+            {
+              "bm25_weight": 0.05,
+              "normalization": "per-query corpus maximum",
+              "candidate_scope": "full corpus",
+              "vector_correction": false
+            }
+          ]
+        },
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.8028604550749961,
+          "mean_b": 0.8087191867106275,
+          "difference": 0.005858731635631367,
+          "ci95": [
+            -0.0009295568544833914,
+            0.012760821151221464
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 50,
+          "ties": 640,
+          "losses_b": 31
+        },
+        "mrr@10": {
+          "mean_a": 0.7703877991325981,
+          "mean_b": 0.7784740109636088,
+          "difference": 0.008086211831010721,
+          "ci95": [
+            -0.0008488128261013137,
+            0.017113755696453337
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 50,
+          "ties": 640,
+          "losses_b": 31
+        },
+        "recall@10": {
+          "mean_a": 0.9015256588072122,
+          "mean_b": 0.9001386962552012,
+          "difference": -0.0013869625520110957,
+          "ci95": [
+            -0.006934812760055479,
+            0.0027739251040221915
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 1,
+          "ties": 718,
+          "losses_b": 2
+        },
+        "p@1": {
+          "mean_a": 0.6893203883495146,
+          "mean_b": 0.7004160887656034,
+          "difference": 0.011095700416088766,
+          "ci95": [
+            -0.005547850208044383,
+            0.027739251040221916
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 22,
+          "ties": 685,
+          "losses_b": 14
+        }
+      }
+    },
+    {
+      "a": "bge:score_fusion",
+      "b": "kanana:dense",
+      "identity": {
+        "differences": {
+          "name": [
+            "score_fusion",
+            "dense"
+          ],
+          "config": [
+            {
+              "bm25_weight": 0.05,
+              "normalization": "per-query corpus maximum",
+              "candidate_scope": "full corpus",
+              "vector_correction": false
+            },
+            {
+              "embedding": "cached kakaocorp/kanana-2-3b-embedding vectors"
+            }
+          ],
+          "model_name": [
+            "BAAI/bge-m3",
+            "kakaocorp/kanana-2-3b-embedding"
+          ],
+          "model_revision": [
+            "5617a9f61b028005a4858fdac845db406aefb181",
+            "2c85dbe61af8ff033d2c9d46a686c665153069aa"
+          ],
+          "dtype": [
+            "torch.float32",
+            "torch.bfloat16"
+          ],
+          "max_seq_length": [
+            8192,
+            4096
+          ],
+          "embedding_dimension": [
+            null,
+            2560
+          ],
+          "vector_sha256": [
+            {
+              "document-vectors.npy": "44c7899574c68a4b242b4e8d0eee9670c24ffe1793f8aed8f8524649f259be5a",
+              "query-vectors-validation.npy": "2fcc71cb1af1b66a255733083242624c7527c8432e98b02d370fc8c235d348c3",
+              "query-vectors-test.npy": "f9bd29c1a96a299958e25071d9aec66289401788047e1351de48768dc5ff696e"
+            },
+            {
+              "document-vectors.npy": "e8fc9d3b345bce6a475246a71e1a0bd12e97f22290c6eb372a60ea7db59793c5",
+              "query-vectors-validation.npy": "9c7c5e685c2d91948387b6f891918c0423311ba2e088a6e3e5543799341ba816",
+              "query-vectors-test.npy": "3d0a0da8c548c3ccc6d6e21e71c2b479b4c914b37d5baf6c5ebfc713a8a6c6da"
+            }
+          ]
+        },
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.7940145938588489,
+          "mean_b": 0.8028604550749961,
+          "difference": 0.008845861216147183,
+          "ci95": [
+            -0.005371830093096904,
+            0.022934079512219714
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 99,
+          "ties": 541,
+          "losses_b": 81
+        },
+        "mrr@10": {
+          "mean_a": 0.7614617044228695,
+          "mean_b": 0.7703877991325981,
+          "difference": 0.008926094709728553,
+          "ci95": [
+            -0.008458338837152983,
+            0.026144422979547808
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 99,
+          "ties": 541,
+          "losses_b": 81
+        },
+        "recall@10": {
+          "mean_a": 0.8945908460471568,
+          "mean_b": 0.9015256588072122,
+          "difference": 0.006934812760055479,
+          "ci95": [
+            -0.006934812760055479,
+            0.020804438280166437
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 16,
+          "ties": 694,
+          "losses_b": 11
+        },
+        "p@1": {
+          "mean_a": 0.6851595006934813,
+          "mean_b": 0.6893203883495146,
+          "difference": 0.004160887656033287,
+          "ci95": [
+            -0.024965325936199722,
+            0.0319001386962552
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 55,
+          "ties": 614,
+          "losses_b": 52
+        }
+      }
+    },
+    {
+      "a": "pr28:score_fusion",
+      "b": "bge:score_fusion",
+      "identity": {
+        "differences": {},
+        "unverified": [],
+        "warnings": []
+      },
+      "query_count": 721,
+      "resamples": 10000,
+      "seed": 20261030,
+      "interval": "percentile 2.5/97.5 of resampled mean(B - A)",
+      "tie_tolerance": 1e-12,
+      "metrics": {
+        "ndcg@10": {
+          "mean_a": 0.7940145938588489,
+          "mean_b": 0.7940145938588489,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 0,
+          "ties": 721,
+          "losses_b": 0
+        },
+        "mrr@10": {
+          "mean_a": 0.7614617044228695,
+          "mean_b": 0.7614617044228695,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 0,
+          "ties": 721,
+          "losses_b": 0
+        },
+        "recall@10": {
+          "mean_a": 0.8945908460471568,
+          "mean_b": 0.8945908460471568,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 0,
+          "ties": 721,
+          "losses_b": 0
+        },
+        "p@1": {
+          "mean_a": 0.6851595006934813,
+          "mean_b": 0.6851595006934813,
+          "difference": 0.0,
+          "ci95": [
+            0.0,
+            0.0
+          ],
+          "ci_excludes_zero": false,
+          "wins_b": 0,
+          "ties": 721,
+          "losses_b": 0
+        }
+      }
+    }
+  ]
+}
