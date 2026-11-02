@@ -1,20 +1,21 @@
 # Downstream RAG 평가 (RAGAS, 탐색적 실험)
 
-상태: experimental branch(`experiment/ragas-downstream-eval`) 전용. main 미반영.
+상태: 탐색 실험 기록이다. 실험 코드(`evaluation/rag_downstream.py`, `scripts/evaluate_rag_downstream.py`)와 요약만 포함하며 API·UI 경로는 바꾸지 않는다. 의존성은 optional `rag` extra에만 있다.
 목적: 기존 retrieval 차이가 동일 generator·동일 judge·동일 질의에서 RAG context/answer 품질로
 어떻게 전달되는지 확인한다. 새 알고리즘·재튜닝이 아니며 최종 benchmark가 아니다.
 
 ## 요약
 
-- **큰 retrieval 차이는 downstream으로 전달됐다.** Sparse(TF-IDF/BM25)와 Dense 계열의
-  nDCG@10 차이(약 0.14–0.22)는 Context Precision(+0.09–0.20), 응답 거부율(29–32% → 20–21%),
-  Faithfulness(+0.03–0.06)에서 같은 방향으로 나타났다.
+- **큰 retrieval 차이와 같은 방향의 downstream 차이가 관찰됐다.** Sparse(TF-IDF/BM25)와 Dense 계열의
+  nDCG@10 차이(약 0.14–0.22)와 같은 방향으로 Context Precision(+0.09–0.20), 응답 거부율(29–32% → 20–21%),
+  Faithfulness(+0.03–0.06) 차이가 나타났다. 이 비교는 paired CI를 계산하지 않은 기술 통계다.
 - **RRF − Dense(nDCG@10 −0.053, CI가 0 제외)는 LLM Context Precision에서만 같은 방향으로 보였다**
   (−0.053, 95% CI [−0.102, −0.002]). 잘린 생성 1건을 뺀 sensitivity에서는 CI 상한이 +0.002로 0을 포함해
   경계선상이다. Faithfulness·Response Relevancy 차이는 CI가 0을 포함한다.
 - **Score Fusion − Dense는 downstream 차이가 관찰되지 않았다.** 이 표본의 nDCG@10 차이는 +0.006(CI 0 포함)이고,
   top-5 관련 문서 수가 바뀐 질의는 100개 중 6개뿐이다. RAGAS 세 지표 모두 평균 차이가 −0.008 ~ −0.010으로
-  CI가 0을 포함한다. 작은 retrieval 개선은 이 규모에서 answer 품질 신호로 구분되지 않았다.
+  CI가 0을 포함한다. 작은 retrieval 개선은 이 규모에서 RAGAS 지표로 구분되지 않았다. 차이가 없다는 증명은 아니다.
+  CI 반폭(약 0.02–0.03)보다 작은 효과는 이 실험으로 배제할 수 없다.
 - Ko-StrategyQA에는 reference answer가 없어 **Answer Correctness와 LLM Context Recall은 계산하지 않았다.**
 
 ## 1. 데이터 적합성과 metric 선택
@@ -200,9 +201,9 @@ Faithfulness 0.007, Context Precision 0.002, Response Relevancy 0.025다.
 
 ## 6. 해석과 한계
 
-1. **Faithfulness는 상당 부분 응답 거부율을 반영한다 (사후 기술 분석).** 거부 응답의 평균 Faithfulness는 0.687,
+1. **Faithfulness 차이는 응답 거부율 차이와 함께 나타났다 (사후 기술 분석).** 거부 응답의 평균 Faithfulness는 0.687,
    답변한 응답은 0.922다. 답변한 응답만 보면 방법별 Faithfulness는 0.915–0.939로 거의 같다(BM25 0.939, Dense 0.919, Score Fusion 0.915).
-   Sparse와 Dense의 Faithfulness 차이는 주로 “관련 문서가 없어 거부한 비율”의 차이다.
+   Sparse와 Dense의 Faithfulness 차이의 상당 부분이 거부 비율 차이와 겹친다는 기술이며, 거부가 Faithfulness를 낮췄다는 인과 분해는 아니다.
 2. **Context Precision(reference-free)은 응답을 기준으로 context를 판정한다.** 응답이 바뀌면 같은 context도 다르게 평가될 수 있어
    순수한 retrieval 지표가 아니다. qrels 기반 ID 지표를 함께 본 이유다.
 3. **정답성(correctness)은 측정하지 않았다.** 위 벅스 버니 사례처럼 응답이 달라져도 어느 쪽이 맞는지 판단할 근거가 없다.
@@ -211,6 +212,9 @@ Faithfulness 0.007, Context Precision 0.002, Response Relevancy 0.025다.
 5. 하위 질문은 짧은 사실 질의이고 1위 문서로 답이 되는 경우가 많아, 하위 순위의 retrieval 개선이 응답에 반영될 여지가 작다.
 6. Ko-StrategyQA dev와 과거 실험 노출 이력은 [SCORE_FUSION_ANALYSIS.md](SCORE_FUSION_ANALYSIS.md)와 같다.
    α=0.05와 검색 설정은 바꾸지 않았다.
+7. 이 실험은 원본 BGE-M3 검색기 다섯 개를 생성 품질로 비교한 것이다. Finance query encoder 실험(PR #40–#43)은
+   다른 모델(BC Card로 학습한 query encoder), 다른 목적(encoder 교체 효과), 다른 범위(dev 592 전체, 생성 없음)라
+   두 결과를 직접 비교하거나 합쳐 해석하지 않는다.
 
 ## 7. 재현
 
@@ -239,6 +243,11 @@ uv run --no-sync python -m scripts.evaluate_rag_downstream summarize --queries 1
 NaN/무한대 metric은 0이 아니라 undefined(`None`, judge metric은 `non_finite_value` 사유)로 처리해
 평균·paired 비교·noise 추정에서 제외하며, JSONL과 `summary.json`은 표준 JSON으로만 기록한다.
 이 검증을 추가한 집계기로 아래 원시 산출물을 다시 요약해도 `summary.json`은 같은 SHA-256으로 재현된다.
+
+2026-11-02에 최신 main(`cc2959e`)과 병합한 tree로 다시 확인했다. Lock 검증(`uv lock --check`)과 `rag` extra 설치가 통과했고,
+다섯 검색기의 dev 592 nDCG@10이 고정값과 차이 0으로 같았으며, 기록된 100 질의 × 5 방법의 Top-10이 500/500 일치했다.
+원시 산출물을 `summarize --queries 100`으로 다시 집계한 `summary.json`도 같은 SHA-256이었다. 생성과 judge는 서버가 필요해 다시 실행하지 않았으므로,
+이 단계는 원시 산출물 기준 집계 재현만 확인한 것이다.
 
 원시 산출물(`config.json`, `queries.jsonl`, `retrieval.jsonl`, `generations.jsonl`, `ragas-results.jsonl/.csv`,
 `summary.json`, 서버 로그)은 gitignore된 `artifacts/ragas-eval/`에 보관한다.
