@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="360" viewBox="0 0 860 360" role="img" aria-label="Validation checkpoint curves, reproduction vs reference" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<title>Validation checkpoint curves, reproduction vs reference</title>
+<rect width="860" height="360" fill="#fcfcfb"/>
+<text x="24" y="28" font-size="15" font-weight="600" fill="#0b0b0b">Validation Dense nDCG@10 by checkpoint (745 primary queries)</text>
+<text x="24" y="46" font-size="12" fill="#52514e">Filled marker = selected checkpoint. Steps are evenly spaced on the axis.</text>
+<text x="76" y="76" font-size="13" font-weight="600" fill="#0b0b0b">Seed42 (selected 2048 vs reference 4096)</text>
+<line x1="76" x2="386" y1="261.4" y2="261.4" stroke="#e4e3df" stroke-width="1"/>
+<text x="70" y="265.4" font-size="11" text-anchor="end" fill="#52514e">0.790</text>
+<line x1="76" x2="386" y1="213.8" y2="213.8" stroke="#e4e3df" stroke-width="1"/>
+<text x="70" y="217.8" font-size="11" text-anchor="end" fill="#52514e">0.800</text>
+<line x1="76" x2="386" y1="166.2" y2="166.2" stroke="#e4e3df" stroke-width="1"/>
+<text x="70" y="170.2" font-size="11" text-anchor="end" fill="#52514e">0.810</text>
+<line x1="76" x2="386" y1="118.6" y2="118.6" stroke="#e4e3df" stroke-width="1"/>
+<text x="70" y="122.6" font-size="11" text-anchor="end" fill="#52514e">0.820</text>
+<text x="76.0" y="306" font-size="11" text-anchor="middle" fill="#52514e">0</text>
+<text x="120.3" y="306" font-size="11" text-anchor="middle" fill="#52514e">64</text>
+<text x="164.6" y="306" font-size="11" text-anchor="middle" fill="#52514e">128</text>
+<text x="208.9" y="306" font-size="11" text-anchor="middle" fill="#52514e">256</text>
+<text x="253.1" y="306" font-size="11" text-anchor="middle" fill="#52514e">512</text>
+<text x="297.4" y="306" font-size="11" text-anchor="middle" fill="#52514e">1024</text>
+<text x="341.7" y="306" font-size="11" text-anchor="middle" fill="#52514e">2048</text>
+<text x="386.0" y="306" font-size="11" text-anchor="middle" fill="#52514e">4096</text>
+<line x1="76" x2="386" y1="290" y2="290" stroke="#52514e" stroke-width="1"/>
+<text x="231.0" y="324" font-size="11" text-anchor="middle" fill="#52514e">training step</text>
+<clipPath id="clip76"><rect x="76" y="82" width="310" height="208"/></clipPath>
+<polyline points="76.0,270.1 120.3,230.2 164.6,229.5 208.9,225.1 253.1,212.2 297.4,200.9 341.7,146.1 386.0,147.1" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" clip-path="url(#clip76)"/>
+<circle cx="76.0" cy="270.1" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 0: 0.788180</title></circle>
+<circle cx="120.3" cy="230.2" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 64: 0.796553</title></circle>
+<circle cx="164.6" cy="229.5" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 128: 0.796713</title></circle>
+<circle cx="208.9" cy="225.1" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 256: 0.797622</title></circle>
+<circle cx="253.1" cy="212.2" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 512: 0.800336</title></circle>
+<circle cx="297.4" cy="200.9" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 1024: 0.802714</title></circle>
+<circle cx="341.7" cy="146.1" r="5" fill="#2a78d6" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 2048: 0.814211</title></circle>
+<circle cx="386.0" cy="147.1" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 4096: 0.814012</title></circle>
+<polyline points="76.0,274.1 120.3,230.9 164.6,220.4 208.9,217.6 253.1,217.0 297.4,195.0 341.7,156.7 386.0,141.4" fill="none" stroke="#eb6834" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round" clip-path="url(#clip76)"/>
+<circle cx="76.0" cy="274.1" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 0: 0.787339</title></circle>
+<circle cx="120.3" cy="230.9" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 64: 0.796406</title></circle>
+<circle cx="164.6" cy="220.4" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 128: 0.798620</title></circle>
+<circle cx="208.9" cy="217.6" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 256: 0.799214</title></circle>
+<circle cx="253.1" cy="217.0" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 512: 0.799333</title></circle>
+<circle cx="297.4" cy="195.0" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 1024: 0.803959</title></circle>
+<circle cx="341.7" cy="156.7" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 2048: 0.811984</title></circle>
+<circle cx="386.0" cy="141.4" r="5" fill="#eb6834" stroke="#eb6834" stroke-width="2"><title>Reference step 4096: 0.815200</title></circle>
+<text x="396.0" y="156.3" font-size="11" fill="#0b0b0b">Repro</text>
+<text x="396.0" y="140.3" font-size="11" fill="#0b0b0b">c95c3fb</text>
+<text x="476" y="76" font-size="13" font-weight="600" fill="#0b0b0b">Seed43 (selected 4096 vs reference 4096)</text>
+<line x1="476" x2="786" y1="261.4" y2="261.4" stroke="#e4e3df" stroke-width="1"/>
+<text x="470" y="265.4" font-size="11" text-anchor="end" fill="#52514e">0.790</text>
+<line x1="476" x2="786" y1="213.8" y2="213.8" stroke="#e4e3df" stroke-width="1"/>
+<text x="470" y="217.8" font-size="11" text-anchor="end" fill="#52514e">0.800</text>
+<line x1="476" x2="786" y1="166.2" y2="166.2" stroke="#e4e3df" stroke-width="1"/>
+<text x="470" y="170.2" font-size="11" text-anchor="end" fill="#52514e">0.810</text>
+<line x1="476" x2="786" y1="118.6" y2="118.6" stroke="#e4e3df" stroke-width="1"/>
+<text x="470" y="122.6" font-size="11" text-anchor="end" fill="#52514e">0.820</text>
+<text x="476.0" y="306" font-size="11" text-anchor="middle" fill="#52514e">0</text>
+<text x="520.3" y="306" font-size="11" text-anchor="middle" fill="#52514e">64</text>
+<text x="564.6" y="306" font-size="11" text-anchor="middle" fill="#52514e">128</text>
+<text x="608.9" y="306" font-size="11" text-anchor="middle" fill="#52514e">256</text>
+<text x="653.1" y="306" font-size="11" text-anchor="middle" fill="#52514e">512</text>
+<text x="697.4" y="306" font-size="11" text-anchor="middle" fill="#52514e">1024</text>
+<text x="741.7" y="306" font-size="11" text-anchor="middle" fill="#52514e">2048</text>
+<text x="786.0" y="306" font-size="11" text-anchor="middle" fill="#52514e">4096</text>
+<line x1="476" x2="786" y1="290" y2="290" stroke="#52514e" stroke-width="1"/>
+<text x="631.0" y="324" font-size="11" text-anchor="middle" fill="#52514e">training step</text>
+<clipPath id="clip476"><rect x="476" y="82" width="310" height="208"/></clipPath>
+<polyline points="476.0,270.1 520.3,242.5 564.6,235.3 608.9,224.2 653.1,232.8 697.4,169.4 741.7,145.4 786.0,108.7" fill="none" stroke="#2a78d6" stroke-width="2" stroke-linejoin="round" clip-path="url(#clip476)"/>
+<circle cx="476.0" cy="270.1" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 0: 0.788180</title></circle>
+<circle cx="520.3" cy="242.5" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 64: 0.793974</title></circle>
+<circle cx="564.6" cy="235.3" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 128: 0.795478</title></circle>
+<circle cx="608.9" cy="224.2" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 256: 0.797824</title></circle>
+<circle cx="653.1" cy="232.8" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 512: 0.796014</title></circle>
+<circle cx="697.4" cy="169.4" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 1024: 0.809317</title></circle>
+<circle cx="741.7" cy="145.4" r="5" fill="#fcfcfb" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 2048: 0.814365</title></circle>
+<circle cx="786.0" cy="108.7" r="5" fill="#2a78d6" stroke="#2a78d6" stroke-width="2"><title>Reproduction step 4096: 0.822078</title></circle>
+<polyline points="476.0,274.1 520.3,236.1 564.6,239.8 608.9,215.8 653.1,239.1 697.4,176.0 741.7,143.7 786.0,106.6" fill="none" stroke="#eb6834" stroke-width="2" stroke-dasharray="6 4" stroke-linejoin="round" clip-path="url(#clip476)"/>
+<circle cx="476.0" cy="274.1" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 0: 0.787339</title></circle>
+<circle cx="520.3" cy="236.1" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 64: 0.795320</title></circle>
+<circle cx="564.6" cy="239.8" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 128: 0.794551</title></circle>
+<circle cx="608.9" cy="215.8" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 256: 0.799577</title></circle>
+<circle cx="653.1" cy="239.1" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 512: 0.794696</title></circle>
+<circle cx="697.4" cy="176.0" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 1024: 0.807949</title></circle>
+<circle cx="741.7" cy="143.7" r="5" fill="#fcfcfb" stroke="#eb6834" stroke-width="2"><title>Reference step 2048: 0.814731</title></circle>
+<circle cx="786.0" cy="106.6" r="5" fill="#eb6834" stroke="#eb6834" stroke-width="2"><title>Reference step 4096: 0.822511</title></circle>
+<text x="796.0" y="119.6" font-size="11" fill="#0b0b0b">Repro</text>
+<text x="796.0" y="103.6" font-size="11" fill="#0b0b0b">PR #40</text>
+<line x1="24" x2="44" y1="340" y2="340" stroke="#2a78d6" stroke-width="2"/><text x="50" y="344" font-size="11" fill="#0b0b0b">Repro: reproduction (Blackwell, original cache)</text>
+<line x1="340" x2="360" y1="340" y2="340" stroke="#eb6834" stroke-width="2" stroke-dasharray="6 4"/><text x="366" y="344" font-size="11" fill="#0b0b0b">Reference (Seed42: c95c3fb; Seed43: PR #40)</text>
+</svg>

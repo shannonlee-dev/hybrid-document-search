@@ -1,0 +1,33 @@
+{
+  "frozen_at_utc": "2026-11-02T03:18:20.646063+00:00",
+  "test_vectors_exist": false,
+  "test_metrics_computed": false,
+  "selection": {
+    "seed42_checkpoint": {
+      "step": 2048,
+      "sha256": "c78c8db18fa8111fa1111372813bb3479b4d4f641d590d4efb73f28db3731ad8"
+    },
+    "seed43_checkpoint": {
+      "step": 4096,
+      "sha256": "fbbd5ed0c4d82c42745e21afb54c9a43000d38d39a975595b61b52f314e42971"
+    },
+    "alphas": {
+      "baseline": 0.84,
+      "seed42": 0.88,
+      "seed43": 0.89
+    },
+    "validation_fixed_ndcg": {
+      "baseline": 0.8057394947788906,
+      "seed42": 0.8257568403779189,
+      "seed43": 0.830633220111324
+    },
+    "selected_encoder": "seed43",
+    "shared_alpha": 0.84
+  },
+  "sha256": {
+    "replay/frozen.json": "6cb1e64d3ad8c8e850b8ae766e64ee07184e2d1e179aad36ab61437fb97d0313",
+    "replay/protocol.json": "145865e68df1b48c9469abb5cd0e21174791ad215c7dbd3b696a193e5754ca36",
+    "replay/validation-quality.npz": "5ccd3777ac768f40f731af520a30cb5f12565657c7e70ad46f7da20b569fb6e1",
+    "preregistration.md": "9c8e0f7937182035a9f08c8bacad37d9425d891c20876f4b7d686f6a5efc07ec"
+  }
+}
