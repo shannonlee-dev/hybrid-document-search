@@ -14,10 +14,10 @@ from math import fsum
 from pathlib import Path
 
 from app.schemas import RetrievalMethod
-from app.service import QueryCheckpoint, SearchService, build_search_service
+from app.service import SearchService, build_search_service
 from data.loader import Document
 from evaluation.data import file_sha256
-from evaluation.json_io import read_json, write_json
+from evaluation.json_io import read_json
 from evaluation.metrics import (
     ndcg_at_k,
     precision_at_k,
@@ -71,7 +71,11 @@ def write_corpus(documents, path):
         for doc in documents:
             stream.write(
                 json.dumps(
-                    {"document_id": doc.document_id, "text": doc.text, "title": doc.title},
+                    {
+                        "document_id": doc.document_id,
+                        "text": doc.text,
+                        "title": doc.title,
+                    },
                     ensure_ascii=False,
                 )
                 + "\n"
@@ -111,9 +115,15 @@ def build_services(corpus_path, index_dir, device, checkpoint):
             dense_query_checkpoint=query_checkpoint,
         )
         seconds[name] = time.perf_counter() - started
-        for method in (RetrievalMethod.BM25, RetrievalMethod.DENSE, RetrievalMethod.HYBRID):
+        for method in (
+            RetrievalMethod.BM25,
+            RetrievalMethod.DENSE,
+            RetrievalMethod.HYBRID,
+        ):
             if service.retriever(method) is None:
-                raise RuntimeError(f"{name} {method.value} unavailable: {service.availability()[method]}")
+                raise RuntimeError(
+                    f"{name} {method.value} unavailable: {service.availability()[method]}"
+                )
         services[name] = service
     return services, seconds
 
@@ -162,11 +172,14 @@ def run_conditions(mapped, queries, qrels, conditions=None):
         with TestClient(create_app(service=service)) as client:
             for query_id, text in queries:
                 response = client.post(
-                    "/search", json={"query": text, "method": method.value, "top_k": TOP_K}
+                    "/search",
+                    json={"query": text, "method": method.value, "top_k": TOP_K},
                 )
                 response.raise_for_status()
                 api_ids = [hit["document_id"] for hit in response.json()["results"]]
-                direct_ids = [r.document_id for r in service.search(text, method, TOP_K)]
+                direct_ids = [
+                    r.document_id for r in service.search(text, method, TOP_K)
+                ]
                 if api_ids != direct_ids:
                     mismatches[cid] += 1
                 judgments = qrels[query_id]
@@ -177,7 +190,11 @@ def run_conditions(mapped, queries, qrels, conditions=None):
                         **query_metrics(api_ids, judgments),
                         "top10_document_ids": api_ids,
                         "relevant_rank_top10": next(
-                            (i for i, d in enumerate(api_ids, 1) if judgments.get(d, 0) > 0),
+                            (
+                                i
+                                for i, d in enumerate(api_ids, 1)
+                                if judgments.get(d, 0) > 0
+                            ),
                             None,
                         ),
                     }
@@ -190,7 +207,10 @@ def aggregate(rows):
     for row in rows:
         grouped.setdefault(row["condition"], []).append(row)
     return {
-        cid: {"queries": len(group), **{m: fsum(r[m] for r in group) / len(group) for m in METRICS}}
+        cid: {
+            "queries": len(group),
+            **{m: fsum(r[m] for r in group) / len(group) for m in METRICS},
+        }
         for cid, group in grouped.items()
     }
 
@@ -233,7 +253,9 @@ def compare(rows, pairs=PAIRS, metrics=METRICS):
             "treated": treated,
             "control": control,
             **{
-                m: paired_bootstrap([by[treated][q][m] - by[control][q][m] for q in ids])
+                m: paired_bootstrap(
+                    [by[treated][q][m] - by[control][q][m] for q in ids]
+                )
                 for m in metrics
             },
         }
@@ -243,7 +265,9 @@ def compare(rows, pairs=PAIRS, metrics=METRICS):
 def write_rows(path, rows):
     with Path(path).open("w", encoding="utf-8") as stream:
         for row in rows:
-            stream.write(json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n")
+            stream.write(
+                json.dumps(row, ensure_ascii=False, separators=(",", ":")) + "\n"
+            )
 
 
 # ------------------------------------------------------------- BC Card data
@@ -273,7 +297,9 @@ def parity_checkpoint(checkpoint, validation_vectors_path, data_dir, device="cud
         checkpoint_sha256=checkpoint.checkpoint_sha256,
     )
     model = embedder.load_model()
-    texts = [q["text"] for q in load_query_rows(Path(data_dir) / "queries_validation.jsonl")]
+    texts = [
+        q["text"] for q in load_query_rows(Path(data_dir) / "queries_validation.jsonl")
+    ]
     vectors = encode_queries(model, texts, device=device, batch_size=16, max_tokens=512)
     reference = np.load(validation_vectors_path, allow_pickle=False)
     return {
@@ -320,7 +346,8 @@ def parity_fixed(services, data_dir, bf16_vectors, reference_rows_path):
             top_mismatch += ids != ref["top10_document_ids"]
             mine = query_metrics(ids, qrels[query_id])
             metric_mismatch += any(
-                abs(mine[k] - ref[k]) > 1e-12 for k in ("p@1", "recall@10", "mrr@10", "ndcg@10")
+                abs(mine[k] - ref[k]) > 1e-12
+                for k in ("p@1", "recall@10", "mrr@10", "ndcg@10")
             )
         checks[method] = {
             "queries": len(queries),
@@ -331,7 +358,10 @@ def parity_fixed(services, data_dir, bf16_vectors, reference_rows_path):
         "check": "UnionMinMaxFusionRetriever with PR #41 BF16 Test vectors vs PR #41 per-query rows",
         "reference_sha256": file_sha256(Path(reference_rows_path)),
         "methods": checks,
-        "passed": all(c["top10_mismatches"] == 0 and c["metric_mismatches"] == 0 for c in checks.values()),
+        "passed": all(
+            c["top10_mismatches"] == 0 and c["metric_mismatches"] == 0
+            for c in checks.values()
+        ),
     }
 
 
@@ -354,7 +384,9 @@ def parity_service_hybrid(services, data_dir, cache_dir, reference_rows_path):
     )
     service = services["bge"]
     base_dense = service.retriever(RetrievalMethod.DENSE)
-    dense = DenseRetriever(index=base_dense.index, documents=base_dense.documents, embedder=embedder)
+    dense = DenseRetriever(
+        index=base_dense.index, documents=base_dense.documents, embedder=embedder
+    )
     fusion = ScoreFusionRetriever(
         service.retriever(RetrievalMethod.BM25), dense, bm25_weight=DEFAULT_BM25_WEIGHT
     )
@@ -417,15 +449,23 @@ def gpu_snapshot():
 
     def query(args):
         try:
-            return subprocess.run(
-                ["nvidia-smi", *args, "--format=csv,noheader,nounits"],
-                capture_output=True, text=True, check=True,
-            ).stdout.strip().splitlines()
+            return (
+                subprocess.run(
+                    ["nvidia-smi", *args, "--format=csv,noheader,nounits"],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                .stdout.strip()
+                .splitlines()
+            )
         except (OSError, subprocess.CalledProcessError):
             return []
 
     return {
-        "gpus": query(["--query-gpu=index,name,utilization.gpu,memory.used,memory.total"]),
+        "gpus": query(
+            ["--query-gpu=index,name,utilization.gpu,memory.used,memory.total"]
+        ),
         "compute_apps": query(["--query-compute-apps=pid,gpu_uuid,used_memory"]),
     }
 
@@ -443,7 +483,10 @@ def summarize_ms(samples):
         "min": float(values.min()),
         "max": float(values.max()),
         "histogram_ms": {
-            "edges": [float(e) for e in np.quantile(values, [0, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99, 1])],
+            "edges": [
+                float(e)
+                for e in np.quantile(values, [0, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99, 1])
+            ],
         },
     }
 
@@ -469,33 +512,69 @@ def staged_latency(service, queries, warmup_queries, repeats=3):
         fixed.search(text, TOP_K)
         dense.search(text, TOP_K)
     torch.cuda.reset_peak_memory_stats()
-    stages = {k: [] for k in (
-        "query_encoding", "dense_service_hybrid", "dense_fixed_fp64", "dense_faiss",
-        "bm25", "fusion_service_hybrid", "fusion_fixed",
-        "total_service_hybrid", "total_fixed", "total_dense",
-    )}
+    stages = {
+        k: []
+        for k in (
+            "query_encoding",
+            "dense_service_hybrid",
+            "dense_fixed_fp64",
+            "dense_faiss",
+            "bm25",
+            "fusion_service_hybrid",
+            "fusion_fixed",
+            "total_service_hybrid",
+            "total_fixed",
+            "total_dense",
+        )
+    }
     mismatches = 0
-    clock = time.perf_counter
+
+    def timed(stage, function, *args):
+        started = time.perf_counter()
+        value = function(*args)
+        stages[stage].append((time.perf_counter() - started) * 1e3)
+        return value
+
+    def service_fusion(scores, sparse):
+        fused = _fuse_scores(
+            scores,
+            sparse.astype(np.float64),
+            maximum=float(np.max(sparse)),
+            bm25_weight=DEFAULT_BM25_WEIGHT,
+        )
+        return np.lexsort((tie_ranks, -fused))[:TOP_K]
+
     for _ in range(repeats):
         for _, text in queries:
-            t = clock(); vector = as_vectors(embedder.encode_query(text)); stages["query_encoding"].append((clock() - t) * 1e3)
-            t = clock(); scores = (vectors32 @ vector[0]).astype(np.float64); stages["dense_service_hybrid"].append((clock() - t) * 1e3)
-            t = clock(); dense64 = fixed.dense_scores(vector[0]); stages["dense_fixed_fp64"].append((clock() - t) * 1e3)
-            t = clock(); faiss_hits = dense.index.search(vector, TOP_K); stages["dense_faiss"].append((clock() - t) * 1e3)
-            t = clock(); sparse = bm25.score_all(text); stages["bm25"].append((clock() - t) * 1e3)
-            t = clock()
-            fused = _fuse_scores(scores, sparse.astype(np.float64), maximum=float(np.max(sparse)), bm25_weight=DEFAULT_BM25_WEIGHT)
-            selected = np.lexsort((tie_ranks, -fused))[:TOP_K]
-            stages["fusion_service_hybrid"].append((clock() - t) * 1e3)
-            t = clock(); fixed_rows, _ = fixed.rank(dense64, np.asarray(sparse, dtype=np.float64), TOP_K); stages["fusion_fixed"].append((clock() - t) * 1e3)
-            t = clock(); hybrid_hits = hybrid.search(text, TOP_K); stages["total_service_hybrid"].append((clock() - t) * 1e3)
-            t = clock(); fixed_hits = fixed.search(text, TOP_K); stages["total_fixed"].append((clock() - t) * 1e3)
-            t = clock(); dense_hits = dense.search(text, TOP_K); stages["total_dense"].append((clock() - t) * 1e3)
+            vector = timed(
+                "query_encoding", lambda: as_vectors(embedder.encode_query(text))
+            )
+            scores = timed(
+                "dense_service_hybrid",
+                lambda: (vectors32 @ vector[0]).astype(np.float64),
+            )
+            dense64 = timed("dense_fixed_fp64", fixed.dense_scores, vector[0])
+            faiss_hits = timed("dense_faiss", dense.index.search, vector, TOP_K)
+            sparse = timed("bm25", bm25.score_all, text)
+            selected = timed("fusion_service_hybrid", service_fusion, scores, sparse)
+            fixed_rows, _ = timed(
+                "fusion_fixed",
+                fixed.rank,
+                dense64,
+                np.asarray(sparse, dtype=np.float64),
+                TOP_K,
+            )
+            hybrid_hits = timed("total_service_hybrid", hybrid.search, text, TOP_K)
+            fixed_hits = timed("total_fixed", fixed.search, text, TOP_K)
+            dense_hits = timed("total_dense", dense.search, text, TOP_K)
             documents = hybrid._documents
             mismatches += (
-                [documents[r].document_id for r in selected] != [h.document_id for h in hybrid_hits]
-                or [documents[r].document_id for r in fixed_rows] != [h.document_id for h in fixed_hits]
-                or [documents[r].document_id for r, _ in faiss_hits] != [h.document_id for h in dense_hits]
+                [documents[r].document_id for r in selected]
+                != [h.document_id for h in hybrid_hits]
+                or [documents[r].document_id for r in fixed_rows]
+                != [h.document_id for h in fixed_hits]
+                or [documents[r].document_id for r, _ in faiss_hits]
+                != [h.document_id for h in dense_hits]
             )
     return {
         "repeats": repeats,
@@ -508,7 +587,9 @@ def staged_latency(service, queries, warmup_queries, repeats=3):
     }
 
 
-def http_latency(base_url, queries, warmup_queries, method, repeats=3, concurrency=(1, 4)):
+def http_latency(
+    base_url, queries, warmup_queries, method, repeats=3, concurrency=(1, 4)
+):
     """Measure full POST /search latency and throughput against a running server."""
     from concurrent.futures import ThreadPoolExecutor
 
@@ -516,19 +597,26 @@ def http_latency(base_url, queries, warmup_queries, method, repeats=3, concurren
 
     with httpx.Client(base_url=base_url, timeout=120) as client:
         for _, text in warmup_queries:
-            client.post("/search", json={"query": text, "method": method, "top_k": TOP_K}).raise_for_status()
+            client.post(
+                "/search", json={"query": text, "method": method, "top_k": TOP_K}
+            ).raise_for_status()
         samples = []
         for _ in range(repeats):
             for _, text in queries:
                 t = time.perf_counter()
-                client.post("/search", json={"query": text, "method": method, "top_k": TOP_K}).raise_for_status()
+                client.post(
+                    "/search", json={"query": text, "method": method, "top_k": TOP_K}
+                ).raise_for_status()
                 samples.append((time.perf_counter() - t) * 1e3)
     throughput = {}
     for workers in concurrency:
+
         def one(text):
             with httpx.Client(base_url=base_url, timeout=120) as c:
                 t = time.perf_counter()
-                c.post("/search", json={"query": text, "method": method, "top_k": TOP_K}).raise_for_status()
+                c.post(
+                    "/search", json={"query": text, "method": method, "top_k": TOP_K}
+                ).raise_for_status()
                 return (time.perf_counter() - t) * 1e3
 
         started = time.perf_counter()
@@ -541,7 +629,11 @@ def http_latency(base_url, queries, warmup_queries, method, repeats=3, concurren
             "requests_per_second": len(lat) / elapsed,
             "latency_ms": summarize_ms(lat),
         }
-    return {"method": method, "sequential_ms": summarize_ms(samples), "throughput": throughput}
+    return {
+        "method": method,
+        "sequential_ms": summarize_ms(samples),
+        "throughput": throughput,
+    }
 
 
 # ----------------------------------------------------------------- external
@@ -550,7 +642,9 @@ def load_external(cache_dir, name):
 
     directory = Path(cache_dir) / name
     data = read_json(directory / "data.json")
-    documents = [Document(d["document_id"], d["text"], d.get("title")) for d in data["documents"]]
+    documents = [
+        Document(d["document_id"], d["text"], d.get("title")) for d in data["documents"]
+    ]
     vectors = np.load(directory / "document-vectors.npy", allow_pickle=False)
     query_vectors = np.load(directory / "query-vectors.npy", allow_pickle=False)
     split_ids = data["splits"]["dev"] if name == "miracl10k" else data["query_ids"]

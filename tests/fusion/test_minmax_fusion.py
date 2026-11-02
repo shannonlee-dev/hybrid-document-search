@@ -14,7 +14,18 @@ from indexing.faiss_index import FaissIndex  # noqa: E402
 from retrievers.bm25 import BM25Retriever  # noqa: E402
 from retrievers.dense import DenseConfig, DenseRetriever  # noqa: E402
 
-WORDS = ["카드", "해지", "연회비", "포인트", "결제", "한도", "대출", "이자", "환불", "분실"]
+WORDS = [
+    "카드",
+    "해지",
+    "연회비",
+    "포인트",
+    "결제",
+    "한도",
+    "대출",
+    "이자",
+    "환불",
+    "분실",
+]
 
 
 class _Embedder:

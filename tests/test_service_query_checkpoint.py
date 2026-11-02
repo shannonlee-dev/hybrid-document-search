@@ -21,13 +21,19 @@ from data.loader import Document  # noqa: E402
 from indexing.faiss_index import FaissIndex  # noqa: E402
 from retrievers.dense import DenseConfig, DenseRetriever  # noqa: E402
 
-ENV = ("DENSE_QUERY_CHECKPOINT", "DENSE_QUERY_CHECKPOINT_SHA256", "DENSE_QUERY_BASE_MODEL")
+ENV = (
+    "DENSE_QUERY_CHECKPOINT",
+    "DENSE_QUERY_CHECKPOINT_SHA256",
+    "DENSE_QUERY_BASE_MODEL",
+)
 
 
 class _FakeModel:
     def __init__(self, path, device=None, local_files_only=False, revision=None):
         layer = torch.nn.ModuleList(torch.nn.Linear(2, 2) for _ in range(6))
-        self.auto_model = types.SimpleNamespace(encoder=types.SimpleNamespace(layer=layer))
+        self.auto_model = types.SimpleNamespace(
+            encoder=types.SimpleNamespace(layer=layer)
+        )
 
     def __getitem__(self, index):
         return self
@@ -48,7 +54,10 @@ def corpus(tmp_path, monkeypatch):
     path = tmp_path / "corpus.jsonl"
     path.write_text(
         "".join(
-            json.dumps({"document_id": d.document_id, "text": d.text, "title": None}, ensure_ascii=False)
+            json.dumps(
+                {"document_id": d.document_id, "text": d.text, "title": None},
+                ensure_ascii=False,
+            )
             + "\n"
             for d in documents
         ),
@@ -72,7 +81,9 @@ def _checkpoint(root: Path, digest: str) -> QueryCheckpoint:
 
 def test_default_service_keeps_the_index_embedder(corpus):
     root, _ = corpus
-    service = build_search_service(root / "corpus.jsonl", dense_index_path=root / "index")
+    service = build_search_service(
+        root / "corpus.jsonl", dense_index_path=root / "index"
+    )
     dense = service.retriever(RetrievalMethod.DENSE)
     assert type(dense.embedder).__name__ == "DenseEmbedder"
     assert service.retriever(RetrievalMethod.HYBRID) is not None
@@ -90,7 +101,9 @@ def test_query_checkpoint_replaces_only_the_query_encoder(corpus):
     np.testing.assert_array_equal(dense.index.snapshot_vectors(), [[1, 0], [0, 1]])
     hybrid = service.retriever(RetrievalMethod.HYBRID)
     assert hybrid._embedder is dense.embedder
-    assert [r.document_id for r in service.search("카드", RetrievalMethod.DENSE, 2)] == ["b", "a"]
+    assert [
+        r.document_id for r in service.search("카드", RetrievalMethod.DENSE, 2)
+    ] == ["b", "a"]
 
 
 def test_bad_checkpoint_disables_dense_and_hybrid_but_not_bm25(corpus):

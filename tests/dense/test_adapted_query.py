@@ -20,7 +20,9 @@ class _FakeModel:
         assert local_files_only
         torch.manual_seed(0)
         layer = torch.nn.ModuleList(torch.nn.Linear(2, 2) for _ in range(6))
-        self.auto_model = types.SimpleNamespace(encoder=types.SimpleNamespace(layer=layer))
+        self.auto_model = types.SimpleNamespace(
+            encoder=types.SimpleNamespace(layer=layer)
+        )
         self.calls = []
 
     def __getitem__(self, index):
@@ -74,7 +76,9 @@ def test_checkpoint_replaces_only_the_last_blocks(tmp_path, fake_st):
     vector = embedder.encode_query("카드")
     assert vector.shape == (1, 2)
     texts, kwargs = model.calls[-1]
-    assert texts == ["카드"] and kwargs["prompt"] == "" and kwargs["normalize_embeddings"]
+    assert (
+        texts == ["카드"] and kwargs["prompt"] == "" and kwargs["normalize_embeddings"]
+    )
 
 
 def test_single_block_checkpoint_uses_bare_block_state(tmp_path, fake_st):

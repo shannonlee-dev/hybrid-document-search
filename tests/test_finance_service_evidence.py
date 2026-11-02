@@ -43,8 +43,14 @@ def test_preregistered_bccard_verdicts():
 def test_external_verdicts_are_reported_as_measured():
     external = _load("external.json")
     for pair in ("A", "B", "D"):
-        assert external["strategyqa"]["comparisons"][pair]["ndcg@10"]["verdict"] == "reversed"
-        assert external["miracl10k"]["comparisons"][pair]["ndcg@10"]["verdict"] == "not_shown"
+        assert (
+            external["strategyqa"]["comparisons"][pair]["ndcg@10"]["verdict"]
+            == "reversed"
+        )
+        assert (
+            external["miracl10k"]["comparisons"][pair]["ndcg@10"]["verdict"]
+            == "not_shown"
+        )
     for name in ("miracl10k", "strategyqa"):
         for check in external[name]["path_check_cached_bge"].values():
             assert check["max_abs_difference"] == 0

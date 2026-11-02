@@ -42,7 +42,9 @@ def cmd_prepare(args):
     from data.loader import load_prepared_documents
     from evaluation.query_encoder_training import load_encoder_inputs
 
-    load_encoder_inputs(args.data_dir, args.cache_dir, ("test",))  # identity/order checks
+    load_encoder_inputs(
+        args.data_dir, args.cache_dir, ("test",)
+    )  # identity/order checks
     corpus, index_dir = _bccard_paths(args)
     documents = load_prepared_documents(corpus)
     vectors = np.load(args.cache_dir / "document-vectors.npy", allow_pickle=False)
@@ -60,7 +62,10 @@ def cmd_parity(args):
     run = args.repro_run
     result = {
         "check1_checkpoint": fs.parity_checkpoint(
-            _checkpoint(args), run / "train-seed43/selected-validation-vectors.npy", args.data_dir, args.device
+            _checkpoint(args),
+            run / "train-seed43/selected-validation-vectors.npy",
+            args.data_dir,
+            args.device,
         ),
         "check2_fixed": fs.parity_fixed(
             services,
@@ -88,9 +93,13 @@ def cmd_parity(args):
 
 def cmd_accuracy(args):
     corpus, index_dir = _bccard_paths(args)
-    services, build_seconds = fs.build_services(corpus, index_dir, args.device, _checkpoint(args))
+    services, build_seconds = fs.build_services(
+        corpus, index_dir, args.device, _checkpoint(args)
+    )
     dataset, queries, qrels = fs.bccard_test(args.data_dir)
-    rows, mismatches = fs.run_conditions(fs.condition_services(services), queries, qrels)
+    rows, mismatches = fs.run_conditions(
+        fs.condition_services(services), queries, qrels
+    )
     fs.write_rows(args.output_dir / "bccard-per-query.jsonl", rows)
     run = args.repro_run
     drift = fs.encoding_drift(
@@ -105,7 +114,10 @@ def cmd_accuracy(args):
     return {
         "dataset": "BC Card Test primary",
         "queries": len(queries),
-        "conditions": {k: {"encoder": v[0], "kind": v[1], "alpha": v[2], "role": v[3]} for k, v in fs.CONDITIONS.items()},
+        "conditions": {
+            k: {"encoder": v[0], "kind": v[1], "alpha": v[2], "role": v[3]}
+            for k, v in fs.CONDITIONS.items()
+        },
         "api_vs_direct_top10_mismatches": mismatches,
         "aggregates": fs.aggregate(rows),
         "comparisons": fs.compare(rows),
@@ -122,20 +134,36 @@ def cmd_latency(args):
 
     before = fs.gpu_snapshot()
     service = build_search_service(
-        corpus, dense_index_path=index_dir, dense_device=args.device,
+        corpus,
+        dense_index_path=index_dir,
+        dense_device=args.device,
         dense_query_checkpoint=_checkpoint(args) if args.encoder == "fin" else None,
     )
     _, queries, _ = fs.bccard_test(args.data_dir)
-    validation = load_evaluation_dataset(args.data_dir, "validation", verify_all_splits=False)
+    validation = load_evaluation_dataset(
+        args.data_dir, "validation", verify_all_splits=False
+    )
     warmup = [(q.query_id, q.text) for q in validation.queries[:50]]
     result = fs.staged_latency(service, queries, warmup, repeats=3)
-    result.update({"encoder": args.encoder, "gpu_before": before, "gpu_after": fs.gpu_snapshot(), "environment": fs.environment()})
+    result.update(
+        {
+            "encoder": args.encoder,
+            "gpu_before": before,
+            "gpu_after": fs.gpu_snapshot(),
+            "environment": fs.environment(),
+        }
+    )
     return result
 
 
 def _server(args, port):
     corpus, index_dir = _bccard_paths(args)
-    env = dict(os.environ, SEARCH_CORPUS_PATH=str(corpus), DENSE_INDEX_PATH=str(index_dir), DENSE_DEVICE=args.device)
+    env = dict(
+        os.environ,
+        SEARCH_CORPUS_PATH=str(corpus),
+        DENSE_INDEX_PATH=str(index_dir),
+        DENSE_DEVICE=args.device,
+    )
     if args.encoder == "fin":
         env.update(
             DENSE_QUERY_CHECKPOINT=str(args.checkpoint),
@@ -145,8 +173,22 @@ def _server(args, port):
     # The app logs one line per search; an unread pipe would fill and block the server.
     log = (args.work_dir / f"server-{args.encoder}.log").open("w")
     return subprocess.Popen(
-        [sys.executable, "-m", "uvicorn", "app.api:app", "--host", "127.0.0.1", "--port", str(port), "--log-level", "warning"],
-        env=env, stdout=log, stderr=subprocess.STDOUT, text=True,
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "app.api:app",
+            "--host",
+            "127.0.0.1",
+            "--port",
+            str(port),
+            "--log-level",
+            "warning",
+        ],
+        env=env,
+        stdout=log,
+        stderr=subprocess.STDOUT,
+        text=True,
     )
 
 
@@ -156,10 +198,18 @@ def _wait_ready(base_url, process, timeout=900):
     started = time.perf_counter()
     while time.perf_counter() - started < timeout:
         if process.poll() is not None:
-            raise RuntimeError(f"server exited with code {process.returncode}; see server log")
+            raise RuntimeError(
+                f"server exited with code {process.returncode}; see server log"
+            )
         try:
-            methods = httpx.get(f"{base_url}/search/methods", timeout=5).json()["methods"]
-            if all(m["available"] for m in methods if m["method"] in ("bm25", "dense", "hybrid")):
+            methods = httpx.get(f"{base_url}/search/methods", timeout=5).json()[
+                "methods"
+            ]
+            if all(
+                m["available"]
+                for m in methods
+                if m["method"] in ("bm25", "dense", "hybrid")
+            ):
                 return time.perf_counter() - started
             raise RuntimeError(f"methods unavailable: {methods}")
         except (httpx.HTTPError, OSError):
@@ -176,10 +226,15 @@ def cmd_http(args):
     try:
         ready = _wait_ready(base_url, process)
         _, queries, _ = fs.bccard_test(args.data_dir)
-        validation = load_evaluation_dataset(args.data_dir, "validation", verify_all_splits=False)
+        validation = load_evaluation_dataset(
+            args.data_dir, "validation", verify_all_splits=False
+        )
         warmup = [(q.query_id, q.text) for q in validation.queries[:50]]
         before = fs.gpu_snapshot()
-        results = {m: fs.http_latency(base_url, queries, warmup, m) for m in ("hybrid", "dense")}
+        results = {
+            m: fs.http_latency(base_url, queries, warmup, m)
+            for m in ("hybrid", "dense")
+        }
         return {
             "encoder": args.encoder,
             "server_ready_seconds": ready,
@@ -204,7 +259,9 @@ def cmd_cold_start(args):
     corpus, index_dir = _bccard_paths(args)
     started = time.perf_counter()
     service = build_search_service(
-        corpus, dense_index_path=index_dir, dense_device=args.device,
+        corpus,
+        dense_index_path=index_dir,
+        dense_device=args.device,
         dense_query_checkpoint=_checkpoint(args) if args.encoder == "fin" else None,
     )
     ready = time.perf_counter() - started
@@ -232,9 +289,14 @@ def cmd_external(args):
     previous = {"miracl10k": "miracl-dev.json", "strategyqa": "strategyqa.json"}
     report = {}
     for name in ("miracl10k", "strategyqa"):
-        data, _, _, query_vectors, queries, qrels = fs.load_external(args.external_cache, name)
+        data, _, _, query_vectors, queries, qrels = fs.load_external(
+            args.external_cache, name
+        )
         services, _ = fs.build_services(
-            args.work_dir / name / "corpus.jsonl", args.work_dir / name / "index", args.device, _checkpoint(args)
+            args.work_dir / name / "corpus.jsonl",
+            args.work_dir / name / "index",
+            args.device,
+            _checkpoint(args),
         )
         # Path check: cached BGE query vectors through the service retrievers.
         service = services["bge"]
@@ -243,12 +305,26 @@ def cmd_external(args):
             documents=service.retriever(RetrievalMethod.DENSE).documents,
             embedder=_CachedEmbedder(data, query_vectors),
         )
-        cached_fusion = ScoreFusionRetriever(service.retriever(RetrievalMethod.BM25), cached, bm25_weight=DEFAULT_BM25_WEIGHT)
+        cached_fusion = ScoreFusionRetriever(
+            service.retriever(RetrievalMethod.BM25),
+            cached,
+            bm25_weight=DEFAULT_BM25_WEIGHT,
+        )
         path_check = {}
-        old = read_json(Path("docs/experiments/score-fusion") / previous[name])["quality"]
+        old = read_json(Path("docs/experiments/score-fusion") / previous[name])[
+            "quality"
+        ]
         for label, retriever in (("dense", cached), ("score_0.05", cached_fusion)):
-            rows = [fs.query_metrics([r.document_id for r in retriever.search(t, fs.TOP_K)], qrels[q]) for q, t in queries]
-            mine = {m: sum(r[m] for r in rows) / len(rows) for m in ("recall@5", "recall@10", "mrr@10", "ndcg@10")}
+            rows = [
+                fs.query_metrics(
+                    [r.document_id for r in retriever.search(t, fs.TOP_K)], qrels[q]
+                )
+                for q, t in queries
+            ]
+            mine = {
+                m: sum(r[m] for r in rows) / len(rows)
+                for m in ("recall@5", "recall@10", "mrr@10", "ndcg@10")
+            }
             path_check[label] = {
                 "recomputed": mine,
                 "previous": {m: old[label][m] for m in mine},
@@ -257,10 +333,15 @@ def cmd_external(args):
         # Live FP32 BGE query vectors vs cached BGE query vectors.
         index_of = {q: i for i, q in enumerate(data["query_ids"])}
         live = service.retriever(RetrievalMethod.DENSE).embedder
-        cos = np.asarray([
-            float(live.encode_query(t)[0].astype(np.float64) @ query_vectors[index_of[q]].astype(np.float64))
-            for q, t in queries
-        ])
+        cos = np.asarray(
+            [
+                float(
+                    live.encode_query(t)[0].astype(np.float64)
+                    @ query_vectors[index_of[q]].astype(np.float64)
+                )
+                for q, t in queries
+            ]
+        )
         mapped = fs.condition_services(services)
         conditions = ["A-bge", "A-fin", "B-bge", "B-fin", "D-bge", "D-fin"]
         rows, mismatches = fs.run_conditions(mapped, queries, qrels, conditions)
@@ -268,18 +349,30 @@ def cmd_external(args):
         report[name] = {
             "queries": len(queries),
             "path_check_cached_bge": path_check,
-            "live_vs_cached_bge_query_cosine": {"min": float(cos.min()), "mean": float(cos.mean())},
+            "live_vs_cached_bge_query_cosine": {
+                "min": float(cos.min()),
+                "mean": float(cos.mean()),
+            },
             "api_vs_direct_top10_mismatches": mismatches,
             "aggregates": fs.aggregate(rows),
-            "comparisons": fs.compare(rows, {k: v for k, v in fs.PAIRS.items() if k in ("A", "B", "D")}),
-            "per_query_sha256": fs.file_sha256(args.output_dir / f"{name}-per-query.jsonl"),
+            "comparisons": fs.compare(
+                rows, {k: v for k, v in fs.PAIRS.items() if k in ("A", "B", "D")}
+            ),
+            "per_query_sha256": fs.file_sha256(
+                args.output_dir / f"{name}-per-query.jsonl"
+            ),
         }
     return report
 
 
 COMMANDS = {
-    "prepare": cmd_prepare, "parity": cmd_parity, "accuracy": cmd_accuracy,
-    "latency": cmd_latency, "http": cmd_http, "cold-start": cmd_cold_start, "external": cmd_external,
+    "prepare": cmd_prepare,
+    "parity": cmd_parity,
+    "accuracy": cmd_accuracy,
+    "latency": cmd_latency,
+    "http": cmd_http,
+    "cold-start": cmd_cold_start,
+    "external": cmd_external,
 }
 
 
@@ -287,11 +380,20 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("command", choices=COMMANDS)
     parser.add_argument("--data-dir", type=Path, required=True)
-    parser.add_argument("--cache-dir", type=Path, required=True, help="original BC Card vector cache")
+    parser.add_argument(
+        "--cache-dir", type=Path, required=True, help="original BC Card vector cache"
+    )
     parser.add_argument("--external-cache", type=Path, required=True)
-    parser.add_argument("--base-model", type=Path, required=True, help="local BGE-M3 snapshot")
+    parser.add_argument(
+        "--base-model", type=Path, required=True, help="local BGE-M3 snapshot"
+    )
     parser.add_argument("--checkpoint", type=Path, required=True)
-    parser.add_argument("--repro-run", type=Path, required=True, help="PR #41 reproduction run directory")
+    parser.add_argument(
+        "--repro-run",
+        type=Path,
+        required=True,
+        help="PR #41 reproduction run directory",
+    )
     parser.add_argument("--work-dir", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--encoder", choices=("bge", "fin"))
@@ -302,7 +404,11 @@ def main(argv=None):
         parser.error("--encoder is required for latency, http and cold-start")
     args.output_dir.mkdir(parents=True, exist_ok=True)
     args.work_dir.mkdir(parents=True, exist_ok=True)
-    name = args.command + (f"-{args.encoder}" if args.encoder else "") + (f"-{args.tag}" if args.tag else "")
+    name = (
+        args.command
+        + (f"-{args.encoder}" if args.encoder else "")
+        + (f"-{args.tag}" if args.tag else "")
+    )
     out = args.output_dir / f"{name}.json"
     if out.exists():
         raise SystemExit(f"refusing to overwrite {out}")
