@@ -345,11 +345,69 @@ def write_manifest(evidence_dir=EVIDENCE):
     (evidence_dir / "MANIFEST.sha256").write_text("\n".join(lines) + "\n")
 
 
+def multiplicity(evidence_dir=EVIDENCE, seed=20261102, resamples=20000):
+    """Co-primary correction fixed in multiplicity-addendum.md (joint resampling)."""
+    import numpy as np
+
+    evidence_dir = Path(evidence_dir)
+    rows = rows_by(evidence_dir / "bccard-per-query.jsonl")
+    family = {"A": PAIRS["A"], "B": PAIRS["B"]}
+    ids = list(rows["A-bge"])
+    diffs = np.array(
+        [
+            [rows[t][q]["ndcg@10"] - rows[c][q]["ndcg@10"] for q in ids]
+            for t, c in family.values()
+        ]
+    )
+    rng = np.random.default_rng(seed)
+    means = np.empty((resamples, len(family)))
+    for start in range(0, resamples, 1000):
+        stop = min(start + 1000, resamples)
+        draws = rng.integers(0, len(ids), size=(stop - start, len(ids)))
+        means[start:stop] = diffs[:, draws].mean(axis=2).T
+    observed = diffs.mean(axis=1)
+    se = means.std(axis=0, ddof=1)
+    critical = float(np.quantile(np.abs((means - observed) / se).max(axis=1), 0.95))
+    result = {
+        "addendum": "multiplicity-addendum.md",
+        "addendum_sha256": sha256(evidence_dir / "multiplicity-addendum.md"),
+        "seed": seed,
+        "resamples": resamples,
+        "queries": len(ids),
+        "joint_resampling": True,
+        "correlation_of_bootstrap_means": float(np.corrcoef(means.T)[0, 1]),
+        "max_abs_t_critical": critical,
+        "comparisons": {},
+    }
+    for k, name in enumerate(family):
+        marginal = np.quantile(means[:, k], [0.025, 0.975])
+        bonferroni = np.quantile(means[:, k], [0.0125, 0.9875])
+        simultaneous = [observed[k] - critical * se[k], observed[k] + critical * se[k]]
+        result["comparisons"][name] = {
+            "treated": family[name][0],
+            "control": family[name][1],
+            "mean_difference": float(observed[k]),
+            "bootstrap_se": float(se[k]),
+            "ci95_marginal": [float(v) for v in marginal],
+            "ci97_5_bonferroni": [float(v) for v in bonferroni],
+            "ci95_simultaneous_max_t": [float(v) for v in simultaneous],
+            "improvement_bonferroni": bool(bonferroni[0] > 0),
+            "improvement_simultaneous": bool(simultaneous[0] > 0),
+        }
+    result["both_improved_intersection_union"] = all(
+        c["ci95_marginal"][0] > 0 for c in result["comparisons"].values()
+    )
+    return result
+
+
 def write_analysis(evidence_dir=EVIDENCE):
     evidence_dir = Path(evidence_dir)
     result = analyze(evidence_dir)
     (evidence_dir / "analysis.json").write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+    )
+    (evidence_dir / "multiplicity.json").write_text(
+        json.dumps(multiplicity(evidence_dir), indent=2) + "\n"
     )
     (evidence_dir / "paired-differences.svg").write_text(differences_figure(result))
     (evidence_dir / "latency-stages.svg").write_text(latency_figure(result))
@@ -380,6 +438,10 @@ def check(evidence_dir=EVIDENCE):
         raise ValueError("paired differences figure differs")
     if (evidence_dir / "latency-stages.svg").read_text() != latency_figure(recomputed):
         raise ValueError("latency figure differs")
+    if json.loads(json.dumps(multiplicity(evidence_dir))) != read_json(
+        evidence_dir / "multiplicity.json"
+    ):
+        raise ValueError("multiplicity.json does not match recomputation")
     return {"verified": True, "files": len(listed)}
 
 

@@ -1,8 +1,8 @@
 # Finance encoder 서비스 경로 검증
 
-Finance Seed43은 실제 검색 서비스 경로에서도 BC Card 개선을 유지했음. 사전 등록한 두 co-primary 모두 Test nDCG@10 paired CI 하한이 0보다 큼. 비용은 원본 BGE와 차이가 측정되지 않았음. 같은 architecture에 마지막 4 block 가중치만 다르기 때문임. 반면 금융 밖 Ko-StrategyQA에서는 세 조건 모두 유의하게 나빠졌고, Ko-MIRACL은 50개라 결론을 낼 수 없었음. 금융 특화와 범용 성능 사이에 trade-off가 관찰됨.
+Finance Seed43은 실제 검색 서비스 경로에서도 BC Card 개선을 유지했음. 사전 등록한 두 co-primary 모두 Test nDCG@10 paired CI 하한이 0보다 큼. 사후에 고정한 다중 비교 보정 후에도 하한이 0보다 크지만, 서비스 Hybrid 쪽은 여유가 작음. 비용은 원본 BGE와 차이가 측정되지 않았음. 같은 architecture에 마지막 4 block 가중치만 다르기 때문임. 반면 금융 밖 Ko-StrategyQA에서는 세 조건 모두 유의하게 나빠졌고, Ko-MIRACL은 50개라 결론을 낼 수 없었음. 금융 특화와 범용 성능 사이에 trade-off가 관찰됨.
 
-사전 등록은 [`preregistration.md`](validation/2026-11-02/finance-service-eval/preregistration.md)이고 구현·측정 전에 커밋했음(`5506f11`). Evidence는 [`finance-service-eval/`](validation/2026-11-02/finance-service-eval/)에 있음. 측정에 쓴 코드는 `5168591` 그대로이고, 다음 커밋 `60a0dc7`은 lint 정리만 했음(AST 비교상 미사용 import와 `staged_latency`의 timing 표기만 다름).
+사전 등록은 [`preregistration.md`](validation/2026-11-02/finance-service-eval/preregistration.md)이고 구현·측정 전에 커밋했음(`5506f11`). Evidence는 [`finance-service-eval/`](validation/2026-11-02/finance-service-eval/)에 있음. 측정에 쓴 코드는 `5168591`임. 그중 `scripts/evaluate_finance_service.py`는 parity·accuracy·staged latency를 돌린 뒤 HTTP 하네스의 `_server`/`_wait_ready`만 고쳤고, 커밋된 버전은 성공한 HTTP 측정에 쓴 버전임. `60a0dc7`은 lint 정리만 했음(AST 비교상 미사용 import와 `staged_latency`의 timing 표기만 다름). 측정 뒤 추가한 base model identity 검증(`9a87625`)과 다중 비교 보정(`a0b9523` 이후)은 아래 각 절에 따로 적었음.
 
 ## 기존 시스템과 이번에 새로 검증한 것
 
@@ -20,12 +20,26 @@ PR #40/#41과 같은 오프라인 계산은 다시 돌리지 않고 parity check
 
 ## 구현
 
-- `retrievers/adapted_query.py`: 원본 snapshot을 로컬에서 읽고 checkpoint SHA를 확인한 뒤 마지막 4 block에 load하는 query 전용 embedder. 인코딩은 서비스 `DenseEmbedder._encode`를 그대로 씀. 문서 인코딩은 거부함.
-- `app/service.py`, `app/api.py`: `QueryCheckpoint`와 `DENSE_QUERY_CHECKPOINT`, `DENSE_QUERY_CHECKPOINT_SHA256`, `DENSE_QUERY_BASE_MODEL` opt-in. 셋 다 없으면 동작은 전과 같고, 일부만 있으면 시작할 때 오류를 냄. Checkpoint 적용에 실패하면 Dense와 Hybrid만 `load_failed`가 되고 BM25는 그대로 동작함. `SearchService.retriever()` 읽기 accessor를 추가했음.
+- `retrievers/adapted_query.py`: 원본 snapshot을 로컬에서 읽어 마지막 4 block에 checkpoint를 load하는 query 전용 embedder. 인코딩은 서비스 `DenseEmbedder._encode`를 그대로 씀. 문서 인코딩은 거부함. Identity 검증은 아래 절에 있음.
+- `app/service.py`, `app/api.py`: `QueryCheckpoint`와 `DENSE_QUERY_CHECKPOINT`, `DENSE_QUERY_CHECKPOINT_IDENTITY`, `DENSE_QUERY_BASE_MODEL` opt-in. 셋 다 없으면 동작은 전과 같고, 일부만 있으면 시작할 때 오류를 냄. Checkpoint 적용에 실패하면 Dense와 Hybrid만 `load_failed`가 되고 BM25는 그대로 동작함. `SearchService.retriever()` 읽기 accessor를 추가했음.
 - `fusion/minmax.py`: α Fixed fusion을 retriever로 옮긴 것. 평가에서 `SearchService`의 `hybrid` 자리에 주입해서 API로 호출함. API schema와 서비스 기본 Hybrid는 바꾸지 않았음.
 - `evaluation/finance_service.py`, `scripts/evaluate_finance_service.py`, `scripts/analyze_finance_service.py`: 평가, 측정, 분석, 검증 스크립트.
 
 문서 vector는 원본 BGE-M3 FP32 cache를 FAISS 인덱스로 저장해서 서비스가 `DenseRetriever.load`로 읽게 했음. 두 encoder가 같은 인덱스와 BM25를 쓰고 query encoder만 다름. Finance checkpoint는 PR #41 재현 run의 Seed43 step 4096(`fbbd5ed0…`)임. PR #40 원래 checkpoint(`d36f5c66…`)는 로컬에 없어서 쓰지 않았음.
+
+### Base model identity 검증
+
+측정 뒤 리뷰에서 adapter가 base snapshot이 checkpoint 학습에 쓴 모델과 같은지 확인하지 않는다는 점이 나와서 추가했음(`9a87625`). 이제 checkpoint마다 identity 파일(`config/query_checkpoints/finance-seed43-fbbd5ed0.json`)이 필요함. 이 파일은 `scripts/make_query_checkpoint_identity.py`가 학습 run의 `frozen.json`, 학습 `protocol.json`(SHA가 `frozen.json`에 묶여 있음), cache `encoding.json`에서만 값을 가져와 만듦.
+
+서비스는 시작할 때 네 가지를 확인함. 하나라도 다르거나 identity가 없으면 Dense와 Hybrid를 `load_failed`로 두고 BM25만 열어 둠(fail-closed).
+- Checkpoint 파일 SHA-256
+- Base snapshot 파일 해시 집합. 학습 기록과 같은 규칙(`.bin`·`.safetensors`·`.json`·`.model`)이고 추가·누락 파일도 불일치로 봄.
+- 인덱스에 저장된 embedding model 이름과 revision
+- Layer 수
+
+인덱스 쪽은 문서 vector를 만든 모델의 파일을 다시 확인할 수 없고 저장된 이름·revision 문자열만 비교함. 이 한계는 남아 있음. Snapshot 해싱은 시작 시간에 약 1.5초를 더함. 기본 경로(checkpoint 미설정)는 바뀌지 않음.
+
+이 identity로 다시 띄운 Finance 서비스는 커밋된 A-fin·D-fin top10을 721개 모두에서 그대로 재현했음. HF hub cache 전체 snapshot은 쓰이지 않는 `onnx/` 파일까지 포함해서 해시 집합이 달라 거부됨. 고정한 10개 파일만 받은 snapshot을 써야 함.
 
 ## 경로 일치 확인
 
@@ -68,6 +82,17 @@ Finance − BGE paired 차이. Seed 20261102, 20,000 resamples, percentile 95% C
 ![paired differences](validation/2026-11-02/finance-service-eval/paired-differences.svg)
 
 Q1 판정은 두 co-primary 모두 "유지됨"임. 서비스 Hybrid의 gain(+.0176)은 Fixed α=.84(+.0214)나 Dense-only(+.0252)보다 작았음. 이 차이의 이유는 분석하지 않았고, 세 gain의 CI는 서로 많이 겹침. P@1은 Hybrid 두 조건에서 CI가 0을 포함함.
+
+### 다중 비교
+
+두 co-primary는 같은 721개 query와 같은 encoder 쌍을 써서 독립이 아님. Bootstrap 평균 사이 상관은 .887임. 원래 사전 등록은 각각을 95% CI로 판정하고 보정하지 않기로 했고, 위 판정은 그 기준을 따른 것임. 보정 방법은 결과를 본 뒤지만 계산 전에 [`multiplicity-addendum.md`](validation/2026-11-02/finance-service-eval/multiplicity-addendum.md)로 고정했음(`a0b9523`). 결과는 [`multiplicity.json`](validation/2026-11-02/finance-service-eval/multiplicity.json)에 있음. 같은 seed, 같은 resample index를 썼음.
+
+| | 차이 | 원래 95% CI | Bonferroni 97.5% CI | Joint max-\|t\| 95% |
+|---|---:|---|---|---|
+| A 서비스 Hybrid | +.0176 | [+.0026, +.0328] | [+.0006, +.0351] | [+.0012, +.0340] |
+| B Fixed α=.84 | +.0214 | [+.0074, +.0358] | [+.0055, +.0379] | [+.0060, +.0368] |
+
+보정한 두 방법 모두 A·B의 하한이 0보다 큼. FWER 5%에서도 각 co-primary의 개선을 주장할 수 있음. 다만 A의 Bonferroni 하한은 +.0006이라 여유가 거의 없음. A의 결론은 B보다 약하게 읽어야 함. "두 co-primary 모두 개선"이라는 결합 주장은 intersection-union 원리상 원래 95% CI 두 개로 판정해도 되고, 그 기준으로도 성립함.
 
 Finance Dense-only(.808735)가 BGE 서비스 Hybrid(.794015)보다 높은데, 이건 사전 등록한 비교가 아니라서 판정하지 않음.
 
@@ -126,11 +151,11 @@ StrategyQA에서는 P@1, Recall@5, MRR@10도 대부분 CI 상한이 0보다 작�
 ## 한계
 
 - BC Card Test는 이전 탐색에서 여러 번 노출됐음. 이번 CI는 query sampling 불확실성만 반영하고 seed·학습 분산은 포함하지 않음. Seed43 하나만 봤음.
-- 두 co-primary에 다중 비교 보정을 하지 않았음(사전 등록대로). 보정하면 CI가 넓어지며, 보정한 구간은 계산하지 않았음.
+- 원래 사전 등록은 다중 비교 보정을 하지 않았음. 결과를 본 뒤 addendum으로 보정 방법을 고정해서 계산했으므로, 보정 결과는 확증 분석이 아니라 결론 강도 점검임(다중 비교 절).
 - 쓴 checkpoint는 Blackwell에서 재현한 Seed43(`fbbd5ed0…`)이고 PR #40 원래 checkpoint가 아님.
 - Ko-MIRACL은 50개라 검정력이 낮음. Ko-StrategyQA 결론도 이 한 데이터셋에 한정됨.
 - Latency는 RTX PRO 6000 Blackwell 한 장, 동시 요청 1·4, localhost 기준임. 다른 GPU나 부하에서는 다를 수 있음.
-- HTTP 측정 첫 시도는 하네스 버그로 실패했음(서버 stderr pipe를 읽지 않아 로그가 쌓이며 서버가 멈춤). 로그를 파일로 돌린 뒤 다시 쟀고, Dense-only 흔들림 때문에 반복 측정을 한 번 더 했음. 둘 다 사전 등록에 없던 절차임.
+- HTTP 측정 첫 시도는 하네스 버그로 실패했음. 서버를 `stderr=PIPE`로 띄우고 읽지 않았는데, 앱이 검색마다 INFO 로그 한 줄을 stderr에 써서 pipe buffer(64 KB)가 차자 서버가 쓰기에서 멈췄고 동시 요청 측정 중 120초 timeout이 났음. 서버 출력을 로그 파일로 돌린 뒤 BGE·Finance 모두 처음부터 다시 쟀음. 실패한 시도의 수치는 쓰지 않았음. 그 뒤 Dense-only 처리량 흔들림을 확인하려고 반복 측정(`--tag rep2`)을 한 번 더 했고 두 run을 모두 보고함. 둘 다 사전 등록에 없던 절차임.
 - `nvidia-smi` 결과의 GPU UUID는 커밋 전에 `GPU0`/`GPU1`로 바꿨음.
 - 퇴보 분석은 query ID 접두어와 relevant rank 변화만 봤음. Query 원문은 커밋하지 않았음.
 
@@ -156,7 +181,7 @@ uv run --locked python scripts/analyze_finance_service.py check
 uv run --locked pytest -q tests/test_finance_service_evidence.py
 
 # Finance encoder로 서비스 띄우기 (opt-in)
-DENSE_QUERY_CHECKPOINT=... DENSE_QUERY_CHECKPOINT_SHA256=fbbd5ed0c4d82c42745e21afb54c9a43000d38d39a975595b61b52f314e42971 \
+DENSE_QUERY_CHECKPOINT=... DENSE_QUERY_CHECKPOINT_IDENTITY=config/query_checkpoints/finance-seed43-fbbd5ed0.json \
 DENSE_QUERY_BASE_MODEL=$FINANCE_MODEL DENSE_INDEX_PATH=... SEARCH_CORPUS_PATH=... \
   uv run --extra sparse --extra dense uvicorn app.api:app
 ```

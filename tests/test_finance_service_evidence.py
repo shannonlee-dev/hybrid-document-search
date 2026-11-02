@@ -4,6 +4,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 EVIDENCE = ROOT / "docs/validation/2026-11-02/finance-service-eval"
 
@@ -22,7 +24,7 @@ def test_manifest_analysis_and_figures_recompute():
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    assert module.check(EVIDENCE) == {"verified": True, "files": 23}
+    assert module.check(EVIDENCE) == {"verified": True, "files": 25}
 
 
 def test_parity_checks_passed_before_accuracy():
@@ -63,3 +65,15 @@ def test_per_query_rows_have_ids_only():
     assert not any("text" in r or "query" in r for r in rows)
     assert len(_rows("strategyqa-per-query.jsonl")) == 6 * 592
     assert len(_rows("miracl10k-per-query.jsonl")) == 6 * 50
+
+
+def test_multiplicity_correction_keeps_original_cis_and_reports_corrected_ones():
+    multiplicity = _load("multiplicity.json")
+    accuracy = _load("accuracy.json")["comparisons"]
+    for name in ("A", "B"):
+        corrected = multiplicity["comparisons"][name]
+        assert corrected["ci95_marginal"] == pytest.approx(
+            accuracy[name]["ndcg@10"]["ci95"], abs=1e-12
+        )
+        assert corrected["ci97_5_bonferroni"][0] < corrected["ci95_marginal"][0]
+    assert multiplicity["both_improved_intersection_union"] is True

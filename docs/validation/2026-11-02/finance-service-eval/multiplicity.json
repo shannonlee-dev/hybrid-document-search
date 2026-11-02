@@ -1,0 +1,53 @@
+{
+  "addendum": "multiplicity-addendum.md",
+  "addendum_sha256": "c1f641159638c82e40cc1ce09434fce05cc4725b30efb4c86f4796c9c9d46376",
+  "seed": 20261102,
+  "resamples": 20000,
+  "queries": 721,
+  "joint_resampling": true,
+  "correlation_of_bootstrap_means": 0.8874356080296066,
+  "max_abs_t_critical": 2.1156034092869596,
+  "comparisons": {
+    "A": {
+      "treated": "A-fin",
+      "control": "A-bge",
+      "mean_difference": 0.017590150815553932,
+      "bootstrap_se": 0.007738823449123566,
+      "ci95_marginal": [
+        0.002581218952827604,
+        0.032833178436276825
+      ],
+      "ci97_5_bonferroni": [
+        0.0006419121227248324,
+        0.035066628190659775
+      ],
+      "ci95_simultaneous_max_t": [
+        0.0012178695427182487,
+        0.033962432088389616
+      ],
+      "improvement_bonferroni": true,
+      "improvement_simultaneous": true
+    },
+    "B": {
+      "treated": "B-fin",
+      "control": "B-bge",
+      "mean_difference": 0.02137370268402271,
+      "bootstrap_se": 0.007272456725265019,
+      "ci95_marginal": [
+        0.0074191291009744215,
+        0.035815651416588566
+      ],
+      "ci97_5_bonferroni": [
+        0.005450617354386211,
+        0.03792624906383022
+      ],
+      "ci95_simultaneous_max_t": [
+        0.00598806844216016,
+        0.03675933692588526
+      ],
+      "improvement_bonferroni": true,
+      "improvement_simultaneous": true
+    }
+  },
+  "both_improved_intersection_union": true
+}
