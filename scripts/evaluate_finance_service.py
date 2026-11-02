@@ -28,7 +28,7 @@ def _checkpoint(args):
     return QueryCheckpoint(
         base_model_path=args.base_model,
         checkpoint_path=args.checkpoint,
-        checkpoint_sha256=fs.CHECKPOINT_SHA256,
+        identity_path=args.identity,
     )
 
 
@@ -167,7 +167,7 @@ def _server(args, port):
     if args.encoder == "fin":
         env.update(
             DENSE_QUERY_CHECKPOINT=str(args.checkpoint),
-            DENSE_QUERY_CHECKPOINT_SHA256=fs.CHECKPOINT_SHA256,
+            DENSE_QUERY_CHECKPOINT_IDENTITY=str(args.identity),
             DENSE_QUERY_BASE_MODEL=str(args.base_model),
         )
     # The app logs one line per search; an unread pipe would fill and block the server.
@@ -388,6 +388,12 @@ def main(argv=None):
         "--base-model", type=Path, required=True, help="local BGE-M3 snapshot"
     )
     parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument(
+        "--identity",
+        type=Path,
+        default=Path("config/query_checkpoints/finance-seed43-fbbd5ed0.json"),
+        help="checkpoint identity JSON (fail-closed base model check)",
+    )
     parser.add_argument(
         "--repro-run",
         type=Path,

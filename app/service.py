@@ -94,12 +94,15 @@ class SearchService:
 
 @dataclass(frozen=True)
 class QueryCheckpoint:
-    """Opt-in query-side checkpoint applied over a local base model snapshot."""
+    """Opt-in query-side checkpoint applied over a local base model snapshot.
+
+    ``identity_path`` names the checkpoint SHA-256, layer count and the base
+    model's name, revision and snapshot file hashes; any mismatch fails closed.
+    """
 
     base_model_path: Path
     checkpoint_path: Path
-    checkpoint_sha256: str
-    layers: int = 4
+    identity_path: Path
 
 
 def build_search_service(
@@ -291,9 +294,13 @@ def _dense(
         )
     if query_checkpoint is not None:
         try:
-            from retrievers.adapted_query import AdaptedQueryEmbedder
+            from retrievers.adapted_query import (
+                AdaptedQueryEmbedder,
+                load_checkpoint_identity,
+            )
 
             # 문서 vector는 저장된 인덱스를 그대로 쓰고 query encoder만 교체한다.
+            # identity가 없거나 하나라도 다르면 Dense/Hybrid를 열지 않는다.
             retriever = DenseRetriever(
                 index=retriever.index,
                 documents=retriever.documents,
@@ -301,8 +308,7 @@ def _dense(
                     retriever.config,
                     base_model_path=query_checkpoint.base_model_path,
                     checkpoint_path=query_checkpoint.checkpoint_path,
-                    checkpoint_sha256=query_checkpoint.checkpoint_sha256,
-                    layers=query_checkpoint.layers,
+                    identity=load_checkpoint_identity(query_checkpoint.identity_path),
                 ),
             )
         except (OSError, ValueError):

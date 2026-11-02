@@ -10,9 +10,9 @@ Environment:
     SEARCH_CORPUS_PATH  corpus JSONL (default data/processed/corpus.jsonl)
     DENSE_INDEX_PATH    saved Dense index directory (Dense is off when unset)
     DENSE_DEVICE        device for the Dense model, e.g. cpu or cuda (optional)
-    DENSE_QUERY_CHECKPOINT         optional query-side final-block checkpoint; requires
-    DENSE_QUERY_CHECKPOINT_SHA256  its SHA-256 and
-    DENSE_QUERY_BASE_MODEL         a local base model snapshot directory
+    DENSE_QUERY_CHECKPOINT           optional query-side final-block checkpoint; requires
+    DENSE_QUERY_CHECKPOINT_IDENTITY  its identity JSON (checkpoint/base model hashes) and
+    DENSE_QUERY_BASE_MODEL           a local base model snapshot directory
 """
 
 import logging
@@ -145,7 +145,7 @@ def _query_checkpoint_from_env() -> QueryCheckpoint | None:
     """Return the opt-in query checkpoint; partial configuration is an error."""
     names = (
         "DENSE_QUERY_CHECKPOINT",
-        "DENSE_QUERY_CHECKPOINT_SHA256",
+        "DENSE_QUERY_CHECKPOINT_IDENTITY",
         "DENSE_QUERY_BASE_MODEL",
     )
     values = [os.environ.get(name) or None for name in names]
@@ -153,11 +153,11 @@ def _query_checkpoint_from_env() -> QueryCheckpoint | None:
         return None
     if not all(values):
         raise ValueError(f"{', '.join(names)} must be set together")
-    checkpoint, digest, base = values
+    checkpoint, identity, base = values
     return QueryCheckpoint(
         base_model_path=Path(base),
         checkpoint_path=Path(checkpoint),
-        checkpoint_sha256=digest,
+        identity_path=Path(identity),
     )
 
 

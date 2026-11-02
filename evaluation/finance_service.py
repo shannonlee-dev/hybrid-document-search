@@ -287,14 +287,14 @@ def parity_checkpoint(checkpoint, validation_vectors_path, data_dir, device="cud
     import numpy as np
 
     from evaluation.query_encoder_training import encode_queries, load_query_rows
-    from retrievers.adapted_query import AdaptedQueryEmbedder
+    from retrievers.adapted_query import AdaptedQueryEmbedder, load_checkpoint_identity
     from retrievers.dense import DenseConfig
 
     embedder = AdaptedQueryEmbedder(
         DenseConfig(device=device),
         base_model_path=checkpoint.base_model_path,
         checkpoint_path=checkpoint.checkpoint_path,
-        checkpoint_sha256=checkpoint.checkpoint_sha256,
+        identity=load_checkpoint_identity(checkpoint.identity_path),
     )
     model = embedder.load_model()
     texts = [
