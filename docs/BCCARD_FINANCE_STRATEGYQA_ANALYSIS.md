@@ -85,7 +85,7 @@ H1(drift가 크면 손실이 큼)은 지지되지 않았음. Finance가 query를
 
 H3(금융 쪽으로 끌림)도 지지되지 않았음. Finance는 두 데이터셋 모두에서 query를 BC Card corpus 중심에서 멀어지게 했고, 자기 corpus 중심에서도 비슷하게 멀어졌음. 이 이동량과 ΔnDCG의 상관은 .047(p .26)임.
 
-H2(margin)는 v1에서 "StrategyQA margin이 평균적으로 그대로"라고 썼는데, 원점수 기준이라 오해를 부르는 표현이었음. 다시 보면 Finance의 점수 하락은 대부분 corpus 전체의 평행 이동임(평균 −.089 / −.132, 표준편차 변화는 ±.002 이내). 원점수 gap은 이 이동과 query마다 다른 분포 폭이 섞인 값이라 분리 변화를 직접 보여주지 못함. 그래서 query와 encoder마다 corpus 전체 점수를 z-점수 `z_i = (s_i − mean(s)) / std(s)`(표준편차는 모집단 기준)로 바꾸고, `zgap_k = max_{relevant} z − (non-relevant 중 k번째로 큰 z)`를 계산했음. k=1은 최고 relevant와 최고 non-relevant의 차이라서 relevant가 1위인지와 같은 말은 아님(relevant끼리 1위를 다툴 수 있음). 이 정규화 기준과 k 값은 결과를 본 뒤 정한 사후 측정임.
+H2(margin)는 v1에서 "StrategyQA margin이 평균적으로 그대로"라고 썼는데, 원점수 기준이라 오해를 부르는 표현이었음. 다시 보면 Finance의 점수 하락은 대부분 corpus 전체의 평행 이동임(평균 −.089 / −.132, 표준편차 변화는 ±.002 이내). 원점수 gap은 query마다 다른 분포 폭이 섞인 값이라 상대적인 분리 변화를 직접 보여주지 못함. 그래서 query와 encoder마다 corpus 전체 점수를 z-점수 `z_i = (s_i − mean(s)) / std(s)`(표준편차는 모집단 기준)로 바꾸고, `zgap_k = max_{relevant} z − (non-relevant 중 k번째로 큰 z)`를 계산했음. k=1은 최고 relevant와 최고 non-relevant의 차이라서 relevant가 1위인지와 같은 말은 아님(relevant끼리 1위를 다툴 수 있음). 이 정규화 기준과 k 값은 결과를 본 뒤 정한 사후 측정임.
 
 | z-gap 변화 | StrategyQA 평균 / 중앙값 / 감소 비율 | BC Card 평균 / 중앙값 / 감소 비율 |
 |---|---|---|
