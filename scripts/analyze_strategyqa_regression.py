@@ -127,6 +127,14 @@ def compute_features(args):
         committed = {}
         for row in read_rows(SERVICE_EVIDENCE / rows_file):
             committed.setdefault(row["condition"], {})[row["query_id"]] = row
+        # v2: rank features come from the canonical service path (FAISS
+        # IndexFlatIP over the same FP32 vectors, full ordering), so exact ties
+        # between duplicate document vectors resolve exactly as in PR #42.
+        # Scores for margins/gaps use NumPy FP32 (max/order statistics are
+        # tie-invariant; FAISS vs NumPy score error <= 3.6e-7, ranking-parity.json).
+        from indexing.faiss_index import FaissIndex
+
+        index = FaissIndex.build(np.ascontiguousarray(vectors, dtype=np.float32))
         mismatches = {"bge": 0, "fin": 0}
         for query_id, text in queries:
             relevant = [index_of[d] for d, g in qrels[query_id].items() if g > 0]
@@ -138,13 +146,19 @@ def compute_features(args):
                 q = embedder.encode_query(text)[0]
                 vec[name] = q.astype(np.float64)
                 s = vectors @ q
-                order = np.argsort(-s, kind="stable")
+                order = np.asarray(
+                    [r for r, _ in index.search(q[None, :], len(documents))]
+                )
                 position = np.empty(len(order), dtype=np.int64)
                 position[order] = np.arange(1, len(order) + 1)
                 relevant_mask = np.zeros(len(s), dtype=bool)
                 relevant_mask[relevant] = True
                 best_rel = float(s[relevant_mask].max())
-                best_non = float(s[~relevant_mask].max())
+                nonrel = np.sort(s[~relevant_mask])[::-1]
+                best_non = float(nonrel[0])
+                z = (s.astype(np.float64) - s.mean()) / s.std()
+                z_rel = float(z[relevant_mask].max())
+                z_non = np.sort(z[~relevant_mask])[::-1]
                 top10 = [documents[i].document_id for i in order[:10]]
                 if top10 != committed[f"D-{name}"][query_id]["top10_document_ids"]:
                     mismatches[name] += 1
@@ -154,6 +168,12 @@ def compute_features(args):
                 row[f"best_relevant_score_{name}"] = best_rel
                 row[f"best_nonrelevant_score_{name}"] = best_non
                 row[f"margin_{name}"] = best_rel - best_non
+                row[f"corpus_score_mean_{name}"] = float(s.mean())
+                row[f"corpus_score_std_{name}"] = float(s.std())
+                for k in (1, 5, 10):
+                    # best relevant score minus the k-th best non-relevant score
+                    row[f"gap_k{k}_{name}"] = best_rel - float(nonrel[k - 1])
+                    row[f"zgap_k{k}_{name}"] = z_rel - float(z_non[k - 1])
                 row[f"prenorm_norm_{name}"] = _prenorm_norm(embedder, text)
                 row[f"finance_centroid_cos_{name}"] = float(
                     vec[name] @ finance_centroid
@@ -199,7 +219,7 @@ def compute_features(args):
     (EVIDENCE / "features-parity.json").write_text(
         json.dumps(
             {
-                "check": "Dense top10 from features vs committed PR #42 D-bge/D-fin rows",
+                "check": "Dense top10 from features (v2: FAISS full ordering) vs committed PR #42 D-bge/D-fin rows",
                 "datasets": parity,
                 "identity_sha256": sha256(IDENTITY),
             },
@@ -233,6 +253,166 @@ def print_cases(args):
             for d, g in qrels[r["query_id"]].items():
                 if g > 0:
                     print("   gold:", titles[d][0], "|", titles[d][1])
+
+
+def _first_difference(a, b):
+    return next((i for i, (x, y) in enumerate(zip(a, b)) if x != y), None)
+
+
+def _ndcg_ids(ids, judgments):
+    from evaluation.metrics import ndcg_at_k
+    from retrievers.base import SearchResult
+
+    hits = [SearchResult(d, r, 0.0) for r, d in enumerate(ids, 1)]
+    return ndcg_at_k(hits, judgments, 10)
+
+
+def _relevant_rank(ranking, judgments):
+    return next((i for i, d in enumerate(ranking, 1) if judgments.get(d, 0) > 0), None)
+
+
+def ranking_parity(args):
+    """Compare canonical FAISS service rankings with NumPy rankings per query.
+
+    For every query and encoder: canonical committed top10 (service FAISS path,
+    PR #42), FAISS recomputed now, NumPy FP32 and NumPy FP64 with stable
+    corpus-order ties. Mismatches are attributed to exact score ties between
+    bitwise-identical document vectors, or to real score differences.
+    """
+    import numpy as np
+
+    from indexing.faiss_index import FaissIndex
+
+    embedders = _embedders(args)
+    report = {
+        "kind": "ranking parity investigation (follow-up review of PR #43)",
+        "ranking_paths": {
+            "canonical": "PR #42 committed D-* rows: DenseRetriever.search -> FAISS IndexFlatIP FP32, k=10",
+            "faiss_now": "FaissIndex.build(document vectors).search(query vector, 100)",
+            "numpy_fp32": "document_vectors_fp32 @ query_fp32, argsort(kind=stable)",
+            "numpy_fp64": "document_vectors_fp64 @ query_fp64, argsort(kind=stable)",
+        },
+        "datasets": {},
+    }
+    for dataset, rows_file in DATASETS.items():
+        documents, vectors, queries, qrels = _load_dataset(dataset, args)
+        vectors = np.ascontiguousarray(vectors, dtype=np.float32)
+        vectors64 = vectors.astype(np.float64)
+        index = FaissIndex.build(vectors)
+        digest = {}
+        for i, row in enumerate(vectors):
+            digest.setdefault(row.tobytes(), []).append(i)
+        groups = [g for g in digest.values() if len(g) > 1]
+        group_of = np.full(len(vectors), -1)
+        for gid, g in enumerate(groups):
+            group_of[g] = gid
+        committed = {}
+        for row in read_rows(SERVICE_EVIDENCE / rows_file):
+            committed.setdefault(row["condition"], {})[row["query_id"]] = row
+        ids = [doc.document_id for doc in documents]
+        row_of = {d: i for i, d in enumerate(ids)}
+        summary = {
+            "documents": len(vectors),
+            "vectors_sha256": hashlib.sha256(vectors.tobytes()).hexdigest(),
+            "duplicate_vector_groups": len(groups),
+            "documents_in_duplicate_groups": int((group_of >= 0).sum()),
+            "max_abs_document_norm_error": float(
+                np.abs(np.linalg.norm(vectors64, axis=1) - 1).max()
+            ),
+        }
+        cases, totals = [], {}
+        for encoder, embedder in embedders.items():
+            t = {
+                "queries": 0,
+                "query_vector_reencode_bitwise_equal": 0,
+                "faiss_now_equals_canonical": 0,
+                "numpy32_equals_canonical": 0,
+                "numpy64_equals_numpy32": 0,
+                "mismatch_same_top10_set": 0,
+                "mismatch_different_top10_set": 0,
+                "mismatch_all_differences_exact_ties_duplicate_vectors": 0,
+                "mismatch_other": 0,
+                "mismatch_ndcg_changed": 0,
+                "max_abs_score_error_faiss_vs_numpy32": 0.0,
+            }
+            for query_id, text in queries:
+                q = embedder.encode_query(text)
+                t["queries"] += 1
+                t["query_vector_reencode_bitwise_equal"] += bool(
+                    np.array_equal(q, embedder.encode_query(text))
+                )
+                canonical = committed[f"D-{encoder}"][query_id]["top10_document_ids"]
+                hits = index.search(q, 100)
+                faiss_ids = [ids[r] for r, _ in hits]
+                s32 = vectors @ q[0]
+                s64 = vectors64 @ q[0].astype(np.float64)
+                np32 = [ids[r] for r in np.argsort(-s32, kind="stable")[:10]]
+                np64 = [ids[r] for r in np.argsort(-s64, kind="stable")[:10]]
+                error = max(abs(score - float(s32[r])) for r, score in hits)
+                t["max_abs_score_error_faiss_vs_numpy32"] = max(
+                    t["max_abs_score_error_faiss_vs_numpy32"], error
+                )
+                t["faiss_now_equals_canonical"] += faiss_ids[:10] == canonical
+                t["numpy64_equals_numpy32"] += np64 == np32
+                if np32 == canonical:
+                    t["numpy32_equals_canonical"] += 1
+                    continue
+                differing = [
+                    (row_of[a], row_of[b]) for a, b in zip(canonical, np32) if a != b
+                ]
+                ties = all(
+                    s32[a] == s32[b] and group_of[a] >= 0 and group_of[a] == group_of[b]
+                    for a, b in differing
+                )
+                same_set = set(canonical) == set(np32)
+                judgments = qrels[query_id]
+                ndcg_c = _ndcg_ids(canonical, judgments)
+                ndcg_n = _ndcg_ids(np32, judgments)
+                t[
+                    "mismatch_same_top10_set"
+                    if same_set
+                    else "mismatch_different_top10_set"
+                ] += 1
+                t[
+                    "mismatch_all_differences_exact_ties_duplicate_vectors"
+                    if ties
+                    else "mismatch_other"
+                ] += 1
+                t["mismatch_ndcg_changed"] += abs(ndcg_c - ndcg_n) > 1e-12
+                a, b = differing[0]
+                cases.append(
+                    {
+                        "encoder": encoder,
+                        "query_id": query_id,
+                        "first_difference_position": _first_difference(canonical, np32)
+                        + 1,
+                        "top10_set_equal": same_set,
+                        "positions_agreeing": sum(
+                            x == y for x, y in zip(canonical, np32)
+                        ),
+                        "relevant_rank_canonical": _relevant_rank(canonical, judgments),
+                        "relevant_rank_numpy32": _relevant_rank(np32, judgments),
+                        "ndcg_canonical": ndcg_c,
+                        "ndcg_numpy32": ndcg_n,
+                        "first_pair_score_gap_numpy32": float(s32[a] - s32[b]),
+                        "first_pair_same_vector_group": bool(
+                            group_of[a] >= 0 and group_of[a] == group_of[b]
+                        ),
+                        "first_pair_same_text": documents[a].text == documents[b].text,
+                        "first_pair_corpus_rows": [int(a), int(b)],
+                        "all_differences_exact_ties_duplicate_vectors": ties,
+                        "faiss_now_equals_canonical": faiss_ids[:10] == canonical,
+                        "numpy64_equals_numpy32": np64 == np32,
+                    }
+                )
+            totals[encoder] = t
+        report["datasets"][dataset] = {
+            **summary,
+            "encoders": totals,
+            "mismatch_cases": cases,
+        }
+    (EVIDENCE / "ranking-parity.json").write_text(json.dumps(report, indent=2) + "\n")
+    return {d: v["encoders"] for d, v in report["datasets"].items()}
 
 
 def _source(dataset, document_id):
@@ -337,6 +517,106 @@ def _describe(values):
     }
 
 
+def score_scale_vs_separation(rs):
+    """POST-HOC review: separate a uniform score shift from ranking separation.
+
+    All statistics are per query over the full corpus (same document set for
+    both encoders). gap_kK = best relevant - K-th best non-relevant score; its
+    sign says whether the best relevant document beats the K-th non-relevant
+    one. zgap uses per-query corpus z-scores, removing scale and location.
+    """
+    import numpy as np
+
+    out = {
+        "scope": "per query, full corpus; same documents for both encoders",
+        "delta_corpus_score_mean": _describe(
+            [r["corpus_score_mean_fin"] - r["corpus_score_mean_bge"] for r in rs]
+        ),
+        "delta_corpus_score_std": _describe(
+            [r["corpus_score_std_fin"] - r["corpus_score_std_bge"] for r in rs]
+        ),
+    }
+    for k in (1, 5, 10):
+        raw = [r[f"gap_k{k}_fin"] - r[f"gap_k{k}_bge"] for r in rs]
+        z = [r[f"zgap_k{k}_fin"] - r[f"zgap_k{k}_bge"] for r in rs]
+        out[f"k{k}"] = {
+            "delta_gap_raw": _describe(raw),
+            "delta_gap_z": _describe(z),
+            "share_delta_gap_z_negative": float(np.mean(np.asarray(z) < 0)),
+            "relevant_above_kth_nonrelevant_lost": sum(
+                r[f"gap_k{k}_bge"] > 0 >= r[f"gap_k{k}_fin"] for r in rs
+            ),
+            "relevant_above_kth_nonrelevant_gained": sum(
+                r[f"gap_k{k}_bge"] <= 0 < r[f"gap_k{k}_fin"] for r in rs
+            ),
+            "spearman_delta_gap_z_vs_dense_delta_ndcg": _spearman(
+                z, [r["delta_ndcg@10_D"] for r in rs]
+            ),
+        }
+    return out
+
+
+def overlap_outlier_check(rs):
+    """POST-HOC review: is the low-overlap loss driven by a few large losses?"""
+    import numpy as np
+    from scipy.stats import trim_mean
+
+    t = _tertiles(rs, "lexical_overlap")
+    out = {"cuts": t["cuts"]}
+    for name, group in t["groups"].items():
+        d = np.sort(np.asarray([r["delta_ndcg@10_D"] for r in group]))
+        out[name] = {
+            "n": int(len(d)),
+            "mean": float(d.mean()),
+            "median": float(np.median(d)),
+            "trimmed_mean_10pct": float(trim_mean(d, 0.1)),
+            "mean_without_5_largest_losses": float(d[5:].mean()),
+            "share_losses": float(np.mean(d < -1e-12)),
+            "share_gains": float(np.mean(d > 1e-12)),
+            "sum_of_5_largest_losses": float(d[:5].sum()),
+        }
+    return out
+
+
+def v1_v2_differences(evidence_dir):
+    """Record how rank-based features changed between v1 (NumPy ties) and v2."""
+    v1 = {
+        (r["dataset"], r["query_id"]): r
+        for r in read_rows(evidence_dir / "per-query-summary.v1-numpy-ties.jsonl")
+    }
+    v2 = {
+        (r["dataset"], r["query_id"]): r
+        for r in read_rows(evidence_dir / "per-query-summary.jsonl")
+    }
+    fields = (
+        "first_relevant_rank_bge",
+        "first_relevant_rank_fin",
+        "top10_overlap",
+        "top100_overlap",
+        "margin_bge",
+        "margin_fin",
+        "query_cosine_bge_fin",
+        "delta_ndcg@10_D",
+    )
+    out = {}
+    for dataset in DATASETS:
+        keys = [k for k in v2 if k[0] == dataset]
+        changed = {
+            f: sum(
+                not isclose(float(v1[k][f]), float(v2[k][f]), rel_tol=0, abs_tol=1e-9)
+                for k in keys
+            )
+            for f in fields
+        }
+        out[dataset] = {
+            "queries": len(keys),
+            "queries_with_changed_field": changed,
+            "dense_rank_movement_v1": movement([v1[k] for k in keys]),
+            "dense_rank_movement_v2": movement([v2[k] for k in keys]),
+        }
+    return out
+
+
 def _tertiles(rows, key):
     import numpy as np
 
@@ -389,6 +669,8 @@ def analyze(evidence_dir=EVIDENCE):
             for name in (
                 "per-query-summary.jsonl",
                 "features-parity.json",
+                "ranking-parity.json",
+                "per-query-summary.v1-numpy-ties.jsonl",
                 "manual-review.json",
                 "posthoc-same-source.json",
             )
@@ -523,6 +805,23 @@ def analyze(evidence_dir=EVIDENCE):
             tally[case["group"]][label] += 1
     out["manual_review_tally"] = tally
     out["posthoc_same_source"] = read_json(evidence_dir / "posthoc-same-source.json")
+    rows_by_dataset = {ds: [r for r in rows if r["dataset"] == ds] for ds in DATASETS}
+    out["posthoc_v2_review"] = {
+        "kind": "post-hoc, added in the PR #43 follow-up review; not preregistered",
+        "score_scale_vs_separation": {
+            ds: score_scale_vs_separation(rs) for ds, rs in rows_by_dataset.items()
+        },
+        "lexical_overlap_outlier_check": {
+            ds: overlap_outlier_check(rs) for ds, rs in rows_by_dataset.items()
+        },
+        "ranking_parity_summary": {
+            ds: v["encoders"]
+            for ds, v in read_json(evidence_dir / "ranking-parity.json")[
+                "datasets"
+            ].items()
+        },
+        "v1_numpy_ties_vs_v2_canonical": v1_v2_differences(evidence_dir),
+    }
     return out
 
 
@@ -716,7 +1015,8 @@ def check(evidence_dir=EVIDENCE):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
-        "command", choices=("features", "cases", "posthoc", "analyze", "check")
+        "command",
+        choices=("features", "cases", "posthoc", "ranking-parity", "analyze", "check"),
     )
     parser.add_argument("--data-dir", type=Path)
     parser.add_argument("--cache-dir", type=Path)
@@ -732,6 +1032,8 @@ def main(argv=None):
         return 0
     elif args.command == "posthoc":
         result = posthoc_same_source(args)
+    elif args.command == "ranking-parity":
+        result = ranking_parity(args)
     elif args.command == "analyze":
         result = {"datasets": list(write_analysis()["datasets"])}
     else:

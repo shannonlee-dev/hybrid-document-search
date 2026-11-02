@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="364" viewBox="0 0 760 364" role="img" aria-label="Dense first relevant rank movement" font-family="-apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Segoe UI', Helvetica, Arial, sans-serif">
+<title>Dense first relevant rank movement</title>
+<rect width="760" height="364" fill="#fcfcfb"/>
+<text x="20" y="26" font-size="15" font-weight="600" fill="#0b0b0b">Dense-only 첫 relevant 문서 순위 이동 (원본 BGE → Finance)</text>
+<text x="20" y="44" font-size="12" fill="#52514e">데이터셋별 query 비율. 막대 끝 숫자는 query 수.</text>
+<rect x="20" y="56" width="14" height="10" rx="2" fill="#eb6834"/><text x="40" y="65" font-size="11" fill="#0b0b0b">Ko-StrategyQA (592)</text>
+<rect x="240" y="56" width="14" height="10" rx="2" fill="#2a78d6"/><text x="260" y="65" font-size="11" fill="#0b0b0b">BC Card Test (721)</text>
+<text x="180" y="98" font-size="12" text-anchor="end" fill="#0b0b0b">top10 진입</text>
+<rect x="190" y="86" width="2.2" height="11" rx="2" fill="#eb6834"><title>Ko-StrategyQA (592) top10 진입: 2 (0.3%)</title></rect>
+<text x="196.2" y="95" font-size="10" fill="#52514e">2</text>
+<rect x="190" y="100" width="29.8" height="11" rx="2" fill="#2a78d6"><title>BC Card Test (721) top10 진입: 33 (4.6%)</title></rect>
+<text x="223.8" y="109" font-size="10" fill="#52514e">33</text>
+<text x="180" y="138" font-size="12" text-anchor="end" fill="#0b0b0b">top10 안 상승</text>
+<rect x="190" y="126" width="26.4" height="11" rx="2" fill="#eb6834"><title>Ko-StrategyQA (592) top10 안 상승: 24 (4.1%)</title></rect>
+<text x="220.4" y="135" font-size="10" fill="#52514e">24</text>
+<rect x="190" y="140" width="69.6" height="11" rx="2" fill="#2a78d6"><title>BC Card Test (721) top10 안 상승: 77 (10.7%)</title></rect>
+<text x="263.6" y="149" font-size="10" fill="#52514e">77</text>
+<text x="180" y="178" font-size="12" text-anchor="end" fill="#0b0b0b">top10 안 동일</text>
+<rect x="190" y="166" width="510.0" height="11" rx="2" fill="#eb6834"><title>Ko-StrategyQA (592) top10 안 동일: 463 (78.2%)</title></rect>
+<text x="704.0" y="175" font-size="10" fill="#52514e">463</text>
+<rect x="190" y="180" width="456.7" height="11" rx="2" fill="#2a78d6"><title>BC Card Test (721) top10 안 동일: 505 (70.0%)</title></rect>
+<text x="650.7" y="189" font-size="10" fill="#52514e">505</text>
+<text x="180" y="218" font-size="12" text-anchor="end" fill="#0b0b0b">top10 안 하락</text>
+<rect x="190" y="206" width="43.0" height="11" rx="2" fill="#eb6834"><title>Ko-StrategyQA (592) top10 안 하락: 39 (6.6%)</title></rect>
+<text x="237.0" y="215" font-size="10" fill="#52514e">39</text>
+<rect x="190" y="220" width="42.5" height="11" rx="2" fill="#2a78d6"><title>BC Card Test (721) top10 안 하락: 47 (6.5%)</title></rect>
+<text x="236.5" y="229" font-size="10" fill="#52514e">47</text>
+<text x="180" y="258" font-size="12" text-anchor="end" fill="#0b0b0b">top10 이탈</text>
+<rect x="190" y="246" width="6.6" height="11" rx="2" fill="#eb6834"><title>Ko-StrategyQA (592) top10 이탈: 6 (1.0%)</title></rect>
+<text x="200.6" y="255" font-size="10" fill="#52514e">6</text>
+<rect x="190" y="260" width="17.2" height="11" rx="2" fill="#2a78d6"><title>BC Card Test (721) top10 이탈: 19 (2.6%)</title></rect>
+<text x="211.2" y="269" font-size="10" fill="#52514e">19</text>
+<text x="180" y="298" font-size="12" text-anchor="end" fill="#0b0b0b">둘 다 top10 밖</text>
+<rect x="190" y="286" width="63.9" height="11" rx="2" fill="#eb6834"><title>Ko-StrategyQA (592) 둘 다 top10 밖: 58 (9.8%)</title></rect>
+<text x="257.9" y="295" font-size="10" fill="#52514e">58</text>
+<rect x="190" y="300" width="36.2" height="11" rx="2" fill="#2a78d6"><title>BC Card Test (721) 둘 다 top10 밖: 40 (5.5%)</title></rect>
+<text x="230.2" y="309" font-size="10" fill="#52514e">40</text>
+</svg>

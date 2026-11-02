@@ -55,3 +55,8 @@ jobs:
       - run: uv sync --locked --extra sparse --extra dense
       - run: uv run --locked --extra sparse --extra dense python -c "import numpy, faiss, bm25s, sklearn"
       - run: uv run --locked --extra sparse --extra dense pytest tests/fusion -q
+      # Evidence checks that need scipy (via scikit-learn) and faiss; the base job skips them.
+      - run: >-
+          uv run --locked --extra sparse --extra dense pytest -q
+          tests/test_strategyqa_regression_evidence.py
+          tests/test_finance_service_evidence.py
