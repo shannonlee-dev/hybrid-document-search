@@ -1,0 +1,194 @@
+{
+  "protocol": "preregistration.md: Ko-StrategyQA Dense delta nDCG@10 bottom 15 (loss) and top 5 (gain), read directly; multi-label",
+  "labels": {
+    "multi_hop": "decomposition step that refers to a previous step (e.g. '1번') or needs another hop",
+    "fact_causal": "factual attribute, relation or cause lookup",
+    "short_ambiguous": "short, acronym, or ambiguous without the parent question",
+    "non_finance_general": "general knowledge unrelated to finance",
+    "low_overlap": "automatic: lexical_overlap <= 0.019608 (lowest tertile of Ko-StrategyQA); not a manual judgement",
+    "other": "none of the above"
+  },
+  "reviewer_note": "Labels were assigned by reading the query and gold passage titles/openings. Query text is not committed. Gains share the same label profile as losses, so these labels do not separate losses from gains. low_overlap was first guessed by eye and then re-derived from the automatic rule; one case (b7ee54ccf00c2de84abb_0) changed.",
+  "cases": [
+    {
+      "group": "loss",
+      "query_id": "d15cac26462700b9d6ca_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "a40dafa5d3114a101432_2",
+      "labels": [
+        "multi_hop",
+        "short_ambiguous",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "9a7a4669a295c5f3ebea_1",
+      "labels": [
+        "multi_hop",
+        "short_ambiguous",
+        "non_finance_general"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "86b893746c5eeece6760_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "d7bac31bafedfe9de6ee_1",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ],
+      "note": "consumer/company topic; no finance lexicon term"
+    },
+    {
+      "group": "loss",
+      "query_id": "955a55c2c64209b0ab7d_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "955a55c2c64209b0ab7d_1",
+      "labels": [
+        "fact_causal",
+        "non_finance_general"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "1d4a642a03f37de1b5d0_0",
+      "labels": [
+        "short_ambiguous",
+        "non_finance_general",
+        "low_overlap"
+      ],
+      "note": "acronym query"
+    },
+    {
+      "group": "loss",
+      "query_id": "3cb1925dc00aecc7ef83_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "7cfc1003f0a479b3487c_2",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ],
+      "note": "first relevant stays rank 1; loss comes from other relevant passages moving"
+    },
+    {
+      "group": "loss",
+      "query_id": "0d88c13d582a6c3c6f94_0",
+      "labels": [
+        "short_ambiguous",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "0dad30a3a3c7c915e0c2_1",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "2b2a1d9d526e9a99a8ca_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "b7ee54ccf00c2de84abb_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "loss",
+      "query_id": "ffd8a720264778c0fd6e_1",
+      "labels": [
+        "fact_causal",
+        "non_finance_general"
+      ]
+    },
+    {
+      "group": "gain",
+      "query_id": "cea676f4afc9e1051166_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general"
+      ]
+    },
+    {
+      "group": "gain",
+      "query_id": "519626e90b19ecb3886f_0",
+      "labels": [
+        "short_ambiguous",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "gain",
+      "query_id": "18677e493ffd5cd35fa9_0",
+      "labels": [
+        "fact_causal",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    },
+    {
+      "group": "gain",
+      "query_id": "0aad1627ee2984c8c147_1",
+      "labels": [
+        "fact_causal",
+        "non_finance_general"
+      ]
+    },
+    {
+      "group": "gain",
+      "query_id": "0cafe7ae4858b90c92ab_1",
+      "labels": [
+        "multi_hop",
+        "short_ambiguous",
+        "non_finance_general",
+        "low_overlap"
+      ]
+    }
+  ]
+}
