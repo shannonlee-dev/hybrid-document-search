@@ -1,0 +1,63 @@
+{
+  "runtime": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "cudnn": 92400,
+    "gpus": [
+      "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
+      "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition"
+    ],
+    "transformers": "5.18.0",
+    "sentence_transformers": "6.1.0",
+    "numpy": "2.5.3",
+    "cudnn_deterministic": false,
+    "cudnn_benchmark": false,
+    "deterministic_algorithms": false,
+    "CUBLAS_WORKSPACE_CONFIG": null
+  },
+  "cpu_threads": 128,
+  "gpus": [
+    {
+      "index": "0",
+      "name": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
+      "driver_version": "610.57.04",
+      "memory.total [MiB]": "97887 MiB",
+      "power.limit [W]": "300.00 W"
+    },
+    {
+      "index": "1",
+      "name": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
+      "driver_version": "610.57.04",
+      "memory.total [MiB]": "97887 MiB",
+      "power.limit [W]": "300.00 W"
+    }
+  ],
+  "placement": {
+    "seed42": "GPU0",
+    "seed43": "GPU1",
+    "concurrent": true
+  },
+  "source_sha256": {
+    "evaluation/query_encoder.py": "ab60b96f6d826a976e7011042fa787d768967567db0cb1f72df8aa37c1a2302d",
+    "evaluation/query_encoder_report.py": "4d034101ad4ffe63e4c5bdc6be38e3acd7e0dec2f5cee9096ddae11ee81e76ce",
+    "evaluation/query_encoder_training.py": "c2e15426916f520fc38e444d8c9a1f490deeec576d75a9ec4acfe8390bfe44d9",
+    "evaluation/metrics.py": "af4de41d9ccf9cd64186da1f973faf4d5604f00f559239ccf8adea992cee7722",
+    "scripts/evaluate_query_encoder.py": "a5a09d6d7059eddde131e899270b14a392fa3bef761e638f85a31c4a62aa0a79",
+    "scripts/train_query_encoder.py": "5ef83bb0c2481e0319f64a5ff4c2b24da5a72ed9d2c65ca348e10e9bc81bd64b",
+    "evaluation/runtime_config.py": "1ff1ef8a364169e3c360399d54b245c444808f6e3c8d79573812c2458de061e2",
+    "evaluation/data.py": "e5367f36b1971037fa53f52a307a68ea7c6d7dd3610a75ccaae753e818d6b507",
+    "retrievers/bm25.py": "623bfbb261a93037e1b3ac6bf1ff4aff0f35afa5e333f67cdb667549cd14d7a3",
+    "data/bccard.py": "00200adc7081a464d6d44d8fc9637ae32422ea3d3ee305c11e6801150b22eecf",
+    "uv.lock": "29e76b185a8721e8cc833901c8829154009c881ce34833d1ddf51b802c559712",
+    "pyproject.toml": "57bdbe97ddabbba1b7c15a0301527d3e66b8f55bcf6cca9b1be4c36d12f946a3"
+  },
+  "git_head": "b6f8649a8dc7a8cbb580926ba2cc08cbee9358df",
+  "git_status_porcelain_bytes": 0,
+  "launcher": {
+    "file": "tools/train_with_loss_log.py (local)",
+    "sha256": "1d632786ea9aec15812ff92329aef1f551a37afbc3fcc7f9edc80ee5f14d2777",
+    "behavior": "calls scripts.train_query_encoder.main unchanged; also appends each progress.json write to progress-log.jsonl"
+  }
+}
