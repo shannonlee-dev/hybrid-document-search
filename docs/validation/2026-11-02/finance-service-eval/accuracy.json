@@ -1,0 +1,432 @@
+{
+  "dataset": "BC Card Test primary",
+  "queries": 721,
+  "conditions": {
+    "A-bge": {
+      "encoder": "bge",
+      "kind": "service_hybrid",
+      "alpha": null,
+      "role": "co-primary A"
+    },
+    "A-fin": {
+      "encoder": "fin",
+      "kind": "service_hybrid",
+      "alpha": null,
+      "role": "co-primary A"
+    },
+    "B-bge": {
+      "encoder": "bge",
+      "kind": "fixed",
+      "alpha": 0.84,
+      "role": "co-primary B"
+    },
+    "B-fin": {
+      "encoder": "fin",
+      "kind": "fixed",
+      "alpha": 0.84,
+      "role": "co-primary B"
+    },
+    "S-fin89": {
+      "encoder": "fin",
+      "kind": "fixed",
+      "alpha": 0.89,
+      "role": "secondary"
+    },
+    "D-bge": {
+      "encoder": "bge",
+      "kind": "dense",
+      "alpha": null,
+      "role": "secondary"
+    },
+    "D-fin": {
+      "encoder": "fin",
+      "kind": "dense",
+      "alpha": null,
+      "role": "secondary"
+    }
+  },
+  "api_vs_direct_top10_mismatches": {
+    "A-bge": 0,
+    "A-fin": 0,
+    "B-bge": 0,
+    "B-fin": 0,
+    "S-fin89": 0,
+    "D-bge": 0,
+    "D-fin": 0
+  },
+  "aggregates": {
+    "A-bge": {
+      "queries": 721,
+      "p@1": 0.6851595006934813,
+      "recall@5": 0.8488210818307905,
+      "recall@10": 0.8945908460471568,
+      "mrr@10": 0.7614617044228695,
+      "ndcg@10": 0.7940145938588489
+    },
+    "A-fin": {
+      "queries": 721,
+      "p@1": 0.6907073509015257,
+      "recall@5": 0.8821081830790569,
+      "recall@10": 0.9181692094313454,
+      "mrr@10": 0.7767034321819342,
+      "ndcg@10": 0.8116047446744028
+    },
+    "B-bge": {
+      "queries": 721,
+      "p@1": 0.6768377253814147,
+      "recall@5": 0.8502080443828016,
+      "recall@10": 0.8932038834951457,
+      "mrr@10": 0.7577378200471127,
+      "ndcg@10": 0.7910127414592707
+    },
+    "B-fin": {
+      "queries": 721,
+      "p@1": 0.6920943134535368,
+      "recall@5": 0.8821081830790569,
+      "recall@10": 0.9195561719833565,
+      "mrr@10": 0.7773473790810823,
+      "ndcg@10": 0.8123864441432933
+    },
+    "S-fin89": {
+      "queries": 721,
+      "p@1": 0.6920943134535368,
+      "recall@5": 0.883495145631068,
+      "recall@10": 0.9181692094313454,
+      "mrr@10": 0.7783353147084077,
+      "ndcg@10": 0.81288325843719
+    },
+    "D-bge": {
+      "queries": 721,
+      "p@1": 0.6560332871012483,
+      "recall@5": 0.855755894590846,
+      "recall@10": 0.8987517337031901,
+      "mrr@10": 0.7460064284613521,
+      "ndcg@10": 0.7835091332711331
+    },
+    "D-fin": {
+      "queries": 721,
+      "p@1": 0.6893203883495146,
+      "recall@5": 0.8821081830790569,
+      "recall@10": 0.9181692094313454,
+      "mrr@10": 0.7731490654514233,
+      "ndcg@10": 0.8087350967384629
+    }
+  },
+  "comparisons": {
+    "A": {
+      "treated": "A-fin",
+      "control": "A-bge",
+      "p@1": {
+        "mean_difference": 0.005547850208044383,
+        "ci95": [
+          -0.016643550624133148,
+          0.027739251040221916
+        ],
+        "verdict": "not_shown",
+        "wins_ties_losses": [
+          34,
+          657,
+          30
+        ],
+        "queries": 721
+      },
+      "recall@5": {
+        "mean_difference": 0.033287101248266296,
+        "ci95": [
+          0.013869625520110958,
+          0.052704576976421634
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          38,
+          669,
+          14
+        ],
+        "queries": 721
+      },
+      "recall@10": {
+        "mean_difference": 0.023578363384188627,
+        "ci95": [
+          0.004160887656033287,
+          0.04299583911234397
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          35,
+          668,
+          18
+        ],
+        "queries": 721
+      },
+      "mrr@10": {
+        "mean_difference": 0.01524172775906479,
+        "ci95": [
+          -0.00048334544173656555,
+          0.031303276974220084
+        ],
+        "verdict": "not_shown",
+        "wins_ties_losses": [
+          91,
+          569,
+          61
+        ],
+        "queries": 721
+      },
+      "ndcg@10": {
+        "mean_difference": 0.017590150815553932,
+        "ci95": [
+          0.002581218952827603,
+          0.03283317843627682
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          91,
+          569,
+          61
+        ],
+        "queries": 721
+      }
+    },
+    "B": {
+      "treated": "B-fin",
+      "control": "B-bge",
+      "p@1": {
+        "mean_difference": 0.015256588072122053,
+        "ci95": [
+          -0.004160887656033287,
+          0.03467406380027739
+        ],
+        "verdict": "not_shown",
+        "wins_ties_losses": [
+          31,
+          670,
+          20
+        ],
+        "queries": 721
+      },
+      "recall@5": {
+        "mean_difference": 0.0319001386962552,
+        "ci95": [
+          0.012482662968099861,
+          0.052704576976421634
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          39,
+          666,
+          16
+        ],
+        "queries": 721
+      },
+      "recall@10": {
+        "mean_difference": 0.026352288488210817,
+        "ci95": [
+          0.008321775312066574,
+          0.04576976421636616
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          34,
+          672,
+          15
+        ],
+        "queries": 721
+      },
+      "mrr@10": {
+        "mean_difference": 0.019609559033969572,
+        "ci95": [
+          0.004817438302181712,
+          0.034763473350505184
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          89,
+          583,
+          49
+        ],
+        "queries": 721
+      },
+      "ndcg@10": {
+        "mean_difference": 0.02137370268402271,
+        "ci95": [
+          0.007419129100974416,
+          0.03581565141658857
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          89,
+          583,
+          49
+        ],
+        "queries": 721
+      }
+    },
+    "S89-vs-B-bge": {
+      "treated": "S-fin89",
+      "control": "B-bge",
+      "p@1": {
+        "mean_difference": 0.015256588072122053,
+        "ci95": [
+          -0.004160887656033287,
+          0.03467406380027739
+        ],
+        "verdict": "not_shown",
+        "wins_ties_losses": [
+          32,
+          668,
+          21
+        ],
+        "queries": 721
+      },
+      "recall@5": {
+        "mean_difference": 0.033287101248266296,
+        "ci95": [
+          0.013869625520110958,
+          0.05409153952843273
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          40,
+          665,
+          16
+        ],
+        "queries": 721
+      },
+      "recall@10": {
+        "mean_difference": 0.024965325936199722,
+        "ci95": [
+          0.006934812760055479,
+          0.044382801664355064
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          34,
+          671,
+          16
+        ],
+        "queries": 721
+      },
+      "mrr@10": {
+        "mean_difference": 0.02059749466129494,
+        "ci95": [
+          0.0055544410320762586,
+          0.036046854016687564
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          90,
+          583,
+          48
+        ],
+        "queries": 721
+      },
+      "ndcg@10": {
+        "mean_difference": 0.02187051697791939,
+        "ci95": [
+          0.007445571356081882,
+          0.03669257026815659
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          90,
+          583,
+          48
+        ],
+        "queries": 721
+      }
+    },
+    "D": {
+      "treated": "D-fin",
+      "control": "D-bge",
+      "p@1": {
+        "mean_difference": 0.033287101248266296,
+        "ci95": [
+          0.008321775312066574,
+          0.05825242718446602
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          53,
+          639,
+          29
+        ],
+        "queries": 721
+      },
+      "recall@5": {
+        "mean_difference": 0.026352288488210817,
+        "ci95": [
+          0.006934812760055479,
+          0.047156726768377254
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          37,
+          666,
+          18
+        ],
+        "queries": 721
+      },
+      "recall@10": {
+        "mean_difference": 0.019417475728155338,
+        "ci95": [
+          0.0,
+          0.038834951456310676
+        ],
+        "verdict": "not_shown",
+        "wins_ties_losses": [
+          33,
+          669,
+          19
+        ],
+        "queries": 721
+      },
+      "mrr@10": {
+        "mean_difference": 0.02714263699007111,
+        "ci95": [
+          0.01009480329348568,
+          0.044408807212205255
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          110,
+          545,
+          66
+        ],
+        "queries": 721
+      },
+      "ndcg@10": {
+        "mean_difference": 0.02522596346732984,
+        "ci95": [
+          0.00949563701710022,
+          0.04102320844765968
+        ],
+        "verdict": "maintained",
+        "wins_ties_losses": [
+          110,
+          545,
+          66
+        ],
+        "queries": 721
+      }
+    }
+  },
+  "fp32_service_vs_pr41_bf16_query_vectors": {
+    "bge": {
+      "queries": 721,
+      "cosine_min": 0.9997750640771279,
+      "cosine_p01": 0.9999584762967535,
+      "cosine_mean": 0.9999812428975783
+    },
+    "fin": {
+      "queries": 721,
+      "cosine_min": 0.9996875268316703,
+      "cosine_p01": 0.9999415937033482,
+      "cosine_mean": 0.9999749257724447
+    }
+  },
+  "service_build_seconds": {
+    "bge": 26.503434184007347,
+    "fin": 21.65322086913511
+  },
+  "per_query_sha256": "089dec053699e1613a7830de4b86ccae06f390dff73d70a9591a050efb093b11"
+}
