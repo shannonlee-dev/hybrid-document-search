@@ -27,7 +27,10 @@ Reference: PR #40 ([`finance-retrain/`](validation/2026-11-02/finance-retrain/))
 - **Order:** pre-registration → training → score cache → BF16 baseline → `select` → **freeze** → `checkpoint` (adapted Test vectors) → `evaluate` → `export` → `verify`.
   - This order is stricter than the PR #40 handoff, which ran `checkpoint` before `select`. The algorithm is unchanged.
   - The baseline Test vectors this order produced are bitwise identical to those from `checkpoint`.
-- **Loss logging:** a local launcher called the unchanged training CLI and also appended each `progress.json` write to a log. It observes only.
+- **Loss logging:** training ran through [`scripts/train_query_encoder_with_loss_log.py`](../scripts/train_query_encoder_with_loss_log.py), committed byte-identical to the file used.
+  - Its SHA-256 `1d632786…` was recorded before training in the run's pre-registration hash list and in `environment.json`, where the file appears under its local name `tools/train_with_loss_log.py`.
+  - It calls `scripts.train_query_encoder.main` with the same arguments. It wraps only the training module's `write_json`, so that each `progress.json` record is also appended to `progress-log.jsonl`.
+  - It doesn't touch arguments, seeds, data order, model or optimizer.
 
 ## Reproduction levels (criteria in [`preregistration.md`](validation/2026-11-02/finance-repro-blackwell/preregistration.md), frozen before training)
 | Level | Result |
@@ -72,6 +75,7 @@ How material the changes are:
 - **The curves are flat and jagged near their optimum.** Seed43's curve has two near-equal peaks: .830633 at α .89 and .830630 at .82, 3×10⁻⁶ apart.
 - **The α changes are within noise.** A paired bootstrap over the 745 Validation queries puts the advantage of the selected α over the reference α at +.0012 (95% CI [−.0044, +.0069]) for Seed43 and +.0013 ([−.0047, +.0073]) for Seed42.
 - **Most queries don't move.** 683 and 681 queries respectively are unaffected by the change.
+- **The difference is biased upward.** The selected α is the argmax on these same 745 queries, so selected-minus-reference overstates the true advantage. That the CI still includes zero strengthens the conclusion below.
 
 So the α changes are mostly a consequence of an argmax over a flat, noisy objective, not evidence of a materially different optimum. They are still reported as model-selection non-reproduction, and the frozen α values were not changed.
 
@@ -102,11 +106,17 @@ PR #40 has no Seed42 Test result.
 
 The reproduced gain is smaller than PR #40's by .0024, but the cross-run difference CI includes zero.
 
+How to read these CIs:
+- **What they cover:** they resample the 721 Test queries with the trained models held fixed. They quantify query-sampling uncertainty only.
+- **What they don't cover:** variance from seeds, training nondeterminism or hardware. Two seeds are too few to estimate that.
+- **Cross-run interval:** this compares two runs on the same queries. Its inclusion of zero means the runs are not distinguishable at this query sample size; it does not show they are equivalent.
+- **Test exposure:** the Test split was already exposed, so the intervals describe these 721 queries, not new data.
+
 ## What the evidence does and does not show about the differences
 - **Shown:**
   - The code, package versions and every input byte are identical.
   - The CPU FP64 score cache reproduces bitwise.
-  - On the reference machine, Seed43 trained twice (`c95c3fb` and the PR #40 retrain, with different timings) produced the same checkpoint SHA. So the pipeline is deterministic within that environment.
+  - On the reference machine, two recorded Seed43 runs (`c95c3fb` and the PR #40 retrain, with different recorded timings) report the same checkpoint SHA. This is consistent with run-to-run determinism in that environment, but it is a single repeat.
 - **Not isolated:** the GPU model, driver, CUDA kernel selection, host OS (WSL2 vs native Linux) and concurrent two-GPU execution all differ together from the reference. The differences are consistent with GPU-side floating-point behavior, but this run does not attribute them to GPU architecture alone.
 - **Observed sensitivity:** BF16 encoding of the unmodified model already changes step-0 Validation by +.00084 and alters 111 of the 721 baseline Test top-10 lists, though only 5 change nDCG@10. Selection margins of 2×10⁻⁴ (checkpoint) and 3×10⁻⁶ (α) are far below this level.
 
@@ -132,7 +142,8 @@ The audit found these statements in the local `REPORT.md` unsupported; they are 
 ```bash
 # Integrity of committed evidence, analysis and figures (no data needed)
 uv run --locked python scripts/analyze_finance_reproduction.py check
-uv run --locked pytest -q tests/dense/test_finance_reproduction_evidence.py
+uv run --locked --extra dense pytest -q tests/dense/test_finance_reproduction_evidence.py
+# Without official BC Card data, the official-data verify test is skipped (FINANCE_DATA_DIR unset).
 
 # Recompute every per-query metric from rankings with the official BC Card data
 uv run --locked --extra sparse --extra dense python -m scripts.evaluate_query_encoder verify \

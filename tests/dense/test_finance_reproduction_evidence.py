@@ -27,6 +27,18 @@ def test_manifest_analysis_and_figures_recompute(monkeypatch):
     assert _analysis_module().check(EVIDENCE) == {"verified": True, "files": 12}
 
 
+def test_loss_log_launcher_is_the_recorded_original():
+    import hashlib
+
+    launcher = ROOT / "scripts/train_query_encoder_with_loss_log.py"
+    environment = json.loads((EVIDENCE / "environment.json").read_text())
+    digest = hashlib.sha256(launcher.read_bytes()).hexdigest()
+    assert digest == environment["launcher"]["sha256"]
+    assert digest == (
+        "1d632786ea9aec15812ff92329aef1f551a37afbc3fcc7f9edc80ee5f14d2777"
+    )
+
+
 def test_frozen_selection_and_policies_are_recorded_as_run():
     frozen = json.loads((EVIDENCE / "frozen.json").read_text())
     assert frozen["selected_encoder"] == "seed43"
