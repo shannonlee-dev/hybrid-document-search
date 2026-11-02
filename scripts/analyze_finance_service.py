@@ -400,6 +400,18 @@ def multiplicity(evidence_dir=EVIDENCE, seed=20261102, resamples=20000):
     return result
 
 
+def _close(a, b, rel=1e-9):
+    from math import isclose
+
+    if isinstance(a, float) and isinstance(b, float):
+        return isclose(a, b, rel_tol=rel, abs_tol=1e-15)
+    if isinstance(a, dict) and isinstance(b, dict):
+        return a.keys() == b.keys() and all(_close(a[k], b[k], rel) for k in a)
+    if isinstance(a, list) and isinstance(b, list):
+        return len(a) == len(b) and all(_close(x, y, rel) for x, y in zip(a, b))
+    return type(a) is type(b) and a == b
+
+
 def write_analysis(evidence_dir=EVIDENCE):
     evidence_dir = Path(evidence_dir)
     result = analyze(evidence_dir)
@@ -438,8 +450,11 @@ def check(evidence_dir=EVIDENCE):
         raise ValueError("paired differences figure differs")
     if (evidence_dir / "latency-stages.svg").read_text() != latency_figure(recomputed):
         raise ValueError("latency figure differs")
-    if json.loads(json.dumps(multiplicity(evidence_dir))) != read_json(
-        evidence_dir / "multiplicity.json"
+    # NumPy reductions can differ in the last bits across CPUs, so floats are
+    # compared with a tight relative tolerance; everything else must be exact.
+    if not _close(
+        json.loads(json.dumps(multiplicity(evidence_dir))),
+        read_json(evidence_dir / "multiplicity.json"),
     ):
         raise ValueError("multiplicity.json does not match recomputation")
     return {"verified": True, "files": len(listed)}
