@@ -1,0 +1,33 @@
+{
+  "kind": "v1 (NumPy stable tie order) files removed from the tree; kept in git history",
+  "v1_commit": "19d9d147ed0e0c87140c7a1fbd1fd500cb76e590",
+  "renamed_copy_commit": "73a9c8f0bbf0d1ce27e921ca2ede7863c4194b5c",
+  "reason_removed": "superseded by canonical-tie v2; differences frozen in v1-v2-comparison.json",
+  "files": {
+    "per-query-summary.jsonl": {
+      "path_at_v1_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/per-query-summary.jsonl",
+      "path_at_renamed_copy_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/per-query-summary.v1-numpy-ties.jsonl",
+      "sha256": "74171d9804fe248e20ae539a4c6e4d8058ec0d82dac0f48567548bd83b280de2"
+    },
+    "analysis.json": {
+      "path_at_v1_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/analysis.json",
+      "path_at_renamed_copy_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/analysis.v1-numpy-ties.json",
+      "sha256": "ec9123f3466128bdc2f26a5580ff66715f69d6eb19213bf7d96d0530df404330"
+    },
+    "features-parity.json": {
+      "path_at_v1_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/features-parity.json",
+      "path_at_renamed_copy_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/features-parity.v1-numpy-ties.json",
+      "sha256": "5a03983e47bb507e541e7d436ecc87c42b20dcc17e8fae0a167db4349bab4a0e"
+    },
+    "rank-movement.svg": {
+      "path_at_v1_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/rank-movement.svg",
+      "path_at_renamed_copy_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/rank-movement.v1-numpy-ties.svg",
+      "sha256": "bc24b6335fc1f58577174f2015948cf2bf58056b0c205a5dc602478003962190"
+    },
+    "drift-vs-delta.svg": {
+      "path_at_v1_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/drift-vs-delta.svg",
+      "path_at_renamed_copy_commit": "docs/validation/2026-11-02/finance-strategyqa-analysis/drift-vs-delta.v1-numpy-ties.svg",
+      "sha256": "9ee5b4746aa57c0691ca312bb73e732fe446e070b1594d9db95bebacd35bc7d9"
+    }
+  }
+}

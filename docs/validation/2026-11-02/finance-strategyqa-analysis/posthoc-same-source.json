@@ -1,0 +1,45 @@
+{
+  "kind": "post-hoc, added after manual case review; not preregistered",
+  "source_definition": {
+    "strategyqa": "Wikipedia title (document_id = title-index)",
+    "bccard": "parent document (data.bccard.parent_and_index)"
+  },
+  "datasets": {
+    "strategyqa": {
+      "lost_rank1": {
+        "queries": 22,
+        "new_top1_same_source_as_gold": 2
+      },
+      "gained_rank1": {
+        "queries": 12,
+        "new_top1_same_source_as_gold": 6
+      },
+      "all_nonrelevant_top1_bge": {
+        "queries": 144,
+        "same_source_as_gold": 31
+      },
+      "all_nonrelevant_top1_fin": {
+        "queries": 154,
+        "same_source_as_gold": 28
+      }
+    },
+    "bccard": {
+      "lost_rank1": {
+        "queries": 29,
+        "new_top1_same_source_as_gold": 0
+      },
+      "gained_rank1": {
+        "queries": 53,
+        "new_top1_same_source_as_gold": 0
+      },
+      "all_nonrelevant_top1_bge": {
+        "queries": 248,
+        "same_source_as_gold": 0
+      },
+      "all_nonrelevant_top1_fin": {
+        "queries": 224,
+        "same_source_as_gold": 0
+      }
+    }
+  }
+}
