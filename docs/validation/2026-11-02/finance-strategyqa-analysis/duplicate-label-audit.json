@@ -1,0 +1,29 @@
+{
+  "documents": 36281,
+  "duplicate_vector_groups": 192,
+  "documents_in_duplicate_groups": 392,
+  "group_size_distribution": {
+    "2": 185,
+    "3": 6,
+    "4": 1
+  },
+  "groups_text_and_title_identical": 189,
+  "groups_same_vector_different_text": 3,
+  "binary_label_conflicts_query_group_pairs": 10,
+  "queries_with_binary_label_conflict": 10,
+  "queries": 721,
+  "canonical_reproduction_matches_committed_top10": {
+    "D-bge": 721,
+    "A-bge": 721,
+    "B-bge": 721,
+    "D-fin": 721,
+    "A-fin": 721,
+    "B-fin": 721
+  },
+  "queries_with_top10_exact_tie_block": {
+    "D": 79,
+    "A": 74,
+    "B": 72
+  },
+  "source_rows_sha256": "089dec053699e1613a7830de4b86ccae06f390dff73d70a9591a050efb093b11"
+}

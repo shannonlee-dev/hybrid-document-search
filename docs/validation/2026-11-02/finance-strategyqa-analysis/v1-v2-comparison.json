@@ -1,0 +1,64 @@
+{
+  "v1_source": "19d9d147ed0e0c87140c7a1fbd1fd500cb76e590:docs/validation/2026-11-02/finance-strategyqa-analysis/per-query-summary.jsonl",
+  "v2_source": "per-query-summary.jsonl",
+  "comparison": {
+    "strategyqa": {
+      "queries": 592,
+      "queries_with_changed_field": {
+        "first_relevant_rank_bge": 0,
+        "first_relevant_rank_fin": 0,
+        "top10_overlap": 0,
+        "top100_overlap": 0,
+        "margin_bge": 0,
+        "margin_fin": 0,
+        "query_cosine_bge_fin": 0,
+        "delta_ndcg@10_D": 0
+      },
+      "dense_rank_movement_v1": {
+        "entered_top10": 2,
+        "left_top10": 6,
+        "up_in_top10": 24,
+        "down_in_top10": 39,
+        "same_in_top10": 463,
+        "outside_both": 58
+      },
+      "dense_rank_movement_v2": {
+        "entered_top10": 2,
+        "left_top10": 6,
+        "up_in_top10": 24,
+        "down_in_top10": 39,
+        "same_in_top10": 463,
+        "outside_both": 58
+      }
+    },
+    "bccard": {
+      "queries": 721,
+      "queries_with_changed_field": {
+        "first_relevant_rank_bge": 10,
+        "first_relevant_rank_fin": 11,
+        "top10_overlap": 0,
+        "top100_overlap": 0,
+        "margin_bge": 0,
+        "margin_fin": 0,
+        "query_cosine_bge_fin": 0,
+        "delta_ndcg@10_D": 0
+      },
+      "dense_rank_movement_v1": {
+        "entered_top10": 33,
+        "left_top10": 19,
+        "up_in_top10": 77,
+        "down_in_top10": 47,
+        "same_in_top10": 505,
+        "outside_both": 40
+      },
+      "dense_rank_movement_v2": {
+        "entered_top10": 33,
+        "left_top10": 19,
+        "up_in_top10": 77,
+        "down_in_top10": 47,
+        "same_in_top10": 505,
+        "outside_both": 40
+      }
+    }
+  }
+}

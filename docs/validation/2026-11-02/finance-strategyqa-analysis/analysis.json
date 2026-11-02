@@ -4,7 +4,8 @@
     "per-query-summary.jsonl": "875abdb5bfea43878f4cd343946ba27245b172064a48ce1eb53988a485ea564f",
     "features-parity.json": "a95828acaa24addd91ed8a560fca2615462c89fd50e64d6c0cc5badb7a376cfe",
     "ranking-parity.json": "2630d1ee9198796280ed3420696bccd2bc562bdc72dcd4a19473bc4c369ae798",
-    "per-query-summary.v1-numpy-ties.jsonl": "74171d9804fe248e20ae539a4c6e4d8058ec0d82dac0f48567548bd83b280de2",
+    "v1-v2-comparison.json": "2f6895191f9395ddf0c8cf3d63bc24c503f5052c0fbbe44b3ad940827ecf081a",
+    "revisions.json": "d981dddad76c9443fd6f580ad043d8827652c658443ec289ba92ef8886f02c6f",
     "manual-review.json": "d46ad394edef7dad20ff49527af74614190ffe530341ba69440220a47447e91e",
     "posthoc-same-source.json": "c1db46d081f58a37c90960330c706c91034442633ec73c60d0089ac142bdfc85"
   },

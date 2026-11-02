@@ -2,7 +2,7 @@
 
 이 분석은 exploratory임. Ko-StrategyQA 결과를 이미 본 뒤 원인을 찾으려는 분석이라 여기 나온 연관은 가설 생성용이고 인과 증명이 아님. 사전 등록은 [`preregistration.md`](validation/2026-11-02/finance-strategyqa-analysis/preregistration.md)이고 분석 코드 작성 전에 커밋했음(`a1f9ee1`). 처음 분석(`19d9d14`, 이하 v1) 이후 리뷰에서 순위 parity와 해석을 다시 점검했고, 그 결과와 바뀐 부분을 이 문서와 [수정 내역](#수정-내역)에 남겼음. 재점검에서 새로 넣은 측정은 모두 사후 탐색임.
 
-요약하면 Dense 손실과 Hybrid 손실은 query 단위로 강하게 겹쳐서, fusion이 독립 원인이라는 증거는 없었음. 사전 등록한 drift 가설과 "금융 쪽으로 끌려감" 가설은 지지되지 않았음. Finance는 두 데이터셋에서 query-문서 점수 전체를 아래로 평행 이동시켰고, 이 이동을 걷어내고 corpus 분포 대비로 보면 BC Card에서는 relevant 분리가 커졌고 StrategyQA에서는 작게 줄었음. StrategyQA 손실은 정답 passage가 여러 개인 query에서 컸고, lexical overlap이 낮은 query에서도 컸지만 후자는 소수의 큰 손실이 평균을 끌어내린 몫이 큼.
+요약하면 Dense 손실과 Hybrid 손실은 query 단위로 강하게 겹쳐서, fusion이 독립 원인이라는 증거는 없었음. 사전 등록한 drift 가설과 "금융 쪽으로 끌려감" 가설은 지지되지 않았음. Finance는 두 데이터셋에서 query-문서 점수 전체를 아래로 평행 이동시켰고, 이 이동을 걷어내고 corpus 분포 대비로 보면 BC Card에서는 relevant 분리가 커졌고 StrategyQA에서는 작게 줄었음. StrategyQA 손실은 정답 passage가 여러 개인 query에서 컸고, lexical overlap이 낮은 query에서도 컸지만 후자는 소수의 큰 손실이 평균을 끌어내린 몫이 큼. PR #42 BC Card 결론은 고정된 동점 규칙 어느 것에서도 유지됐지만, 서비스 Hybrid는 극단적인 동점 배치 bound에서 CI가 0을 포함함(동점 민감도 절).
 
 ## 순위 parity
 
@@ -21,13 +21,31 @@ v1은 BC Card에서 features의 Dense top10이 PR #42 canonical 행과 BGE 39개
 
 이 동점 의존성은 PR #42 canonical 지표에도 있음. BC Card Dense 평균 nDCG@10은 NumPy 동점 순서로 바꾸면 BGE −.0006, Finance −.0015 달라지고, Finance − BGE 차이(+.0252)는 −.0008 움직임. 결론을 바꿀 크기는 아니지만 중복 문서 라벨이 지표에 끼어드는 한계로 남겨 둠. PR #42 결과는 바꾸지 않았음.
 
+## 동점 민감도 (PR #42 BC Card 결론, 사후 분석)
+
+중복 vector 동점이 PR #42 BC Card 결론을 바꿀 수 있는지 사후에 따로 봤음(`scripts/analyze_tie_sensitivity.py`, `tie-sensitivity.json`, `duplicate-label-audit.json`). 원래 점수, 후보 집합(D 전체 corpus, A 전체 corpus, B Top100 union pool), relevance label은 그대로 두고 정확히 같은 점수끼리의 순서만 바꿨음. 반올림으로 새 동점을 만들지 않았음. 세 조건 × 두 encoder의 canonical 순위를 다시 만들면 721개 모두 PR #42 행과 같았음. Canonical 결과는 그대로 보고 결과이고, 다른 순서는 민감도 확인용임.
+
+중복 그룹 192개는 2개짜리 185, 3개짜리 6, 4개짜리 1개임. 189개는 제목과 본문까지 같고 3개는 vector만 같음. 원문이 같아도 relevance label이 같다고 가정하지 않았음. Test 721개 중 중복 그룹 안에서 relevant와 non-relevant가 갈리는 query는 10개(1.4%)이고, 이 충돌이 top10의 동점 블록 안에 들어오는 경우가 BGE 9개, Finance 8개임. 동점 순서로 지표가 바뀐 query는 세 조건 모두 정확히 이 9개, 8개였음.
+
+비교한 순서는 canonical(D는 FAISS, A는 document_id, B는 pool 안 corpus 순), 동점 시 corpus 행 오름차순, 내림차순임. 여기에 동점 블록 안에서 relevant를 맨 뒤 또는 맨 앞에 두는 하한·상한을 더했음. 블록 위치는 점수로 고정되므로 10위 경계에 걸친 블록도 위치 범위는 그대로이고, binary relevance 지표는 relevant가 앞으로 갈수록 줄지 않아서 이 두 배치가 실제 하한·상한임. Finance − BGE의 최악·최선은 두 encoder에 반대 방향 bound를 붙인 값이라 실제로 나올 수 있는 단일 순서가 아니라 극단값임. 아래 수치는 모든 순서를 그대로 보고하고, 같은 bootstrap 설정(seed 20261102, 20,000회, A·B joint resampling)을 썼음.
+
+| Finance − BGE nDCG@10 | canonical | 행 오름차순 | 행 내림차순 | Finance 최악 bound | Finance 최선 bound |
+|---|---|---|---|---|---|
+| A 서비스 Hybrid | +.0176 [+.0026, +.0328] | +.0176 [+.0026, +.0328] | +.0180 [+.0031, +.0332] | +.0139 [−.0014, +.0295] | +.0217 [+.0066, +.0370] |
+| B Fixed α=.84 | +.0214 [+.0074, +.0358] | +.0214 [+.0074, +.0358] | +.0218 [+.0078, +.0362] | +.0177 [+.0034, +.0325] | +.0255 [+.0113, +.0400] |
+| D Dense-only | +.0252 [+.0095, +.0410] | +.0244 [+.0087, +.0402] | +.0252 [+.0095, +.0410] | +.0211 [+.0053, +.0372] | +.0285 [+.0126, +.0445] |
+
+Bonferroni 97.5% 하한은 A가 canonical +.0006, 오름차순 +.0006, 내림차순 +.0010, 최악 bound −.0034이고 B는 각각 +.0055, +.0055, +.0059, +.0013임. BGE와 Finance 평균 nDCG@10은 하한과 상한 사이 폭이 .004 이내였음(예: A BGE .7925~.7966, Finance .8105~.8142).
+
+고정된 결정적 규칙(canonical, 오름차순, 내림차순) 어느 것을 써도 BC Card의 세 조건 결론과 다중 비교 보정 결론은 바뀌지 않았음. 다만 A(서비스 Hybrid)는 두 encoder에 가장 불리·유리한 배치를 붙인 극단 bound에서 95% CI가 0을 포함함. A 결론은 원래도 Bonferroni 여유가 작았고, 중복 문서 라벨 처리에도 민감하다는 점을 같이 읽어야 함. B는 극단 bound에서도 양수임.
+
 ## 무엇을 어느 순위로 계산했나
 
 - Canonical 행(PR #42) 그대로: ΔnDCG@10·ΔMRR@10·ΔRecall@10, W/T/L, Dense–Hybrid 상관(H4), query 특성별 손실, 사례 선택, 사후 same-source 집계.
 - 새로 계산(v2): 첫 relevant 문서의 전체 corpus 순위, top10·top100 이웃 overlap. v2는 FAISS 전체 순서(k = corpus 크기)를 써서 canonical과 같은 동점 처리를 함. Features top10과 canonical의 불일치는 v2에서 0임(`features-parity.json`). 회귀 테스트 `test_rank_features_match_canonical_service_rows`가 이를 확인하고, v1 파일에 같은 검사를 돌리면 17건이 실패함.
 - 점수 통계: 최고 relevant 점수, 최고 non-relevant 점수, margin, k번째 non-relevant와의 gap, corpus 평균·표준편차, z-점수, 중심과의 cos. NumPy FP32 점수를 씀. 최댓값과 k번째 값은 동점 순서와 무관함.
 
-v1과 v2를 비교하면 StrategyQA는 모든 값이 같았음. BC Card는 첫 relevant 순위가 BGE 10개, Finance 11개 query에서 바뀌었지만 top10 진입·이탈·상승·하락 분류, overlap, margin, 상관 계수는 모두 그대로였음(`analysis.json`의 `v1_numpy_ties_vs_v2_canonical`). v1 결론 중 순위 parity 때문에 바뀌는 것은 없었음. v1 파일은 `*.v1-numpy-ties.*`로 그대로 보존했음.
+v1과 v2를 비교하면 StrategyQA는 모든 값이 같았음. BC Card는 첫 relevant 순위가 BGE 10개, Finance 11개 query에서 바뀌었지만 top10 진입·이탈·상승·하락 분류, overlap, margin, 상관 계수는 모두 그대로였음(`analysis.json`의 `v1_numpy_ties_vs_v2_canonical`). v1 결론 중 순위 parity 때문에 바뀌는 것은 없었음. 이 비교는 `v1-v2-comparison.json`에 고정했고 v1 파일 처리는 [Evidence 정리](#evidence-정리)에 있음.
 
 ## 순위 변화
 
@@ -67,7 +85,7 @@ H1(drift가 크면 손실이 큼)은 지지되지 않았음. Finance가 query를
 
 H3(금융 쪽으로 끌림)도 지지되지 않았음. Finance는 두 데이터셋 모두에서 query를 BC Card corpus 중심에서 멀어지게 했고, 자기 corpus 중심에서도 비슷하게 멀어졌음. 이 이동량과 ΔnDCG의 상관은 .047(p .26)임.
 
-H2(margin)는 v1에서 "StrategyQA margin이 평균적으로 그대로"라고 썼는데, 원점수 기준이라 오해를 부르는 표현이었음. 다시 보면 Finance의 점수 하락은 대부분 corpus 전체의 평행 이동임(평균 −.089 / −.132, 표준편차 변화는 ±.002 이내). 원점수 gap은 이 이동과 query마다 다른 분포 폭이 섞인 값이라 분리 변화를 직접 보여주지 못함. Query마다 corpus 점수를 z-점수로 바꿔 최고 relevant와 k번째 non-relevant의 차이(z-gap)를 보면 이렇게 나왔음(사후 측정).
+H2(margin)는 v1에서 "StrategyQA margin이 평균적으로 그대로"라고 썼는데, 원점수 기준이라 오해를 부르는 표현이었음. 다시 보면 Finance의 점수 하락은 대부분 corpus 전체의 평행 이동임(평균 −.089 / −.132, 표준편차 변화는 ±.002 이내). 원점수 gap은 이 이동과 query마다 다른 분포 폭이 섞인 값이라 분리 변화를 직접 보여주지 못함. 그래서 query와 encoder마다 corpus 전체 점수를 z-점수 `z_i = (s_i − mean(s)) / std(s)`(표준편차는 모집단 기준)로 바꾸고, `zgap_k = max_{relevant} z − (non-relevant 중 k번째로 큰 z)`를 계산했음. k=1은 최고 relevant와 최고 non-relevant의 차이라서 relevant가 1위인지와 같은 말은 아님(relevant끼리 1위를 다툴 수 있음). 이 정규화 기준과 k 값은 결과를 본 뒤 정한 사후 측정임.
 
 | z-gap 변화 | StrategyQA 평균 / 중앙값 / 감소 비율 | BC Card 평균 / 중앙값 / 감소 비율 |
 |---|---|---|
@@ -94,7 +112,7 @@ Dense ΔnDCG@10 평균과 bootstrap 95% CI(seed 20261102, 5,000회). 구간 CI�
 
 Lexical overlap 하위 3분위의 손실이 소수 outlier 때문인지 다시 봤음(사후 측정). StrategyQA 하위 3분위 199개의 평균 −.027 가운데 가장 큰 손실 5개가 합계 −2.75로 그룹 전체 합(약 −5.4)의 절반가량을 차지함. 5개를 빼면 평균 −.014, 10% 절사 평균 −.007, 중앙값은 0임. 대신 손실 비율 18.6% 대 개선 비율 9.6%로 손실 쪽으로 기운 정도는 상위 3분위(14.7% 대 11.7%)보다 큼. "손실이 하위 overlap에 몰렸다"는 v1 표현은 "하위 overlap 구간은 손실이 더 잦고, 평균 차이의 상당 부분은 큰 손실 몇 개에서 옴"으로 약하게 고쳤음. BC Card도 하위 3분위의 개선 평균 +.044에서 10% 절사 평균은 +.018로 줄어 비슷한 성격임.
 
-정답 passage 수는 v1에서 다단계 근거의 proxy라고 불렀는데, 이 기준이 다단계 추론을 실제로 반영하는지 검증하지 않았음. 그래서 "정답 passage가 2개 이상인 query"로만 부름. 금융 용어 사전은 StrategyQA에서 4개만 걸려 정보가 없음. BC Card에서는 금융 용어가 없는 query에서도 개선이 있었음.
+정답 passage 수는 사전 등록 문서와 v1에서 다단계 근거의 proxy라고 불렀는데(사전 등록 문서는 고정본이라 고치지 않음), 이 기준이 다단계 추론을 실제로 반영하는지 검증하지 않았음. 그래서 "정답 passage가 2개 이상인 query"로만 부름. 금융 용어 사전은 사전 등록 때 정한 주관적 heuristic(24개 단어, "돈"·"가격"처럼 일반 문맥에도 쓰이는 단어 포함)이고, StrategyQA에서는 4개만 걸려 정보가 없음. BC Card에서는 금융 용어가 없는 query에서도 개선이 있었음.
 
 ## 사례 검토와 사후 측정
 
@@ -134,7 +152,12 @@ StrategyQA Dense 손실 상위 15개와 개선 상위 5개를 직접 읽었음(`
 | 정답 2개 이상 | 다단계 근거 proxy | 정답 passage 수로만 기술 | proxy 타당성 미검증 |
 | Dense와 Hybrid 관계 | "손실은 Dense에서 생겼고" | 손실이 query 단위로 겹침, 인과는 아님 | 상관만 관찰 |
 
-v1 수치 파일은 `analysis.v1-numpy-ties.json`, `per-query-summary.v1-numpy-ties.jsonl`, `features-parity.v1-numpy-ties.json`, 그림 두 개의 `*.v1-numpy-ties.svg`로 남겨 뒀음.
+| v1 보존 파일 | evidence 안 `*.v1-numpy-ties.*` | tree에서 제거, git 이력에 보존 | 아래 Evidence 정리 |
+| PR #42 BC Card 결론의 동점 민감도 | 다루지 않음 | 사후 민감도 분석 추가 | 아래 동점 민감도 |
+
+## Evidence 정리
+
+v1 파일 다섯 개(`per-query-summary.jsonl`, `analysis.json`, `features-parity.json`, 그림 두 개)는 tree에서 지우고 git 이력에만 남겼음. 지우기 전에 확인한 조건은 이렇게 됨. 첫 분석 커밋 `19d9d14`의 원래 경로와 `73a9c8f`의 `*.v1-numpy-ties.*` 경로가 같은 바이트이고, 그 해시가 `19d9d14` 당시 MANIFEST와 맞음. 이 출처와 해시를 `revisions.json`에 적었고, `test_removed_v1_files_are_recoverable_from_git_history`가 두 커밋에서 blob을 꺼내 해시를 확인함. CI `fusion-tests` job은 전체 이력을 받아 이 테스트를 skip 없이 돌림. 수정 전후 차이는 분석 코드가 git 이력에서 v1을 읽어 다시 만들 수 있고(`v1-records` 명령), 결과는 `v1-v2-comparison.json`에 고정했음. 고정 전후 값은 같았음. 현재 MANIFEST는 남은 파일을 모두 검증함.
 
 ## 재현
 
@@ -146,9 +169,14 @@ run features $COMMON $MODEL        # GPU, v2 per-query-summary.jsonl, features-p
 run ranking-parity $COMMON $MODEL  # GPU, ranking-parity.json
 run posthoc $COMMON                # 로컬 qrels, posthoc-same-source.json
 run cases $COMMON                  # 수동 검토용 원문을 stdout에만 출력
+run v1-records                     # git 이력 필요, v1-v2-comparison.json과 revisions.json
 run analyze                        # 커밋된 파일만 사용, analysis.json과 그림
 run check
-uv run --locked --extra sparse --extra dense pytest -q tests/test_strategyqa_regression_evidence.py
+uv run --locked --extra sparse --extra dense python -m scripts.analyze_tie_sensitivity run \
+  --data-dir $FINANCE_DATA --cache-dir $FINANCE_CACHE \
+  --base-model $FINANCE_MODEL --checkpoint $REPRO_RUN/train-seed43/selected-last-block.pt   # GPU
+uv run --locked --extra sparse --extra dense python -m scripts.analyze_tie_sensitivity check
+uv run --locked --extra sparse --extra dense pytest -q tests/test_strategyqa_regression_evidence.py tests/test_tie_sensitivity.py
 ```
 
-`check`는 `analysis.json`과 그림을 다시 계산해 비교하고, 로컬 데이터가 필요한 `posthoc-same-source.json`, `features-parity.json`, `ranking-parity.json`, v1 파일은 해시로 확인함. CI는 `fusion-tests` job에서 이 테스트를 skip 없이 돌림. Query 원문, vector, 모델은 커밋하지 않았음.
+`check`는 `analysis.json`과 그림을 다시 계산해 비교하고, 로컬 데이터나 GPU가 필요한 `posthoc-same-source.json`, `features-parity.json`, `ranking-parity.json`, `duplicate-label-audit.json`, `tie-sensitivity-per-query.jsonl`은 MANIFEST 해시로 확인함. `tie-sensitivity.json`은 per-query 파일에서 다시 계산해 비교함. CI는 `fusion-tests` job에서 이 테스트를 skip 없이 돌림. Query 원문, vector, 모델은 커밋하지 않았음.

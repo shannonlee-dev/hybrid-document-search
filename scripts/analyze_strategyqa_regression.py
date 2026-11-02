@@ -477,6 +477,39 @@ def posthoc_same_source(args):
     return result
 
 
+def write_v1_records(evidence_dir=EVIDENCE):
+    """Freeze the v1->v2 comparison and the v1 file provenance (needs git history)."""
+    evidence_dir = Path(evidence_dir)
+    revisions = {
+        "kind": "v1 (NumPy stable tie order) files removed from the tree; kept in git history",
+        "v1_commit": V1_COMMIT,
+        "renamed_copy_commit": "73a9c8f0bbf0d1ce27e921ca2ede7863c4194b5c",
+        "reason_removed": "superseded by canonical-tie v2; differences frozen in v1-v2-comparison.json",
+        "files": {
+            name: {
+                "path_at_v1_commit": _evidence_path(name),
+                "path_at_renamed_copy_commit": _evidence_path(
+                    name.rsplit(".", 1)[0] + ".v1-numpy-ties." + name.rsplit(".", 1)[1]
+                ),
+                "sha256": hashlib.sha256(
+                    _git_show(V1_COMMIT, _evidence_path(name))
+                ).hexdigest(),
+            }
+            for name in V1_FILES
+        },
+    }
+    (evidence_dir / "revisions.json").write_text(json.dumps(revisions, indent=2) + "\n")
+    comparison = {
+        "v1_source": f"{V1_COMMIT}:{_evidence_path('per-query-summary.jsonl')}",
+        "v2_source": "per-query-summary.jsonl",
+        "comparison": v1_v2_differences(evidence_dir),
+    }
+    (evidence_dir / "v1-v2-comparison.json").write_text(
+        json.dumps(comparison, indent=2) + "\n"
+    )
+    return comparison["comparison"]
+
+
 # ------------------------------------------------------------------- analyze
 def _bootstrap_mean(values, seed=SEED, resamples=RESAMPLES):
     import numpy as np
@@ -578,11 +611,37 @@ def overlap_outlier_check(rs):
     return out
 
 
+V1_COMMIT = "19d9d147ed0e0c87140c7a1fbd1fd500cb76e590"
+V1_FILES = (
+    "per-query-summary.jsonl",
+    "analysis.json",
+    "features-parity.json",
+    "rank-movement.svg",
+    "drift-vs-delta.svg",
+)
+
+
+def _git_show(commit, path):
+    import subprocess
+
+    return subprocess.run(
+        ["git", "show", f"{commit}:{path}"], cwd=ROOT, capture_output=True, check=True
+    ).stdout
+
+
+def _evidence_path(name):
+    return f"{EVIDENCE.relative_to(ROOT).as_posix()}/{name}"
+
+
 def v1_v2_differences(evidence_dir):
-    """Record how rank-based features changed between v1 (NumPy ties) and v2."""
+    """Record how rank-based features changed between v1 (NumPy ties) and v2.
+
+    v1 is read from git history (commit V1_COMMIT), not from the working tree.
+    """
+    v1_text = _git_show(V1_COMMIT, _evidence_path("per-query-summary.jsonl")).decode()
     v1 = {
         (r["dataset"], r["query_id"]): r
-        for r in read_rows(evidence_dir / "per-query-summary.v1-numpy-ties.jsonl")
+        for r in (json.loads(line) for line in v1_text.splitlines())
     }
     v2 = {
         (r["dataset"], r["query_id"]): r
@@ -670,7 +729,8 @@ def analyze(evidence_dir=EVIDENCE):
                 "per-query-summary.jsonl",
                 "features-parity.json",
                 "ranking-parity.json",
-                "per-query-summary.v1-numpy-ties.jsonl",
+                "v1-v2-comparison.json",
+                "revisions.json",
                 "manual-review.json",
                 "posthoc-same-source.json",
             )
@@ -820,7 +880,9 @@ def analyze(evidence_dir=EVIDENCE):
                 "datasets"
             ].items()
         },
-        "v1_numpy_ties_vs_v2_canonical": v1_v2_differences(evidence_dir),
+        "v1_numpy_ties_vs_v2_canonical": read_json(
+            evidence_dir / "v1-v2-comparison.json"
+        )["comparison"],
     }
     return out
 
@@ -1016,7 +1078,15 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
         "command",
-        choices=("features", "cases", "posthoc", "ranking-parity", "analyze", "check"),
+        choices=(
+            "features",
+            "cases",
+            "posthoc",
+            "ranking-parity",
+            "v1-records",
+            "analyze",
+            "check",
+        ),
     )
     parser.add_argument("--data-dir", type=Path)
     parser.add_argument("--cache-dir", type=Path)
@@ -1034,6 +1104,8 @@ def main(argv=None):
         result = posthoc_same_source(args)
     elif args.command == "ranking-parity":
         result = ranking_parity(args)
+    elif args.command == "v1-records":
+        result = write_v1_records()
     elif args.command == "analyze":
         result = {"datasets": list(write_analysis()["datasets"])}
     else:
