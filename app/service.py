@@ -71,6 +71,10 @@ class SearchService:
         """Return the status of every method. Available means initialized."""
         return {method: self._status(method) for method in RetrievalMethod}
 
+    def retriever(self, method: RetrievalMethod) -> Retriever | None:
+        """Return the initialized retriever for a method, or None if unavailable."""
+        return self._retrievers.get(method)
+
     def search(
         self, query: str, method: RetrievalMethod, top_k: int
     ) -> list[SearchResult]:
@@ -88,16 +92,31 @@ class SearchService:
         )
 
 
+@dataclass(frozen=True)
+class QueryCheckpoint:
+    """Opt-in query-side checkpoint applied over a local base model snapshot.
+
+    ``identity_path`` names the checkpoint SHA-256, layer count and the base
+    model's name, revision and snapshot file hashes; any mismatch fails closed.
+    """
+
+    base_model_path: Path
+    checkpoint_path: Path
+    identity_path: Path
+
+
 def build_search_service(
     corpus_path: Path,
     *,
     dense_index_path: Path | None = None,
     dense_device: str | None = None,
+    dense_query_checkpoint: QueryCheckpoint | None = None,
 ) -> SearchService:
     """Load the corpus once and initialize every retriever that can run.
 
     Expected initialization failures become method statuses. Internal paths stay
-    in server logs rather than availability messages.
+    in server logs rather than availability messages. Without
+    ``dense_query_checkpoint`` Dense queries use the index's saved model.
     """
     try:
         documents = load_prepared_documents(corpus_path)
@@ -126,7 +145,7 @@ def build_search_service(
     _register(RetrievalMethod.BM25, _bm25(documents))
     _register(
         RetrievalMethod.DENSE,
-        _dense(documents, dense_index_path, dense_device),
+        _dense(documents, dense_index_path, dense_device, dense_query_checkpoint),
     )
 
     bm25 = retrievers.get(RetrievalMethod.BM25)
@@ -216,6 +235,7 @@ def _dense(
     documents: list[Document],
     index_dir: Path | None,
     device: str | None,
+    query_checkpoint: QueryCheckpoint | None = None,
 ) -> Retriever | MethodStatus:
     if index_dir is None:
         return MethodStatus(
@@ -272,6 +292,31 @@ def _dense(
             MethodState.LOAD_FAILED,
             "index was built from a different corpus. Rebuild it from the current corpus.",
         )
+    if query_checkpoint is not None:
+        try:
+            from retrievers.adapted_query import (
+                AdaptedQueryEmbedder,
+                load_checkpoint_identity,
+            )
+
+            # 문서 vector는 저장된 인덱스를 그대로 쓰고 query encoder만 교체한다.
+            # identity가 없거나 하나라도 다르면 Dense/Hybrid를 열지 않는다.
+            retriever = DenseRetriever(
+                index=retriever.index,
+                documents=retriever.documents,
+                embedder=AdaptedQueryEmbedder(
+                    retriever.config,
+                    base_model_path=query_checkpoint.base_model_path,
+                    checkpoint_path=query_checkpoint.checkpoint_path,
+                    identity=load_checkpoint_identity(query_checkpoint.identity_path),
+                ),
+            )
+        except (OSError, ValueError):
+            logger.exception("query checkpoint could not be applied")
+            return MethodStatus(
+                MethodState.LOAD_FAILED,
+                "query checkpoint could not be applied; see server logs.",
+            )
     try:
         # 사용 가능 상태를 알리기 전에 실제 검색으로 모델과 인덱스의 호환성을 확인한다.
         retriever.search("warm-up", 1)

@@ -1,0 +1,220 @@
+{
+  "encoder": "fin",
+  "server_ready_seconds": 27.618908626027405,
+  "results": {
+    "hybrid": {
+      "method": "hybrid",
+      "sequential_ms": {
+        "count": 2163,
+        "mean": 14.541303463602267,
+        "p50": 14.48184996843338,
+        "p95": 15.204371651634574,
+        "p99": 16.83022840879858,
+        "min": 13.804159127175808,
+        "max": 29.912646859884262,
+        "histogram_ms": {
+          "edges": [
+            13.804159127175808,
+            14.0646961517632,
+            14.194241492077708,
+            14.48184996843338,
+            14.755909331142902,
+            14.999272767454386,
+            16.83022840879858,
+            29.912646859884262
+          ]
+        }
+      },
+      "throughput": {
+        "1": {
+          "requests": 721,
+          "seconds": 20.69159019133076,
+          "requests_per_second": 34.84507441588904,
+          "latency_ms": {
+            "count": 721,
+            "mean": 16.016037360314233,
+            "p50": 15.372338704764843,
+            "p95": 23.683434817939997,
+            "p99": 27.438788302242752,
+            "min": 14.430053066462278,
+            "max": 35.43418226763606,
+            "histogram_ms": {
+              "edges": [
+                14.430053066462278,
+                14.818222261965275,
+                15.024038963019848,
+                15.372338704764843,
+                15.71564981713891,
+                16.272881999611855,
+                27.438788302242752,
+                35.43418226763606
+              ]
+            }
+          }
+        },
+        "4": {
+          "requests": 721,
+          "seconds": 16.610971957910806,
+          "requests_per_second": 43.40504588334044,
+          "latency_ms": {
+            "count": 721,
+            "mean": 57.1072524589139,
+            "p50": 57.314697187393904,
+            "p95": 90.57951299473643,
+            "p99": 103.93602941185232,
+            "min": 14.963848982006311,
+            "max": 134.92493703961372,
+            "histogram_ms": {
+              "edges": [
+                14.963848982006311,
+                29.99551873654127,
+                46.037496998906136,
+                57.314697187393904,
+                68.75471118837595,
+                79.56345286220312,
+                103.93602941185232,
+                134.92493703961372
+              ]
+            }
+          }
+        }
+      }
+    },
+    "dense": {
+      "method": "dense",
+      "sequential_ms": {
+        "count": 2163,
+        "mean": 17.87787249571869,
+        "p50": 17.842743080109358,
+        "p95": 18.510907795280218,
+        "p99": 18.709463644772768,
+        "min": 16.433681827038527,
+        "max": 19.07957810908556,
+        "histogram_ms": {
+          "edges": [
+            16.433681827038527,
+            17.478906828910112,
+            17.566711409017444,
+            17.842743080109358,
+            18.112455494701862,
+            18.403765931725502,
+            18.709463644772768,
+            19.07957810908556
+          ]
+        }
+      },
+      "throughput": {
+        "1": {
+          "requests": 721,
+          "seconds": 25.847548625431955,
+          "requests_per_second": 27.894328025002444,
+          "latency_ms": {
+            "count": 721,
+            "mean": 20.78984614304072,
+            "p50": 17.82078994438052,
+            "p95": 29.075378086417913,
+            "p99": 40.93344043940305,
+            "min": 17.016130033880472,
+            "max": 45.17099494114518,
+            "histogram_ms": {
+              "edges": [
+                17.016130033880472,
+                17.374164890497923,
+                17.597227357327938,
+                17.82078994438052,
+                25.384281761944294,
+                25.953891687095165,
+                40.93344043940305,
+                45.17099494114518
+              ]
+            }
+          }
+        },
+        "4": {
+          "requests": 721,
+          "seconds": 26.762515113223344,
+          "requests_per_second": 26.94066671049741,
+          "latency_ms": {
+            "count": 721,
+            "mean": 109.25764959930713,
+            "p50": 118.85294457897544,
+            "p95": 149.0918379276991,
+            "p99": 155.0740764476359,
+            "min": 23.88622798025608,
+            "max": 165.46662198379636,
+            "histogram_ms": {
+              "edges": [
+                23.88622798025608,
+                54.12328662350774,
+                93.21813890710473,
+                118.85294457897544,
+                135.03100583329797,
+                143.78339983522892,
+                155.0740764476359,
+                165.46662198379636
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "server_process_memory": {
+    "VmHWM": 5230583808,
+    "VmRSS": 3869229056
+  },
+  "gpu_before": {
+    "gpus": [
+      "0, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 0, 4089, 97887",
+      "1, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 0, 782, 97887"
+    ],
+    "compute_apps": [
+      "1229217, GPU0, 1172",
+      "155926, GPU0, 2902",
+      "1690003, GPU1, 772"
+    ]
+  },
+  "gpu_after": {
+    "gpus": [
+      "0, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 13, 4257, 97887",
+      "1, NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition, 0, 782, 97887"
+    ],
+    "compute_apps": [
+      "1229217, GPU0, 1172",
+      "155926, GPU0, 3070",
+      "1690003, GPU1, 772"
+    ]
+  },
+  "server_pid": 155926,
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+    "torch": "2.14.1+cu130",
+    "cuda": "13.0",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Max-Q Workstation Edition",
+    "cuda_visible_devices": "0",
+    "code": {
+      "sha256": {
+        "evaluation/constants.py": "71fc8da69caa5a783f265589262fa4f11948003b812fee72db99763ae761a754",
+        "evaluation/data.py": "e5367f36b1971037fa53f52a307a68ea7c6d7dd3610a75ccaae753e818d6b507",
+        "evaluation/metrics.py": "af4de41d9ccf9cd64186da1f973faf4d5604f00f559239ccf8adea992cee7722",
+        "evaluation/latency.py": "80718bfab14352e778c1a3b6add727411384874864e24c39ba6add7bff1e4232",
+        "evaluation/benchmark.py": "7a44e75ccfe6318a7c58483c95a8444519ee8575e016a39833d0e339f42a3179",
+        "scripts/evaluate.py": "1e3659c553efb40ce18d4549114e2bc4f0600b1ecd95b9035c9c692ad37a7ad0",
+        "retrievers/tfidf.py": "20d8da00a10965495ee0470ba6b8320ee64cb4297b404ac6927c29a92a40f386",
+        "retrievers/bm25.py": "623bfbb261a93037e1b3ac6bf1ff4aff0f35afa5e333f67cdb667549cd14d7a3",
+        "retrievers/dense.py": "29665f845190866ea43f8dc116d0fd912abc90e68229cb0dfd26c0a077f5c65e",
+        "retrievers/model_config.py": "4b634e1311a0019d4b2f7512be283e272490ae043ac0ff4a3463a5ef6faeeb0b",
+        "config/dense_models.toml": "ae04a554936281654e719db68f451e5330d1575dde6ea1aabcea48e0abe646a3",
+        "indexing/faiss_index.py": "b40d64f94fa703fe310063c17fd69f720977730086d074bf9787e49d8b392609",
+        "fusion/hybrid.py": "052cd3514e64e89dff1f4a60761731c441281228ce19352f631941e1fc514412",
+        "fusion/rrf.py": "c36dada93bea725e313e781da756b2eb107db2e6c4da353a5b2333d65b6ce90b",
+        "fusion/score.py": "dec2738b5f38071b48b0621f279796cad6a3a154e0aa7a6cc29c7699076916d0",
+        "data/loader.py": "850e381db854635c551fcf572adb3ed16762a71032cff2c3ddda5013f148edf0",
+        "data/preprocess.py": "d938f0084012b22615b7296dff2fbda61b3d184d878404ef2744cef10018f57c"
+      },
+      "git_commit": "5506f1101a46a84a780c2a6622647dfbe2a58f2f",
+      "working_tree_dirty": true
+    }
+  }
+}

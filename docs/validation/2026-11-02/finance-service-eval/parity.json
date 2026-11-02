@@ -1,0 +1,48 @@
+{
+  "check1_checkpoint": {
+    "check": "adapter checkpoint load vs PR #41 selected-validation-vectors (BF16, 512 tokens, batch 16)",
+    "queries": 1000,
+    "bitwise_equal": true,
+    "max_abs_difference": 0.0,
+    "reference_sha256": "672e300e9e9961748636c2a808e6ccfd07bf256471b7e6add860ba7f4d186621"
+  },
+  "check2_fixed": {
+    "check": "UnionMinMaxFusionRetriever with PR #41 BF16 Test vectors vs PR #41 per-query rows",
+    "reference_sha256": "2254f901b5178cf3ebefa910ffaafec31927e2424c46ddcdfa9f3ef957f3d07b",
+    "methods": {
+      "baseline + Fixed alpha=0.84": {
+        "queries": 721,
+        "top10_mismatches": 0,
+        "metric_mismatches": 0
+      },
+      "seed43 + Fixed alpha=0.84": {
+        "queries": 721,
+        "top10_mismatches": 0,
+        "metric_mismatches": 0
+      },
+      "seed43 + Fixed": {
+        "queries": 721,
+        "top10_mismatches": 0,
+        "metric_mismatches": 0
+      }
+    },
+    "passed": true
+  },
+  "check3_service_hybrid": {
+    "check": "service ScoreFusionRetriever/DenseRetriever on cached FP32 BGE query vectors vs main contract replay",
+    "reference_sha256": "75706c90db431f92a34a28eee9a8ae4240c5626337c4a6dd25f2d4be8cd784af",
+    "query_vectors_sha256": "db783ead74ea2d702e516e2842c23388a8646987bb6904db77ada46ca3a33826",
+    "methods": {
+      "Existing Fixed": {
+        "queries": 721,
+        "top10_mismatches": 0
+      },
+      "Dense": {
+        "queries": 721,
+        "top10_mismatches": 0
+      }
+    },
+    "passed": true
+  },
+  "passed": true
+}

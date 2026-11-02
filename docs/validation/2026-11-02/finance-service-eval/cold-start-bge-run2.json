@@ -1,0 +1,10 @@
+{
+  "encoder": "bge",
+  "service_ready_seconds": 25.24318116204813,
+  "first_hybrid_query_ms": 16.347402706742287,
+  "torch_cuda_max_memory_allocated_bytes": 2305382400,
+  "process_memory": {
+    "VmHWM": 5267271680,
+    "VmRSS": 3870777344
+  }
+}

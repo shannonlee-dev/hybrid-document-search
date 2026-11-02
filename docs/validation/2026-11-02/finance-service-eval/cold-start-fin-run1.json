@@ -1,0 +1,10 @@
+{
+  "encoder": "fin",
+  "service_ready_seconds": 25.387342455331236,
+  "first_hybrid_query_ms": 16.370737925171852,
+  "torch_cuda_max_memory_allocated_bytes": 2305382400,
+  "process_memory": {
+    "VmHWM": 5264637952,
+    "VmRSS": 3879645184
+  }
+}

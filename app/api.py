@@ -10,6 +10,9 @@ Environment:
     SEARCH_CORPUS_PATH  corpus JSONL (default data/processed/corpus.jsonl)
     DENSE_INDEX_PATH    saved Dense index directory (Dense is off when unset)
     DENSE_DEVICE        device for the Dense model, e.g. cpu or cuda (optional)
+    DENSE_QUERY_CHECKPOINT           optional query-side final-block checkpoint; requires
+    DENSE_QUERY_CHECKPOINT_IDENTITY  its identity JSON (checkpoint/base model hashes) and
+    DENSE_QUERY_BASE_MODEL           a local base model snapshot directory
 """
 
 import logging
@@ -22,7 +25,12 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, HTTPException, Request
 
 from app.schemas import SearchHit, SearchRequest, SearchResponse
-from app.service import MethodUnavailableError, SearchService, build_search_service
+from app.service import (
+    MethodUnavailableError,
+    QueryCheckpoint,
+    SearchService,
+    build_search_service,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +48,7 @@ def create_app(service: SearchService | None = None) -> FastAPI:
                 Path(os.environ.get("SEARCH_CORPUS_PATH", DEFAULT_CORPUS_PATH)),
                 dense_index_path=_env_path("DENSE_INDEX_PATH"),
                 dense_device=os.environ.get("DENSE_DEVICE") or None,
+                dense_query_checkpoint=_query_checkpoint_from_env(),
             )
         yield
 
@@ -130,6 +139,26 @@ def _configure_logging() -> None:
 def _env_path(name: str) -> Path | None:
     value = os.environ.get(name)
     return Path(value) if value else None
+
+
+def _query_checkpoint_from_env() -> QueryCheckpoint | None:
+    """Return the opt-in query checkpoint; partial configuration is an error."""
+    names = (
+        "DENSE_QUERY_CHECKPOINT",
+        "DENSE_QUERY_CHECKPOINT_IDENTITY",
+        "DENSE_QUERY_BASE_MODEL",
+    )
+    values = [os.environ.get(name) or None for name in names]
+    if not any(values):
+        return None
+    if not all(values):
+        raise ValueError(f"{', '.join(names)} must be set together")
+    checkpoint, identity, base = values
+    return QueryCheckpoint(
+        base_model_path=Path(base),
+        checkpoint_path=Path(checkpoint),
+        identity_path=Path(identity),
+    )
 
 
 app = create_app()

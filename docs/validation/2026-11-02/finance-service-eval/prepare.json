@@ -1,0 +1,14 @@
+{
+  "bccard": {
+    "index_sha256": "1781cb62100a5538fc25f8a10446ac697d7558227eb4ace7849506e9bd490f57",
+    "documents": 36281
+  },
+  "miracl10k": {
+    "index_sha256": "fb59dfaa2aea5fbb0d75b148eedf638a19433490aa4d86982e3acccfd12fdd78",
+    "documents": 10000
+  },
+  "strategyqa": {
+    "index_sha256": "06722391cb94ddcdb6760d6c409d2cabaa88cb7caed75320792ffc8d93137403",
+    "documents": 9251
+  }
+}

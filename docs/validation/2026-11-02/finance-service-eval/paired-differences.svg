@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="422" viewBox="0 0 760 422" role="img" aria-label="Finance minus BGE paired nDCG@10 differences" font-family="-apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', 'Segoe UI', Helvetica, Arial, sans-serif">
+<title>Finance minus BGE paired nDCG@10 differences</title>
+<rect width="760" height="422" fill="#fcfcfb"/>
+<text x="20" y="26" font-size="15" font-weight="600" fill="#0b0b0b">Finance Seed43 − 원본 BGE, nDCG@10 query 단위 paired 차이</text>
+<text x="20" y="44" font-size="12" fill="#52514e">점 = 평균 차이, 선 = bootstrap 95% CI (seed 20261102, 20,000 resamples). 0의 오른쪽이 Finance 우위.</text>
+<line x1="342.0" x2="342.0" y1="64" y2="382" stroke="#e4e3df" stroke-width="1"/>
+<text x="342.0" y="398" font-size="11" text-anchor="middle" fill="#52514e">-0.04</text>
+<line x1="426.0" x2="426.0" y1="64" y2="382" stroke="#e4e3df" stroke-width="1"/>
+<text x="426.0" y="398" font-size="11" text-anchor="middle" fill="#52514e">-0.02</text>
+<line x1="510.0" x2="510.0" y1="64" y2="382" stroke="#52514e" stroke-width="1"/>
+<text x="510.0" y="398" font-size="11" text-anchor="middle" fill="#52514e">+0.00</text>
+<line x1="594.0" x2="594.0" y1="64" y2="382" stroke="#e4e3df" stroke-width="1"/>
+<text x="594.0" y="398" font-size="11" text-anchor="middle" fill="#52514e">+0.02</text>
+<line x1="678.0" x2="678.0" y1="64" y2="382" stroke="#e4e3df" stroke-width="1"/>
+<text x="678.0" y="398" font-size="11" text-anchor="middle" fill="#52514e">+0.04</text>
+<text x="20" y="82" font-size="12" font-weight="600" fill="#0b0b0b">BC Card Test (n=721)</text>
+<text x="36" y="100" font-size="12" fill="#0b0b0b">서비스 Hybrid (.05)</text>
+<text x="290" y="100" font-size="11" text-anchor="end" fill="#52514e">+0.0176</text>
+<line x1="520.8" x2="647.9" y1="96" y2="96" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="583.9" cy="96" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>BC Card Test 서비스 Hybrid (.05): +0.0176 [+0.0026, +0.0328] maintained</title></circle>
+<text x="36" y="126" font-size="12" fill="#0b0b0b">Fixed α=.84</text>
+<text x="290" y="126" font-size="11" text-anchor="end" fill="#52514e">+0.0214</text>
+<line x1="541.2" x2="660.4" y1="122" y2="122" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="599.8" cy="122" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>BC Card Test Fixed α=.84: +0.0214 [+0.0074, +0.0358] maintained</title></circle>
+<text x="36" y="152" font-size="12" fill="#0b0b0b">Dense-only</text>
+<text x="290" y="152" font-size="11" text-anchor="end" fill="#52514e">+0.0252</text>
+<line x1="549.9" x2="682.3" y1="148" y2="148" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="615.9" cy="148" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>BC Card Test Dense-only: +0.0252 [+0.0095, +0.0410] maintained</title></circle>
+<text x="20" y="186" font-size="12" font-weight="600" fill="#0b0b0b">Ko-MIRACL dev (n=50)</text>
+<text x="36" y="204" font-size="12" fill="#0b0b0b">서비스 Hybrid (.05)</text>
+<text x="290" y="204" font-size="11" text-anchor="end" fill="#52514e">+0.0070</text>
+<line x1="420.7" x2="675.0" y1="200" y2="200" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="539.5" cy="200" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Ko-MIRACL dev 서비스 Hybrid (.05): +0.0070 [-0.0213, +0.0393] not_shown</title></circle>
+<text x="36" y="230" font-size="12" fill="#0b0b0b">Fixed α=.84</text>
+<text x="290" y="230" font-size="11" text-anchor="end" fill="#52514e">-0.0175</text>
+<line x1="304.6" x2="558.7" y1="226" y2="226" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="436.5" cy="226" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Ko-MIRACL dev Fixed α=.84: -0.0175 [-0.0489, +0.0116] not_shown</title></circle>
+<text x="36" y="256" font-size="12" fill="#0b0b0b">Dense-only</text>
+<text x="290" y="256" font-size="11" text-anchor="end" fill="#52514e">+0.0161</text>
+<line x1="491.5" x2="699.2" y1="252" y2="252" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="577.4" cy="252" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Ko-MIRACL dev Dense-only: +0.0161 [-0.0044, +0.0451] not_shown</title></circle>
+<text x="20" y="290" font-size="12" font-weight="600" fill="#0b0b0b">Ko-StrategyQA (n=592)</text>
+<text x="36" y="308" font-size="12" fill="#0b0b0b">서비스 Hybrid (.05)</text>
+<text x="290" y="308" font-size="11" text-anchor="end" fill="#52514e">-0.0142</text>
+<line x1="419.1" x2="480.3" y1="304" y2="304" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="450.5" cy="304" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Ko-StrategyQA 서비스 Hybrid (.05): -0.0142 [-0.0216, -0.0071] reversed</title></circle>
+<text x="36" y="334" font-size="12" fill="#0b0b0b">Fixed α=.84</text>
+<text x="290" y="334" font-size="11" text-anchor="end" fill="#52514e">-0.0122</text>
+<line x1="429.4" x2="485.8" y1="330" y2="330" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="458.7" cy="330" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Ko-StrategyQA Fixed α=.84: -0.0122 [-0.0192, -0.0058] reversed</title></circle>
+<text x="36" y="360" font-size="12" fill="#0b0b0b">Dense-only</text>
+<text x="290" y="360" font-size="11" text-anchor="end" fill="#52514e">-0.0148</text>
+<line x1="413.8" x2="480.9" y1="356" y2="356" stroke="#2a78d6" stroke-width="2"/>
+<circle cx="448.0" cy="356" r="5" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"><title>Ko-StrategyQA Dense-only: -0.0148 [-0.0229, -0.0069] reversed</title></circle>
+</svg>
